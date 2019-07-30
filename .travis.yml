@@ -2,3 +2,6 @@
 
 language: R
 cache: packages
+
+after_script:
+  - ./travis-tool.sh dump_logs

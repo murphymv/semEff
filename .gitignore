@@ -1,1 +1,5 @@
+.Rbuildignore
+.Rhistory
 .Rproj.user
+cran-comments.md
+semEff.Rproj
