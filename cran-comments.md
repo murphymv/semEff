@@ -1,6 +1,6 @@
 ## Test environments
-* Local Windows install, R 3.6.1
-* Ubuntu ..... (on travis-ci), R 3.6.1
+* Windows 10 version 1903, R 3.6.1
+* Ubuntu 16.04.6 LTS (on travis-ci), R 3.6.1
 * win-builder (devel and release)
 
 ## R CMD check results
