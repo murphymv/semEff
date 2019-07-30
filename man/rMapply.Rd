@@ -38,11 +38,11 @@ Recursively apply a function to a list or lists.
   \code{f(...)}.
 
   This is primarily a convenience function used internally to enable
-  recursive application of functions to lists or nested lists. However, it's
+  recursive application of functions to lists or nested lists. It's
   particular stop condition for recursing is also designed to either a) act
   as a wrapper for \code{f} if the first object in \code{...} is not a list,
   or b) apply a model averaging operation if the first object is a list and
-  the second object is a numeric vector of weights.
+  the second object is a numeric vector (of weights).
 }
 \seealso{
 \code{\link[base]{mapply}}

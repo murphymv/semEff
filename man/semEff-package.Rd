@@ -2,15 +2,16 @@
 % Please edit documentation in R/semEff-package.R
 \docType{package}
 \name{semEff-package}
-\alias{semEff}
 \alias{semEff-package}
+\alias{_PACKAGE}
 \title{semEff: Automatic Calculation of Effects for Piecewise SEM's}
 \description{
 This package provides functionality to automatically calculate 
-    direct, indirect, and total effects from piecewise Structual Equation Models 
-    (SEM), comprising lists of fitted models representing structured equations 
-    (currently supported classes are "lm", "glm", "lmerMod", and "glmerMod"). 
-    Confidence intervals for all effects are provided via bootstrapping.
+    direct, indirect, and total effects from 'piecewise' Structual Equation 
+    Models (SEM) (Shipley 2000, 2009; Lefcheck 2015), comprising lists of 
+    fitted models representing structured equations. Confidence intervals are 
+    provided via bootstrapping. Currently supported model classes are "lm", 
+    "glm", "lmerMod", and "glmerMod".
 }
 \author{
 \strong{Maintainer}: Mark Murphy \email{murphymv@gmail.com}

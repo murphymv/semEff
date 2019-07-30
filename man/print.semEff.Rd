@@ -4,12 +4,14 @@
 \alias{print.semEff}
 \title{Print SEM Effects}
 \usage{
-\method{print}{semEff}(x)
+\method{print}{semEff}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "semEff".}
+\item{x}{An object of class \code{"semEff"}.}
+
+\item{...}{Further arguments passed to or from other methods.}
 }
 \description{
-A print method for an object of class "semEff", which returns
+A print method for an object of class \code{"semEff"}, returning
   summary tables of effects and confidence intervals for all responses.
 }

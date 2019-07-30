@@ -4,21 +4,21 @@
 \alias{bootCI}
 \title{Bootstrap Confidence Intervals}
 \usage{
-bootCI(x, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
+bootCI(m, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   ...)
 }
 \arguments{
-\item{x}{A fitted model object of class \code{lm}, \code{glm}, or
-\code{merMod}, or a named list/nested list of such objects. \code{x} can
+\item{m}{A fitted model object of class \code{lm}, \code{glm}, or
+\code{merMod}, or a named list/nested list of such objects. \code{m} can
 also be a boot object(s)/list (class \code{"boot"}), corresponding to
 bootstrapped estimates from fitted models.}
 
 \item{conf}{A numeric value specifying the confidence level for the
 intervals.}
 
-\item{type}{The type of confidence interval to return. Can be one of
-\code{c("norm","basic", "stud", "perc", "bca")} (see
-\code{\link[boot]{boot.ci}}). Defaults to \code{"bca"} (see Details).}
+\item{type}{The type of confidence interval to return (defaults to
+\code{"bca"} - see Details). See \code{\link[boot]{boot.ci}} for further
+specification details.}
 
 \item{digits}{The number of significant digits to return for numeric values.}
 
@@ -38,28 +38,42 @@ Calculate confidence intervals using bootstrapped model
 \details{
 This function is essentially a wrapper for \code{boot.ci} from the
   \pkg{boot} package, which will return confidence intervals of the specified
-  type and confidence level calculated from bootstrapped model estimates. If
-  a model or models are supplied to \code{x}, bootstrapping will first be
-  performed via \code{bootSEM}. Estimates for which the confidence intervals
-  do not contain zero are highlighted with a star.
+  type and level calculated from bootstrapped model estimates. If a model or
+  models are supplied to \code{m}, bootstrapping will first be performed via
+  \code{bootSEM}. Estimates for which the confidence intervals do not contain
+  zero are highlighted with a star.
 
   Nonparametric bias-corrected and accelerated confidence intervals
-  (BC\emph{a}, Efron 1987) are calculated by default, as these are likely the
-  most accurate solution across the widest variety of bootstrap sampling
-  distributions (Puth \emph{et al.} 2015). They will not be appropriate for
-  parametric resampling however - due to the requirement for empirical
-  influence values calculated from the data (see \url{http://bit.ly/2UzmA7Y})
-  - in which case the default will be set to the boostrap percentile method
-  instead (\code{"perc"}).
+  (BC\emph{a}, Efron 1987) are calculated by default, which provide the most
+  accurate coverage across the widest variety of bootstrap sampling
+  distributions (Puth \emph{et al.} 2015). They will, however, be
+  inappropriate for parametric resampling - due to the requirement for
+  empirical influence values calculated from the data
+  (\url{http://bit.ly/2UzmA7Y}) - in which case the default will be set to
+  the boostrap percentile method instead (\code{"perc"}).
 
-  NOTE: All bootstrapped confidence intervals will tend to underestimate the
-  true nominal coverage to some extent when sample size is small (Chernick &
+  NOTE: All bootstrapped confidence intervals will underestimate the true
+  nominal coverage to some extent when sample size is small (Chernick &
   Labudde 2009), so the appropriate caution should be exercised in
   interpretation in these cases. Comparison of different interval types may
-  be informative. For example, normal theory-based intervals may outperform
+  be informative. For example, normal-theory based intervals may outperform
   bootstrap percentile methods when n < 34 (Hesterberg 2015). Ultimately
-  however, the bootstrap is not a solution to small sample size
+  though, the bootstrap is not a solution to small sample size
   (\url{http://bit.ly/2GpfLMn}).
+}
+\examples{
+## CI's from bootstrapped SEM
+bootCI(Shipley.SEM.boot)
+
+## From original SEM
+## (not usually recommended - better to use saved boot objects)
+
+\dontrun{
+
+system.time(
+  Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)
+)
+}
 }
 \references{
 Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
@@ -72,7 +86,7 @@ Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
   \url{https://doi.org/10.1080/01621459.1987.10478410}
 
   Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
-  Resampling in the Undergraduate Statistics Curriculum. \code{The American
+  Resampling in the Undergraduate Statistics Curriculum. \emph{The American
   Statistician}, \strong{69}(4), 371–386.
   \url{https://doi.org/10.1080/00031305.2015.1089789}
 

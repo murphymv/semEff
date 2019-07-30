@@ -2,13 +2,12 @@
 % Please edit documentation in R/sem_eff_functions.R
 \name{Effects}
 \alias{Effects}
-\alias{effects}
 \alias{direct}
 \alias{indirect}
 \alias{total}
 \title{Extract SEM Effects}
 \usage{
-effects(x, type = "orig", responses = NULL)
+Effects(sem.eff, type = "orig", responses = NULL)
 
 direct(...)
 
@@ -17,28 +16,31 @@ indirect(...)
 total(...)
 }
 \arguments{
-\item{x}{An object of class "semEff".}
+\item{sem.eff}{An object of class \code{"semEff"}.}
 
-\item{type}{The type of effects to return. Must be one of \code{c("orig",
-"boot")} (defaults to \code{"orig"}).}
+\item{type}{The type of effects to return. Must be either \code{"orig"}
+(default) or \code{"boot"}.}
 
 \item{responses}{A vector of names of response variables for which to return
 effects. If \code{NULL} (default), all responses are used.}
+
+\item{...}{Arguments (above) to be passed to \code{Effects}.}
 }
 \value{
 A list containing the original or bootstrapped effects for each
   response variable, as numeric vectors or matrices (respectively).
 }
 \description{
-Extract direct, indirect, or total effects for a piecewise SEM.
+Extract SEM direct, indirect, or total effects from an object of
+  class \code{"semEff"}.
 }
 \details{
 These are simple extractor functions for effects calculated using
-  \code{semEff}, intended for convenience.
+  \code{semEff}, intended for convenience (e.g. for use in \code{predEff}).
 }
 \section{Functions}{
 \itemize{
-\item \code{effects}: Extract all effects.
+\item \code{Effects}: Extract all effects.
 
 \item \code{direct}: Extract direct effects.
 

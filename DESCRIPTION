@@ -1,19 +1,22 @@
 Package: semEff
 Type: Package
 Title: Automatic Calculation of Effects for Piecewise SEM's
-Version: 0.0.0.9000
+Version: 0.1.0.9000
 Authors@R: person(given = "Mark", family = "Murphy", role = c("aut", "cre"), 
     email = "murphymv@gmail.com")
 Description: This package provides functionality to automatically calculate 
-    direct, indirect, and total effects from piecewise Structual Equation Models 
-    (SEM), comprising lists of fitted models representing structured equations 
-    (currently supported classes are "lm", "glm", "lmerMod", and "glmerMod"). 
-    Confidence intervals for all effects are provided via bootstrapping. 
+    direct, indirect, and total effects from 'piecewise' Structual Equation 
+    Models (SEM) (Shipley 2000, 2009; Lefcheck 2015), comprising lists of 
+    fitted models representing structured equations. Confidence intervals are 
+    provided via bootstrapping. Currently supported model classes are "lm", 
+    "glm", "lmerMod", and "glmerMod". 
 Depends: R (>= 3.6.0)
 Imports: 
     boot, 
     lme4, 
-    parallel
+    parallel,
+    stats,
+    utils
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

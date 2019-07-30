@@ -26,7 +26,8 @@ isMerMod(x)
 A logical value.
 }
 \description{
-Functions to determine the class of an R object.
+Functions to determine the class of an R object. Intended
+  largely for convenience and for internal use.
 }
 \section{Functions}{
 \itemize{
@@ -41,3 +42,4 @@ Functions to determine the class of an R object.
 \item \code{isMerMod}: Is object a mixed model (of class \code{merMod})?
 }}
 
+\keyword{internal}

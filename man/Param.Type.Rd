@@ -15,14 +15,15 @@ isR2(x)
 }
 \arguments{
 \item{x}{A character vector of parameter names (e.g. names of coefficients
-from \code{\link[stats]{coef}} or \code{\link[semEff]{stdCoeff}}).}
+from \code{coef} or \code{stdCoeff}).}
 }
 \value{
 A logical vector of the same length as \code{x}.
 }
 \description{
 Functions to determine the presence/absence of certain model
-  parameters using names.
+  parameters using their names. Intended largely for convenience and for
+  internal use.
 }
 \section{Functions}{
 \itemize{
@@ -33,3 +34,4 @@ Functions to determine the presence/absence of certain model
 \item \code{isR2}: Is parameter an R-squared value?
 }}
 
+\keyword{internal}

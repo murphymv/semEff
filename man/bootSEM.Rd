@@ -2,31 +2,31 @@
 % Please edit documentation in R/boot_functions.R
 \name{bootSEM}
 \alias{bootSEM}
-\title{Bootstrap a Piecewise Structural Equation Model}
+\title{Bootstrap a Piecewise SEM}
 \usage{
 bootSEM(sem, cor.err = NULL, data = NULL, ran.eff = NULL,
-  R = 10000, seed = 1, catch.err = TRUE, parallel = "snow",
+  R = 10000, seed = NULL, catch.err = TRUE, parallel = "snow",
   ncpus = NULL, cl = NULL, bM.arg = NULL, ...)
 }
 \arguments{
 \item{sem}{A piecewise SEM, comprising a named list/nested list of fitted
 model objects of class \code{lm}, \code{glm}, or \code{lmerMod}.}
 
-\item{cor.err}{An optional character vector of the correlated errors in the
-SEM. This should be of the form: \code{c("a ~~ b", "c ~~ d", ...)} (spaces
-optional), with names corresponding to model names.}
+\item{cor.err}{An optional character vector describing the correlated errors
+in the SEM. This should be of the form: \code{c("a ~~ b", "c ~~ d", ...)}
+(spaces optional), with the names corresponding to model names.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
 \item{ran.eff}{For mixed models with nested random effects, the name of the
-variable containing the highest-level random effect. If \code{NULL} and
-\code{m} is a mixed model(s), crossed random effects will be assumed
-instead.}
+variable containing the highest-level random effect. For non-nested random
+effects, specify \code{"crossed"}. If argument is not specified and
+\code{m} is a mixed model(s), an error will be thrown.}
 
 \item{R}{Integer, number of bootstrap replicates to generate.}
 
-\item{seed}{Integer, seed for the random number generator (for reproducible
-results).}
+\item{seed}{Integer, seed for the random number generator. If not provided, a
+random five-digit integer is used (see Details).}
 
 \item{catch.err}{Logical, should errors generated during model fitting or
 estimation be caught and \code{NA} returned? If \code{FALSE}, any such
@@ -51,21 +51,28 @@ An object of class \code{boot} containing the bootstrapped
 }
 \description{
 Generate bootstrapped standardised coefficients and correlated
-  errors for a list of models, comprising a piecewise Structural Equation
-  Model (SEM).
+  errors for a list of fitted models, comprising a piecewise Structural
+  Equation Model (SEM).
 }
 \details{
-\code{BootSEM} uses the \code{boot} function (primarily) to
+\code{bootSEM} uses the \code{boot} function (primarily) to
   bootstrap standardised coefficients from a fitted model or list of models
-  (calculated using function \code{stdCoeff}), where bootstrapping is
-  nonparametric, i.e. coefficients are calculated from data where the rows
+  (calculated using \code{stdCoeff}), where bootstrapping is typically
+  nonparametric, i.e. coefficients are calculated using data where the rows
   have been randomly sampled with replacement. The number of replicates is
-  set by default to 10,000, which should ensure accurate coverage for
-  confidence intervals under most scenarios.
+  set by default to 10,000, which should provide accurate coverage for
+  confidence intervals in most situations.
+
+  To ensure that data is resampled in the same way across bootstrap
+  operations, the same seed is set per individual operation, with the value
+  then saved as an additional attribute to all boot objects (for
+  reproducibility). The seed can either be user-supplied or a random
+  five-digit number (default), and is always re-initialised on exit (i.e.
+  \code{set.seed(NULL)}).
 
   Where \code{weights} are specified, bootstrapped coefficients will be a
   weighted average across the set of candidate models for each response
-  variable, calculated after each model is first refitted to the resampled
+  variable, calculated after each model is first refit to the resampled
   dataset (specifying \code{weights = "equal"} will use a simple average
   instead). If no weights are specified and \code{sem} is a nested list of
   models, the function will throw an error, as it will be expecting weights
@@ -78,47 +85,68 @@ Generate bootstrapped standardised coefficients and correlated
   \code{cor.err}, the function will also return bootstrapped Pearson
   correlated errors (residuals) for the models fitting those variables
   (residuals used are the default type returned by \code{resid}). Where
-  weights are supplied and \code{sem} is a nested list, errors are first
-  averaged across candidate models (as for coefficients). If any two models
-  (or candidate sets) with correlated errors were fit to different subsets of
-  data observations, both models/sets are first refit to data containing only
-  the common observations.
+  weights are supplied and \code{sem} is a nested list, errors are averaged
+  across candidate models (as for coefficients) prior to correlating. If any
+  two models (or candidate sets) with correlated errors were fit to different
+  subsets of data observations, both models/sets are first refit to data
+  containing only the common observations.
 
   For mixed models with nested random effects, the highest-level random
-  effect (only) in the dataset is resampled, a procedure which best retains
-  the hierarchical structure of the data (Davison & Hinkley 1997, Ren
-  \emph{et al.} 2010). Lower-level groups or individual data rows are not
-  themselves resampled, either within or across the higher groups. The name
-  of the variable containing this random effect must be supplied to
-  \code{ran.eff}. For non-nested ('crossed') random effects however (assumed
-  when \code{ran.eff = NULL}), this form of resampling will not be
-  appropriate, and (semi-)parametric bootstrapping is performed instead via
-  \code{bootMer} in the \pkg{lme4} package. Users should think carefully
-  about whether their random effects are truly nested or not (see
-  \url{http://bit.ly/2K244jK}). NOTE: As \code{bootMer} takes only a fitted
-  model as its first argument, any model averaging is calculated 'post-hoc'
-  using the estimates in boot objects for each candidate model, rather than
-  during the bootstrapping process itself (i.e. the default procedure using
-  \code{boot} in \code{bootSEM}). Results are then returned in a new boot
-  object for each response variable or correlated error estimate.
+  effect group (only) in the dataset is resampled, a procedure which best
+  retains the hierarchical structure of the data (Davison & Hinkley 1997, Ren
+  \emph{et al.} 2010). Lower-level groups or individual observations are not
+  themselves resampled, as these are not independent. The name of this random
+  effect must be supplied to \code{ran.eff}, matching the name in the data.
+  This type of resampling will result in different sized datasets if
+  observations are unbalanced across groups; however this should not be a
+  problem as the number of independent units (groups), and hence the 'degrees
+  of freedom', remains unchanged (see \url{http://bit.ly/2YFObSE}). For
+  non-nested random effects (\code{ran.eff = "crossed"}), group resampling
+  will not be appropriate, and (semi-)parametric bootstrapping is performed
+  instead via \code{bootMer} in the \pkg{lme4} package. Users should think
+  carefully about whether their random effects are nested or not (see
+  \url{http://bit.ly/2K244jK}). (As \code{bootMer} takes only a fitted model
+  as its first argument, any model averaging is calculated 'post-hoc' using
+  the estimates in boot objects for each candidate model, rather than during
+  the bootstrapping process itself (i.e. the default procedure via
+  \code{boot}). Results are then returned in a new boot object for each
+  response variable or correlated error estimate.)
 
   Parallel processing is used by default via the \pkg{parallel} package and
   option \code{parallel = "snow"} (and is generally recommended), but users
   can specify the type of parallel processing to use, or none. If
-  \code{parallel = "snow"}, a cluster of workers is created using
-  \code{makeCluster}, and the user can specify the number of system cores to
-  incorporate in the cluster (defaults to all available). \code{BootSEM} then
-  exports all required objects and functions to this cluster using
-  \code{clusterExport}, after performing a (rough) match of all objects and
-  functions in the current global environment to those referenced in the
-  model call(s). Users should attach any required packages prior to calling
-  the function.
-
-  NOTE: Bootstrapping mixed (or any other) models may take a very long time
+  \code{"snow"}, a cluster of workers is created using \code{makeCluster},
+  and the user can specify the number of system cores to incorporate in the
+  cluster (defaults to all available). \code{bootSEM} then exports all
+  required objects and functions to this cluster using \code{clusterExport},
+  after performing a (rough) match of all objects and functions in the
+  current global environment to those referenced in the model call(s). Users
+  should load any required external packages prior to calling the function.
+}
+\note{
+Bootstrapping mixed (or any other) models may take a very long time
   when the number of replicates, observations, parameters, and/or models is
   high. To decrease processing time, it may be worth trying different
-  optimizers (e.g. \code{nloptwrap}) and/or other options to generate faster
-  estimates (always check results).
+  optimizers and/or other options to generate faster estimates (always check
+  results).
+}
+\examples{
+## Bootstrap Shipley SEM
+## (set 'site' as random effect group for resampling - highest-level)
+
+\dontrun{
+
+## 45-60 mins with parallel processing and eight cores (YMMV)
+system.time(
+  Shipley.SEM.boot <- bootSEM(Shipley.SEM, ran.eff = "site", seed = 53908)
+)
+}
+
+## Original estimates
+lapply(Shipley.SEM.boot, "[[", 1)
+
+## Bootstrapped estimates
+lapply(Shipley.SEM.boot, function(i) head(i$t))
 }
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
@@ -135,7 +163,7 @@ Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
   \url{https://doi.org/10.1080/02664760903046102}
 }
 \seealso{
-\code{\link[semEff]{stdCoeff}}, \code{\link[semEff]{avgEst}},
-  \code{\link[stats]{resid}}, \code{\link[boot]{boot}},
-  \code{\link[lme4]{bootMer}}
+\code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
+  \code{\link[semEff]{stdCoeff}}, \code{\link[semEff]{avgEst}},
+  \code{\link[stats]{resid}}
 }

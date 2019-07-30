@@ -1,7 +1,9 @@
 
 
 #' @title Determine Class of Objects
-#' @description Functions to determine the class of an R object.
+#' @keywords internal
+#' @description Functions to determine the class of an R object. Intended
+#'   largely for convenience and for internal use.
 #' @param x An R object.
 #' @return A logical value.
 #' @name Class
@@ -19,10 +21,12 @@ isMerMod <- function(x) class(x)[1] %in% c("lmerMod", "glmerMod")
 
 
 #' @title Determine Model Parameter Types
+#' @keywords internal
 #' @description Functions to determine the presence/absence of certain model
-#'   parameters using names.
+#'   parameters using their names. Intended largely for convenience and for
+#'   internal use.
 #' @param x A character vector of parameter names (e.g. names of coefficients
-#'   from \code{\link[stats]{coef}} or \code{\link[semEff]{stdCoeff}}).
+#'   from \code{coef} or \code{stdCoeff}).
 #' @return A logical vector of the same length as \code{x}.
 #' @name Param.Type
 NULL
@@ -54,14 +58,15 @@ isR2 <- function(x) grepl("r.squared", x)
 #'   \code{f(...)}.
 #'
 #'   This is primarily a convenience function used internally to enable
-#'   recursive application of functions to lists or nested lists. However, it's
+#'   recursive application of functions to lists or nested lists. It's
 #'   particular stop condition for recursing is also designed to either a) act
 #'   as a wrapper for \code{f} if the first object in \code{...} is not a list,
 #'   or b) apply a model averaging operation if the first object is a list and
-#'   the second object is a numeric vector of weights.
+#'   the second object is a numeric vector (of weights).
 #' @return The output of \code{f} in a list or nested list, or simplified to a
 #'   vector or matrix.
 #' @seealso \code{\link[base]{mapply}}
+#' @export
 rMapply <- function(f, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
                     USE.NAMES = TRUE) {
   l <- list(...)
@@ -93,19 +98,21 @@ rMapply <- function(f, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 #' @param add.obj A character vector of any additional objects to be exported to
 #'   the cluster for parallel processing. Use if a required object or function
 #'   cannot be found.
-#' @param ... Additional arguments to \code{parSapply} or \code{sapply}.
-#' @details This function is a wrapper for \code{parSapply} from the parallel
-#'   package, enabling (potentially) faster processing of a function over a
-#'   vector of objects. Parallel processing is carried out using a cluster of
-#'   workers, which is automatically set up via \code{makeCluster} using all
-#'   available system cores or a user supplied number of cores. The function
-#'   then exports the required objects and functions to this cluster using
-#'   \code{clusterExport}, after performing a (rough) match of all objects and
-#'   functions in the current global environment to those referenced in the call
-#'   to \code{f} (and also any calls in \code{x}). Any additional required
-#'   objects can be supplied using \code{add.obj}.
+#' @param ... Arguments to \code{parSapply} or \code{sapply}.
+#' @details This function is a wrapper for \code{parSapply} from the
+#'   \pkg{parallel} package, enabling (potentially) faster processing of a
+#'   function over a vector of objects. Parallel processing via option
+#'   \code{"snow"} (default) is carried out using a cluster of workers, which is
+#'   automatically set up via \code{makeCluster} using all available system
+#'   cores or a user supplied number of cores. The function then exports the
+#'   required objects and functions to this cluster using \code{clusterExport},
+#'   after performing a (rough) match of all objects and functions in the
+#'   current global environment to those referenced in the call to \code{f} (and
+#'   also any calls in \code{x}). Any additional required objects can be
+#'   supplied using \code{add.obj}.
 #' @return The output of \code{f} in a list, vector, or matrix.
 #' @seealso \code{\link[parallel]{parSapply}}, \code{\link[base]{sapply}}
+#' @export
 pSapply <- function(x, f, parallel = "snow", ncpus = NULL, cl = NULL,
                     add.obj = NULL, ...) {
 
@@ -130,10 +137,10 @@ pSapply <- function(x, f, parallel = "snow", ncpus = NULL, cl = NULL,
       xc <- P(unlist(rMapply(function(i) {
         if (isMod(i) || isBoot(i)) P(getCall(i))
       }, x)))
-      fa <- P(sapply(match.call(expand.dots = F)$..., deparse))
+      fa <- P(sapply(match.call(expand.dots = FALSE)$..., deparse))
       fc <- P(xc, enquote(f)[2], fa)
       o <- unlist(lapply(search(), ls))
-      o <- o[sapply(o, function(i) grepl(i, fc, fixed = T))]
+      o <- o[sapply(o, function(i) grepl(i, fc, fixed = TRUE))]
       parallel::clusterExport(cl, c("x", o, ao), environment())
 
     }

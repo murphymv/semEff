@@ -2,11 +2,11 @@
 % Please edit documentation in R/sem_eff_functions.R
 \name{predEff}
 \alias{predEff}
-\title{SEM Effect Predictions}
+\title{Predict SEM Effects}
 \usage{
 predEff(m, newdata = NULL, effects = NULL, eff.boot = NULL,
-  type = "link", interaction = NULL, seed = 1, ci.conf = 0.95,
-  ci.type = "bca", digits = 3, bci.arg = NULL, parallel = "no",
+  re.form = NA, type = "link", ci.conf = 0.95, ci.type = "bca",
+  interaction = NULL, digits = 3, bci.arg = NULL, parallel = "no",
   ncpus = NULL, cl = NULL, ...)
 }
 \arguments{
@@ -14,38 +14,41 @@ predEff(m, newdata = NULL, effects = NULL, eff.boot = NULL,
 \code{merMod}, or a list or nested list of such objects.}
 
 \item{newdata}{An optional data frame of new values to predict from, which
-should contain all the variables used to fit \code{m}, or all those named
-in \code{effects}.}
+should contain all the variables named in \code{effects}, or all those used
+to fit \code{m}.}
 
 \item{effects}{A numeric vector of effects to predict, or a list or nested
-list of such vectors.}
+list of such vectors. Can be effects/estimates from \code{semEff},
+\code{bootSEM}, or \code{stdCoeff}.}
 
 \item{eff.boot}{A matrix of bootstrapped effects used to calculate confidence
-intervals for predictions, or a list or nested list of such matrices.}
+intervals for predictions, or a list or nested list of such matrices. Can
+be bootstrapped effects/estimates from \code{semEff} or \code{bootSEM}.}
+
+\item{re.form}{For mixed models of class \code{merMod}, the formula for
+random effects to condition on when predicting effects. Defaults to
+\code{NA}, meaning no random effects are included. See
+\code{\link[lme4]{predict.merMod}} for further specification details.}
 
 \item{type}{The type of prediction to return (for GLM's). Can be either
 \code{"link"} (default) or \code{"response"}.}
 
-\item{interaction}{An optional name of an interactive effect, for which to
-return standardised effects for the main (continuous) variable across
-different values or levels of interacting variables (see Details). The name
-should be of the form \code{"a:b:..."}, containing all the variables
-involved and matching the name of an interactive effect present in model(s)
-coefficients or in \code{effects}.}
-
-\item{seed}{Integer, seed for the random number generator (for reproducible
-results). This should be set to the same value originally set for
-boostrapping effects.}
-
 \item{ci.conf}{A numeric value specifying the confidence level for confidence
-intervals on predictions (and optional interactive effects).}
+intervals on predictions (and any interactive effects).}
 
-\item{ci.type}{The type of confidence interval to return. Can be one of
-\code{c("norm","basic", "stud", "perc", "bca")} (see
-\code{\link[boot]{boot.ci}}). Defaults to \code{"bca"} (see Details).}
+\item{ci.type}{The type of confidence interval to return (defaults to
+\code{"bca"} - see Details). See \code{\link[boot]{boot.ci}} for further
+specification details.}
 
-\item{digits}{The number of significant digits to return for numeric values
-(for interactive effects only).}
+\item{interaction}{An optional name of an interactive effect, for which to
+return standardised effects for predictions of a main (continuous) variable
+across different values or levels of interacting variables (see Details).
+The name should be of the form \code{"a:b"} or \code{"a:b:c"} etc.,
+containing all the variables involved and matching the name of an
+interactive effect in the model(s) terms or in \code{effects}.}
+
+\item{digits}{The number of significant digits to return for interactive
+effects.}
 
 \item{bci.arg}{A named list of additional arguments to \code{boot.ci}, which
 should not include argument \code{index}.}
@@ -63,10 +66,10 @@ If \code{NULL} (default), all available cores are used.}
 \item{...}{Arguments to \code{stdCoeff}.}
 }
 \value{
-A numeric vector of the predictions; or, if bootstrapped effects are
+A numeric vector of the predictions, or, if bootstrapped effects are
   supplied, a list containing the predictions and the upper and lower
-  confidence intervals. Optional interactive effects may also be appended to
-  the output.
+  confidence intervals. Optional interactive effects (and confidence
+  intervals) may also be appended.
 }
 \description{
 Generate predicted values for SEM direct, indirect, or total
@@ -75,36 +78,105 @@ Generate predicted values for SEM direct, indirect, or total
 \details{
 This function can be used to generate predicted values for SEM
   direct, indirect, or total effects on a response variable (arising via
-  function \code{semEff}), which should be supplied to argument
-  \code{effects}. The standard prediction formula is used, except that
-  effects are used in place of model coefficients, with values for predictors
-  drawn from the original model data (or from \code{newdata}). Fully
-  standardised effects will be assumed, but if this is not the case then the
-  same standardisation options as were applied originally (via
-  \code{stdCoeff}) should be specified to the function. If no effects are
+  \code{semEff}), which should be supplied to \code{effects}. These are used
+  in place of model coefficients in the standard prediction formula, with
+  values for predictors drawn from either the data used to fit the original
+  model(s) (\code{m}) or from \code{newdata}. It is assumed that effects are
+  fully standardised; however, if this is not the case, then the same
+  standardisation options originally specified in \code{stdCoeff} should be
+  re-specified - which will be used to standardise data. If no effects are
   supplied, standardised coefficients will be calculated and used to generate
-  predictions (these will equal the model(s) fitted values if \code{unique.x
-  = F} and \code{newdata = NULL}). In addition, model averaged predictions
-  can be generated if \code{m} is a list and \code{weights} are supplied
-  (passed to \code{stdCoeff}) - but only if no effects are supplied.
+  predictions. These will equal the model(s) fitted values if \code{newdata =
+  NULL}, \code{unique.x = FALSE}, and \code{re.form = NULL} (where
+  applicable).
 
-  If bootstrapped effects are also supplied (to \code{eff.boot}),
-  bootstrapped predictions are calculated by predicting from each effect.
+  Model-averaged predictions can be generated if averaged \code{effects} are
+  supplied to the model \code{m}, or alternatively, if \code{weights} are
+  specified (passed to \code{stdCoeff}) and \code{m} is a list of candidate
+  models (n.b. \code{effects} can also be passed using the latter method).
+  For mixed model predictions where random effects are included (e.g.
+  \code{re.form = NULL}), the latter approach should be used, otherwise the
+  contribution of random effects will be taken from the single model \code{m}
+  instead of (correctly) being averaged over a candidate set.
+
+  If bootstrapped effects are supplied to \code{eff.boot}, bootstrapped
+  predictions are calculated by predicting from each bootstrapped effect.
   Confidence intervals can then be returned, for which the \code{type} should
   be appropriate for the original form of bootstrap sampling (defaults to
   \code{"bca"}). If the number of observations to predict is very large,
   parallel processing may speed up the calculation of intervals.
 
-  Predictions are always returned in the original (typically unstandardised)
-  units of the (link-)response variable. For GLM's, they can be converted to
-  the response scale if \code{type = "response"}.
+  Predictions are always returned in the original units of the
+  (link-)response variable. For GLM's, these can be converted back to the
+  response scale if \code{type = "response"}.
 
   If the name of an interactive effect is supplied to \code{interaction},
-  standardised effects (and confidence intervals) can be returned for
-  predictions of a continuous 'main' variable across specified values or
-  levels of interacting variable(s). The values of the variables to predict
-  must be supplied to \code{newdata}, with the continuous variable being
-  identified automatically as having the most unique values.
+  standardised effects (and confidence intervals) can be calculated and
+  returned for predictions of a continuous 'main' variable across specified
+  values or levels of an interacting variable(s). The values of all variables
+  should be suppied to \code{newdata}, with the main variable being
+  automatically identified as having the most unique values.
+}
+\examples{
+## Predict effects (direct, total)
+m <- Shipley.SEM
+e <- Shipley.SEM.eff
+dir <- direct(e)
+tot <- total(e)
+f.dir <- predEff(m, effects = dir, type = "response")
+f.tot <- predEff(m, effects = tot, type = "response")
+
+## Using new data for predictors
+d <- na.omit(Shipley)
+xn <- c("lat", "DD", "Date", "Growth")
+seq100 <- function(x) seq(min(x), max(x), length = 100)
+nd <- data.frame(sapply(d[xn], seq100))
+f.dir <- predEff(m, nd, dir, type = "response")
+f.tot <- predEff(m, nd, tot, type = "response")
+
+## Add CI's
+\dontrun{
+
+dir.b <- direct(e, "boot")
+tot.b <- total(e, "boot")
+f.dir <- predEff(m, nd, dir, dir.b, type = "response")
+f.tot <- predEff(m, nd, tot, tot.b, type = "response")
+}
+
+## Predict an interactive effect (e.g. Live ~ Growth * DD)
+xn <- c("Growth", "DD")
+d[xn] <- scale(d[xn])  # standardise predictors (improves fit)
+m <- lme4::glmer(Live ~ Growth * DD + (1 | site) + (1 | tree),
+                 family = binomial, data = d)
+nd <- with(d, expand.grid(
+  Growth = seq100(Growth),
+  DD = mean(DD) + c(-sd(DD), sd(DD))  # two levels for DD
+))
+f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
+
+## Add CI's (need to bootstrap model... could take a while)
+\dontrun{
+
+system.time(mb <- bootSEM(m, ran.eff = "site", R = 1000))
+est <- mb$t0; est.b <- mb$t  # estimates
+f <- predEff(m, nd, est, est.b, type = "response", interaction = "Growth:DD")
+}
+
+## Model-averaged predictions (several approaches)
+m <- Shipley.Growth  # candidate models (list)
+w <- runif(length(m), 0, 1)  # weights
+e <- stdCoeff(m, w)  # averaged effects
+f1 <- predEff(m[[1]], effects = e)  # pass avg. effects
+f2 <- predEff(m, weights = w)  # pass weights argument
+f3 <- avgEst(predEff(m), w)  # use avgEst function
+stopifnot(all.equal(f1, f2))
+stopifnot(all.equal(f2, f3))
+
+## Compare model fitted values from 'predEff' to 'predict'
+m <- Shipley.SEM$Growth
+f1 <- predEff(m, unique.x = FALSE, re.form = NULL)
+f2 <- predict(m)
+stopifnot(all.equal(f1, f2))
 }
 \seealso{
 \code{\link[semEff]{semEff}}, \code{\link[semEff]{stdCoeff}},
