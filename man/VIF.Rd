@@ -55,5 +55,6 @@ Fox, J. and Monette, G. (1992) Generalized Collinearity
   \strong{87}, 178-183. \url{https://doi.org/10.2307/2290467}
 }
 \seealso{
-\code{\link[car]{vif}}
+\href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
+vif (web)}
 }

@@ -13,7 +13,6 @@ Description: This package provides functionality to automatically calculate
 Depends: R (>= 3.6.0)
 Imports: 
     boot,
-    car,
     lme4,
     parallel,
     stats,

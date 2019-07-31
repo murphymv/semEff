@@ -427,7 +427,9 @@ getY <- function(m, family = NULL, data = NULL, link = FALSE, ...) {
 #' @references Fox, J. and Monette, G. (1992) Generalized Collinearity
 #'   Diagnostics. \emph{Journal of the American Statistical Association}
 #'   \strong{87}, 178-183. \url{https://doi.org/10.2307/2290467}
-#' @seealso \code{\link[car]{vif}}
+#' @seealso
+#' \href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
+#' vif (web)}
 #' @examples
 #' ## Model with two correlated terms
 #' m <- Shipley.Growth[[3]]
