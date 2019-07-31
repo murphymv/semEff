@@ -42,7 +42,7 @@ A numeric vector of the standardised coefficients, or a list or
 }
 \description{
 Calculate fully standardised model coefficients in standard
-  deviation units, adjusted for multicollinearity among predictors.
+  deviation units, and adjusted for multicollinearity among predictors.
 }
 \details{
 This function will calculate fully standardised coefficients in
@@ -82,7 +82,7 @@ This function will calculate fully standardised coefficients in
   In addition, if \code{std.x = TRUE} or \code{unique.x = TRUE} (see below),
   product terms for interactive effects will be recalculated using
   mean-centred variables, to ensure that standard deviations and variance
-  inflation factors for predictors are calculated correctly (the model will
+  inflation factors for predictors are calculated correctly (the model must
   be re-fit for this latter purpose, to recalculate the variance-covariance
   matrix).
 

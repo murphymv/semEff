@@ -35,8 +35,7 @@ This function can be used to extract term names from a fitted model.
   is rank deficient.
 }
 \examples{
-## Fit a test model with different types of predictor
-## (some multi-coefficient terms)
+## Model with different types of predictor (some multi-coefficient terms)
 y <- rnorm(100)  # response
 x1 <- poly(rnorm(100), 2)  # polynomial
 x2 <- as.factor(rep(c("a", "b", "c", "d"), each = 25))  # categorical

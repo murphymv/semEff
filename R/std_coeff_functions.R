@@ -72,16 +72,17 @@ sdW <- function(...) {
 #'   is rank deficient.
 #' @return A character vector or named list of term names.
 #' @examples
-#' ## Fit a test model with different types of predictor
-#' ## (some multi-coefficient terms)
-#' y <- rnorm(100)  # response
+#' ## Term names from Shipley SEM
+#' m <- Shipley.SEM
+#' xNam(m)
+#' xNam(m, intercept = FALSE)  # only predictors
+#'
+#' ## Model with different types of predictor (some multi-coefficient terms)
 #' x1 <- poly(rnorm(100), 2)  # polynomial
 #' x2 <- as.factor(rep(c("a", "b", "c", "d"), each = 25))  # categorical
 #' x3 <- rep(1, 100)  # no variation
-#' m <- lm(y ~ x1 + x2 + x3)
-#'
-#' ## Term names
-#' xNam(m)  # all
+#' m <- lm(rnorm(100) ~ x1 + x2 + x3)
+#' xNam(m)
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 #' xNam(m, aliased = FALSE, list = TRUE)  # as named list
 #' @export
@@ -123,7 +124,7 @@ xNam <- function(m, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
   }
 
   ## Apply recursively
-  rMapply(xNam, m)
+  rMapply(xNam, m, SIMPLIFY = FALSE)
 
 }
 
@@ -428,15 +429,16 @@ getY <- function(m, family = NULL, data = NULL, link = FALSE, ...) {
 #'   \strong{87}, 178-183. \url{https://doi.org/10.2307/2290467}
 #' @seealso \code{\link[car]{vif}}
 #' @examples
-#' ## Fit a test model with different types of predictor
-#' ## (some multi-coefficient terms)
-#' y <- rnorm(100)  # response
+#' ## Model with two correlated terms
+#' m <- Shipley.Growth[[3]]
+#' VIF(m)  # Date & DD somewhat correlated
+#' VIF(update(m, . ~ . - DD))  # drop DD
+#'
+#' ## Model with different types of predictor (some multi-coefficient terms)
 #' x1 <- poly(rnorm(100), 2)  # polynomial
 #' x2 <- as.factor(rep(c("a", "b", "c", "d"), each = 25))  # categorical
 #' x3 <- rep(1, 100)  # no variation
-#' m <- lm(y ~ x1 + x2 + x3)
-#'
-#' ## VIF's
+#' m <- lm(rnorm(100) ~ x1 + x2 + x3)
 #' VIF(m)
 #' @export
 VIF <- function(m, data = NULL, ...) {
@@ -633,9 +635,8 @@ VIF <- function(m, data = NULL, ...) {
 #' R2(Shipley.SEM, re.form = ~ (1 | site))  # fixed + 'site'
 #' R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
 #'
-#' ## Predicted R-squared:
-#' ## Compare cross-validated predictions calculated/approximated via the hat
-#' ## matrix to standard method (leave-one-out)
+#' ## Predicted R-squared: compare cross-validated predictions calculated/
+#' ## approximated via the hat matrix to more standard method (leave-one-out)
 #'
 #' \dontrun{
 #'
@@ -845,7 +846,7 @@ avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
 
 #' @title Standardised Coefficients
 #' @description Calculate fully standardised model coefficients in standard
-#'   deviation units, adjusted for multicollinearity among predictors.
+#'   deviation units, and adjusted for multicollinearity among predictors.
 #' @param m A fitted model object of class \code{lm}, \code{glm}, or
 #'   \code{merMod}, or a list or nested list of such objects.
 #' @param weights An optional numeric vector of weights to use for model
@@ -901,7 +902,7 @@ avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
 #'   In addition, if \code{std.x = TRUE} or \code{unique.x = TRUE} (see below),
 #'   product terms for interactive effects will be recalculated using
 #'   mean-centred variables, to ensure that standard deviations and variance
-#'   inflation factors for predictors are calculated correctly (the model will
+#'   inflation factors for predictors are calculated correctly (the model must
 #'   be re-fit for this latter purpose, to recalculate the variance-covariance
 #'   matrix).
 #'

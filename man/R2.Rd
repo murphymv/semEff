@@ -122,9 +122,8 @@ R2(Shipley.SEM, re.form = ~ (1 | tree))  # fixed + 'tree'
 R2(Shipley.SEM, re.form = ~ (1 | site))  # fixed + 'site'
 R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
 
-## Predicted R-squared:
-## Compare cross-validated predictions calculated/approximated via the hat
-## matrix to standard method (leave-one-out)
+## Predicted R-squared: compare cross-validated predictions calculated/
+## approximated via the hat matrix to more standard method (leave-one-out)
 
 \dontrun{
 
