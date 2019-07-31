@@ -43,11 +43,10 @@ VIF(m)  # Date & DD somewhat correlated
 VIF(update(m, . ~ . - DD))  # drop DD
 
 ## Model with different types of predictor (some multi-coefficient terms)
-y <- rnorm(100)  # response
 x1 <- poly(rnorm(100), 2)  # polynomial
 x2 <- as.factor(rep(c("a", "b", "c", "d"), each = 25))  # categorical
 x3 <- rep(1, 100)  # no variation
-m <- lm(y ~ x1 + x2 + x3)
+m <- lm(rnorm(100) ~ x1 + x2 + x3)
 VIF(m)
 }
 \references{
