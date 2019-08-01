@@ -23,10 +23,10 @@ variable containing the highest-level random effect. For non-nested random
 effects, specify \code{"crossed"}. If argument is not specified and
 \code{m} is a mixed model(s), an error will be thrown.}
 
-\item{R}{Integer, number of bootstrap replicates to generate.}
+\item{R}{Number of bootstrap replicates to generate.}
 
-\item{seed}{Integer, seed for the random number generator. If not provided, a
-random five-digit integer is used (see Details).}
+\item{seed}{Seed for the random number generator. If not provided, a random
+five-digit integer is used (see Details).}
 
 \item{catch.err}{Logical, should errors generated during model fitting or
 estimation be caught and \code{NA} returned? If \code{FALSE}, any such
@@ -35,8 +35,8 @@ errors will cause the function to exit.}
 \item{parallel}{The type of parallel processing to use. Can be one of
 \code{"snow"}, \code{"multicore"}, or \code{"no"} (for none).}
 
-\item{ncpus}{Integer, number of system cores to use for parallel processing.
-If \code{NULL} (default), all available cores are used.}
+\item{ncpus}{Number of system cores to use for parallel processing. If
+\code{NULL} (default), all available cores are used.}
 
 \item{cl}{Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 (default), a local cluster is created using the specified number of cores.}
@@ -151,16 +151,14 @@ lapply(Shipley.SEM.boot, function(i) head(i$t))
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-  ed.). New York: Springer-Verlag. Retrieved from
-  \url{https://www.springer.com/gb/book/9780387953649}
+  ed.). New York: Springer-Verlag. Retrieved from \url{http://bit.ly/2MwlTHa}
 
   Davison, A. C., & Hinkley, D. V. (1997). \emph{Bootstrap Methods and their
   Application}. Cambridge University Press.
 
   Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
   Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
-  Statistics}, \strong{37}(9), 1487–1498.
-  \url{https://doi.org/10.1080/02664760903046102}
+  Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
 }
 \seealso{
 \code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},

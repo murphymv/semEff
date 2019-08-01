@@ -161,19 +161,16 @@ stdCoeff(m, w)
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-  ed.). New York: Springer-Verlag. Retrieved from
-  \url{https://www.springer.com/gb/book/9780387953649}
+  ed.). New York: Springer-Verlag. Retrieved from \url{http://bit.ly/2MwlTHa}
 
   Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
   Independent Variables in Linear Regression. \emph{Multivariate Behavioral
-  Research}, \strong{51}(2-3), 139-153.
-  \url{https://doi.org/10.1080/00273171.2015.1121372}
+  Research}, \strong{51}(2-3), 139-153. \url{https://doi.org/gfww3f}
 
   Thompson, C. G., Kim, R. S., Aloe, A. M., & Becker, B. J. (2017).
   Extracting the Variance Inflation Factor and Other Multicollinearity
   Diagnostics from Typical Regression Results. \emph{Basic and Applied Social
-  Psychology}, \strong{39}(2), 81-90.
-  \url{https://doi.org/10.1080/01973533.2016.1277529}
+  Psychology}, \strong{39}(2), 81-90. \url{https://doi.org/gfww2w}
 }
 \seealso{
 \code{\link[stats]{coef}}, \code{\link[semEff]{VIF}},

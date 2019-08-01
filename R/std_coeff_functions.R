@@ -279,21 +279,20 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 #' @return A numeric vector comprising the response variable in the original or
 #'   link scale, or an array, list or nested list of such vectors.
 #' @references Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
-#'  (2018) Quantifying relative importance: computing standardized effects in
-#'  models with binary outcomes. \emph{Ecosphere} \strong{9}, e02283.
-#'  \url{https://doi.org/10.1002/ecs2.2283}
+#'   (2018) Quantifying relative importance: computing standardized effects in
+#'   models with binary outcomes. \emph{Ecosphere} \strong{9}, e02283.
+#'   \url{https://doi.org/gdm5bj}
 #'
-#'  McCullagh P. and Nelder, J. A. (1989) \emph{Generalized Linear Models} (2nd
-#'  Edition). London: Chapman and Hall.
+#'   McCullagh P. and Nelder, J. A. (1989) \emph{Generalized Linear Models} (2nd
+#'   Edition). London: Chapman and Hall.
 #'
-#'  McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
-#'  of ordinal level dependent variables. \emph{The Journal of Mathematical
-#'  Sociology}, \strong{4}(1), 103-120.
-#'  \url{https://doi.org/10.1080/0022250x.1975.9989847}
+#'   McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
+#'   of ordinal level dependent variables. \emph{The Journal of Mathematical
+#'   Sociology}, \strong{4}(1), 103-120. \url{https://doi.org/dqfhpp}
 #'
-#'  Menard, S. (2011) Standards for Standardized Logistic Regression
-#'  Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
-#'  \url{https://doi.org/10.1093/sf/89.4.1409}
+#'   Menard, S. (2011) Standards for Standardized Logistic Regression
+#'   Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
+#'   \url{https://doi.org/bvxb6s}
 #' @seealso \code{\link[stats]{glm.fit}}, \code{\link[base]{all.equal}}
 #' @examples
 #' ## SEM responses (original scale)
@@ -426,7 +425,7 @@ getY <- function(m, family = NULL, data = NULL, link = FALSE, ...) {
 #'   such vectors.
 #' @references Fox, J. and Monette, G. (1992) Generalized Collinearity
 #'   Diagnostics. \emph{Journal of the American Statistical Association}
-#'   \strong{87}, 178-183. \url{https://doi.org/10.2307/2290467}
+#'   \strong{87}, 178-183. \url{https://doi.org/dm9wbw}
 #' @seealso
 #' \href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
 #' vif (web)}
@@ -607,29 +606,24 @@ VIF <- function(m, data = NULL, ...) {
 #'   nested list of such vectors.
 #' @references Allen, D. M. (1974). The Relationship Between Variable Selection
 #'   and Data Agumentation and a Method for Prediction. \emph{Technometrics},
-#'   \strong{16}(1), 125-127.
-#'   \url{https://doi.org/10.1080/00401706.1974.10489157}
+#'   \strong{16}(1), 125-127. \url{https://doi.org/gfgv57}
 #'
 #'   Kvalseth, T. O. (1985) Cautionary Note about R2. \emph{The American
-#'   Statistician}, \strong{39}(4), 279-285.
-#'   \url{https://doi.org/10.2307/2683704}
+#'   Statistician}, \strong{39}(4), 279-285. \url{https://doi.org/b8b782}
 #'
 #'   Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
 #'   determination R2 and intra-class correlation coefficient from generalized
 #'   linear mixed-effects models revisited and expanded. \emph{Journal of the
-#'   Royal Society Interface} \strong{14}(134).
-#'   \url{https://doi.org/10.1098/rsif.2017.0213}
+#'   Royal Society Interface} \strong{14}(134). \url{https://doi.org/gddpnq}
 #'
 #'   Yin, P. and Fan, X. (2001) Estimating R2 Shrinkage in Multiple Regression:
 #'   A Comparison of Different Analytical Methods. \emph{The Journal of
 #'   Experimental Education} \strong{69}(2), 203-224.
-#'   \url{https://doi.org/10.1080/00220970109600656}
+#'   \url{https://doi.org/fbdq5g}
 #'
 #'   Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
 #'   generalized linear model. \emph{Statistics in Medicine} \strong{19}(13),
-#'   1771-1781.
-#'   \url{https://doi.org/10.1002/1097-0258(20000715)19:13<1771::aid-sim485>3.0
-#'   .co;2-p}
+#'   1771-1781. \url{https://doi.org/db7rfv}
 #' @examples
 #' ## Pseudo R-squared for mixed models
 #' R2(Shipley.SEM)  # fixed + random
@@ -764,28 +758,27 @@ R2 <- function(m, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
 #'   vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
 #'   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-#'   ed.). New York: Springer-Verlag. Retrieved from
-#'   \url{https://www.springer.com/gb/book/9780387953649}
+#'   ed.). New York: Springer-Verlag. Retrieved from \url{http://bit.ly/2MwlTHa}
 #'
 #'   Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
 #'   selection and multimodel inference in behavioral ecology: some background,
 #'   observations, and comparisons. \emph{Behavioral Ecology and Sociobiology},
-#'   \strong{65}(1), 23-35. \url{https://doi.org/10.1007/s00265-010-1029-6}
+#'   \strong{65}(1), 23-35. \url{https://doi.org/c4mrns}
 #'
 #'   Dormann, C. F., Calabrese, J. M., Guillera-Arroita, G., Matechou, E., Bahn,
 #'   V., Barton, K., ... Hartig, F. (2018). Model averaging in ecology: a review
 #'   of Bayesian, information-theoretic, and tactical approaches for predictive
 #'   inference. \emph{Ecological Monographs}, \strong{88}(4), 485-504.
-#'   \url{https://doi.org/10.1002/ecm.1309}
+#'   \url{https://doi.org/gfgwrv}
 #'
 #'   Grueber, C. E., Nakagawa, S., Laws, R. J., & Jamieson, I. G. (2011).
 #'   Multimodel inference in ecology and evolution: challenges and solutions.
 #'   \emph{Journal of Evolutionary Biology}, \strong{24}(4), 699-711.
-#'   \url{https://doi.org/10.1111/j.1420-9101.2010.02210.x}
+#'   \url{https://doi.org/b7b5d4}
 #'
 #'   Walker, J. A. (2019). Model-averaged regression coefficients have a
 #'   straightforward interpretation using causal conditioning. \emph{BioRxiv},
-#'   133785. \url{https://doi.org/10.1101/133785}
+#'   133785. \url{https://doi.org/c8zt}
 #' @seealso \code{\link[stats]{weighted.mean}}
 #' @examples
 #' ## Model-averaged coefficients
@@ -948,19 +941,16 @@ avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
 #'   nested list of such vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
 #'   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-#'   ed.). New York: Springer-Verlag. Retrieved from
-#'   \url{https://www.springer.com/gb/book/9780387953649}
+#'   ed.). New York: Springer-Verlag. Retrieved from \url{http://bit.ly/2MwlTHa}
 #'
 #'   Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 #'   Independent Variables in Linear Regression. \emph{Multivariate Behavioral
-#'   Research}, \strong{51}(2-3), 139-153.
-#'   \url{https://doi.org/10.1080/00273171.2015.1121372}
+#'   Research}, \strong{51}(2-3), 139-153. \url{https://doi.org/gfww3f}
 #'
 #'   Thompson, C. G., Kim, R. S., Aloe, A. M., & Becker, B. J. (2017).
 #'   Extracting the Variance Inflation Factor and Other Multicollinearity
 #'   Diagnostics from Typical Regression Results. \emph{Basic and Applied Social
-#'   Psychology}, \strong{39}(2), 81-90.
-#'   \url{https://doi.org/10.1080/01973533.2016.1277529}
+#'   Psychology}, \strong{39}(2), 81-90. \url{https://doi.org/gfww2w}
 #' @seealso \code{\link[stats]{coef}}, \code{\link[semEff]{VIF}},
 #'   \code{\link[semEff]{getY}}, \code{\link[semEff]{R2}},
 #'   \code{\link[semEff]{avgEst}}

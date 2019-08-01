@@ -14,16 +14,16 @@
 #'   variable containing the highest-level random effect. For non-nested random
 #'   effects, specify \code{"crossed"}. If argument is not specified and
 #'   \code{m} is a mixed model(s), an error will be thrown.
-#' @param R Integer, number of bootstrap replicates to generate.
-#' @param seed Integer, seed for the random number generator. If not provided, a
-#'   random five-digit integer is used (see Details).
+#' @param R Number of bootstrap replicates to generate.
+#' @param seed Seed for the random number generator. If not provided, a random
+#'   five-digit integer is used (see Details).
 #' @param catch.err Logical, should errors generated during model fitting or
 #'   estimation be caught and \code{NA} returned? If \code{FALSE}, any such
 #'   errors will cause the function to exit.
 #' @param parallel The type of parallel processing to use. Can be one of
 #'   \code{"snow"}, \code{"multicore"}, or \code{"no"} (for none).
-#' @param ncpus Integer, number of system cores to use for parallel processing.
-#'   If \code{NULL} (default), all available cores are used.
+#' @param ncpus Number of system cores to use for parallel processing. If
+#'   \code{NULL} (default), all available cores are used.
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param bM.arg A named list of additional arguments to \code{bootMer}.
@@ -105,16 +105,14 @@
 #'   coefficients, or a list/nested list of such objects.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
 #'   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-#'   ed.). New York: Springer-Verlag. Retrieved from
-#'   \url{https://www.springer.com/gb/book/9780387953649}
+#'   ed.). New York: Springer-Verlag. Retrieved from \url{http://bit.ly/2MwlTHa}
 #'
 #'   Davison, A. C., & Hinkley, D. V. (1997). \emph{Bootstrap Methods and their
 #'   Application}. Cambridge University Press.
 #'
 #'   Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
 #'   Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
-#'   Statistics}, \strong{37}(9), 1487–1498.
-#'   \url{https://doi.org/10.1080/02664760903046102}
+#'   Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
 #' @seealso \code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
 #'   \code{\link[semEff]{stdCoeff}}, \code{\link[semEff]{avgEst}},
 #'   \code{\link[stats]{resid}}
@@ -480,22 +478,20 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
 #'   confidence intervals, or a list of same.
 #' @references Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
 #'   Bootstrap Confidence Intervals. \emph{American Journal of Mathematical and
-#'   Management Sciences}, \strong{29}(3–4), 437–456.
-#'   \url{https://doi.org/10.1080/01966324.2009.10737767}
+#'   Management Sciences}, \strong{29}(3–4), 437–456. \url{https://doi.org/c8zv}
 #'
 #'   Efron, B. (1987). Better Bootstrap Confidence Intervals. \emph{Journal of
 #'   the American Statistical Association}, \strong{82}(397), 171–185.
-#'   \url{https://doi.org/10.1080/01621459.1987.10478410}
+#'   \url{https://doi.org/gfww2z}
 #'
 #'   Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
 #'   Resampling in the Undergraduate Statistics Curriculum. \emph{The American
-#'   Statistician}, \strong{69}(4), 371–386.
-#'   \url{https://doi.org/10.1080/00031305.2015.1089789}
+#'   Statistician}, \strong{69}(4), 371–386. \url{https://doi.org/gd85v5}
 #'
 #'   Puth, M.-T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of
 #'   methods for calculating confidence intervals by bootstrapping.
 #'   \emph{Journal of Animal Ecology}, \strong{84}(4), 892–897.
-#'   \url{https://doi.org/10.1111/1365-2656.12382}
+#'   \url{https://doi.org/f8n9rq}
 #' @seealso \code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootSEM}}
 #' @examples
 #' ## CI's from bootstrapped SEM

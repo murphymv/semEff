@@ -151,21 +151,20 @@ all.equal(yl, log(y), check.names = FALSE, tolerance = .Machine$double.eps)
 }
 \references{
 Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
- (2018) Quantifying relative importance: computing standardized effects in
- models with binary outcomes. \emph{Ecosphere} \strong{9}, e02283.
- \url{https://doi.org/10.1002/ecs2.2283}
+  (2018) Quantifying relative importance: computing standardized effects in
+  models with binary outcomes. \emph{Ecosphere} \strong{9}, e02283.
+  \url{https://doi.org/gdm5bj}
 
- McCullagh P. and Nelder, J. A. (1989) \emph{Generalized Linear Models} (2nd
- Edition). London: Chapman and Hall.
+  McCullagh P. and Nelder, J. A. (1989) \emph{Generalized Linear Models} (2nd
+  Edition). London: Chapman and Hall.
 
- McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
- of ordinal level dependent variables. \emph{The Journal of Mathematical
- Sociology}, \strong{4}(1), 103-120.
- \url{https://doi.org/10.1080/0022250x.1975.9989847}
+  McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
+  of ordinal level dependent variables. \emph{The Journal of Mathematical
+  Sociology}, \strong{4}(1), 103-120. \url{https://doi.org/dqfhpp}
 
- Menard, S. (2011) Standards for Standardized Logistic Regression
- Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
- \url{https://doi.org/10.1093/sf/89.4.1409}
+  Menard, S. (2011) Standards for Standardized Logistic Regression
+  Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
+  \url{https://doi.org/bvxb6s}
 }
 \seealso{
 \code{\link[stats]{glm.fit}}, \code{\link[base]{all.equal}}

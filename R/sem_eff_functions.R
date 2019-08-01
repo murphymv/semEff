@@ -8,14 +8,9 @@
 #'   containing bootstrapped estimates from fitted models, or, alternatively, a
 #'   named list/nested list of fitted model objects (class \code{lm},
 #'   \code{glm}, or \code{lmerMod}).
-#' @param predictors A character vector of names of predictor variables for
-#'   which to calculate effects. If \code{NULL} (default), all predictor
-#'   variables will be used.
-#' @param mediators A character vector of names of mediating variables through
-#'   which indirect effects will be calculated. If \code{NULL} (default), all
-#'   endogenous predictor variables will be used.
-#' @param responses A character vector of names of response variables for which
-#'   to calculate effects. If \code{NULL} (default), all endogenous variables
+#' @param predictors,mediators,responses Character vector(s) of names of variables for (or through)
+#'   which to calculate effects (character vector(s)). If \code{NULL} (default), all predictors,
+#'   endogenous predictors (mediators), and endogenous variables (responses)
 #'   will be used.
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on effects.
@@ -74,54 +69,52 @@
 #'   and confidence intervals}
 #' @references Cheung, M. W. L. (2009). Comparison of methods for constructing
 #'   confidence intervals of standardized indirect effects. \emph{Behavior
-#'   Research Methods}, \strong{41}(2), 425-438.
-#'   \url{https://doi.org/10.3758/brm.41.2.425}
+#'   Research Methods}, \strong{41}(2), 425-438. \url{https://doi.org/fnx7xk}
 #'
 #'   Hayes, A. F., & Scharkow, M. (2013). The Relative Trustworthiness of
 #'   Inferential Tests of the Indirect Effect in Statistical Mediation Analysis:
 #'   Does Method Really Matter? \emph{Psychological Science}, \strong{24}(10),
-#'   1918-1927. \url{https://doi.org/10.1177/0956797613480187}
+#'   1918-1927. \url{https://doi.org/bbhr}
 #'
 #'   Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
 #'   modelling in \code{R} for ecology, evolution, and systematics.
 #'   \emph{Methods in Ecology and Evolution}, \strong{7}(5), 573-579.
-#'   \url{https://doi.org/10.1111/2041-210x.12512}
+#'   \url{https://doi.org/f8s8rb}
 #'
 #'   MacKinnon, D. P., Lockwood, C. M., & Williams, J. (2004). Confidence Limits
 #'   for the Indirect Effect: Distribution of the Product and Resampling
 #'   Methods. \emph{Multivariate Behavioral Research}, \strong{39}(1), 99.
-#'   \url{https://doi.org/10.1207/s15327906mbr3901_4}
+#'   \url{https://doi.org/chqcnx}
 #'
 #'   Shipley, B. (2000). A New Inferential Test for Path Models Based on
 #'   Directed Acyclic Graphs. \emph{Structural Equation Modeling: A
 #'   Multidisciplinary Journal}, \strong{7}(2), 206-218.
-#'   \url{https://doi.org/10.1207/s15328007sem0702_4}
+#'   \url{https://doi.org/cqm32d}
 #'
 #'   Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
 #'   context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/10.1890/08-1034.1}
+#'   \url{https://doi.org/bqd43d}
 #' @seealso \code{\link[semEff]{bootSEM}}, \code{\link[semEff]{bootCI}},
 #' @examples
+#' \dontrun{
+#'
 #' ## SEM effects
 #' Shipley.SEM.eff <- semEff(Shipley.SEM.boot)
 #'
 #' ## Effects for selected variables
-#' \dontrun{
-#'
 #' semEff(Shipley.SEM.boot, predictors = "lat")
 #' semEff(Shipley.SEM.boot, mediators = "DD")
 #' semEff(Shipley.SEM.boot, responses = "Live")
-#' }
 #'
 #' ## Effects calculated using original SEM
 #' ## (not usually recommended - better to use saved boot objects)
-#'
-#' \dontrun{
-#'
 #' system.time(
 #'   Shipley.SEM.eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 #' )
 #' }
+#'
+#' ## Summary of effects
+#' Shipley.SEM.eff
 #' @export
 semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
                    ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL,
@@ -435,8 +428,8 @@ print.semEff <- function(x, ...) print(x$Summary)
 #' @param sem.eff An object of class \code{"semEff"}.
 #' @param type The type of effects to return. Must be either \code{"orig"}
 #'   (default) or \code{"boot"}.
-#' @param responses A vector of names of response variables for which to return
-#'   effects. If \code{NULL} (default), all responses are used.
+#' @param responses A character vector of names of response variables for which
+#'   to return effects. If \code{NULL} (default), all responses are used.
 #' @param ... Arguments (above) to be passed to \code{Effects}.
 #' @details These are simple extractor functions for effects calculated using
 #'   \code{semEff}, intended for convenience (e.g. for use in \code{predEff}).
@@ -469,7 +462,6 @@ indirect <- function(...) {
 total <- function(...) {
   lapply(Effects(...), "[[", 3)
 }
-
 
 
 #' @title Predict SEM Effects
@@ -510,8 +502,8 @@ total <- function(...) {
 #' @param parallel The type of parallel processing to use for calculating
 #'   confidence intervals on predictions. Can be one of \code{"snow"},
 #'   \code{"multicore"}, or \code{"no"} (for none - the default).
-#' @param ncpus Integer, number of system cores to use for parallel processing.
-#'   If \code{NULL} (default), all available cores are used.
+#' @param ncpus Number of system cores to use for parallel processing. If
+#'   \code{NULL} (default), all available cores are used.
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param ... Arguments to \code{stdCoeff}.

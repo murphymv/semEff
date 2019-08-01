@@ -161,27 +161,22 @@ cor(cvf1, cvf2)
 \references{
 Allen, D. M. (1974). The Relationship Between Variable Selection
   and Data Agumentation and a Method for Prediction. \emph{Technometrics},
-  \strong{16}(1), 125-127.
-  \url{https://doi.org/10.1080/00401706.1974.10489157}
+  \strong{16}(1), 125-127. \url{https://doi.org/gfgv57}
 
   Kvalseth, T. O. (1985) Cautionary Note about R2. \emph{The American
-  Statistician}, \strong{39}(4), 279-285.
-  \url{https://doi.org/10.2307/2683704}
+  Statistician}, \strong{39}(4), 279-285. \url{https://doi.org/b8b782}
 
   Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
   determination R2 and intra-class correlation coefficient from generalized
   linear mixed-effects models revisited and expanded. \emph{Journal of the
-  Royal Society Interface} \strong{14}(134).
-  \url{https://doi.org/10.1098/rsif.2017.0213}
+  Royal Society Interface} \strong{14}(134). \url{https://doi.org/gddpnq}
 
   Yin, P. and Fan, X. (2001) Estimating R2 Shrinkage in Multiple Regression:
   A Comparison of Different Analytical Methods. \emph{The Journal of
   Experimental Education} \strong{69}(2), 203-224.
-  \url{https://doi.org/10.1080/00220970109600656}
+  \url{https://doi.org/fbdq5g}
 
   Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
   generalized linear model. \emph{Statistics in Medicine} \strong{19}(13),
-  1771-1781.
-  \url{https://doi.org/10.1002/1097-0258(20000715)19:13<1771::aid-sim485>3.0
-  .co;2-p}
+  1771-1781. \url{https://doi.org/db7rfv}
 }

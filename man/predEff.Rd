@@ -57,8 +57,8 @@ should not include argument \code{index}.}
 confidence intervals on predictions. Can be one of \code{"snow"},
 \code{"multicore"}, or \code{"no"} (for none - the default).}
 
-\item{ncpus}{Integer, number of system cores to use for parallel processing.
-If \code{NULL} (default), all available cores are used.}
+\item{ncpus}{Number of system cores to use for parallel processing. If
+\code{NULL} (default), all available cores are used.}
 
 \item{cl}{Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 (default), a local cluster is created using the specified number of cores.}

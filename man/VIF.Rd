@@ -52,7 +52,7 @@ VIF(m)
 \references{
 Fox, J. and Monette, G. (1992) Generalized Collinearity
   Diagnostics. \emph{Journal of the American Statistical Association}
-  \strong{87}, 178-183. \url{https://doi.org/10.2307/2290467}
+  \strong{87}, 178-183. \url{https://doi.org/dm9wbw}
 }
 \seealso{
 \href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{

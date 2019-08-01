@@ -91,8 +91,8 @@ rMapply <- function(f, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 #' @param parallel The type of parallel processing to use. Can be one of
 #'   \code{"snow"}, \code{"multicore"}, or \code{"no"} (for none). If none,
 #'   \code{sapply} is used instead.
-#' @param ncpus Integer, number of system cores to use for parallel processing.
-#'   If \code{NULL} (default), all available cores are used.
+#' @param ncpus Number of system cores to use for parallel processing. If
+#'   \code{NULL} (default), all available cores are used.
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param add.obj A character vector of any additional objects to be exported to

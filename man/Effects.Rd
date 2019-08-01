@@ -21,8 +21,8 @@ total(...)
 \item{type}{The type of effects to return. Must be either \code{"orig"}
 (default) or \code{"boot"}.}
 
-\item{responses}{A vector of names of response variables for which to return
-effects. If \code{NULL} (default), all responses are used.}
+\item{responses}{A character vector of names of response variables for which
+to return effects. If \code{NULL} (default), all responses are used.}
 
 \item{...}{Arguments (above) to be passed to \code{Effects}.}
 }

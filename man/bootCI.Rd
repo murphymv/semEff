@@ -78,22 +78,20 @@ system.time(
 \references{
 Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
   Bootstrap Confidence Intervals. \emph{American Journal of Mathematical and
-  Management Sciences}, \strong{29}(3–4), 437–456.
-  \url{https://doi.org/10.1080/01966324.2009.10737767}
+  Management Sciences}, \strong{29}(3–4), 437–456. \url{https://doi.org/c8zv}
 
   Efron, B. (1987). Better Bootstrap Confidence Intervals. \emph{Journal of
   the American Statistical Association}, \strong{82}(397), 171–185.
-  \url{https://doi.org/10.1080/01621459.1987.10478410}
+  \url{https://doi.org/gfww2z}
 
   Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
   Resampling in the Undergraduate Statistics Curriculum. \emph{The American
-  Statistician}, \strong{69}(4), 371–386.
-  \url{https://doi.org/10.1080/00031305.2015.1089789}
+  Statistician}, \strong{69}(4), 371–386. \url{https://doi.org/gd85v5}
 
   Puth, M.-T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of
   methods for calculating confidence intervals by bootstrapping.
   \emph{Journal of Animal Ecology}, \strong{84}(4), 892–897.
-  \url{https://doi.org/10.1111/1365-2656.12382}
+  \url{https://doi.org/f8n9rq}
 }
 \seealso{
 \code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootSEM}}
