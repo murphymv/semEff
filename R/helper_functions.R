@@ -141,7 +141,8 @@ pSapply <- function(x, f, parallel = "snow", ncpus = NULL, cl = NULL,
       fc <- P(xc, enquote(f)[2], fa)
       o <- unlist(lapply(search(), ls))
       o <- o[sapply(o, function(i) grepl(i, fc, fixed = TRUE))]
-      parallel::clusterExport(cl, c("x", o, ao), environment())
+      o <- c("x", o, ao)
+      parallel::clusterExport(cl, o, environment())
 
     }
 

@@ -225,7 +225,8 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
       mc <- P(unlist(rMapply(function(i) P(getCall(i)), m)))
       o <- unlist(lapply(search(), ls))
       o <- o[sapply(o, function(i) grepl(i, mc, fixed = TRUE))]
-      parallel::clusterExport(cl, c(o, ls("package:semEff")))
+      o <- c(o, ls("package:semEff"))
+      parallel::clusterExport(cl, o)
 
     }
 
