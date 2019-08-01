@@ -8,6 +8,8 @@ Description: Provides functionality to automatically calculate direct, indirect,
     and total effects from 'piecewise' Structural Equation Models, comprising 
     lists of fitted models representing structured equations. Confidence 
     intervals are provided via bootstrapping.
+URL: https://github.com/murphymv/semEff
+BugReports: https://github.com/murphymv/semEff/issues
 Depends: R (>= 3.6.0)
 Imports: 
     boot,

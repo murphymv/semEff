@@ -9,7 +9,16 @@
 Provides functionality to automatically calculate direct, indirect, 
     and total effects from 'piecewise' Structural Equation Models, comprising 
     lists of fitted models representing structured equations. Confidence 
-    intervals are provided via bootstrapping.
+    intervals are provided via bootstrapping. Currently supported model classes 
+    are "lm", "glm", "lmer" and "glmer".
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/murphymv/semEff}
+  \item Report bugs at \url{https://github.com/murphymv/semEff/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Mark Murphy \email{murphymv@gmail.com}
