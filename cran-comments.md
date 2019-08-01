@@ -1,4 +1,4 @@
-## Release notes
+## Release
 This is a first submission to CRAN.
 
 ## Test environments

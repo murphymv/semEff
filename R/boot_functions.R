@@ -252,7 +252,7 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
           do.call(rbind, lapply(x[i, ], function(j) {
             d[d[, re] == j, ]
           }))
-        } else x[, i]
+        } else x[i, ]
         do.call(stdCoeff, c(list(m, w, xi), a))
       }
     } else {
