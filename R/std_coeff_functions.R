@@ -1054,7 +1054,7 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
           ## Centre predictors (for correct SD's/VIF's)
           if (std.x || unique.x) {
             x <- sapply(XN, function(i) {
-              xi <- sweep(x[, i], 2, xm[i])
+              xi <- sweep(x[, i, drop = FALSE], 2, xm[i])
               apply(xi, 1, prod)
             })
           }
