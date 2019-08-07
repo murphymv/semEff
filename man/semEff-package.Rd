@@ -9,8 +9,7 @@
 Provides functionality to automatically calculate direct, indirect, 
     and total effects from 'piecewise' Structural Equation Models, comprising 
     lists of fitted models representing structured equations. Confidence 
-    intervals are provided via bootstrapping. Currently supported model classes 
-    are "lm", "glm", "lmer" and "glmer".
+    intervals are provided via bootstrapping.
 }
 \seealso{
 Useful links:

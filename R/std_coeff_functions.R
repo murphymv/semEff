@@ -463,7 +463,7 @@ VIF <- function(m, data = NULL, ...) {
     ## VIF's
     if (length(xn2) > 1) {
 
-      ## T/F for terms as matrices?
+      ## T/F for terms as matrices
       mf <- model.frame(m)
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
@@ -477,12 +477,11 @@ VIF <- function(m, data = NULL, ...) {
       ## Function
       VIF <- function(i) {
         if (all(i %in% xn2)) {
-          df <- length(i)
           ni <- !xn2 %in% i
           Ri <- R[i, i, drop = FALSE]
           Rni <- R[ni, ni, drop = FALSE]
           vif <- det(Ri) * det(Rni) / det.R
-          (vif^(1 / (2 * df)))^2
+          (vif^(1 / (2 * length(i))))^2
         } else NA
       }
 
@@ -1021,8 +1020,7 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
     if (k > 0) {
 
       ## Predictors
-      x <- model.matrix(m)[s, , drop = FALSE]
-      x <- data.frame(x, check.names = FALSE)[xn]
+      x <- model.matrix(m)[s, xn, drop = FALSE]
       obs <- rownames(x)
 
       ## Interactions?
@@ -1034,34 +1032,31 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
         ## For interactions, adjust coefs and centre predictors
         if (inx) {
 
-          ## List of main effect names for all terms
+          ## Main effect names for all terms
           XN <- sapply(xn, function(i) unlist(strsplit(i, ":")))
 
           ## Predictor means
           xm <- colMeans(x)
 
           ## Adjust lower-order coefs
+          ## (ti = terms containing term i; ni = non-i components of ti)
           b[xn] <- sapply(xn, function(i) {
-            bi <- b[[i]]
-            XNi <- XN[[i]]
-            ti <- xn[sapply(xn, function(j) all(XNi %in% XN[[j]]))]
-            ti <- ti[ti != i]
+            bi <- b[[i]]; XNi <- XN[[i]]
+            ti <- xn[sapply(xn, function(j) all(XNi %in% XN[[j]])) & xn != i]
             if (length(ti) > 0) {
-              nim <- sapply(ti, function(j) {
+              bi + sum(sapply(ti, function(j) {
                 ni <- XN[[j]][!XN[[j]] %in% XNi]
-                prod(xm[ni])
-              })
-              bi + sum(b[ti] * nim)
+                prod(b[j], xm[ni])
+              }))
             } else bi
           })
 
           ## Centre predictors (for correct SD's/VIF's)
           if (std.x || unique.x) {
             x <- sapply(XN, function(i) {
-              xi <- sweep(x[i], 2, xm[i])
+              xi <- sweep(x[, i], 2, xm[i])
               apply(xi, 1, prod)
             })
-            x <- data.frame(x, row.names = obs, check.names = FALSE)
           }
 
         }
@@ -1072,18 +1067,18 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
       }
 
       ## Standardise by x
-      if (std.x) b[xn] <- b[xn] * sapply(x, sdW, w)
+      if (std.x) b[xn] <- b[xn] * apply(x, 2, sdW, w)
 
       ## Calculate unique effects of predictors (adjust for multicollinearity)
       if (unique.x && k > 1) {
 
         ## Re-fit model with centred predictors
-        ## (to calculate correct VIF's for interactions)
+        ## (to calculate correct VIF's for interacting terms)
         m2 <- if (cen.x && inx) {
 
           ## Add centred predictors to data (list)
           if (is.null(d)) d <- getData(m)
-          d <- c(list(x = as.matrix(x)), as.list(d[obs, ]))
+          d <- c(list(x = x), as.list(d[obs, ]))
 
           ## Add any offset(s)
           o <- model.offset(model.frame(m)[s, ])
@@ -1091,13 +1086,12 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
           d <- c(list(o = o), d)
 
           ## New model formula
-          ran <- if (isMerMod(m)) {
-            bars <- lme4::findbars(formula(m))
-            sapply(bars, function(i) {
+          re <- if (isMerMod(m)) {
+            sapply(lme4::findbars(formula(m)), function(i) {
               paste0("(", deparse(i), ")")
             })
-          }  # ran. effects (http://bit.ly/2V1yDeu)
-          f <- reformulate(c("x", ran), response = ".")
+          }  # ran. eff. (http://bit.ly/2V1yDeu)
+          f <- reformulate(c("x", re), response = ".")
 
           ## Update model
           update(m, f, data = d, offset = o)
@@ -1136,8 +1130,7 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
   if (!is.null(w) && isList(b)) avgEst(b, w, bn)
   else {
     if (!is.null(bn)) {
-      f <- function(i) i[bn[bn %in% names(i)]]
-      rMapply(f, b, SIMPLIFY = FALSE)
+      rMapply(function(i) i[bn[bn %in% names(i)]], b, SIMPLIFY = FALSE)
     } else b
   }
 
