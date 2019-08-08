@@ -8,15 +8,15 @@
 #' @return A logical value.
 #' @name Class
 NULL
-#' @describeIn Class Is object of class "list"?
+#' @describeIn Class Is object of class \code{"list"}?
 isList <- function(x) class(x)[1] == "list"
-#' @describeIn Class Is object a boot object (output of function \code{boot})?
+#' @describeIn Class Is object of class \code{"boot"}?
 isBoot <- function(x) class(x)[1] %in% c("boot", "bootMer")
 #' @describeIn Class Is object a linear or generalised linear (mixed) model?
 isMod <- function(x) class(x)[1] %in% c("lm", "glm", "lmerMod", "glmerMod")
 #' @describeIn Class Is object a generalised linear (mixed) model?
 isGlm <- function(x) class(x)[1] %in% c("glm", "glmerMod")
-#' @describeIn Class Is object a mixed model (of class \code{merMod})?
+#' @describeIn Class Is object a mixed model (class \code{"merMod"})?
 isMerMod <- function(x) class(x)[1] %in% c("lmerMod", "glmerMod")
 
 
@@ -38,7 +38,7 @@ isInx <- function(x) grepl(":", x)
 isR2 <- function(x) grepl("r.squared", x)
 
 
-#' @title (A) Recursive Version of \code{mapply}
+#' @title Recursive Version of \code{mapply}
 #' @description Recursively apply a function to a list or lists.
 #' @param f Function to apply.
 #' @param ... Object(s) to which \code{f} can be applied, or lists of such
@@ -49,22 +49,22 @@ isR2 <- function(x) grepl("r.squared", x)
 #' @param USE.NAMES Logical, whether to use the names of the first list object
 #'   in \code{...} for the output.
 #' @details \code{rMapply} recursively applies \code{f} to the elements of the
-#'   lists in \code{...} via the \code{mapply} function. If only a single list
-#'   is supplied, the function acts like a recursive version of \code{sapply}.
-#'   The particular condition that determines if the function should stop
-#'   recursing is if either the first or second objects in \code{...} are not of
-#'   class \code{"list"}. Thus, unlike \code{mapply}, it will not iterate over
+#'   lists in \code{...} via \code{mapply}. If only a single list is supplied,
+#'   the function acts like a recursive version of \code{sapply}. The particular
+#'   condition that determines if the function should stop recursing is if
+#'   either the first or second objects in \code{...} are not of class
+#'   \code{"list"}. Thus, unlike \code{mapply}, it will not iterate over
 #'   non-list elements in these objects, but instead returns the output of
 #'   \code{f(...)}.
 #'
 #'   This is primarily a convenience function used internally to enable
-#'   recursive application of functions to lists or nested lists. It's
-#'   particular stop condition for recursing is also designed to either a) act
-#'   as a wrapper for \code{f} if the first object in \code{...} is not a list,
-#'   or b) apply a model averaging operation if the first object is a list and
-#'   the second object is a numeric vector (of weights).
+#'   recursive application of functions to lists or nested lists. Its particular
+#'   stop condition for recursing is also designed to either a) act as a wrapper
+#'   for \code{f} if the first object in \code{...} is not a list, or b) apply a
+#'   model averaging operation if the first object is a list and the second
+#'   object is a numeric vector (of weights).
 #' @return The output of \code{f} in a list or nested list, or simplified to a
-#'   vector or matrix.
+#'   vector or array (or list of arrays).
 #' @seealso \code{\link[base]{mapply}}
 #' @export
 rMapply <- function(f, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
@@ -76,10 +76,12 @@ rMapply <- function(f, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
   if (!isList(i) || !isList(j)) {
     do.call(f, c(l, MoreArgs))
   } else {
-    mapply(rMapply, ...,
-           MoreArgs = list(f = f, MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY,
+    mapply(
+      rMapply, ...,
+      MoreArgs = list(f = f, MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY,
                            USE.NAMES = USE.NAMES),
-           SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES)
+      SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES
+    )
   }
 }
 
@@ -95,21 +97,21 @@ rMapply <- function(f, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 #'   \code{NULL} (default), all available cores are used.
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
-#' @param add.obj A character vector of any additional objects to be exported to
-#'   the cluster for parallel processing. Use if a required object or function
-#'   cannot be found.
+#' @param add.obj A character vector of any additional object names to be
+#'   exported to the cluster for parallel processing. Use if a required object
+#'   or function cannot be found.
 #' @param ... Arguments to \code{parSapply} or \code{sapply}.
-#' @details This function is a wrapper for \code{parSapply} from the
-#'   \pkg{parallel} package, enabling (potentially) faster processing of a
-#'   function over a vector of objects. Parallel processing via option
-#'   \code{"snow"} (default) is carried out using a cluster of workers, which is
-#'   automatically set up via \code{makeCluster} using all available system
-#'   cores or a user supplied number of cores. The function then exports the
-#'   required objects and functions to this cluster using \code{clusterExport},
-#'   after performing a (rough) match of all objects and functions in the
-#'   current global environment to those referenced in the call to \code{f} (and
-#'   also any calls in \code{x}). Any additional required objects can be
-#'   supplied using \code{add.obj}.
+#' @details This is a wrapper for \code{parSapply} from the \pkg{parallel}
+#'   package, enabling (potentially) faster processing of a function over a
+#'   vector of objects. Parallel processing via option \code{"snow"} (default)
+#'   is carried out using a cluster of workers, which is automatically set up
+#'   via \code{makeCluster} using all available system cores or a user supplied
+#'   number of cores. The function then exports the required objects and
+#'   functions to this cluster using \code{clusterExport}, after performing a
+#'   (rough) match of all objects and functions in the current global
+#'   environment to those referenced in the call to \code{f} (and also any calls
+#'   in \code{x}). Any additional required objects can be supplied using
+#'   \code{add.obj}.
 #' @return The output of \code{f} in a list, vector, or matrix.
 #' @seealso \code{\link[parallel]{parSapply}}, \code{\link[base]{sapply}}
 #' @export

@@ -4,14 +4,14 @@
 \alias{bootCI}
 \title{Bootstrap Confidence Intervals}
 \usage{
-bootCI(m, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
+bootCI(B, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{lm}, \code{glm}, or
-\code{merMod}, or a named list/nested list of such objects. \code{m} can
-also be a boot object(s)/list (class \code{"boot"}), corresponding to
-bootstrapped estimates from fitted models.}
+\item{B}{A boot object (class \code{"boot"}) containing bootstrapped
+estimates from a fitted model; or, alternatively, the model itself (class
+\code{"lm"}, \code{"glm"}, or \code{"merMod"}). \code{B} can also be a list
+or nested list of such objects.}
 
 \item{conf}{A numeric value specifying the confidence level for the
 intervals.}
@@ -22,48 +22,49 @@ specification details.}
 
 \item{digits}{The number of significant digits to return for numeric values.}
 
-\item{bci.arg}{A named list of additional arguments to \code{boot.ci}, which
-should not include argument \code{index}.}
+\item{bci.arg}{A named list of additional arguments to \code{boot.ci},
+excepting argument \code{index}.}
 
 \item{...}{Arguments to \code{bootSEM}.}
 }
 \value{
 A data frame of the original estimates and the bootstrapped
-  confidence intervals, or a list of same.
+  confidence intervals, or a list or nested list of same.
 }
 \description{
-Calculate confidence intervals using bootstrapped model
+Calculate confidence intervals from bootstrapped model
   estimates.
 }
 \details{
-This function is essentially a wrapper for \code{boot.ci} from the
-  \pkg{boot} package, which will return confidence intervals of the specified
-  type and level calculated from bootstrapped model estimates. If a model or
-  models are supplied to \code{m}, bootstrapping will first be performed via
+This is essentially a wrapper for \code{boot.ci} from the \pkg{boot}
+  package, returning confidence intervals of the specified type and level
+  calculated from bootstrapped model estimates. If a model or models is
+  supplied to \code{B}, bootstrapping will first be performed via
   \code{bootSEM}. Estimates for which the confidence intervals do not contain
   zero are highlighted with a star.
 
   Nonparametric bias-corrected and accelerated confidence intervals
-  (BC\emph{a}, Efron 1987) are calculated by default, which provide the most
-  accurate coverage across the widest variety of bootstrap sampling
+  (BC\emph{a}, Efron 1987) are calculated by default, which should provide
+  the most accurate coverage across a range of bootstrap sampling
   distributions (Puth \emph{et al.} 2015). They will, however, be
-  inappropriate for parametric resampling - due to the requirement for
-  empirical influence values calculated from the data
-  (\url{http://bit.ly/2UzmA7Y}) - in which case the default will be set to
-  the boostrap percentile method instead (\code{"perc"}).
-
-  NOTE: All bootstrapped confidence intervals will underestimate the true
+  \href{https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot}{inappropriate}
+  for parametric resampling - in which case the default will be set to the
+  boostrap percentile method instead (\code{"perc"}).
+}
+\note{
+All bootstrapped confidence intervals will underestimate the true
   nominal coverage to some extent when sample size is small (Chernick &
   Labudde 2009), so the appropriate caution should be exercised in
-  interpretation in these cases. Comparison of different interval types may
-  be informative. For example, normal-theory based intervals may outperform
+  interpretation in such cases. Comparison of different interval types may be
+  informative. For example, normal-theory based intervals may outperform
   bootstrap percentile methods when n < 34 (Hesterberg 2015). Ultimately
-  though, the bootstrap is not a solution to small sample size
-  (\url{http://bit.ly/2GpfLMn}).
+  however, the bootstrap is
+  \href{https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size}{not
+   a solution to small sample size}.
 }
 \examples{
 ## CI's from bootstrapped SEM
-bootCI(Shipley.SEM.boot)
+bootCI(Shipley.SEM.Boot)
 
 ## From original SEM
 ## (not usually recommended - better to use saved boot objects)

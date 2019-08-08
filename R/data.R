@@ -15,10 +15,10 @@
 #' \item{Live}{a binary value (1 = tree lived the following winter, 0 = tree
 #' died the following winter)}
 #' }
-#' @source \url{https://doi.org/10.6084/m9.figshare.c.3300797.v1}
+#' @source \url{https://doi.org/c886}
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/10.1890/08-1034.1}
+#'   \url{https://doi.org/bqd43d}
 "Shipley"
 
 
@@ -27,7 +27,7 @@
 #'   \code{"glmer"} representing structured equations.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/10.1890/08-1034.1}
+#'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
 #'
@@ -45,7 +45,7 @@
 "Shipley.SEM"
 
 
-#' @title Competing Candidate Model Set
+#' @title Candidate Model Set
 #' @description A set of hypothetical competing models fit to the same response
 #'   variable ('Growth') using the simulated data in Shipley (2009), for which
 #'   model estimates can be compared and/or averaged.
@@ -53,7 +53,7 @@
 #'   to the same response variable.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/10.1890/08-1034.1}
+#'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
 #'
@@ -71,37 +71,36 @@
 
 #' @title Bootstrapped SEM Estimates
 #' @description Boostrapped estimates generated from the hypothesised SEM from
-#'   Shipley (2009) using \code{bootSEM}, comprising 1,000 replications.
+#'   Shipley (2009) using \code{bootSEM}.
 #' @format A list of objects of class \code{"boot"}, representing bootstrapped
-#'   estimates from fitted models.
+#'   estimates from fitted mixed models.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/10.1890/08-1034.1}
+#'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
 #'
 #' \dontrun{
 #'
-#' Shipley.SEM.boot <- bootSEM(Shipley.SEM, ran.eff = "site", R = 1000,
-#'                             seed = 53908)
+#' Shipley.SEM.Boot <- bootSEM(Shipley.SEM, ran.eff = "site", seed = 53908)
 #' }
-"Shipley.SEM.boot"
+"Shipley.SEM.Boot"
 
 
 #' @title SEM Effects
 #' @description SEM effects calculated from bootstrapped estimates of the
-#'   hypothesised SEM from Shipley (2009), using \code{semEff}.
-#' @format A list object of class \code{"semEff"}, containing all SEM effects
-#'   and summary tables.
+#'   hypothesised SEM from Shipley (2009) using \code{semEff}.
+#' @format A list object of class \code{"semEff"}, containing SEM effects and
+#'   summary tables.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/10.1890/08-1034.1}
+#'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
 #'
 #' \dontrun{
 #'
-#' Shipley.SEM.eff <- semEff(Shipley.SEM.boot)
+#' Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 #' }
-"Shipley.SEM.eff"
+"Shipley.SEM.Eff"
 

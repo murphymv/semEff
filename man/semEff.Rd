@@ -8,15 +8,14 @@ semEff(sem, predictors = NULL, mediators = NULL, responses = NULL,
   ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL, ...)
 }
 \arguments{
-\item{sem}{A piecewise SEM, comprising a named list of boot objects
-containing bootstrapped estimates from fitted models, or, alternatively, a
-named list/nested list of fitted model objects (class \code{lm},
-\code{glm}, or \code{lmerMod}).}
+\item{sem}{A piecewise SEM, comprising a named list of boot objects (class
+\code{"boot"}) containing bootstrapped estimates from fitted models, or,
+alternatively, the models themselves (class \code{"lm"}, \code{"glm"}, or
+\code{"merMod"}).}
 
-\item{predictors, mediators, responses}{Character vector(s) of names of variables for (or through)
-which to calculate effects (character vector(s)). If \code{NULL} (default), all predictors,
-endogenous predictors (mediators), and endogenous variables (responses)
-will be used.}
+\item{predictors, mediators, responses}{Names of variables for/through which to
+calculate effects. If \code{NULL} (default), all predictors, endogenous
+predictors (mediators), and endogenous variables (responses) will be used.}
 
 \item{ci.conf}{A numeric value specifying the confidence level for confidence
 intervals on effects.}
@@ -27,8 +26,8 @@ specification details.}
 
 \item{digits}{The number of significant digits to return for numeric values.}
 
-\item{bci.arg}{A named list of additional arguments to \code{boot.ci}, which
-should not include argument \code{index}.}
+\item{bci.arg}{A named list of additional arguments to \code{boot.ci},
+excepting argument \code{index}.}
 
 \item{...}{Arguments to \code{bootSEM}.}
 }
@@ -57,14 +56,14 @@ The eponymous function of this package calculates all direct,
   pathway). If fitted models are supplied to \code{sem}, estimates will first
   be bootstrapped using \code{bootSEM} (this may take a while!).
 
-  Direct effects are calculated as the fully standardised model coefficients
-  for each response variable, with indirect effects being the product of
-  these direct effects operating along causal pathways in the SEM. The total
+  Direct effects are calculated as fully standardised model coefficients for
+  each response variable, while indirect effects are the product of these
+  direct effects operating along causal pathways in the SEM. The total
   effects of any given predictor on a response are then the sum of its direct
   and (all) its indirect effects. 'Mediator' effects are also calculated, as
   the sum of all indirect paths which operate through each individual
-  mediator - useful to assess the relative importance of mediators in
-  affecting the response. All of these effect types are calculated
+  mediator - useful to assess the relative importance of different mediators
+  in affecting the response. All of these effect types are calculated
   automatically for all (default) or a subset of predictors, mediators, or
   response variables in the SEM.
 
@@ -74,7 +73,7 @@ The eponymous function of this package calculates all direct,
   Scharkow 2013). As indirect, total, and mediator effects are not directly
   bootstrapped using the fitted models for response variables (i.e. via
   \code{bootSEM}), their equivalent 'bootstrapped' estimates are calculated
-  instead using individual bootstrapped direct effects.
+  instead using the bootstrapped direct effects.
 
   Correlated errors (and confidence intervals) are also returned if their
   boostrapped estimates are present in \code{sem}, or, if \code{sem} is a
@@ -84,29 +83,29 @@ The eponymous function of this package calculates all direct,
 
   All effects and bootstrapped effects are returned in lists for each
   response variable, with all except mediator effects also including the
-  model intercept(s) - typically required for prediction (these will be zero
-  for ordinary linear models with fully standardised effects).
+  model intercept(s) - required for prediction (this will be zero for
+  ordinary linear models with fully standardised effects).
 }
 \examples{
 \dontrun{
 
 ## SEM effects
-Shipley.SEM.eff <- semEff(Shipley.SEM.boot)
+Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 
 ## Effects for selected variables
-semEff(Shipley.SEM.boot, predictors = "lat")
-semEff(Shipley.SEM.boot, mediators = "DD")
-semEff(Shipley.SEM.boot, responses = "Live")
+semEff(Shipley.SEM.Boot, predictors = "lat")
+semEff(Shipley.SEM.Boot, mediators = "DD")
+semEff(Shipley.SEM.Boot, responses = "Live")
 
 ## Effects calculated using original SEM
 ## (not usually recommended - better to use saved boot objects)
 system.time(
-  Shipley.SEM.eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+  Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 )
 }
 
 ## Summary of effects
-Shipley.SEM.eff
+Shipley.SEM.Eff
 }
 \references{
 Cheung, M. W. L. (2009). Comparison of methods for constructing
@@ -138,5 +137,5 @@ Cheung, M. W. L. (2009). Comparison of methods for constructing
   \url{https://doi.org/bqd43d}
 }
 \seealso{
-\code{\link[semEff]{bootSEM}}, \code{\link[semEff]{bootCI}},
+\code{\link[semEff]{bootSEM}}, \code{\link[semEff]{bootCI}}
 }

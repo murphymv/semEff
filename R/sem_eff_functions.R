@@ -4,22 +4,21 @@
 #' @description Automatically calculate direct, indirect, total, and mediator
 #'   effects for endogenous (response) variables in a piecewise Structural
 #'   Equation Model (SEM).
-#' @param sem A piecewise SEM, comprising a named list of boot objects
-#'   containing bootstrapped estimates from fitted models, or, alternatively, a
-#'   named list/nested list of fitted model objects (class \code{lm},
-#'   \code{glm}, or \code{lmerMod}).
-#' @param predictors,mediators,responses Character vector(s) of names of variables for (or through)
-#'   which to calculate effects (character vector(s)). If \code{NULL} (default), all predictors,
-#'   endogenous predictors (mediators), and endogenous variables (responses)
-#'   will be used.
+#' @param sem A piecewise SEM, comprising a named list of boot objects (class
+#'   \code{"boot"}) containing bootstrapped estimates from fitted models, or,
+#'   alternatively, the models themselves (class \code{"lm"}, \code{"glm"}, or
+#'   \code{"merMod"}).
+#' @param predictors,mediators,responses Names of variables for/through which to
+#'   calculate effects. If \code{NULL} (default), all predictors, endogenous
+#'   predictors (mediators), and endogenous variables (responses) will be used.
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on effects.
 #' @param ci.type The type of confidence interval to return (defaults to
 #'   \code{"bca"} - see Details). See \code{\link[boot]{boot.ci}} for further
 #'   specification details.
 #' @param digits The number of significant digits to return for numeric values.
-#' @param bci.arg A named list of additional arguments to \code{boot.ci}, which
-#'   should not include argument \code{index}.
+#' @param bci.arg A named list of additional arguments to \code{boot.ci},
+#'   excepting argument \code{index}.
 #' @param ... Arguments to \code{bootSEM}.
 #' @details The eponymous function of this package calculates all direct,
 #'   indirect, total, and mediator effects for endogenous variables in a
@@ -35,14 +34,14 @@
 #'   pathway). If fitted models are supplied to \code{sem}, estimates will first
 #'   be bootstrapped using \code{bootSEM} (this may take a while!).
 #'
-#'   Direct effects are calculated as the fully standardised model coefficients
-#'   for each response variable, with indirect effects being the product of
-#'   these direct effects operating along causal pathways in the SEM. The total
+#'   Direct effects are calculated as fully standardised model coefficients for
+#'   each response variable, while indirect effects are the product of these
+#'   direct effects operating along causal pathways in the SEM. The total
 #'   effects of any given predictor on a response are then the sum of its direct
 #'   and (all) its indirect effects. 'Mediator' effects are also calculated, as
 #'   the sum of all indirect paths which operate through each individual
-#'   mediator - useful to assess the relative importance of mediators in
-#'   affecting the response. All of these effect types are calculated
+#'   mediator - useful to assess the relative importance of different mediators
+#'   in affecting the response. All of these effect types are calculated
 #'   automatically for all (default) or a subset of predictors, mediators, or
 #'   response variables in the SEM.
 #'
@@ -52,7 +51,7 @@
 #'   Scharkow 2013). As indirect, total, and mediator effects are not directly
 #'   bootstrapped using the fitted models for response variables (i.e. via
 #'   \code{bootSEM}), their equivalent 'bootstrapped' estimates are calculated
-#'   instead using individual bootstrapped direct effects.
+#'   instead using the bootstrapped direct effects.
 #'
 #'   Correlated errors (and confidence intervals) are also returned if their
 #'   boostrapped estimates are present in \code{sem}, or, if \code{sem} is a
@@ -62,8 +61,8 @@
 #'
 #'   All effects and bootstrapped effects are returned in lists for each
 #'   response variable, with all except mediator effects also including the
-#'   model intercept(s) - typically required for prediction (these will be zero
-#'   for ordinary linear models with fully standardised effects).
+#'   model intercept(s) - required for prediction (this will be zero for
+#'   ordinary linear models with fully standardised effects).
 #' @return A list object of class \code{"semEff"}, comprising: \enumerate{\item
 #'   all effects \item all bootstrapped effects \item summary tables of effects
 #'   and confidence intervals}
@@ -94,27 +93,27 @@
 #'   Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
 #'   context. \emph{Ecology}, \strong{90}(2), 363-368.
 #'   \url{https://doi.org/bqd43d}
-#' @seealso \code{\link[semEff]{bootSEM}}, \code{\link[semEff]{bootCI}},
+#' @seealso \code{\link[semEff]{bootSEM}}, \code{\link[semEff]{bootCI}}
 #' @examples
 #' \dontrun{
 #'
 #' ## SEM effects
-#' Shipley.SEM.eff <- semEff(Shipley.SEM.boot)
+#' Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 #'
 #' ## Effects for selected variables
-#' semEff(Shipley.SEM.boot, predictors = "lat")
-#' semEff(Shipley.SEM.boot, mediators = "DD")
-#' semEff(Shipley.SEM.boot, responses = "Live")
+#' semEff(Shipley.SEM.Boot, predictors = "lat")
+#' semEff(Shipley.SEM.Boot, mediators = "DD")
+#' semEff(Shipley.SEM.Boot, responses = "Live")
 #'
 #' ## Effects calculated using original SEM
 #' ## (not usually recommended - better to use saved boot objects)
 #' system.time(
-#'   Shipley.SEM.eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+#'   Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 #' )
 #' }
 #'
 #' ## Summary of effects
-#' Shipley.SEM.eff
+#' Shipley.SEM.Eff
 #' @export
 semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
                    ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL,
@@ -162,7 +161,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   sem <- subNam("[.]", "_", sem)
 
   ## Response names (default to endogenous vars.)
-  ce <- grepl("~~", names(sem))  # T/F for corr. errors
+  ce <- grepl("~~", names(sem))
   if (is.null(r)) r <- names(sem)[!ce]
 
   ## Mediator names (default to endogenous predictors)
@@ -321,8 +320,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
     ## Calculate CI's using boot object
     if (!is.na(e)) {
       if (e != 0) {
-        B$t0 <- e
-        B$t <- as.matrix(eb)
+        B$t0 <- e; B$t <- matrix(eb)
         ci <- do.call(
           boot::boot.ci, c(list(B, ci.conf, ci.type), bci.arg)
         )
@@ -423,16 +421,17 @@ print.semEff <- function(x, ...) print(x$Summary)
 
 
 #' @title Extract SEM Effects
-#' @description Extract SEM direct, indirect, or total effects from an object of
-#'   class \code{"semEff"}.
+#' @description Extract SEM direct, indirect, and/or total effects from an
+#'   object of class \code{"semEff"}.
 #' @param sem.eff An object of class \code{"semEff"}.
 #' @param type The type of effects to return. Must be either \code{"orig"}
 #'   (default) or \code{"boot"}.
-#' @param responses A character vector of names of response variables for which
-#'   to return effects. If \code{NULL} (default), all responses are used.
-#' @param ... Arguments (above) to be passed to \code{Effects}.
+#' @param responses Names of response variables in the SEM for which to return
+#'   effects. If \code{NULL} (default), all responses are used.
+#' @param ... Arguments (above) to be passed to \code{Effects} from other
+#'   extractor functions.
 #' @details These are simple extractor functions for effects calculated using
-#'   \code{semEff}, intended for convenience (e.g. for use in \code{predEff}).
+#'   \code{semEff}, intended for convenience (e.g. for use with \code{predEff}).
 #' @return A list containing the original or bootstrapped effects for each
 #'   response variable, as numeric vectors or matrices (respectively).
 #' @name Effects
@@ -466,21 +465,22 @@ total <- function(...) {
 
 #' @title Predict SEM Effects
 #' @description Generate predicted values for SEM direct, indirect, or total
-#'   effects on a response variable.
-#' @param m A fitted model object of class \code{lm}, \code{glm}, or
-#'   \code{merMod}, or a list or nested list of such objects.
-#' @param newdata An optional data frame of new values to predict from, which
-#'   should contain all the variables named in \code{effects}, or all those used
-#'   to fit \code{m}.
+#'   effects.
+#' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
+#'   \code{"merMod"}, or a list or nested list of such objects.
+#' @param newdata An optional data frame of new values to predict, which should
+#'   contain all the variables named in \code{effects} or all those used to fit
+#'   \code{m}.
 #' @param effects A numeric vector of effects to predict, or a list or nested
-#'   list of such vectors. Can be effects/estimates from \code{semEff},
-#'   \code{bootSEM}, or \code{stdCoeff}.
+#'   list of such vectors. These will be effects/estimates calculated using
+#'   \code{semEff}, \code{bootSEM}, or \code{stdCoeff}.
 #' @param eff.boot A matrix of bootstrapped effects used to calculate confidence
-#'   intervals for predictions, or a list or nested list of such matrices. Can
-#'   be bootstrapped effects/estimates from \code{semEff} or \code{bootSEM}.
-#' @param re.form For mixed models of class \code{merMod}, the formula for
+#'   intervals for predictions, or a list or nested list of such matrices. These
+#'   will be bootstrapped effects/estimates calculated using \code{semEff} or
+#'   \code{bootSEM}.
+#' @param re.form For mixed models of class \code{"merMod"}, the formula for
 #'   random effects to condition on when predicting effects. Defaults to
-#'   \code{NA}, meaning no random effects are included. See
+#'   \code{NA}, meaning random effects are averaged over. See
 #'   \code{\link[lme4]{predict.merMod}} for further specification details.
 #' @param type The type of prediction to return (for GLM's). Can be either
 #'   \code{"link"} (default) or \code{"response"}.
@@ -492,13 +492,13 @@ total <- function(...) {
 #' @param interaction An optional name of an interactive effect, for which to
 #'   return standardised effects for predictions of a main (continuous) variable
 #'   across different values or levels of interacting variables (see Details).
-#'   The name should be of the form \code{"a:b"} or \code{"a:b:c"} etc.,
-#'   containing all the variables involved and matching the name of an
-#'   interactive effect in the model(s) terms or in \code{effects}.
+#'   The name should be of the form \code{"a:b..."}, containing all the
+#'   variables involved and matching the name of an interactive effect in the
+#'   model(s) terms or in \code{effects}.
 #' @param digits The number of significant digits to return for interactive
 #'   effects.
-#' @param bci.arg A named list of additional arguments to \code{boot.ci}, which
-#'   should not include argument \code{index}.
+#' @param bci.arg A named list of additional arguments to \code{boot.ci},
+#'   excepting argument \code{index}.
 #' @param parallel The type of parallel processing to use for calculating
 #'   confidence intervals on predictions. Can be one of \code{"snow"},
 #'   \code{"multicore"}, or \code{"no"} (for none - the default).
@@ -507,57 +507,57 @@ total <- function(...) {
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param ... Arguments to \code{stdCoeff}.
-#' @details This function can be used to generate predicted values for SEM
-#'   direct, indirect, or total effects on a response variable (arising via
-#'   \code{semEff}), which should be supplied to \code{effects}. These are used
-#'   in place of model coefficients in the standard prediction formula, with
-#'   values for predictors drawn from either the data used to fit the original
-#'   model(s) (\code{m}) or from \code{newdata}. It is assumed that effects are
-#'   fully standardised; however, if this is not the case, then the same
-#'   standardisation options originally specified in \code{stdCoeff} should be
-#'   re-specified - which will be used to standardise data. If no effects are
-#'   supplied, standardised coefficients will be calculated and used to generate
-#'   predictions. These will equal the model(s) fitted values if \code{newdata =
-#'   NULL}, \code{unique.x = FALSE}, and \code{re.form = NULL} (where
-#'   applicable).
+#' @details Generate predicted values for SEM direct, indirect, or total effects
+#'   on a response variable, which should be supplied to \code{effects}. These
+#'   are used in place of model coefficients in the standard prediction formula,
+#'   with values for predictors drawn either from the data used to fit the
+#'   original model(s) (\code{m}) or from \code{newdata}. It is assumed that
+#'   effects are fully standardised; however, if this is not the case, then the
+#'   same arguments originally specified to \code{stdCoeff} should be
+#'   re-specified - which will then be used to standardise data. If no effects
+#'   are supplied, standardised model coefficients will be calculated and used
+#'   to generate predictions. These will equal the model(s) fitted values if
+#'   \code{newdata = NULL}, \code{unique.x = FALSE}, and \code{re.form = NULL}
+#'   (where applicable).
 #'
 #'   Model-averaged predictions can be generated if averaged \code{effects} are
-#'   supplied to the model \code{m}, or alternatively, if \code{weights} are
+#'   supplied to the model \code{m}; or alternatively, if \code{weights} are
 #'   specified (passed to \code{stdCoeff}) and \code{m} is a list of candidate
-#'   models (n.b. \code{effects} can also be passed using the latter method).
-#'   For mixed model predictions where random effects are included (e.g.
+#'   models (\code{effects} can also be passed using this latter method). For
+#'   mixed model predictions where random effects are included (e.g.
 #'   \code{re.form = NULL}), the latter approach should be used, otherwise the
 #'   contribution of random effects will be taken from the single model \code{m}
 #'   instead of (correctly) being averaged over a candidate set.
 #'
 #'   If bootstrapped effects are supplied to \code{eff.boot}, bootstrapped
-#'   predictions are calculated by predicting from each bootstrapped effect.
-#'   Confidence intervals can then be returned, for which the \code{type} should
-#'   be appropriate for the original form of bootstrap sampling (defaults to
+#'   predictions are calculated by predicting from each effect. Confidence
+#'   intervals can then be returned, for which the \code{type} should be
+#'   appropriate for the original form of bootstrap sampling (defaults to
 #'   \code{"bca"}). If the number of observations to predict is very large,
 #'   parallel processing may speed up the calculation of intervals.
 #'
-#'   Predictions are always returned in the original units of the
-#'   (link-)response variable. For GLM's, these can be converted back to the
-#'   response scale if \code{type = "response"}.
+#'   Predictions are always returned in the original (typically unstandardised)
+#'   units of the (link-)response variable. For GLM's, they can be returned in
+#'   the response scale if \code{type = "response"}.
 #'
-#'   If the name of an interactive effect is supplied to \code{interaction},
-#'   standardised effects (and confidence intervals) can be calculated and
+#'   Additionally, if the name of an interactive effect is supplied to
+#'   \code{interaction}, standardised effects (and confidence intervals) can be
 #'   returned for predictions of a continuous 'main' variable across specified
-#'   values or levels of an interacting variable(s). The values of all variables
-#'   should be suppied to \code{newdata}, with the main variable being
+#'   values or levels of interacting variable(s). The values for all variables
+#'   should be suppied in \code{newdata}, with the continuous variable being
 #'   automatically identified as having the most unique values.
 #' @return A numeric vector of the predictions, or, if bootstrapped effects are
 #'   supplied, a list containing the predictions and the upper and lower
-#'   confidence intervals. Optional interactive effects (and confidence
-#'   intervals) may also be appended.
-#' @seealso \code{\link[semEff]{semEff}}, \code{\link[semEff]{stdCoeff}},
-#'   \code{\link[semEff]{bootCI}}, \code{\link[semEff]{pSapply}}
-#'   \code{\link[stats]{predict}}
+#'   confidence intervals. Optional interactive effects may also be included.
+#'   Predictions may also be in a list or nested list, depending on the
+#'   structure of \code{m} (and other arguments).
+#' @seealso \code{\link[stats]{predict}}, \code{\link[semEff]{semEff}},
+#'   \code{\link[semEff]{stdCoeff}}, \code{\link[semEff]{bootCI}},
+#'   \code{\link[semEff]{pSapply}}
 #' @examples
 #' ## Predict effects (direct, total)
 #' m <- Shipley.SEM
-#' e <- Shipley.SEM.eff
+#' e <- Shipley.SEM.Eff
 #' dir <- direct(e)
 #' tot <- total(e)
 #' f.dir <- predEff(m, effects = dir, type = "response")
@@ -591,7 +591,7 @@ total <- function(...) {
 #' ))
 #' f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
 #'
-#' ## Add CI's (need to bootstrap model... could take a while)
+#' ## Add CI's (need to bootstrap model - will take a while)
 #' \dontrun{
 #'
 #' system.time(mb <- bootSEM(m, ran.eff = "site", R = 1000))
@@ -609,7 +609,7 @@ total <- function(...) {
 #' stopifnot(all.equal(f1, f2))
 #' stopifnot(all.equal(f2, f3))
 #'
-#' ## Compare model fitted values from 'predEff' to 'predict'
+#' ## Compare model fitted values from predEff with predict
 #' m <- Shipley.SEM$Growth
 #' f1 <- predEff(m, unique.x = FALSE, re.form = NULL)
 #' f2 <- predict(m)
@@ -652,26 +652,24 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
     ## Model data
     d <- getData(m, subset = TRUE, merge = TRUE)
     obs <- rownames(d)
-    n <- nrow(d)
 
-    ## Extract single model (if list)
+    ## Extract a single model (if list)
     m1 <- if (isList(m)) m[[1]] else m
 
     ## Random effects
     is.re <- isMerMod(m1) && !identical(rf, NA) && !identical(rf, ~ 0)
     re <- if (is.re) {
-      re <- rMapply(function(i) {
-        predict(i, nd, re.form = rf, random.only = TRUE)
-      }, m, SIMPLIFY = FALSE)
+      pRE <- function(i) predict(i, nd, re.form = rf, random.only = TRUE)
+      re <- rMapply(pRE, m, SIMPLIFY = FALSE)
       if (isList(re)) re <- avgEst(re, w)
       if (is.null(nd)) re[obs] else re
     } else 0
 
     ## Model weights
     w <- weights(m1)
-    w <- if (is.null(w)) rep(1, n) else w[w > 0]
+    w <- if (is.null(w)) rep(1, nrow(d)) else w[w > 0]
 
-    ## Offsets
+    ## Offset(s)
     o <- model.offset(model.frame(m1)[obs, ])
     om <- if (cen.x && !is.null(o)) weighted.mean(o, w) else 0
     if (!is.null(nd)) {
@@ -692,12 +690,12 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
     ## Predictor means/SD's
     x <- sapply(en, function(i) {
       if (!isInt(i)) {
-        pt <- function(j) parse(text = j)
+        pT <- function(j) parse(text = j)
         if (isInx(i)) {
-          xi <- sapply(pt(EN[[i]]), eval, d)
+          xi <- sapply(pT(EN[[i]]), eval, d)
           if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
           apply(xi, 1, prod)
-        } else eval(pt(i), d)
+        } else eval(pT(i), d)
       } else 1
     }, simplify = FALSE)
     x <- data.frame(x, row.names = obs, check.names = FALSE)
@@ -706,22 +704,22 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
     xs <- sapply(x, function(i) if (std.x) sdW(i, w) else 1)
 
     ## Response mean/SD (link scale)
-    lf <- family(m1)$linkfun
-    ym <- if (cen.y) lf(weighted.mean(getY(m1), w)) else 0
+    lF <- family(m1)$linkfun
+    ym <- if (cen.y) lF(weighted.mean(getY(m1), w)) else 0
     ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
 
     ## Data to predict (standardise using original means/SD's)
-    d <- if (is.null(nd)) x else nd
+    d <- if (!is.null(nd)) nd else x
     obs <- rownames(d)
     d <- sapply(en, function(i) {
       if (!isInt(i)) {
-        pt <- function(j) parse(text = j)
+        pT <- function(j) parse(text = j)
         di <- if (isInx(i)) {
           ENi <- EN[[i]]
-          di <- sapply(pt(ENi), eval, d)
+          di <- sapply(pT(ENi), eval, d)
           di <- sweep(di, 2, xm[ENi])
           apply(di, 1, prod)
-        } else eval(pt(i), d)
+        } else eval(pT(i), d)
         (di - xmw[i]) / xs[i]
       } else 1
     }, simplify = FALSE)
@@ -732,8 +730,8 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
     f <- f * ys + ym + o + re
     f <- setNames(f, obs)
     if (type == "response") {
-      li <- family(m1)$linkinv
-      f <- li(f)
+      lI <- family(m1)$linkinv
+      f <- lI(f)
     }
 
     ## Add CI's
@@ -760,7 +758,7 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
         fi * ys + ym + o + re
       }))
       if (nrow(fb) != R) fb <- t(fb)
-      if (type == "response") fb <- li(fb)
+      if (type == "response") fb <- lI(fb)
 
       ## Create a dummy boot object (for CI's)
       x <- data.frame(rep(1, n))  # dummy data
@@ -772,7 +770,7 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
       class(B) <- "boot"
       attr(B, "boot_type") <- "boot"
 
-      ## CI's
+      ## Calculate CI's
       ci <- pSapply(1:nrow(d), function(i) {
         ci <- do.call(
           boot::boot.ci, c(list(B, ci.conf, ci.type, i), bci.arg)
@@ -790,7 +788,7 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
 
       ## Names of variables involved in interaction
       ## (a = continuous var, b = interacting vars, ab = interactions)
-      ixn <- EN[[ix]]  # all var names
+      ixn <- EN[[ix]]  # var names
       a <- ixn[which.max(sapply(nd[ixn], function(i) length(unique(i))))]
       b <- ixn[!ixn %in% a]
       ab <- en[sapply(en, function(i) {
@@ -801,8 +799,7 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
       ## Values for interacting variable(s) ('b')
       db <- sweep(unique(nd[b]), 2, xm[b])  # centred
       db <- lapply(EN[ab], function(i) {
-        dbi <- db[i[i %in% b]]
-        apply(dbi, 1, prod)
+        apply(db[i[i %in% b]], 1, prod)
       })
 
       ## Effects

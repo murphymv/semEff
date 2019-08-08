@@ -9,8 +9,8 @@ stdCoeff(m, weights = NULL, data = NULL, term.names = NULL,
   unique.x = TRUE, r.squared = FALSE, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{lm}, \code{glm}, or
-\code{merMod}, or a list or nested list of such objects.}
+\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\code{"merMod"}, or a list or nested list of such objects.}
 
 \item{weights}{An optional numeric vector of weights to use for model
 averaging, or a named list of such vectors. The former should be supplied
@@ -24,7 +24,7 @@ calculated instead.}
 sort coefficients from the output.}
 
 \item{cen.x, cen.y}{Logical, whether the intercept and coefficients should be
-calculated from mean-centred variables.}
+calculated using mean-centred variables.}
 
 \item{std.x, std.y}{Logical, whether coefficients should be scaled by the
 standard deviations of variables.}
@@ -42,20 +42,19 @@ A numeric vector of the standardised coefficients, or a list or
 }
 \description{
 Calculate fully standardised model coefficients in standard
-  deviation units, and adjusted for multicollinearity among predictors.
+  deviation units, adjusted for multicollinearity among predictors.
 }
 \details{
-This function will calculate fully standardised coefficients in
-  standard deviation units for linear, generalised linear, and mixed models
-  (of class \code{merMod}). It achieves this via adjusting the 'raw' model
-  coefficients, so no standardisation of input variabes is required
-  beforehand. Users can simply specify the model with all variables in their
-  original units and the function will do the rest. However, the user is free
-  to scale and/or centre any input variables should they choose, which will
-  not affect the outcome of standardisation (provided any scaling is by
-  standard deviations). This may be desirable in some cases, such as to
-  increase numerical stability during model fitting when variables are on
-  widely different scales.
+\code{stdCoeff} will calculate fully standardised coefficients in
+  standard deviation units for linear, generalised linear, and mixed models.
+  It achieves this via adjusting the 'raw' model coefficients, so no
+  standardisation of input variabes is required beforehand. Users can simply
+  specify the model with all variables in their original units and the
+  function will do the rest. However, the user is free to scale and/or centre
+  any input variables should they choose, which should not affect the outcome
+  of standardisation (provided any scaling is by standard deviations). This
+  may be desirable in some cases, such as to increase numerical stability
+  during model fitting when variables are on widely different scales.
 
   If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, model estimates
   will be calculated as if all predictors (x) and/or the response variable
@@ -76,15 +75,17 @@ This function will calculate fully standardised coefficients in
 
   \deqn{\beta_{1} + \beta_{12} \bar{x}_{2} + \beta_{13} \bar{x}_{3} +
   \beta_{123} \bar{x}_{2} \bar{x}_{3}}{\beta1 + (\beta12 * Mx2) + (\beta13 *
-  Mx3) + (\beta123 * Mx2 * Mx3)} (adapted from here:
-  \url{http://bit.ly/2FOJPk8})
+  Mx3) + (\beta123 * Mx2 * Mx3)} (adapted from
+  \href{https://stats.stackexchange.com/questions/65898/why-could-centering-independent-variables-change-the-main-effects-with-moderatio}{here})
+
+
 
   In addition, if \code{std.x = TRUE} or \code{unique.x = TRUE} (see below),
   product terms for interactive effects will be recalculated using
   mean-centred variables, to ensure that standard deviations and variance
-  inflation factors for predictors are calculated correctly (the model must
-  be re-fit for this latter purpose, to recalculate the variance-covariance
-  matrix).
+  inflation factors (VIF) for predictors are calculated correctly (the model
+  must be re-fit for this latter purpose, to recalculate the
+  variance-covariance matrix).
 
   If \code{std.x = TRUE}, coefficients are standardised by multiplying by the
   standard deviations of predictor variables (or terms), while if \code{std.y
@@ -94,30 +95,30 @@ This function will calculate fully standardised coefficients in
   both arguments are true, the coefficients are regarded as 'fully'
   standardised in the traditional sense, often referred to as 'betas'.
 
-  If \code{unique.x = TRUE}, coefficients are adjusted for multicollinearity
-  among predictors by dividing by the square root of the variance inflation
-  factors (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
+  If \code{unique.x = TRUE} (default), coefficients are adjusted for
+  multicollinearity among predictors by dividing by the square root of the
+  VIF's (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
   standardised by the standard deviations of x and y, this converts them to
   semipartial correlations, i.e. the correlation between the unique
   components of predictors (residualised on other predictors) and the
   response variable. This measure of effect size is arguably much more
   interpretable and useful than the traditional standardised coefficient, as
-  it is always estimated independent of the confounding effects of other
-  predictors, and so can more readily be compared both within and across
-  models. Values range from zero (no effect) to +/-1 (perfect relationship),
-  rather than from zero to +/- infinity (as in the case of betas) - putting
-  them on the same scale as the bivariate correlation between predictor and
-  response. In the case of GLM's however, the measure is not exactly equal to
-  the semipartial correlation, so its value may not be always be bound
-  between +/-1 (such cases are likely rare). Crucially, for ordinary linear
-  models, the square of the semipartial correlation equals the increase in
-  R-squared when that variable is added last in the model - directly linking
-  the measure to model fit and 'variance explained'. See
-  \url{http://bit.ly/2GmyrMA} for additional arguments in favour of
-  semipartial correlations.
+  it is always estimated independent of other predictors and so can more
+  readily be compared both within and across models. Values range from zero
+  (no effect) to +/-1 (perfect relationship), rather than from zero to +/-
+  infinity (as in the case of betas) - putting them on the same scale as the
+  bivariate correlation between predictor and response. In the case of GLM's
+  however, the measure is analogous but not exactly equal to the semipartial
+  correlation, so its values may not be always be bound between +/-1 (such
+  cases are likely rare). Crucially, for ordinary linear models, the square
+  of the semipartial correlation equals the increase in R-squared when that
+  variable is added last in the model - directly linking the measure to model
+  fit and 'variance explained'. See
+  \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
+   for additional arguments in favour of semipartial correlations.
 
-  If \code{r.squared = TRUE}, R-squared values are also returned via the
-  \code{R2} function.
+  If \code{r.squared = TRUE}, R-squared values are also returned via
+  \code{R2}.
 
   Finally, if \code{weights} are specified, the function calculates a
   weighted average of the standardised coefficients across models (Burnham &
@@ -161,7 +162,8 @@ stdCoeff(m, w)
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-  ed.). New York: Springer-Verlag. Retrieved from \url{http://bit.ly/2MwlTHa}
+  ed.). New York: Springer-Verlag. Retrieved from
+  \url{https://www.springer.com/gb/book/9780387953649}
 
   Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
   Independent Variables in Linear Regression. \emph{Multivariate Behavioral

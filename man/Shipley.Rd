@@ -19,7 +19,7 @@ for the simulation)}
 died the following winter)}
 }}
 \source{
-\url{https://doi.org/10.6084/m9.figshare.c.3300797.v1}
+\url{https://doi.org/c886}
 }
 \usage{
 Shipley
@@ -30,6 +30,6 @@ Simulated Data from Shipley (2009)
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-  \url{https://doi.org/10.1890/08-1034.1}
+  \url{https://doi.org/bqd43d}
 }
 \keyword{datasets}

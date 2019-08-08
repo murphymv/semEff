@@ -7,15 +7,15 @@
 getData(m, subset = FALSE, merge = FALSE, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{lm}, \code{glm}, or
-\code{merMod}, or a list or nested list of such objects.}
+\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\code{"merMod"}, or a list or nested list of such objects.}
 
 \item{subset}{Logical. If \code{TRUE}, rows with missing observations
-(\code{NA}) are removed - if those variable(s) were used to fit model(s).}
+(\code{NA}) are removed (if those variable(s) were used to fit model(s)).}
 
 \item{merge}{Logical. If \code{TRUE}, and \code{m} is a list or nested list,
-all unique data columns are merged into one data frame, in the order in
-which they are encountered.}
+all unique variables are merged into one data frame, in the order in which
+they are encountered.}
 
 \item{...}{Arguments to \code{eval}.}
 }
@@ -29,10 +29,11 @@ Extract the data used to fit a model.
 This is a simple function to extract the data used to fit a model,
   by evaluating the data slot of the model call object. If the model was fit
   without using the \code{data} argument, data is returned via
-  \code{model.frame} instead (with a warning). If \code{m} is a list and
-  \code{merge = TRUE}, a single dataset containing all (unique) variables
-  used to fit models is returned. This will return an error if \code{subset =
-  TRUE} results in datasets with different numbers of observations (rows).
+  \code{model.frame} instead (with a warning). If \code{m} is a list of
+  models and \code{merge = TRUE}, a single dataset containing all (unique)
+  variables used to fit models is returned. This will return an error if
+  \code{subset = TRUE} results in datasets with different numbers of
+  observations (rows).
 }
 \examples{
 ## Get data used to fit SEM from Shipley (2009)

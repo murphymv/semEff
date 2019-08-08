@@ -21,22 +21,23 @@ total(...)
 \item{type}{The type of effects to return. Must be either \code{"orig"}
 (default) or \code{"boot"}.}
 
-\item{responses}{A character vector of names of response variables for which
-to return effects. If \code{NULL} (default), all responses are used.}
+\item{responses}{Names of response variables in the SEM for which to return
+effects. If \code{NULL} (default), all responses are used.}
 
-\item{...}{Arguments (above) to be passed to \code{Effects}.}
+\item{...}{Arguments (above) to be passed to \code{Effects} from other
+extractor functions.}
 }
 \value{
 A list containing the original or bootstrapped effects for each
   response variable, as numeric vectors or matrices (respectively).
 }
 \description{
-Extract SEM direct, indirect, or total effects from an object of
-  class \code{"semEff"}.
+Extract SEM direct, indirect, and/or total effects from an
+  object of class \code{"semEff"}.
 }
 \details{
 These are simple extractor functions for effects calculated using
-  \code{semEff}, intended for convenience (e.g. for use in \code{predEff}).
+  \code{semEff}, intended for convenience (e.g. for use with \code{predEff}).
 }
 \section{Functions}{
 \itemize{

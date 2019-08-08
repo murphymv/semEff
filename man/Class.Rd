@@ -31,15 +31,15 @@ Functions to determine the class of an R object. Intended
 }
 \section{Functions}{
 \itemize{
-\item \code{isList}: Is object of class "list"?
+\item \code{isList}: Is object of class \code{"list"}?
 
-\item \code{isBoot}: Is object a boot object (output of function \code{boot})?
+\item \code{isBoot}: Is object of class \code{"boot"}?
 
 \item \code{isMod}: Is object a linear or generalised linear (mixed) model?
 
 \item \code{isGlm}: Is object a generalised linear (mixed) model?
 
-\item \code{isMerMod}: Is object a mixed model (of class \code{merMod})?
+\item \code{isMerMod}: Is object a mixed model (class \code{"merMod"})?
 }}
 
 \keyword{internal}

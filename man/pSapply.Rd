@@ -22,9 +22,9 @@ pSapply(x, f, parallel = "snow", ncpus = NULL, cl = NULL,
 \item{cl}{Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 (default), a local cluster is created using the specified number of cores.}
 
-\item{add.obj}{A character vector of any additional objects to be exported to
-the cluster for parallel processing. Use if a required object or function
-cannot be found.}
+\item{add.obj}{A character vector of any additional object names to be
+exported to the cluster for parallel processing. Use if a required object
+or function cannot be found.}
 
 \item{...}{Arguments to \code{parSapply} or \code{sapply}.}
 }
@@ -35,17 +35,17 @@ The output of \code{f} in a list, vector, or matrix.
 Apply a function to a vector using parallel processing.
 }
 \details{
-This function is a wrapper for \code{parSapply} from the
-  \pkg{parallel} package, enabling (potentially) faster processing of a
-  function over a vector of objects. Parallel processing via option
-  \code{"snow"} (default) is carried out using a cluster of workers, which is
-  automatically set up via \code{makeCluster} using all available system
-  cores or a user supplied number of cores. The function then exports the
-  required objects and functions to this cluster using \code{clusterExport},
-  after performing a (rough) match of all objects and functions in the
-  current global environment to those referenced in the call to \code{f} (and
-  also any calls in \code{x}). Any additional required objects can be
-  supplied using \code{add.obj}.
+This is a wrapper for \code{parSapply} from the \pkg{parallel}
+  package, enabling (potentially) faster processing of a function over a
+  vector of objects. Parallel processing via option \code{"snow"} (default)
+  is carried out using a cluster of workers, which is automatically set up
+  via \code{makeCluster} using all available system cores or a user supplied
+  number of cores. The function then exports the required objects and
+  functions to this cluster using \code{clusterExport}, after performing a
+  (rough) match of all objects and functions in the current global
+  environment to those referenced in the call to \code{f} (and also any calls
+  in \code{x}). Any additional required objects can be supplied using
+  \code{add.obj}.
 }
 \seealso{
 \code{\link[parallel]{parSapply}}, \code{\link[base]{sapply}}

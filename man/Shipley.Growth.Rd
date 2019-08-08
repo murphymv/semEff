@@ -3,7 +3,7 @@
 \docType{data}
 \name{Shipley.Growth}
 \alias{Shipley.Growth}
-\title{Competing Candidate Model Set}
+\title{Candidate Model Set}
 \format{A list of mixed models of class \code{"lmer"} and \code{"glmer"} fit
   to the same response variable.}
 \usage{
@@ -30,6 +30,6 @@ Shipley.Growth <- list(
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-  \url{https://doi.org/10.1890/08-1034.1}
+  \url{https://doi.org/bqd43d}
 }
 \keyword{datasets}

@@ -7,8 +7,8 @@
 xNam(m, intercept = TRUE, aliased = TRUE, list = FALSE, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{lm}, \code{glm}, or
-\code{merMod}, or a list or nested list of such objects.}
+\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\code{"merMod"}, or a list or nested list of such objects.}
 
 \item{intercept}{Logical, whether the intercept term should be included.}
 
@@ -16,16 +16,15 @@ xNam(m, intercept = TRUE, aliased = TRUE, list = FALSE, ...)
 (see Details).}
 
 \item{list}{Logical, whether names should be returned as a (named) list, with
-all multi-coefficient terms grouped under their term (variable) name.}
+all multi-coefficient terms grouped under their term names.}
 
 \item{...}{Not currently used.}
 }
 \value{
-A character vector or named list of term names.
+A vector or named list of term names.
 }
 \description{
-Extract term names from a fitted model object as a character
-  vector or list.
+Extract term names from a fitted model object.
 }
 \details{
 This function can be used to extract term names from a fitted model.

@@ -13,12 +13,12 @@ candidate models for each of a set of different response variables.}
 
 \item{weights}{An optional numeric vector of weights to use for model
 averaging, or a named list of such vectors. The former should be supplied
-when \code{m} is a list, and the latter when it is a nested list (with
+when \code{e} is a list, and the latter when it is a nested list (with
 matching list names). If \code{weights = "equal"} (default), a simple
 average is calculated instead.}
 
-\item{est.names}{An optional character vector of names used to extract and/or
-sort estimates from the output.}
+\item{est.names}{An optional vector of names used to extract and/or sort
+estimates from the output.}
 
 \item{...}{Not currently used.}
 }
@@ -33,19 +33,19 @@ Calculate a weighted average of model estimates (e.g.
 \details{
 This function can be used to calculate a weighted average of model
   estimates such as coefficients, fitted values, or residuals, where models
-  are typically competing candidate models fit to the same response variable
-  and data. Weights are typically a 'weight of evidence' type metric such as
-  Akaike model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011),
-  which can be calculated in \code{R} using packages such as \pkg{MuMIn} or
-  \pkg{AICcmodavg}. However, weights of any sort can be used, provided they
-  are numeric. If none are supplied, the simple average is calculated
-  instead.
-}
-\note{
-Averaging is performed via the 'full/zero' rather than
-  'subset/conditional/natural' method, meaning that zero is substituted for
-  any missing estimates (coefficients) prior to calculations - providing a
-  form of 'shrinkage' (Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
+  are typically competing candidate models fit to the same response variable.
+  Weights are typically a 'weight of evidence' type metric such as Akaike
+  model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which
+  can be conveniently calculated in \code{R} using packages such as
+  \pkg{MuMIn} or \pkg{AICcmodavg}. However, numeric weights of any sort can
+  be used. If none are supplied, the simple average is calculated instead.
+
+  Averaging is performed via the 'full'/'zero' rather than
+  'subset'/'conditional'/'natural' method, meaning that zero is substituted
+  for any 'missing' estimates (e.g. coefficients) prior to calculations. This
+  provides a form of shrinkage and thus reduces
+  \href{https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false}{estimate
+  bias} (Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
 }
 \examples{
 ## Model-averaged coefficients
@@ -64,7 +64,8 @@ avgEst(f, w)
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-  ed.). New York: Springer-Verlag. Retrieved from \url{http://bit.ly/2MwlTHa}
+  ed.). New York: Springer-Verlag. Retrieved from
+  \url{https://www.springer.com/gb/book/9780387953649}
 
   Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
   selection and multimodel inference in behavioral ecology: some background,

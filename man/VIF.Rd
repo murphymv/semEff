@@ -7,28 +7,28 @@
 VIF(m, data = NULL, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{lm}, \code{glm}, or
-\code{merMod}, or a list or nested list of such objects.}
+\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\code{"merMod"}, or a list or nested list of such objects.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
 \item{...}{Not currently used.}
 }
 \value{
-A numeric vector of the VIF's, or an array, list or nested list of
-  such vectors.
+A numeric vector of the VIF's, or an array, list of vectors/arrays,
+  or nested list.
 }
 \description{
-Calculate (generalised) variance inflation factors for terms in
-  a fitted model via the variance-covariance matrix of coefficients.
+Calculate generalised variance inflation factors for terms in a
+  fitted model via the variance-covariance matrix of coefficients.
 }
 \details{
-This function calculates generalised variance inflation factors
-  (GVIF) as described in Fox & Monette (1992), and also implemented in the
+\code{VIF} calculates generalised variance inflation factors (GVIF)
+  as described in Fox & Monette (1992), and also implemented in the
   \code{vif} function in the \pkg{car} package. However, whereas \code{vif}
-  returns both GVIF and GVIF^(1/(2*Df)) values, function \code{VIF} simply
-  returns the squared result of the latter measure, which equals the standard
-  VIF for single-coefficient terms and is the equivalent measure for
+  returns both GVIF and GVIF^(1/(2*Df)) values, \code{VIF} simply returns the
+  squared result of the latter measure, which equals the standard VIF for
+  single-coefficient terms and is the equivalent measure for
   multi-coefficient terms (e.g. categorical or polynomial). Also, while
   \code{vif} returns values per model term (i.e. predictor variable),
   \code{VIF} returns values per coefficient, meaning that the same VIF will

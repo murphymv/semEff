@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{rMapply}
 \alias{rMapply}
-\title{(A) Recursive Version of \code{mapply}}
+\title{Recursive Version of \code{mapply}}
 \usage{
 rMapply(f, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)
 }
@@ -22,27 +22,27 @@ in \code{...} for the output.}
 }
 \value{
 The output of \code{f} in a list or nested list, or simplified to a
-  vector or matrix.
+  vector or array (or list of arrays).
 }
 \description{
 Recursively apply a function to a list or lists.
 }
 \details{
 \code{rMapply} recursively applies \code{f} to the elements of the
-  lists in \code{...} via the \code{mapply} function. If only a single list
-  is supplied, the function acts like a recursive version of \code{sapply}.
-  The particular condition that determines if the function should stop
-  recursing is if either the first or second objects in \code{...} are not of
-  class \code{"list"}. Thus, unlike \code{mapply}, it will not iterate over
+  lists in \code{...} via \code{mapply}. If only a single list is supplied,
+  the function acts like a recursive version of \code{sapply}. The particular
+  condition that determines if the function should stop recursing is if
+  either the first or second objects in \code{...} are not of class
+  \code{"list"}. Thus, unlike \code{mapply}, it will not iterate over
   non-list elements in these objects, but instead returns the output of
   \code{f(...)}.
 
   This is primarily a convenience function used internally to enable
-  recursive application of functions to lists or nested lists. It's
-  particular stop condition for recursing is also designed to either a) act
-  as a wrapper for \code{f} if the first object in \code{...} is not a list,
-  or b) apply a model averaging operation if the first object is a list and
-  the second object is a numeric vector (of weights).
+  recursive application of functions to lists or nested lists. Its particular
+  stop condition for recursing is also designed to either a) act as a wrapper
+  for \code{f} if the first object in \code{...} is not a list, or b) apply a
+  model averaging operation if the first object is a list and the second
+  object is a numeric vector (of weights).
 }
 \seealso{
 \code{\link[base]{mapply}}

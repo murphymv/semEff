@@ -7,7 +7,7 @@
 varW(x, w = NULL, na.rm = FALSE, ...)
 }
 \arguments{
-\item{x}{A numeric vector from which to calculate the weighted variance.}
+\item{x}{A numeric vector.}
 
 \item{w}{A numeric vector of weights of the same length as \code{x}.}
 
@@ -35,6 +35,7 @@ w <- runif(30, 0, 1)
 varW(x, w)
 
 ## Simple variance
+varW(x)
 stopifnot(varW(x) == var(x))
 
 ## NA handling

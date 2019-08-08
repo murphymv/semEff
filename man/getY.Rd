@@ -7,8 +7,8 @@
 getY(m, family = NULL, data = NULL, link = FALSE, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{lm}, \code{glm}, or
-\code{merMod}, or alternatively a numeric vector corresponding to a
+\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\code{"merMod"}; or alternatively, a numeric vector corresponding to a
 variable to be transformed. \code{m} can also be a list or nested list of
 such objects.}
 
@@ -26,17 +26,17 @@ link scale (see Details).}
 }
 \value{
 A numeric vector comprising the response variable in the original or
-  link scale, or an array, list or nested list of such vectors.
+  link scale, or an array, list of vectors/arrays, or nested list.
 }
 \description{
 Extract the response variable from a fitted model in the
   original or link scale.
 }
 \details{
-This function will return the response variable from a model by
+\code{getY} will return the response variable from a model by
   summing the fitted values and the response residuals. If \code{link = TRUE}
-  and the model is a GLM, the response is then transformed using the link
-  function. However, if any values are undefined, this transformation is
+  and the model is a GLM, the response is transformed using the link
+  function. However, if the transformation results in undefined values, it is
   replaced by an estimate based on the 'working' response variable of the GLM
   (see below). The function can also be used to transform a variable
   (supplied to \code{m}) using the link function from the specified
@@ -46,20 +46,20 @@ This function will return the response variable from a model by
 
   A key challenge in generating fully standardised model coefficients for a
   generalised linear model (GLM) with a non-gaussian link function is the
-  frequent inability to calculate appropriate standardised ranges (typically
-  the standard deviation) for the response variable in the link scale. This
-  is because directly transforming the response will often produce undefined
+  difficulty in calculating appropriate standardised ranges (typically the
+  standard deviation) for the response variable in the link scale. This is
+  because directly transforming the response will often produce undefined
   values. Although methods for circumventing this issue by indirectly
-  estimating the standard deviation of the link-transformed response have
-  been proposed - including a latent-theoretic approach for binomial models
-  (McKelvey & Zavoina 1975) and a more general variance-based method using
-  pseudo R-squared (Menard 2011) - here an alternative approach is used.
-  Where transformed values are undefined, the function will instead return
-  the synthetic 'working' response arising from the iteratively reweighted
-  least squares (IRLS) algorithm of the GLM (McCullagh & Nelder 1989). This
-  is reconstructed as the sum of the linear predictor and the working
-  residuals - with the latter comprising the error of the model in the link
-  scale. The advantage of this approach is that a relatively straightforward
+  estimating the variance of the link-transformed response have been proposed
+  - including a latent-theoretic approach for binomial models (McKelvey &
+  Zavoina 1975) and a more general variance-based method using a pseudo
+  R-squared (Menard 2011) - here an alternative approach is used. Where
+  transformed values are undefined, the function will instead return the
+  synthetic 'working' response from the iteratively reweighted least squares
+  (IRLS) algorithm of the GLM (McCullagh & Nelder 1989). This is
+  reconstructed as the sum of the linear predictor and the working residuals
+  - with the latter comprising the error of the model in the link scale. The
+  advantage of this approach is that a relatively straightforward
   'transformation' of any non-gaussian response is readily attainable in all
   cases. The standard deviation (or other relevant range) can then be
   calculated using values of the transformed response and used to scale the
@@ -73,23 +73,21 @@ This function will return the response variable from a model by
   the original response - the function uses the following iterative fitting
   procedure to calculate a 'final' working response:
 
-  \enumerate{\item A new GLM is fit with the original response as the sole
-  predictor, with the same error family, and using a single IWLS iteration.
+  \enumerate{\item A new GLM of the same error family is fit with the
+  original response as the sole predictor, and using a single IWLS iteration.
   \item The working response is calculated from this model \item The inverse
-  transformation of the working response is then calculated \item If the
-  inverse transformation is effectively equal to the original response
-  (testing using \code{all.equal} with default tolerance), the working
-  response is returned; otherwise, the GLM is re-fit with the working
-  response now as the sole predictor, and steps 2-4 are repeated - each time
-  with an additional IWLS iteration in the model}
+  transformation of the working response is calculated \item If the result is
+  effectively equal to the original response (testing using \code{all.equal}
+  with the default tolerance), the working response is returned; otherwise,
+  the GLM is re-fit with the working response now as the sole predictor, and
+  steps 2-4 are repeated - each time with an additional IWLS iteration}
 
   This approach will generate a very reasonable transformation of the
-  response variable, which will closely resemble the direct
-  link-transformation where this can be compared - see Examples. It also
-  ensures that the transformed values, and hence the standard deviation, are
-  the same for any GLM fitting the same response - provided it uses the same
-  link function - and so facilitates model comparisons, selection, and
-  averaging.
+  response variable, which will also closely resemble the direct
+  transformation where this can be compared - see Examples. It also ensures
+  that the transformed values, and hence the standard deviation, are the same
+  for any GLM fitting the same response - provided it uses the same link
+  function - and so facilitates model comparisons, selection, and averaging.
 }
 \note{
 As we often cannot directly observe the response variable on the link
@@ -120,7 +118,7 @@ getY(m, link = TRUE, family = binomial("probit"))  # diff. link function
 y <- Shipley$Live
 getY(y, binomial)
 
-## Compare working response with a direct link transformation
+## Compare an estimate with a direct link transformation
 ## (test with a poisson model, log link)
 set.seed(1)
 y <- rpois(30, lambda = 10)
@@ -140,12 +138,10 @@ repeat {
     )
   }
 }
-
 ## Effectively equal?
 all.equal(yl, log(y), check.names = FALSE)
 # TRUE
-
-## Actual difference?
+## Actual difference
 all.equal(yl, log(y), check.names = FALSE, tolerance = .Machine$double.eps)
 # "Mean relative difference: 1.05954e-12"
 }
