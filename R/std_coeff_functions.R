@@ -164,10 +164,11 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
     mf <- model.frame(m)
     if (is.null(d)) {
       d <- mf
+      names(d) <- gsub(".*\\(|\\).*|\\+.*|\\-.*|\\*.*|\\/.*|,.*| .*",
+                       "", names(d))
       wo <- c("weights", "offset")
       names(d)[names(d) %in% wo] <- as.character(getCall(m))[wo]
-      names(d) <- gsub("^offset\\((.*)\\)$", "\\1", names(d))
-      warning("Model frame returned. Some variable names may not match originals.")
+      warning("Model frame used for data.")
     }
     if (subset) {
       w <- weights(m)
@@ -702,7 +703,7 @@ R2 <- function(m, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
       if (R2 > 0) {
         R2a <- 1 - ((n - 3) * (1 - R2) / (n - k - i)) *
           (1 + (2 * (1 - R2) / (n - k - 2.3)))
-        # R2a <- 1 - (1 - R2) * ((n - i) / (n - k - i))  # standard formula (Ezekiel/Wherry)
+        # R2a <- 1 - (1 - R2) * (n - i) / (n - k - i)  # standard formula (Ezekiel/Wherry)
         if (R2a > 0) R2a else 0
       } else 0
     }
@@ -710,9 +711,9 @@ R2 <- function(m, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
     ## Predictive R squared
     R2p <- if (pred) {
       if (R2 > 0) {
-        Hii <- suppressWarnings(hatvalues(m))
-        s <- Hii < 1
-        f <- y - (y - f) / (1 - Hii)
+        hii <- suppressWarnings(hatvalues(m))
+        s <- hii < 1
+        f <- y - (y - f) / (1 - hii)
         Rp <- cov.wt(cbind(y, f)[s, ], w[s], cor = TRUE)$cor[1, 2]
         if (Rp > 0) Rp^2 else 0
       } else 0
