@@ -115,7 +115,7 @@ Calculate fully standardised model coefficients in standard
   variable is added last in the model - directly linking the measure to model
   fit and 'variance explained'. See
   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
-   for additional arguments in favour of semipartial correlations.
+  for additional arguments in favour of the use of semipartial correlations.
 
   If \code{r.squared = TRUE}, R-squared values are also returned via
   \code{R2}.

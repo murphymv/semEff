@@ -162,13 +162,18 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
   getData <- function(m) {
     d <- eval(getCall(m)$data, ...)
     mf <- model.frame(m)
+    mfn <- names(mf)
     if (is.null(d)) {
       d <- mf
-      names(d) <- gsub(".*\\(|\\).*|\\+.*|\\-.*|\\*.*|\\/.*|,.*| .*",
-                       "", names(d))
       wo <- c("weights", "offset")
+      names(d) <- gsub(".*\\(|\\).*|\\+.*|\\-.*|\\*.*|\\/.*|,.*| .*", "", mfn)
       names(d)[names(d) %in% wo] <- as.character(getCall(m))[wo]
       warning("Model frame used for data.")
+    } else {
+      mfn <- mfn[!mfn %in% names(d) & !grepl("\\(.*\\)", mfn)]
+      if (length(mfn) > 0) {
+        d <- cbind(d, sapply(mfn, function(i) eval(parse(text = i), ...)))
+      }
     }
     if (subset) {
       w <- weights(m)
@@ -935,7 +940,7 @@ avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
 #'   variable is added last in the model - directly linking the measure to model
 #'   fit and 'variance explained'. See
 #'   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
-#'    for additional arguments in favour of semipartial correlations.
+#'   for additional arguments in favour of the use of semipartial correlations.
 #'
 #'   If \code{r.squared = TRUE}, R-squared values are also returned via
 #'   \code{R2}.
