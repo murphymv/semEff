@@ -26,14 +26,17 @@ A data frame of the variables used to fit the model(s).
 Extract the data used to fit a model.
 }
 \details{
-This is a simple function to extract the data used to fit a model,
-  by evaluating the data slot of the model call object. If the model was fit
-  without using the \code{data} argument, data is returned via
-  \code{model.frame} instead (with a warning). If \code{m} is a list of
-  models and \code{merge = TRUE}, a single dataset containing all (unique)
-  variables used to fit models is returned. This will return an error if
-  \code{subset = TRUE} results in datasets with different numbers of
-  observations (rows).
+This is a simple convenience function to extract the data used to
+  fit a model, by evaluating the 'data' slot of the model call object. If the
+  'data' argument of the model call was not specified, or is not a data frame
+  containing all variables referenced in the model formula, an error will be
+  thrown - this restriction is largely to ensure that a single coherent
+  dataset of all variables can be made available for resampling purposes.
+
+  If \code{m} is a list of models and \code{merge = TRUE}, a single dataset
+  containing all (unique) variables used to fit models is returned. This will
+  return an error if \code{subset = TRUE} results in datasets with different
+  numbers of observations (rows).
 }
 \examples{
 ## Get data used to fit SEM from Shipley (2009)
@@ -42,6 +45,5 @@ getData(Shipley.SEM)  # from SEM (list of datasets)
 getData(Shipley.SEM, merge = TRUE)  # from SEM (combined dataset)
 }
 \seealso{
-\code{\link[base]{eval}}, \code{\link[stats]{getCall}},
-  \code{\link[stats]{model.frame}}
+\code{\link[stats]{getCall}}, \code{\link[base]{eval}}
 }

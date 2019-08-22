@@ -139,17 +139,19 @@ xNam <- function(m, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
 #'   all unique variables are merged into one data frame, in the order in which
 #'   they are encountered.
 #' @param ... Arguments to \code{eval}.
-#' @details This is a simple function to extract the data used to fit a model,
-#'   by evaluating the data slot of the model call object. If the model was fit
-#'   without using the \code{data} argument, data is returned via
-#'   \code{model.frame} instead (with a warning). If \code{m} is a list of
-#'   models and \code{merge = TRUE}, a single dataset containing all (unique)
-#'   variables used to fit models is returned. This will return an error if
-#'   \code{subset = TRUE} results in datasets with different numbers of
-#'   observations (rows).
+#' @details This is a simple convenience function to extract the data used to
+#'   fit a model, by evaluating the 'data' slot of the model call object. If the
+#'   'data' argument of the model call was not specified, or is not a data frame
+#'   containing all variables referenced in the model formula, an error will be
+#'   thrown - this restriction is largely to ensure that a single coherent
+#'   dataset of all variables can be made available for resampling purposes.
+#'
+#'   If \code{m} is a list of models and \code{merge = TRUE}, a single dataset
+#'   containing all (unique) variables used to fit models is returned. This will
+#'   return an error if \code{subset = TRUE} results in datasets with different
+#'   numbers of observations (rows).
 #' @return A data frame of the variables used to fit the model(s).
-#' @seealso \code{\link[base]{eval}}, \code{\link[stats]{getCall}},
-#'   \code{\link[stats]{model.frame}}
+#' @seealso \code{\link[stats]{getCall}}, \code{\link[base]{eval}}
 #' @examples
 #' ## Get data used to fit SEM from Shipley (2009)
 #' getData(Shipley.SEM[[1]])  # from single model
@@ -160,26 +162,26 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 
   ## Function
   getData <- function(m) {
-    d <- eval(getCall(m)$data, ...)
-    mf <- model.frame(m)
-    mfn <- names(mf)
-    if (is.null(d)) {
-      d <- mf
-      wo <- c("weights", "offset")
-      names(d) <- gsub(".*\\(|\\).*|\\+.*|\\-.*|\\*.*|\\/.*|,.*| .*", "", mfn)
-      names(d)[names(d) %in% wo] <- as.character(getCall(m))[wo]
-      warning("Model frame used for data.")
-    } else {
-      mfn <- mfn[!mfn %in% names(d) & !grepl("\\(.*\\)", mfn)]
-      if (length(mfn) > 0) {
-        d <- cbind(d, sapply(mfn, function(i) eval(parse(text = i), ...)))
-      }
-    }
+
+    ## Data from 'data' argument of model call
+    mc <- getCall(m)
+    d <- eval(mc$data, ...)
+
+    ## All var names from formula
+    f <- c(formula(m), mc$weights, mc$offset)
+    vn <- unlist(lapply(f, all.vars))
+
+    if (!is.data.frame(d) || !all(vn %in% names(d)))
+      stop("'data' argument must be specified as a data frame containing all variables.")
+
+    ## Subset for model observations?
     if (subset) {
+      obs <- names(fitted(m))
       w <- weights(m)
-      if (!is.null(w)) mf <- mf[w > 0, ]
-      d[rownames(mf), ]
+      if (!is.null(w)) obs <- obs[w > 0]
+      d[obs, ]
     } else d
+
   }
 
   ## Apply recursively
