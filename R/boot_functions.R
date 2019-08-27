@@ -322,6 +322,7 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
 
     ## Function to get resids/avg. resids from model/boot obj./list
     res <- function(x, w = NULL) {
+      f <- weighted.residuals
       if (isList(x)) {
         if (all(sapply(x, isBoot))) {
           r <- lapply(x, "[[", 1)
@@ -332,11 +333,11 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
           }))
           list(r, rb)
         } else {
-          r <- lapply(x, resid)
+          r <- lapply(x, f)
           avgEst(r, w)
         }
       } else {
-        if (isBoot(x)) list(x$t0, x$t) else resid(x)
+        if (isBoot(x)) list(x$t0, x$t) else f(x)
       }
     }
 

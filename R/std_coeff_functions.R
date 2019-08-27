@@ -247,7 +247,7 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 #'   coefficients. An additional benefit for piecewise SEM's is that the
 #'   transformed rather than original response can then be specified as a
 #'   predictor in other models, ensuring that standardised indirect and total
-#'   effects are calculated correctly (i.e. using the same standard deviation).
+#'   effects are calculated correctly (i.e. using the same units).
 #'
 #'   To ensure a high level of 'accuracy' in the working response - in the sense
 #'   that the inverse-transformed values are practically indistinguishable from
