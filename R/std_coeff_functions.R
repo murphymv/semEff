@@ -1021,8 +1021,8 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
     xn <- names(b)
 
     ## Intercept?
-    i <- isInt(xn)
-    int <- if (any(i)) {xn <- xn[!i]; TRUE} else FALSE
+    int <- isInt(xn)
+    int <- if (any(int)) {xn <- xn[!int]; TRUE} else FALSE
 
     ## Model weights
     n <- nobs(m)
@@ -1048,7 +1048,9 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
         if (inx) {
 
           ## Main effect names for all terms
-          XN <- sapply(xn, function(i) unlist(strsplit(i, ":")))
+          XN <- sapply(xn, function(i) {
+            unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
+          })
 
           ## Predictor means
           xm <- colMeans(x)

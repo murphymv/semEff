@@ -33,7 +33,7 @@ NULL
 #' @describeIn Param.Type Is parameter an intercept?
 isInt <- function(x) x == "(Intercept)"
 #' @describeIn Param.Type Is parameter a variable interaction (product term)?
-isInx <- function(x) grepl(":", x)
+isInx <- function(x) grepl("(?<!:):(?!:)", x, perl = TRUE)
 #' @describeIn Param.Type Is parameter an R-squared value?
 isR2 <- function(x) grepl("r.squared", x)
 

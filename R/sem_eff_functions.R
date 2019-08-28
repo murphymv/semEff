@@ -648,8 +648,12 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
     ## Effects
     if (is.null(e)) e <- do.call(stdCoeff, c(list(m, w), a))
     e <- e[!is.na(e) & !isR2(names(e))]
+
+    ## Effect names
     en <- names(e)
-    EN <- sapply(en, function(i) unlist(strsplit(i, ":")))
+    EN <- sapply(en, function(i) {
+      unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
+    })
 
     ## Model data
     d <- getData(m, subset = TRUE, merge = TRUE)
@@ -785,7 +789,7 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
     }
 
     ## Add interactive effects
-    if (isTRUE(ix %in% en) && !is.null(nd)) {
+    if (isTRUE(isInx(ix) && ix %in% en && !is.null(nd))) {
 
       ## Names of variables involved in interaction
       ## (ab = all, a = main, b = interacting, a.b = interaction(s))
