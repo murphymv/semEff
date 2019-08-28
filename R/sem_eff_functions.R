@@ -344,7 +344,9 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
         is.B <- any(sapply(e, length) > 1)
         e <- if (is.B) {
           e[sapply(e, function(k) length(k) > 1)]
-        } else unlist(e)[unlist(e) != 0]
+        } else {
+          unlist(e)[unlist(e) != 0]
+        }
         if (length(e) > 0) {
           if (is.B) e <- as.matrix(data.frame(e, check.names = FALSE))
           if (j != "Mediators") {
@@ -783,27 +785,29 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
     }
 
     ## Add interactive effects
-    if (!is.null(ix) && !is.null(nd)) {
+    if (isTRUE(ix %in% en) && !is.null(nd)) {
 
       ## Names of variables involved in interaction
-      ## (a = continuous var, b = interacting vars, ab = interactions)
-      ixn <- EN[[ix]]  # var names
-      a <- ixn[which.max(sapply(nd[ixn], function(i) length(unique(i))))]
-      b <- ixn[!ixn %in% a]
-      ab <- en[sapply(en, function(i) {
-        ENi <- EN[[i]]
-        a %in% ENi && length(ENi) %in% 2:length(ixn)
-      })]
+      ## (ab = all, a = main, b = interacting, a.b = interaction(s))
+      ab <- EN[[ix]]; n <- length(ab)
+      a <- ab[which.max(sapply(nd[ab], function(i) length(unique(i))))]
+      b <- ab[!ab %in% a]
+      a.b <- if (n > 2) {
+        a.b <- unlist(lapply(2:n, function(i) {
+          combn(ab, i, paste, collapse = ":")
+        }))
+        a.b[sapply(a.b, function(i) a %in% EN[[i]])]
+      } else ix
 
-      ## Values for interacting variable(s) ('b')
+      ## Values for interacting variable(s) (b)
       db <- sweep(unique(nd[b]), 2, xm[b])  # centred
-      db <- lapply(EN[ab], function(i) {
+      db <- lapply(EN[a.b], function(i) {
         apply(db[i[i %in% b]], 1, prod)
       })
 
       ## Effects
       e <- e * ys / xs
-      e <- e[a] + rowSums(mapply("*", e[ab], db))
+      e <- e[a] + rowSums(mapply("*", e[a.b], db))
       e <- e * xs[a] / ys
       names(e) <- paste(ix, 1:length(e), sep = "_")
 
@@ -813,7 +817,7 @@ predEff <- function(m, newdata = NULL, effects = NULL, eff.boot = NULL,
         ## Bootstrapped effects
         eb <- t(sapply(1:R, function(i) {
           ei <- eb[i, ] * ys / xs
-          ei <- ei[a] + rowSums(mapply("*", ei[ab], db))
+          ei <- ei[a] + rowSums(mapply("*", ei[a.b], db))
           ei * xs[a] / ys
         }))
         if (nrow(eb) != R) eb <- t(eb)

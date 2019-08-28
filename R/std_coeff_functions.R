@@ -1054,7 +1054,7 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
           xm <- colMeans(x)
 
           ## Adjust lower-order coefs
-          ## (ti = terms containing term i; ni = non-i components of ti)
+          ## (ti = terms containing term i, ni = non-i components of ti)
           b[xn] <- sapply(xn, function(i) {
             bi <- b[[i]]; XNi <- XN[[i]]
             ti <- xn[sapply(xn, function(j) all(XNi %in% XN[[j]])) & xn != i]

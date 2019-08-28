@@ -83,12 +83,13 @@ Generate standardised bootstrapped coefficients and correlated
   Where names of variables with correlated errors are supplied to
   \code{cor.err}, the function will also return bootstrapped Pearson
   correlated errors (residuals) for the models fitting those variables
-  (residuals used are the default type returned by \code{resid}). Where
-  weights are supplied and \code{sem} is a nested list, residuals are
-  averaged across candidate models (as for coefficients) prior to
-  correlating. If any two models (or candidate sets) with correlated errors
-  were fit to different subsets of data observations, both models/sets are
-  first refit to data containing only the observations in common.
+  (residuals are those returned by \code{weighted.residuals}, to account for
+  any weighted regressions). Where weights are supplied and \code{sem} is a
+  nested list, residuals are averaged across candidate models (as for
+  coefficients) prior to correlating. If any two models (or candidate sets)
+  with correlated errors were fit to different subsets of data observations,
+  both models/sets are first refit to data containing only the observations
+  in common.
 
   For mixed models with nested random effects, the highest-level random
   effect (only) in the dataset is resampled, a procedure which should best
@@ -165,6 +166,6 @@ Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
 }
 \seealso{
 \code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
-  \code{\link[semEff]{stdCoeff}}, \code{\link[semEff]{avgEst}},
-  \code{\link[stats]{resid}}
+  \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{weighted.residuals}},
+  \code{\link[semEff]{avgEst}}
 }
