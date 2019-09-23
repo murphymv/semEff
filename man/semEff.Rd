@@ -8,10 +8,9 @@ semEff(sem, predictors = NULL, mediators = NULL, responses = NULL,
   ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL, ...)
 }
 \arguments{
-\item{sem}{A piecewise SEM, comprising a named list of boot objects (class
-\code{"boot"}) containing bootstrapped estimates from fitted models, or,
-alternatively, the models themselves (class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}).}
+\item{sem}{A piecewise SEM, comprising a list of fitted model objects of
+class \code{"lm"}, \code{"glm"}, or \code{"merMod"}, or of boot objects
+(class \code{"boot"}), containing bootstrapped model effects.}
 
 \item{predictors, mediators, responses}{Names of variables for/through which to
 calculate effects. If \code{NULL} (default), all predictors, endogenous
@@ -29,7 +28,7 @@ specification details.}
 \item{bci.arg}{A named list of additional arguments to \code{boot.ci},
 excepting argument \code{index}.}
 
-\item{...}{Arguments to \code{bootSEM}.}
+\item{...}{Arguments to \code{bootEff}.}
 }
 \value{
 A list object of class \code{"semEff"}, comprising: \enumerate{\item
@@ -38,8 +37,9 @@ A list object of class \code{"semEff"}, comprising: \enumerate{\item
 }
 \description{
 Automatically calculate direct, indirect, total, and mediator
-  effects for endogenous (response) variables in a piecewise Structural
-  Equation Model (SEM).
+  effects for endogenous (response) variables in a 'piecewise' Structural
+  Equation Model (SEM), comprising a series of fitted models or bootstrapped
+  effects from such models.
 }
 \details{
 The eponymous function of this package calculates all direct,
@@ -53,8 +53,8 @@ The eponymous function of this package calculates all direct,
   should represent a directed ('acyclic') causal model, which should be named
   (exactly) for each response variable and ordered from 'upstream' or
   'causal' variables through to 'downstream' (i.e. those at the end of the
-  pathway). If fitted models are supplied to \code{sem}, estimates will first
-  be bootstrapped using \code{bootSEM} (this may take a while!).
+  pathway). If fitted models are supplied to \code{sem}, effects will first
+  be bootstrapped using \code{bootEff} (this may take a while!).
 
   Direct effects are calculated as fully standardised model coefficients for
   each response variable, while indirect effects are the product of these
@@ -72,13 +72,13 @@ The eponymous function of this package calculates all direct,
   each effect type (MacKinnon \emph{et al.} 2004, Cheung 2009, Hayes &
   Scharkow 2013). As indirect, total, and mediator effects are not directly
   bootstrapped using the fitted models for response variables (i.e. via
-  \code{bootSEM}), their equivalent 'bootstrapped' estimates are calculated
+  \code{bootEff}), their equivalent 'bootstrapped' estimates are calculated
   instead using the bootstrapped direct effects.
 
   Correlated errors (and confidence intervals) are also returned if their
-  boostrapped estimates are present in \code{sem}, or, if \code{sem} is a
-  list of fitted models, if specified to argument \code{cor.err} (see
-  \code{\link[semEff]{bootSEM}}). These represent residual relationships
+  boostrapped values are present in \code{sem}, or, if \code{sem} is a list
+  of fitted models, if specified to argument \code{cor.err} (see
+  \code{\link[semEff]{bootEff}}). These represent residual relationships
   among response variables, unaccounted for by the SEM.
 
   All effects and bootstrapped effects are returned in lists for each
@@ -97,8 +97,7 @@ semEff(Shipley.SEM.Boot, predictors = "lat")
 semEff(Shipley.SEM.Boot, mediators = "DD")
 semEff(Shipley.SEM.Boot, responses = "Live")
 
-## Effects calculated using original SEM
-## (not usually recommended - better to use saved boot objects)
+## Effects calculated using original SEM (models)
 system.time(
   Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 )
@@ -137,5 +136,5 @@ Cheung, M. W. L. (2009). Comparison of methods for constructing
   \url{https://doi.org/bqd43d}
 }
 \seealso{
-\code{\link[semEff]{bootSEM}}, \code{\link[semEff]{bootCI}}
+\code{\link[semEff]{bootEff}}, \code{\link[semEff]{bootCI}}
 }

@@ -905,8 +905,6 @@ avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
 #'   Mx3) + (\beta123 * Mx2 * Mx3)} (adapted from
 #'   \href{https://stats.stackexchange.com/questions/65898/why-could-centering-independent-variables-change-the-main-effects-with-moderatio}{here})
 #'
-#'
-#'
 #'   In addition, if \code{std.x = TRUE} or \code{unique.x = TRUE} (see below),
 #'   product terms for interactive effects will be recalculated using
 #'   mean-centred variables, to ensure that standard deviations and variance
@@ -1071,7 +1069,8 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
           ## Centre predictors (for correct SD's/VIF's)
           if (std.x || unique.x) {
             x <- sapply(XN, function(i) {
-              xi <- sweep(x[, i, drop = FALSE], 2, xm[i])
+              xi <- x[, i, drop = FALSE]
+              xi <- sweep(xi, 2, xm[i])
               apply(xi, 1, prod)
             })
           }
@@ -1093,7 +1092,7 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
         ## (to calculate correct VIF's for interacting terms)
         m2 <- if (cen.x && inx) {
 
-          ## Add centred predictors to data (list)
+          ## Add centred predictors to data
           if (is.null(d)) d <- getData(m)
           d <- c(list(x = x), as.list(d[obs, ]))
 
@@ -1102,12 +1101,12 @@ stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
           if (is.null(o)) o <- rep(0, n)
           d <- c(list(o = o), d)
 
-          ## New model formula
+          ## New model formula (rand. effs: https://bit.ly/2V1yDeu)
           re <- if (isMerMod(m)) {
             sapply(lme4::findbars(formula(m)), function(i) {
               paste0("(", deparse(i), ")")
             })
-          }  # ran. eff. (https://bit.ly/2V1yDeu)
+          }
           f <- reformulate(c("x", re), response = ".")
 
           ## Update model

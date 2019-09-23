@@ -1,19 +1,18 @@
 
 
-#' @title Bootstrap a Piecewise SEM
-#' @description Generate standardised bootstrapped coefficients and correlated
-#'   errors for a piecewise Structural Equation Model (SEM), comprising a list
-#'   of fitted models representing structured equations.
-#' @param sem A piecewise SEM, comprising a named list/nested list of fitted
-#'   model objects of class \code{"lm"}, \code{"glm"}, or \code{"merMod"}.
-#' @param cor.err Optional, names of correlated errors to be bootstrapped.
-#'   Should be of the form: \code{c("a ~~ b", "c ~~ d", ...)} (spaces optional),
-#'   with names matching model names.
+#' @title Bootstrap Effects
+#' @description Bootstrap model effects (standardised coefficients) and optional
+#'   correlated errors.
+#' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
+#'   \code{"merMod"}, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param ran.eff For mixed models with nested random effects, the name of the
 #'   variable comprising the highest-level random effect. For non-nested random
 #'   effects, specify \code{"crossed"}. Non-specification of this argument when
 #'   \code{m} is a mixed model(s) will result in an error.
+#' @param cor.err Optional, names of SEM correlated errors to be bootstrapped.
+#'   Should be of the form: \code{c("a ~~ b", "c ~~ d", ...)} (spaces optional),
+#'   with names matching model names.
 #' @param R Number of bootstrap replicates to generate.
 #' @param seed Seed for the random number generator. If not provided, a random
 #'   five-digit integer is generated (see Details).
@@ -28,41 +27,37 @@
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param bM.arg A named list of additional arguments to \code{bootMer}.
 #' @param ... Arguments to \code{stdCoeff}.
-#' @details \code{bootSEM} uses the \code{boot} function (primarily) to
-#'   bootstrap standardised coefficients from a fitted model or list of models
-#'   (calculated using \code{stdCoeff}). Bootstrapping is typically
+#' @details \code{bootEff} uses the \code{boot} function (primarily) to
+#'   bootstrap effects from a fitted model or list of models (i.e. standardised
+#'   coefficients, calculated using \code{stdCoeff}). Bootstrapping is typically
 #'   nonparametric, i.e. coefficients are calculated from data where the rows
 #'   have been randomly sampled with replacement. The number of replicates is
 #'   set by default to 10,000, which should provide accurate coverage for
-#'   confidence intervals in most situations.
+#'   confidence intervals in most situations. To ensure that data is resampled
+#'   in the same sequence across individual bootstrap operations, the same seed
+#'   is set per operation, with the value saved as an attribute to the matrix of
+#'   bootrapped values (for reproducibility). The seed can either be
+#'   user-supplied or a randomly-generated five-digit number (default), and is
+#'   always re-initialised on exit (i.e. \code{set.seed(NULL)}).
 #'
-#'   To ensure that data is resampled in the same sequence across individual
-#'   bootstrap operations, the same seed is set per operation, with the value
-#'   saved as an attribute to the bootrapped values (for reproducibility). The
-#'   seed can either be user-supplied or a randomly-generated five-digit number
-#'   (default), and is always re-initialised on exit (i.e.
-#'   \code{set.seed(NULL)}).
+#'   Where \code{weights} are specified, bootstrapped effects will be a weighted
+#'   average across the set of candidate models for each response variable,
+#'   calculated after each model is first refit to the resampled dataset
+#'   (specifying \code{weights = "equal"} will use a simple average instead). If
+#'   no weights are specified and \code{m} is a nested list of models, the
+#'   function will throw an error, as it will be expecting weights for a
+#'   presumed model averaging scenario. If instead the user wishes to bootstrap
+#'   each individual model, they should recursively apply the function using
+#'   \code{rMapply}.
 #'
-#'   Where \code{weights} are specified, bootstrapped coefficients will be a
-#'   weighted average across the set of candidate models for each response
-#'   variable, calculated after each model is first refit to the resampled
-#'   dataset (specifying \code{weights = "equal"} will use a simple average
-#'   instead). If no weights are specified and \code{sem} is a nested list of
-#'   models, the function will throw an error, as it will be expecting weights
-#'   for a presumed model averaging scenario. If instead the user wishes to
-#'   bootstrap each individual model, they should recursively apply the function
-#'   using \code{rMapply}.
-#'
-#'   Where names of variables with correlated errors are supplied to
+#'   Where names of models with correlated errors are supplied to
 #'   \code{cor.err}, the function will also return bootstrapped Pearson
-#'   correlated errors (residuals) for the models fitting those variables
-#'   (residuals are those returned by \code{weighted.residuals}, to account for
-#'   any weighted regressions). Where weights are supplied and \code{sem} is a
-#'   nested list, residuals are averaged across candidate models (as for
-#'   coefficients) prior to correlating. If any two models (or candidate sets)
-#'   with correlated errors were fit to different subsets of data observations,
-#'   both models/sets are first refit to data containing only the observations
-#'   in common.
+#'   correlated errors (\code{weighted.residuals}) for those models. Where
+#'   weights are supplied and \code{m} is a nested list, residuals are averaged
+#'   across candidate models prior to correlating. If any two models (or
+#'   candidate sets) with correlated errors were fit to different subsets of
+#'   data observations, both models/sets are first refit to data containing only
+#'   the observations in common.
 #'
 #'   For mixed models with nested random effects, the highest-level random
 #'   effect (only) in the dataset is resampled, a procedure which should best
@@ -92,7 +87,7 @@
 #'   can specify the type of parallel processing to use, or none. If
 #'   \code{"snow"}, a cluster of workers is created using \code{makeCluster},
 #'   and the user can specify the number of system cores to incorporate in the
-#'   cluster (defaults to all available). \code{bootSEM} then exports all
+#'   cluster (defaults to all available). \code{bootEff} then exports all
 #'   required objects and functions to this cluster using \code{clusterExport},
 #'   after performing a (rough) match of all objects and functions in the
 #'   current global environment to those referenced in the model call(s). Users
@@ -103,8 +98,8 @@
 #'   high. To decrease processing time, it may be worth trying different
 #'   optimizers and/or other options to generate faster estimates (always check
 #'   results).
-#' @return An object of class \code{"boot"} containing the bootstrapped
-#'   coefficients, or a list/nested list of such objects.
+#' @return An object of class \code{"boot"} containing the bootstrapped effects,
+#'   or a list/nested list of such objects.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
 #'   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
 #'   ed.). New York: Springer-Verlag. Retrieved from
@@ -128,7 +123,7 @@
 #' ## 45-60 mins with parallel processing and eight cores (YMMV)
 #' ## (more complicated models will generally take longer...)
 #' system.time(
-#'   Shipley.SEM.Boot <- bootSEM(Shipley.SEM, ran.eff = "site", seed = 53908)
+#'   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 #' )
 #' }
 #'
@@ -138,11 +133,11 @@
 #' ## Bootstrapped estimates
 #' lapply(Shipley.SEM.Boot, function(i) head(i$t))
 #' @export
-bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
+bootEff <- function(m, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
                     seed = NULL, catch.err = TRUE, parallel = "snow",
                     ncpus = NULL, cl = NULL, bM.arg = NULL, ...) {
 
-  m <- sem; ce <- cor.err; d <- data; re <- ran.eff; p <- parallel; nc <- ncpus
+  d <- data; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
 
   ## Main function environment
   env <- environment()
@@ -242,8 +237,8 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
     seed <- sample(10000:99999, 1)
   }
 
-  ## Function to bootstrap coefficients
-  bootCoeff <- function(m, w) {
+  ## Function to bootstrap effects (standardised coefficients)
+  bootEff <- function(m, w) {
 
     ## Data to resample (x)
     ## (mixed model: x = highest-level random effect)
@@ -311,10 +306,10 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
 
   }
 
-  ## Calculate bootstrapped coefficients
-  BC <- rMapply(bootCoeff, m, w, SIMPLIFY = FALSE)
+  ## Bootstrapped effects
+  BE <- rMapply(bootEff, m, w, SIMPLIFY = FALSE)
 
-  # Add bootstrapped correlated errors
+  ## Add bootstrapped correlated errors
   if (any.ce) {
 
     ## Data used to fit models
@@ -342,7 +337,7 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
       }
     }
 
-    ## Calculate bootstrapped correlated errors
+    ## Bootstrapped correlated errors
     BCE <- Map(function(i, j) {
 
       ## Model/list 1
@@ -426,27 +421,26 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
 
     }, cv, names(cv))
 
-    ## Append
-    if (!isList(BC)) BC <- list(BC)
-    BC <- c(BC, BCE)
+    ## Append to bootstrapped effects
+    if (!isList(BE)) BE <- list(BE)
+    BE <- c(BE, BCE)
 
   }
 
   ## Output results
   if (p == "snow") parallel::stopCluster(cl)
   set.seed(NULL)
-  BC
+  BE
 
 }
 
 
 #' @title Bootstrap Confidence Intervals
-#' @description Calculate confidence intervals from bootstrapped model
-#'   estimates.
-#' @param B A boot object (class \code{"boot"}) containing bootstrapped
-#'   estimates from a fitted model; or, alternatively, the model itself (class
-#'   \code{"lm"}, \code{"glm"}, or \code{"merMod"}). \code{B} can also be a list
-#'   or nested list of such objects.
+#' @description Calculate confidence intervals from bootstrapped model effects.
+#' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
+#'   \code{"merMod"}, or a boot object (class \code{"boot"}), containing
+#'   bootstrapped model effects. \code{m} can also be a list or nested list of
+#'   such objects.
 #' @param conf A numeric value specifying the confidence level for the
 #'   intervals.
 #' @param type The type of confidence interval to return (defaults to
@@ -455,12 +449,12 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
 #' @param digits The number of significant digits to return for numeric values.
 #' @param bci.arg A named list of additional arguments to \code{boot.ci},
 #'   excepting argument \code{index}.
-#' @param ... Arguments to \code{bootSEM}.
+#' @param ... Arguments to \code{bootEff}.
 #' @details This is essentially a wrapper for \code{boot.ci} from the \pkg{boot}
 #'   package, returning confidence intervals of the specified type and level
-#'   calculated from bootstrapped model estimates. If a model or models is
-#'   supplied to \code{B}, bootstrapping will first be performed via
-#'   \code{bootSEM}. Estimates for which the confidence intervals do not contain
+#'   calculated from bootstrapped model effects. If a model or models is
+#'   supplied to \code{m}, bootstrapping will first be performed via
+#'   \code{bootEff}. Effects for which the confidence intervals do not contain
 #'   zero are highlighted with a star.
 #'
 #'   Nonparametric bias-corrected and accelerated confidence intervals
@@ -480,8 +474,8 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
 #'   however, the bootstrap is
 #'   \href{https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size}{not
 #'    a solution to small sample size}.
-#' @return A data frame of the original estimates and the bootstrapped
-#'   confidence intervals, or a list or nested list of same.
+#' @return A data frame of the original effects and the bootstrapped confidence
+#'   intervals, or a list or nested list of same.
 #' @references Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
 #'   Bootstrap Confidence Intervals. \emph{American Journal of Mathematical and
 #'   Management Sciences}, \strong{29}(3–4), 437–456. \url{https://doi.org/c8zv}
@@ -498,13 +492,12 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
 #'   methods for calculating confidence intervals by bootstrapping.
 #'   \emph{Journal of Animal Ecology}, \strong{84}(4), 892–897.
 #'   \url{https://doi.org/f8n9rq}
-#' @seealso \code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootSEM}}
+#' @seealso \code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootEff}}
 #' @examples
 #' ## CI's from bootstrapped SEM
 #' bootCI(Shipley.SEM.Boot)
 #'
-#' ## From original SEM
-#' ## (not usually recommended - better to use saved boot objects)
+#' ## From original SEM (models)
 #'
 #' \dontrun{
 #'
@@ -513,12 +506,11 @@ bootSEM <- function(sem, cor.err = NULL, data = NULL, ran.eff = NULL, R = 10000,
 #' )
 #' }
 #' @export
-bootCI <- function(B, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
+bootCI <- function(m, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
                    ...) {
 
   ## Create boot object(s) from model(s) if necessary
-  is.B <- all(unlist(rMapply(isBoot, B)))
-  if (!is.B) B <- bootSEM(B, ...)
+  B <- if (!all(unlist(rMapply(isBoot, m)))) bootEff(m, ...) else m
 
   ## Function
   bootCI <- function(B) {
@@ -542,7 +534,7 @@ bootCI <- function(B, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
       } else c(NA, NA)
     })
 
-    ## Combine estimates and CI's into table (add significance stars)
+    ## Combine effects and CI's into table (add significance stars)
     e <- data.frame(
       rbind(e, ci),
       row.names = c("Estimate", "Lower CI", "Upper CI"),

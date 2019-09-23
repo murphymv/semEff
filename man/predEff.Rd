@@ -18,13 +18,12 @@ contain all the variables named in \code{effects} or all those used to fit
 \code{m}.}
 
 \item{effects}{A numeric vector of effects to predict, or a list or nested
-list of such vectors. These will be effects/estimates calculated using
-\code{semEff}, \code{bootSEM}, or \code{stdCoeff}.}
+list of such vectors. These will be calculated via \code{semEff},
+\code{bootEff}, or \code{stdCoeff}.}
 
 \item{eff.boot}{A matrix of bootstrapped effects used to calculate confidence
 intervals for predictions, or a list or nested list of such matrices. These
-will be bootstrapped effects/estimates calculated using \code{semEff} or
-\code{bootSEM}.}
+will be calculated via \code{semEff} or \code{bootEff}.}
 
 \item{re.form}{For mixed models of class \code{"merMod"}, the formula for
 random effects to condition on when predicting effects. Defaults to
@@ -69,8 +68,8 @@ confidence intervals on predictions. Can be one of \code{"snow"},
 \value{
 A numeric vector of the predictions, or, if bootstrapped effects are
   supplied, a list containing the predictions and the upper and lower
-  confidence intervals. Optional interactive effects may also be included.
-  Predictions may also be in a list or nested list, depending on the
+  confidence intervals. Optional interactive effects may also be appended.
+  Predictions may also be returned in a list or nested list, depending on the
   structure of \code{m} (and other arguments).
 }
 \description{
@@ -158,7 +157,7 @@ f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
 ## Add CI's (need to bootstrap model - will take a while)
 \dontrun{
 
-system.time(mb <- bootSEM(m, ran.eff = "site", R = 1000))
+system.time(mb <- bootEff(m, ran.eff = "site", R = 1000))
 est <- mb$t0; est.b <- mb$t  # estimates
 f <- predEff(m, nd, est, est.b, type = "response", interaction = "Growth:DD")
 }

@@ -2,12 +2,12 @@
 
 #' @title Calculate SEM Effects
 #' @description Automatically calculate direct, indirect, total, and mediator
-#'   effects for endogenous (response) variables in a piecewise Structural
-#'   Equation Model (SEM).
-#' @param sem A piecewise SEM, comprising a named list of boot objects (class
-#'   \code{"boot"}) containing bootstrapped estimates from fitted models, or,
-#'   alternatively, the models themselves (class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}).
+#'   effects for endogenous (response) variables in a 'piecewise' Structural
+#'   Equation Model (SEM), comprising a series of fitted models or bootstrapped
+#'   effects from such models.
+#' @param sem A piecewise SEM, comprising a list of fitted model objects of
+#'   class \code{"lm"}, \code{"glm"}, or \code{"merMod"}, or of boot objects
+#'   (class \code{"boot"}), containing bootstrapped model effects.
 #' @param predictors,mediators,responses Names of variables for/through which to
 #'   calculate effects. If \code{NULL} (default), all predictors, endogenous
 #'   predictors (mediators), and endogenous variables (responses) will be used.
@@ -19,7 +19,7 @@
 #' @param digits The number of significant digits to return for numeric values.
 #' @param bci.arg A named list of additional arguments to \code{boot.ci},
 #'   excepting argument \code{index}.
-#' @param ... Arguments to \code{bootSEM}.
+#' @param ... Arguments to \code{bootEff}.
 #' @details The eponymous function of this package calculates all direct,
 #'   indirect, total, and mediator effects for endogenous variables in a
 #'   'piecewise' Structural Equation Model (SEM), that is, one where parameter
@@ -31,8 +31,8 @@
 #'   should represent a directed ('acyclic') causal model, which should be named
 #'   (exactly) for each response variable and ordered from 'upstream' or
 #'   'causal' variables through to 'downstream' (i.e. those at the end of the
-#'   pathway). If fitted models are supplied to \code{sem}, estimates will first
-#'   be bootstrapped using \code{bootSEM} (this may take a while!).
+#'   pathway). If fitted models are supplied to \code{sem}, effects will first
+#'   be bootstrapped using \code{bootEff} (this may take a while!).
 #'
 #'   Direct effects are calculated as fully standardised model coefficients for
 #'   each response variable, while indirect effects are the product of these
@@ -50,13 +50,13 @@
 #'   each effect type (MacKinnon \emph{et al.} 2004, Cheung 2009, Hayes &
 #'   Scharkow 2013). As indirect, total, and mediator effects are not directly
 #'   bootstrapped using the fitted models for response variables (i.e. via
-#'   \code{bootSEM}), their equivalent 'bootstrapped' estimates are calculated
+#'   \code{bootEff}), their equivalent 'bootstrapped' estimates are calculated
 #'   instead using the bootstrapped direct effects.
 #'
 #'   Correlated errors (and confidence intervals) are also returned if their
-#'   boostrapped estimates are present in \code{sem}, or, if \code{sem} is a
-#'   list of fitted models, if specified to argument \code{cor.err} (see
-#'   \code{\link[semEff]{bootSEM}}). These represent residual relationships
+#'   boostrapped values are present in \code{sem}, or, if \code{sem} is a list
+#'   of fitted models, if specified to argument \code{cor.err} (see
+#'   \code{\link[semEff]{bootEff}}). These represent residual relationships
 #'   among response variables, unaccounted for by the SEM.
 #'
 #'   All effects and bootstrapped effects are returned in lists for each
@@ -93,7 +93,7 @@
 #'   Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
 #'   context. \emph{Ecology}, \strong{90}(2), 363-368.
 #'   \url{https://doi.org/bqd43d}
-#' @seealso \code{\link[semEff]{bootSEM}}, \code{\link[semEff]{bootCI}}
+#' @seealso \code{\link[semEff]{bootEff}}, \code{\link[semEff]{bootCI}}
 #' @examples
 #' \dontrun{
 #'
@@ -105,8 +105,7 @@
 #' semEff(Shipley.SEM.Boot, mediators = "DD")
 #' semEff(Shipley.SEM.Boot, responses = "Live")
 #'
-#' ## Effects calculated using original SEM
-#' ## (not usually recommended - better to use saved boot objects)
+#' ## Effects calculated using original SEM (models)
 #' system.time(
 #'   Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 #' )
@@ -125,7 +124,8 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   p <- predictors; m <- mediators; r <- responses
 
   ## Bootstrap SEM (if necessary)
-  if (!all(sapply(sem, isBoot))) sem <- bootSEM(sem, ...)
+  if (!all(sapply(sem, isBoot))) sem <- bootEff(sem, ...)
+  if (!isList(sem)) sem <- list(sem)
 
   ## Function to (recursively) replace parts of names/colnames in an object/list
   subNam <- function(p, r, x) {
@@ -404,9 +404,9 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   s <- subNam("_", ".", s)
 
   ## Output effects
-  eff <- list("Effects" = e, "Boot. Effects" = eb, "Summary" = s)
-  class(eff) <- c("semEff", "list")
-  eff
+  e <- list("Effects" = e, "Boot. Effects" = eb, "Summary" = s)
+  class(e) <- c("semEff", "list")
+  e
 
 
 }
@@ -425,7 +425,7 @@ print.semEff <- function(x, ...) print(x$Summary)
 #' @title Extract SEM Effects
 #' @description Extract SEM direct, indirect, and/or total effects from an
 #'   object of class \code{"semEff"}.
-#' @param sem.eff An object of class \code{"semEff"}.
+#' @param e An object of class \code{"semEff"}.
 #' @param type The type of effects to return. Must be either \code{"orig"}
 #'   (default) or \code{"boot"}.
 #' @param responses Names of response variables in the SEM for which to return
@@ -440,8 +440,8 @@ print.semEff <- function(x, ...) print(x$Summary)
 NULL
 #' @describeIn Effects Extract all effects.
 #' @export
-Effects <- function(sem.eff, type = "orig", responses = NULL) {
-  e <- sem.eff; t <- type; r <- responses
+Effects <- function(e, type = "orig", responses = NULL) {
+  t <- type; r <- responses
   e <- if (t == "orig") e[[1]] else {
     if (t == "boot") e[[2]] else
       stop("Effect type must be either 'orig' (default) or 'boot'")
@@ -474,12 +474,11 @@ total <- function(...) {
 #'   contain all the variables named in \code{effects} or all those used to fit
 #'   \code{m}.
 #' @param effects A numeric vector of effects to predict, or a list or nested
-#'   list of such vectors. These will be effects/estimates calculated using
-#'   \code{semEff}, \code{bootSEM}, or \code{stdCoeff}.
+#'   list of such vectors. These will be calculated via \code{semEff},
+#'   \code{bootEff}, or \code{stdCoeff}.
 #' @param eff.boot A matrix of bootstrapped effects used to calculate confidence
 #'   intervals for predictions, or a list or nested list of such matrices. These
-#'   will be bootstrapped effects/estimates calculated using \code{semEff} or
-#'   \code{bootSEM}.
+#'   will be calculated via \code{semEff} or \code{bootEff}.
 #' @param re.form For mixed models of class \code{"merMod"}, the formula for
 #'   random effects to condition on when predicting effects. Defaults to
 #'   \code{NA}, meaning random effects are averaged over. See
@@ -550,8 +549,8 @@ total <- function(...) {
 #'   automatically identified as having the most unique values.
 #' @return A numeric vector of the predictions, or, if bootstrapped effects are
 #'   supplied, a list containing the predictions and the upper and lower
-#'   confidence intervals. Optional interactive effects may also be included.
-#'   Predictions may also be in a list or nested list, depending on the
+#'   confidence intervals. Optional interactive effects may also be appended.
+#'   Predictions may also be returned in a list or nested list, depending on the
 #'   structure of \code{m} (and other arguments).
 #' @seealso \code{\link[stats]{predict}}, \code{\link[semEff]{semEff}},
 #'   \code{\link[semEff]{stdCoeff}}, \code{\link[semEff]{bootCI}},
@@ -596,7 +595,7 @@ total <- function(...) {
 #' ## Add CI's (need to bootstrap model - will take a while)
 #' \dontrun{
 #'
-#' system.time(mb <- bootSEM(m, ran.eff = "site", R = 1000))
+#' system.time(mb <- bootEff(m, ran.eff = "site", R = 1000))
 #' est <- mb$t0; est.b <- mb$t  # estimates
 #' f <- predEff(m, nd, est, est.b, type = "response", interaction = "Growth:DD")
 #' }

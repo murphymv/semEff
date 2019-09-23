@@ -4,14 +4,14 @@
 \alias{bootCI}
 \title{Bootstrap Confidence Intervals}
 \usage{
-bootCI(B, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
+bootCI(m, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   ...)
 }
 \arguments{
-\item{B}{A boot object (class \code{"boot"}) containing bootstrapped
-estimates from a fitted model; or, alternatively, the model itself (class
-\code{"lm"}, \code{"glm"}, or \code{"merMod"}). \code{B} can also be a list
-or nested list of such objects.}
+\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\code{"merMod"}, or a boot object (class \code{"boot"}), containing
+bootstrapped model effects. \code{m} can also be a list or nested list of
+such objects.}
 
 \item{conf}{A numeric value specifying the confidence level for the
 intervals.}
@@ -25,22 +25,21 @@ specification details.}
 \item{bci.arg}{A named list of additional arguments to \code{boot.ci},
 excepting argument \code{index}.}
 
-\item{...}{Arguments to \code{bootSEM}.}
+\item{...}{Arguments to \code{bootEff}.}
 }
 \value{
-A data frame of the original estimates and the bootstrapped
-  confidence intervals, or a list or nested list of same.
+A data frame of the original effects and the bootstrapped confidence
+  intervals, or a list or nested list of same.
 }
 \description{
-Calculate confidence intervals from bootstrapped model
-  estimates.
+Calculate confidence intervals from bootstrapped model effects.
 }
 \details{
 This is essentially a wrapper for \code{boot.ci} from the \pkg{boot}
   package, returning confidence intervals of the specified type and level
-  calculated from bootstrapped model estimates. If a model or models is
-  supplied to \code{B}, bootstrapping will first be performed via
-  \code{bootSEM}. Estimates for which the confidence intervals do not contain
+  calculated from bootstrapped model effects. If a model or models is
+  supplied to \code{m}, bootstrapping will first be performed via
+  \code{bootEff}. Effects for which the confidence intervals do not contain
   zero are highlighted with a star.
 
   Nonparametric bias-corrected and accelerated confidence intervals
@@ -66,8 +65,7 @@ All bootstrapped confidence intervals will underestimate the true
 ## CI's from bootstrapped SEM
 bootCI(Shipley.SEM.Boot)
 
-## From original SEM
-## (not usually recommended - better to use saved boot objects)
+## From original SEM (models)
 
 \dontrun{
 
@@ -95,5 +93,5 @@ Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
   \url{https://doi.org/f8n9rq}
 }
 \seealso{
-\code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootSEM}}
+\code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootEff}}
 }

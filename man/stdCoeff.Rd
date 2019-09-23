@@ -78,8 +78,6 @@ Calculate fully standardised model coefficients in standard
   Mx3) + (\beta123 * Mx2 * Mx3)} (adapted from
   \href{https://stats.stackexchange.com/questions/65898/why-could-centering-independent-variables-change-the-main-effects-with-moderatio}{here})
 
-
-
   In addition, if \code{std.x = TRUE} or \code{unique.x = TRUE} (see below),
   product terms for interactive effects will be recalculated using
   mean-centred variables, to ensure that standard deviations and variance
