@@ -9,8 +9,8 @@ semEff(sem, predictors = NULL, mediators = NULL, responses = NULL,
 }
 \arguments{
 \item{sem}{A piecewise SEM, comprising a list of fitted model objects of
-class \code{"lm"}, \code{"glm"}, or \code{"merMod"}, or of boot objects
-(class \code{"boot"}), containing bootstrapped model effects.}
+class \code{"lm"}, \code{"glm"}, or \code{"merMod"}, or, alternatively, of
+boot objects (class \code{"boot"}), containing bootstrapped model effects.}
 
 \item{predictors, mediators, responses}{Names of variables for/through which to
 calculate effects. If \code{NULL} (default), all predictors, endogenous
@@ -38,8 +38,7 @@ A list object of class \code{"semEff"}, comprising: \enumerate{\item
 \description{
 Automatically calculate direct, indirect, total, and mediator
   effects for endogenous (response) variables in a 'piecewise' Structural
-  Equation Model (SEM), comprising a series of fitted models or bootstrapped
-  effects from such models.
+  Equation Model (SEM).
 }
 \details{
 The eponymous function of this package calculates all direct,

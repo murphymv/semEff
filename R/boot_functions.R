@@ -1,8 +1,8 @@
 
 
-#' @title Bootstrap Effects
+#' @title Bootstrap Model Effects
 #' @description Bootstrap model effects (standardised coefficients) and optional
-#'   correlated errors.
+#'   SEM correlated errors.
 #' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
 #'   \code{"merMod"}, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
@@ -15,7 +15,7 @@
 #'   with names matching model names.
 #' @param R Number of bootstrap replicates to generate.
 #' @param seed Seed for the random number generator. If not provided, a random
-#'   five-digit integer is generated (see Details).
+#'   five-digit integer is used (see Details).
 #' @param catch.err Logical, should errors generated during model fitting or
 #'   estimation be caught and \code{NA} returned for estimates? If \code{FALSE},
 #'   any such errors will cause the function to exit.
@@ -53,9 +53,9 @@
 #'   Where names of models with correlated errors are supplied to
 #'   \code{cor.err}, the function will also return bootstrapped Pearson
 #'   correlated errors (\code{weighted.residuals}) for those models. Where
-#'   weights are supplied and \code{m} is a nested list, residuals are averaged
-#'   across candidate models prior to correlating. If any two models (or
-#'   candidate sets) with correlated errors were fit to different subsets of
+#'   \code{weights} are supplied and \code{m} is a nested list, residuals are
+#'   averaged across candidate models prior to correlating. If any two models
+#'   (or candidate sets) with correlated errors were fit to different subsets of
 #'   data observations, both models/sets are first refit to data containing only
 #'   the observations in common.
 #'
@@ -438,9 +438,9 @@ bootEff <- function(m, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
 #' @title Bootstrap Confidence Intervals
 #' @description Calculate confidence intervals from bootstrapped model effects.
 #' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}, or a boot object (class \code{"boot"}), containing
-#'   bootstrapped model effects. \code{m} can also be a list or nested list of
-#'   such objects.
+#'   \code{"merMod"}, or, alternatively, a boot object (class \code{"boot"}),
+#'   containing bootstrapped model effects. \code{m} can also be a list or
+#'   nested list of such objects.
 #' @param conf A numeric value specifying the confidence level for the
 #'   intervals.
 #' @param type The type of confidence interval to return (defaults to

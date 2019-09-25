@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot_functions.R
 \name{bootEff}
 \alias{bootEff}
-\title{Bootstrap Effects}
+\title{Bootstrap Model Effects}
 \usage{
 bootEff(m, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
   seed = NULL, catch.err = TRUE, parallel = "snow", ncpus = NULL,
@@ -26,7 +26,7 @@ with names matching model names.}
 \item{R}{Number of bootstrap replicates to generate.}
 
 \item{seed}{Seed for the random number generator. If not provided, a random
-five-digit integer is generated (see Details).}
+five-digit integer is used (see Details).}
 
 \item{catch.err}{Logical, should errors generated during model fitting or
 estimation be caught and \code{NA} returned for estimates? If \code{FALSE},
@@ -51,7 +51,7 @@ An object of class \code{"boot"} containing the bootstrapped effects,
 }
 \description{
 Bootstrap model effects (standardised coefficients) and optional
-  correlated errors.
+  SEM correlated errors.
 }
 \details{
 \code{bootEff} uses the \code{boot} function (primarily) to
@@ -80,9 +80,9 @@ Bootstrap model effects (standardised coefficients) and optional
   Where names of models with correlated errors are supplied to
   \code{cor.err}, the function will also return bootstrapped Pearson
   correlated errors (\code{weighted.residuals}) for those models. Where
-  weights are supplied and \code{m} is a nested list, residuals are averaged
-  across candidate models prior to correlating. If any two models (or
-  candidate sets) with correlated errors were fit to different subsets of
+  \code{weights} are supplied and \code{m} is a nested list, residuals are
+  averaged across candidate models prior to correlating. If any two models
+  (or candidate sets) with correlated errors were fit to different subsets of
   data observations, both models/sets are first refit to data containing only
   the observations in common.
 

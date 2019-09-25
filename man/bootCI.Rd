@@ -9,9 +9,9 @@ bootCI(m, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
 }
 \arguments{
 \item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or a boot object (class \code{"boot"}), containing
-bootstrapped model effects. \code{m} can also be a list or nested list of
-such objects.}
+\code{"merMod"}, or, alternatively, a boot object (class \code{"boot"}),
+containing bootstrapped model effects. \code{m} can also be a list or
+nested list of such objects.}
 
 \item{conf}{A numeric value specifying the confidence level for the
 intervals.}
