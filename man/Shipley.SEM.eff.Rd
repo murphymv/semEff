@@ -11,7 +11,7 @@ Shipley.SEM.Eff
 }
 \description{
 SEM effects calculated from bootstrapped estimates of the
-  hypothesised SEM from Shipley (2009) using \code{semEff}.
+  hypothesised SEM from Shipley (2009), using \code{semEff}.
 }
 \examples{
 ## Specification

@@ -4,23 +4,24 @@
 \alias{getData}
 \title{Get Model Data}
 \usage{
-getData(m, subset = FALSE, merge = FALSE, ...)
+getData(mod, subset = FALSE, merge = FALSE, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
 \code{"merMod"}, or a list or nested list of such objects.}
 
-\item{subset}{Logical. If \code{TRUE}, rows with missing observations
-(\code{NA}) are removed (if those variable(s) were used to fit model(s)).}
+\item{subset}{Logical. If \code{TRUE}, only observations used to fit the
+model(s) are returned (i.e. missing observations (\code{NA}) are removed).}
 
-\item{merge}{Logical. If \code{TRUE}, and \code{m} is a list or nested list,
-all unique variables are merged into one data frame, in the order in which
-they are encountered.}
+\item{merge}{Logical. If \code{TRUE}, and \code{mod} is a list or nested
+list, a single dataset containing all variables used to fit models is
+returned.}
 
 \item{...}{Arguments to \code{eval}.}
 }
 \value{
-A data frame of the variables used to fit the model(s).
+A data frame of the variables used to fit the model(s), or a list or
+  nested list of same.
 }
 \description{
 Extract the data used to fit a model.
@@ -31,18 +32,19 @@ This is a simple convenience function to extract the data used to
   'data' argument of the model call was not specified, or is not a data frame
   containing all variables referenced in the model formula, an error will be
   thrown - this restriction is largely to ensure that a single coherent
-  dataset of all variables can be made available for resampling purposes.
+  dataset of all model variables can be made available for resampling
+  purposes.
 
-  If \code{m} is a list of models and \code{merge = TRUE}, a single dataset
-  containing all (unique) variables used to fit models is returned. This will
+  If \code{mod} is a list of models and \code{merge = TRUE}, all (unique)
+  variables used to fit models are merged into a single data frame. This will
   return an error if \code{subset = TRUE} results in datasets with different
   numbers of observations (rows).
 }
 \examples{
 ## Get data used to fit SEM from Shipley (2009)
 getData(Shipley.SEM[[1]])  # from single model
-getData(Shipley.SEM)  # from SEM (list of datasets)
-getData(Shipley.SEM, merge = TRUE)  # from SEM (combined dataset)
+getData(Shipley.SEM)  # from SEM (list)
+getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
 }
 \seealso{
 \code{\link[stats]{getCall}}, \code{\link[base]{eval}}

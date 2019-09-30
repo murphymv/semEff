@@ -4,13 +4,12 @@
 #' @description Calculate the weighted variance of \code{x}.
 #' @param x A numeric vector.
 #' @param w A numeric vector of weights of the same length as \code{x}.
-#' @param na.rm Logical, should NA's in \code{x} be removed?
+#' @param na.rm Logical, whether NA's in \code{x} should be removed.
 #' @param ... Not currently used.
-#' @details This function calculates the weighted variance of \code{x} via the
-#'   weighted covariance matrix (\code{cov.wt}). If no weights are supplied, the
-#'   simple variance is returned instead. As in \code{weighted.mean},
-#'   \code{NA}'s in \code{w} are not handled specially and will return \code{NA}
-#'   as result.
+#' @details Calculate the weighted variance of \code{x} via the weighted
+#'   covariance matrix (\code{cov.wt}). If no weights are supplied, the simple
+#'   variance is returned instead. As in \code{weighted.mean}, \code{NA}'s in
+#'   \code{w} are not handled specially and will return \code{NA} as result.
 #' @return A numeric value, the weighted variance of \code{x}.
 #' @seealso \code{\link[stats]{var}}, \code{\link[stats]{cov.wt}},
 #'   \code{\link[stats]{weighted.mean}}
@@ -45,8 +44,8 @@ varW <- function(x, w = NULL, na.rm = FALSE, ...) {
 #' @title Weighted Standard Deviation
 #' @description Calculate the weighted standard deviation of \code{x}.
 #' @param ... Arguments to \code{varW}.
-#' @details This is a wrapper for \code{varW}, which applies the square root to
-#'   the output.
+#' @details This is simply a wrapper for \code{varW}, applying the square root
+#'   to the output.
 #' @return A numeric value, the weighted standard deviation of \code{x}.
 #' @seealso \code{\link[stats]{sd}}, \code{\link[semEff]{varW}}
 #' @export
@@ -57,20 +56,19 @@ sdW <- function(...) {
 
 #' @title Get Model Term Names
 #' @description Extract term names from a fitted model object.
-#' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
+#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
 #'   \code{"merMod"}, or a list or nested list of such objects.
 #' @param intercept Logical, whether the intercept term should be included.
 #' @param aliased Logical, whether names of aliased terms should be included
 #'   (see Details).
-#' @param list Logical, whether names should be returned as a (named) list, with
-#'   all multi-coefficient terms grouped under their term names.
+#' @param list Logical, whether names should be returned as a list, with all
+#'   multi-coefficient terms grouped under their term names.
 #' @param ... Not currently used.
-#' @details This function can be used to extract term names from a fitted model.
-#'   Names of terms for which coefficients cannot be estimated are also included
-#'   if \code{aliased = TRUE} (default). These may be terms which are perfectly
-#'   correlated with other terms in the model, so that the model design matrix
-#'   is rank deficient.
-#' @return A vector or named list of term names.
+#' @details Extract term names from a fitted model. Names of terms for which
+#'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
+#'   (default). These may be terms which are perfectly correlated with other
+#'   terms in the model, so that the model design matrix is rank deficient.
+#' @return A character vector or list/nested list of term names.
 #' @examples
 #' ## Term names from Shipley SEM
 #' m <- Shipley.SEM
@@ -86,7 +84,9 @@ sdW <- function(...) {
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 #' xNam(m, aliased = FALSE, list = TRUE)  # as named list
 #' @export
-xNam <- function(m, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
+xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
+
+  m <- mod
 
   ## Function
   xNam <- function(m) {
@@ -131,34 +131,38 @@ xNam <- function(m, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
 
 #' @title Get Model Data
 #' @description Extract the data used to fit a model.
-#' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
+#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
 #'   \code{"merMod"}, or a list or nested list of such objects.
-#' @param subset Logical. If \code{TRUE}, rows with missing observations
-#'   (\code{NA}) are removed (if those variable(s) were used to fit model(s)).
-#' @param merge Logical. If \code{TRUE}, and \code{m} is a list or nested list,
-#'   all unique variables are merged into one data frame, in the order in which
-#'   they are encountered.
+#' @param subset Logical. If \code{TRUE}, only observations used to fit the
+#'   model(s) are returned (i.e. missing observations (\code{NA}) are removed).
+#' @param merge Logical. If \code{TRUE}, and \code{mod} is a list or nested
+#'   list, a single dataset containing all variables used to fit models is
+#'   returned.
 #' @param ... Arguments to \code{eval}.
 #' @details This is a simple convenience function to extract the data used to
 #'   fit a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
 #'   containing all variables referenced in the model formula, an error will be
 #'   thrown - this restriction is largely to ensure that a single coherent
-#'   dataset of all variables can be made available for resampling purposes.
+#'   dataset of all model variables can be made available for resampling
+#'   purposes.
 #'
-#'   If \code{m} is a list of models and \code{merge = TRUE}, a single dataset
-#'   containing all (unique) variables used to fit models is returned. This will
+#'   If \code{mod} is a list of models and \code{merge = TRUE}, all (unique)
+#'   variables used to fit models are merged into a single data frame. This will
 #'   return an error if \code{subset = TRUE} results in datasets with different
 #'   numbers of observations (rows).
-#' @return A data frame of the variables used to fit the model(s).
+#' @return A data frame of the variables used to fit the model(s), or a list or
+#'   nested list of same.
 #' @seealso \code{\link[stats]{getCall}}, \code{\link[base]{eval}}
 #' @examples
 #' ## Get data used to fit SEM from Shipley (2009)
 #' getData(Shipley.SEM[[1]])  # from single model
-#' getData(Shipley.SEM)  # from SEM (list of datasets)
-#' getData(Shipley.SEM, merge = TRUE)  # from SEM (combined dataset)
+#' getData(Shipley.SEM)  # from SEM (list)
+#' getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
 #' @export
-getData <- function(m, subset = FALSE, merge = FALSE, ...) {
+getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
+
+  m <- mod
 
   ## Function
   getData <- function(m) {
@@ -201,26 +205,25 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 
 #' @title Get Model Response Variable
 #' @description Extract the response variable from a fitted model in the
-#'   original or link scale.
-#' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}; or alternatively, a numeric vector corresponding to a
-#'   variable to be transformed. \code{m} can also be a list or nested list of
-#'   such objects.
+#'   original or link scale (for GLM's).
+#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
+#'   \code{"merMod"}. Alternatively, a numeric vector, corresponding to a
+#'   variable to be transformed. Can also be a list or nested list of such
+#'   objects.
 #' @param family Optional, the error distribution family containing the link
 #'   function which will be used to transform the response (see
 #'   \code{\link[stats]{family}} for specification details).
-#' @param data An optional dataset used to first re-fit the model(s) (if
-#'   \code{m} is a model object/list).
-#' @param link Logical. If \code{TRUE}, return the GLM response variable on the
+#' @param data An optional dataset used to first re-fit the model(s).
+#' @param link Logical. If \code{TRUE}, return the response variable on the
 #'   link scale (see Details).
 #' @param ... Not currently used.
 #' @details \code{getY} will return the response variable from a model by
 #'   summing the fitted values and the response residuals. If \code{link = TRUE}
-#'   and the model is a GLM, the response is transformed using the link
-#'   function. However, if the transformation results in undefined values, it is
-#'   replaced by an estimate based on the 'working' response variable of the GLM
-#'   (see below). The function can also be used to transform a variable
-#'   (supplied to \code{m}) using the link function from the specified
+#'   and the model is a GLM, the response is transformed using the model link
+#'   function. However, if this transformation results in undefined values, it
+#'   is replaced by an estimate based on the 'working' response variable of the
+#'   GLM (see below). The function can also be used to transform a variable
+#'   (supplied to \code{mod}) using the link function from the specified
 #'   \code{family} - in which case the \code{link} argument is ignored.
 #'
 #'   \strong{Estimating the link-transformed response}
@@ -247,7 +250,8 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 #'   coefficients. An additional benefit for piecewise SEM's is that the
 #'   transformed rather than original response can then be specified as a
 #'   predictor in other models, ensuring that standardised indirect and total
-#'   effects are calculated correctly (i.e. using the same units).
+#'   effects are calculated correctly (i.e. using the same units for the
+#'   variable).
 #'
 #'   To ensure a high level of 'accuracy' in the working response - in the sense
 #'   that the inverse-transformed values are practically indistinguishable from
@@ -255,13 +259,14 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 #'   procedure to calculate a 'final' working response:
 #'
 #'   \enumerate{\item A new GLM of the same error family is fit with the
-#'   original response as the sole predictor, and using a single IWLS iteration.
-#'   \item The working response is calculated from this model \item The inverse
-#'   transformation of the working response is calculated \item If the result is
-#'   effectively equal to the original response (testing using \code{all.equal}
-#'   with the default tolerance), the working response is returned; otherwise,
-#'   the GLM is re-fit with the working response now as the sole predictor, and
-#'   steps 2-4 are repeated - each time with an additional IWLS iteration}
+#'   original response as both predictor and response, and using a single IWLS
+#'   iteration. \item The working response is calculated from this model \item
+#'   The inverse transformation of the working response is then calculated \item
+#'   If the inverse transformation is effectively equal to the original response
+#'   (testing using \code{all.equal} with the default tolerance), the working
+#'   response is returned; otherwise, the GLM is re-fit with the working
+#'   response now as the predictor, and steps 2-4 are repeated - each time with
+#'   an additional IWLS iteration}
 #'
 #'   This approach will generate a very reasonable transformation of the
 #'   response variable, which will also closely resemble the direct
@@ -271,19 +276,19 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 #'   function - and so facilitates model comparisons, selection, and averaging.
 #'
 #' @note As we often cannot directly observe the response variable on the link
-#'   scale, any method estimating its values or statistics will be wrong to some
-#'   degree. The aim should be to try to minimise this error as far as
-#'   (reasonably) possible, while also generating standardised coefficients
-#'   whose interpretation most closely resembles those of the ordinary linear
-#'   model - something which the current method achieves. The solution of using
-#'   the working response from the GLM to scale coefficients is a purely
-#'   practical, but reasonable one, and one that takes advantage of modern
-#'   computing power to minimise error through iterative model fitting. An added
-#'   bonus is that the estimated variance is constant across models, which
-#'   cannot be said of previous methods (Menard 2011). The overall approach
-#'   would be classed as 'observed-empirical' by Grace \emph{et al.} (2018), as
-#'   it utilises model error variance (the working residuals) rather than
-#'   theoretical distribution-specific variance.
+#'   scale, any method estimating its values or statistics will be wrong to a
+#'   greater or lesser degree. The aim should be to try to minimise this error
+#'   as far as (reasonably) possible, while also generating standardised
+#'   coefficients whose interpretation most closely resembles those of the
+#'   ordinary linear model - something which the current method achieves. The
+#'   solution of using the working response from the GLM to scale coefficients
+#'   is a purely practical, but reasonable one, and one that takes advantage of
+#'   modern computing power to minimise error through iterative model fitting.
+#'   An added bonus is that the estimated variance is constant across models,
+#'   which cannot be said of previous methods (Menard 2011). The overall
+#'   approach would be classed as 'observed-empirical' by Grace \emph{et al.}
+#'   (2018), as it utilises model error variance (the working residuals) rather
+#'   than theoretical distribution-specific variance.
 #' @return A numeric vector comprising the response variable in the original or
 #'   link scale, or an array, list of vectors/arrays, or nested list.
 #' @references Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
@@ -301,7 +306,7 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 #'   Menard, S. (2011) Standards for Standardized Logistic Regression
 #'   Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
 #'   \url{https://doi.org/bvxb6s}
-#' @seealso \code{\link[stats]{glm.fit}}, \code{\link[base]{all.equal}}
+#' @seealso \code{\link[stats]{glm}}, \code{\link[base]{all.equal}}
 #' @examples
 #' ## SEM responses (original scale)
 #' getY(Shipley.SEM)
@@ -309,13 +314,13 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 #' ## Estimated response in link scale from binomial model
 #' m <- Shipley.SEM$Live
 #' getY(m, link = TRUE)
-#' getY(m, link = TRUE, family = binomial("probit"))  # diff. link function
+#' getY(m, link = TRUE, family = binomial("probit"))  # different link function
 #'
 #' ## Same estimate calculated using variable instead of model
 #' y <- Shipley$Live
 #' getY(y, binomial)
 #'
-#' ## Compare an estimate with a direct link transformation
+#' ## Compare estimate with a direct link transformation
 #' ## (test with a poisson model, log link)
 #' set.seed(1)
 #' y <- rpois(30, lambda = 10)
@@ -338,13 +343,13 @@ getData <- function(m, subset = FALSE, merge = FALSE, ...) {
 #' ## Effectively equal?
 #' all.equal(yl, log(y), check.names = FALSE)
 #' # TRUE
-#' ## Actual difference
+#' ## Actual difference...
 #' all.equal(yl, log(y), check.names = FALSE, tolerance = .Machine$double.eps)
 #' # "Mean relative difference: 1.05954e-12"
 #' @export
-getY <- function(m, family = NULL, data = NULL, link = FALSE, ...) {
+getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 
-  f <- family; d <- data
+  m <- mod; f <- family; d <- data
 
   ## Function
   getY <- function(m) {
@@ -411,7 +416,7 @@ getY <- function(m, family = NULL, data = NULL, link = FALSE, ...) {
 #' @title Generalised Variance Inflation Factors
 #' @description Calculate generalised variance inflation factors for terms in a
 #'   fitted model via the variance-covariance matrix of coefficients.
-#' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
+#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
 #'   \code{"merMod"}, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param ... Not currently used.
@@ -448,9 +453,9 @@ getY <- function(m, family = NULL, data = NULL, link = FALSE, ...) {
 #' m <- lm(rnorm(100) ~ x1 + x2 + x3)
 #' VIF(m)
 #' @export
-VIF <- function(m, data = NULL, ...) {
+VIF <- function(mod, data = NULL, ...) {
 
-  d <- data
+  m <- mod; d <- data
 
   ## Function
   VIF <- function(m) {
@@ -515,9 +520,9 @@ VIF <- function(m, data = NULL, ...) {
 #' @title R-squared/Pseudo R-squared
 #' @description Calculate R-squared or pseudo R-squared for a fitted model,
 #'   defined as the squared multiple correlation between the observed and fitted
-#'   values for the response variable. 'adjusted' and 'predicted' R-squared
-#'   values are also calculated (see Details).
-#' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
+#'   values for the response variable. 'Adjusted' and 'Predicted' versions are
+#'   also calculated (see Details).
+#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
 #'   \code{"merMod"}, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param adj,pred Logical. If \code{TRUE} (default), adjusted and/or predicted
@@ -549,11 +554,11 @@ VIF <- function(m, data = NULL, ...) {
 #'   sample - R-squared. This is achieved via an analytical formula which
 #'   adjusts R-squared for the 'degrees of freedom' of the model (i.e. the ratio
 #'   of observations to parameters). Here, this is calculated via the 'Pratt'
-#'   rather than standard 'Ezekiel/Wherry' formula, as this was shown in a
-#'   previous simulation to be the most effective of a range of existing
-#'   formulas at estimating the population R-squared across a range of model
-#'   specification scenarios (Yin & Fan 2001). Adjusted R-squared can be used to
-#'   safeguard against overfitting of the model to the original sample.
+#'   rather than standard 'Ezekiel/Wherry' formula, shown in a previous
+#'   simulation to be the most effective of a range of existing formulas at
+#'   estimating the population R-squared, across a range of model specification
+#'   scenarios (Yin & Fan 2001). Adjusted R-squared can be used to safeguard
+#'   against overfitting of the model to the original sample.
 #'
 #'   If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned,
 #'   which is calculated via the same formula as for R-squared but using
@@ -575,9 +580,9 @@ VIF <- function(m, data = NULL, ...) {
 #'
 #'   For mixed models, the function will, by default, calculate all R-squared
 #'   metrics using fitted values incorporating both the fixed and random
-#'   effects, thus capturing all variation 'explained' by the model. This is
+#'   effects, thus encompassing all variation captured by the model. This is
 #'   equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017).
-#'   To include selected or no random effects, simply set the appropriate
+#'   To include only some or no random effects, simply set the appropriate
 #'   formula using the argument \code{re.form}, which is passed directly to
 #'   \code{predict.merMod}. If \code{re.form = NA}, R-squared is calculated for
 #'   the fixed effects only - equivalent to the 'marginal' R-squared of Nakagawa
@@ -590,8 +595,8 @@ VIF <- function(m, data = NULL, ...) {
 #'   relationship between the variables, which can be difficult to interpret in
 #'   practice and in any case usually only occurs in rare situations, such as
 #'   where the intercept is suppressed. Hence, for simplicity and ease of
-#'   interpretation, values less than zero are presented as a complete lack of
-#'   model fit.
+#'   interpretation, values less than zero are presented here as a complete lack
+#'   of model fit.
 #'
 #' @note Caution must be exercised in interpreting the values of any pseudo
 #'   R-squared measure calculated for a GLM or mixed model (including those
@@ -678,10 +683,10 @@ VIF <- function(m, data = NULL, ...) {
 #' # caution in interpretation of the predicted R-squared for mixed models,
 #' # especially GLMM's.
 #' @export
-R2 <- function(m, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
+R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
                ...) {
 
-  d <- data
+  m <- mod; d <- data
 
   ## Function
   R2 <- function(m) {
@@ -740,12 +745,12 @@ R2 <- function(m, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
 #' @title Weighted Average of Model Estimates
 #' @description Calculate a weighted average of model estimates (e.g.
 #'   coefficients, fitted values, residuals) for a set of models.
-#' @param e A list or nested list of numeric vectors, comprising the model
+#' @param est A list or nested list of numeric vectors, comprising the model
 #'   estimates. In the latter case, these should correspond to estimates for
 #'   candidate models for each of a set of different response variables.
 #' @param weights An optional numeric vector of weights to use for model
 #'   averaging, or a named list of such vectors. The former should be supplied
-#'   when \code{e} is a list, and the latter when it is a nested list (with
+#'   when \code{est} is a list, and the latter when it is a nested list (with
 #'   matching list names). If \code{weights = "equal"} (default), a simple
 #'   average is calculated instead.
 #' @param est.names An optional vector of names used to extract and/or sort
@@ -756,14 +761,14 @@ R2 <- function(m, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
 #'   are typically competing candidate models fit to the same response variable.
 #'   Weights are typically a 'weight of evidence' type metric such as Akaike
 #'   model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which
-#'   can be conveniently calculated in \code{R} using packages such as
+#'   can be conveniently calculated in \emph{R} using packages such as
 #'   \pkg{MuMIn} or \pkg{AICcmodavg}. However, numeric weights of any sort can
 #'   be used. If none are supplied, the simple average is calculated instead.
 #'
 #'   Averaging is performed via the 'full'/'zero' rather than
 #'   'subset'/'conditional'/'natural' method, meaning that zero is substituted
-#'   for any 'missing' estimates (e.g. coefficients) prior to calculations. This
-#'   provides a form of shrinkage and thus reduces
+#'   for estimates for any 'missing' parameters (e.g. coefficients) prior to
+#'   calculations. This provides a form of shrinkage and thus reduces
 #'   \href{https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false}{estimate
 #'   bias} (Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
 #' @return A numeric vector of the model-averaged estimates, or a list of such
@@ -807,9 +812,9 @@ R2 <- function(m, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
 #' f <- lapply(m, predict)
 #' avgEst(f, w)
 #' @export
-avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
+avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 
-  w <- weights; en <- est.names
+  e <- est; w <- weights; en <- est.names
 
   ## Weights
   if (all(w == "equal")) {
@@ -854,11 +859,11 @@ avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
 #' @title Standardised Coefficients
 #' @description Calculate fully standardised model coefficients in standard
 #'   deviation units, adjusted for multicollinearity among predictors.
-#' @param m A fitted model object of class \code{"lm"}, \code{"glm"}, or
+#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
 #'   \code{"merMod"}, or a list or nested list of such objects.
 #' @param weights An optional numeric vector of weights to use for model
 #'   averaging, or a named list of such vectors. The former should be supplied
-#'   when \code{m} is a list, and the latter when it is a nested list (with
+#'   when \code{mod} is a list, and the latter when it is a nested list (with
 #'   matching list names). If set to \code{"equal"}, a simple average is
 #'   calculated instead.
 #' @param data An optional dataset used to first re-fit the model(s).
@@ -915,7 +920,7 @@ avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
 #'   If \code{std.x = TRUE}, coefficients are standardised by multiplying by the
 #'   standard deviations of predictor variables (or terms), while if \code{std.y
 #'   = TRUE} they are divided by the standard deviation of the response. If the
-#'   model is a GLM, this latter is calculated from the link-transformed
+#'   model is a GLM, this latter is calculated using the link-transformed
 #'   response (or its estimate) generated using the function \code{getY}. If
 #'   both arguments are true, the coefficients are regarded as 'fully'
 #'   standardised in the traditional sense, often referred to as 'betas'.
@@ -940,10 +945,10 @@ avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
 #'   variable is added last in the model - directly linking the measure to model
 #'   fit and 'variance explained'. See
 #'   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
-#'   for additional arguments in favour of the use of semipartial correlations.
+#'    for additional arguments in favour of the use of semipartial correlations.
 #'
-#'   If \code{r.squared = TRUE}, R-squared values are also returned via
-#'   \code{R2}.
+#'   If \code{r.squared = TRUE}, R-squared values are also returned via the
+#'   \code{R2} function.
 #'
 #'   Finally, if \code{weights} are specified, the function calculates a
 #'   weighted average of the standardised coefficients across models (Burnham &
@@ -1001,11 +1006,11 @@ avgEst <-  function(e, weights = "equal", est.names = NULL, ...) {
 #' w <- runif(length(m), 0, 1)  # weights
 #' stdCoeff(m, w)
 #' @export
-stdCoeff <- function(m, weights = NULL, data = NULL, term.names = NULL,
+stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
                      cen.x = TRUE, cen.y = TRUE, std.x = TRUE, std.y = TRUE,
                      unique.x = TRUE, r.squared = FALSE, ...) {
 
-  w <- weights; d <- data; bn <- term.names
+  m <- mod; w <- weights; d <- data; bn <- term.names
 
   ## Function
   stdCoeff <- function(m) {

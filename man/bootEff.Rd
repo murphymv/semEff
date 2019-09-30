@@ -4,12 +4,12 @@
 \alias{bootEff}
 \title{Bootstrap Model Effects}
 \usage{
-bootEff(m, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
-  seed = NULL, catch.err = TRUE, parallel = "snow", ncpus = NULL,
-  cl = NULL, bM.arg = NULL, ...)
+bootEff(mod, data = NULL, ran.eff = NULL, cor.err = NULL,
+  R = 10000, seed = NULL, catch.err = TRUE, parallel = "snow",
+  ncpus = NULL, cl = NULL, bM.arg = NULL, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
 \code{"merMod"}, or a list or nested list of such objects.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
@@ -17,11 +17,11 @@ bootEff(m, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
 \item{ran.eff}{For mixed models with nested random effects, the name of the
 variable comprising the highest-level random effect. For non-nested random
 effects, specify \code{"crossed"}. Non-specification of this argument when
-\code{m} is a mixed model(s) will result in an error.}
+\code{mod} is a mixed model(s) will result in an error.}
 
 \item{cor.err}{Optional, names of SEM correlated errors to be bootstrapped.
-Should be of the form: \code{c("a ~~ b", "c ~~ d", ...)} (spaces optional),
-with names matching model names.}
+Should be of the form: \code{c("mod1 ~~ mod2", "mod3 ~~ mod4", ...)}
+(spaces optional), with names matching model names.}
 
 \item{R}{Number of bootstrap replicates to generate.}
 
@@ -41,7 +41,7 @@ any such errors will cause the function to exit.}
 \item{cl}{Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 (default), a local cluster is created using the specified number of cores.}
 
-\item{bM.arg}{A named list of additional arguments to \code{bootMer}.}
+\item{bM.arg}{A named list of any additional arguments to \code{bootMer}.}
 
 \item{...}{Arguments to \code{stdCoeff}.}
 }
@@ -61,30 +61,31 @@ Bootstrap model effects (standardised coefficients) and optional
   have been randomly sampled with replacement. The number of replicates is
   set by default to 10,000, which should provide accurate coverage for
   confidence intervals in most situations. To ensure that data is resampled
-  in the same sequence across individual bootstrap operations, the same seed
-  is set per operation, with the value saved as an attribute to the matrix of
-  bootrapped values (for reproducibility). The seed can either be
-  user-supplied or a randomly-generated five-digit number (default), and is
-  always re-initialised on exit (i.e. \code{set.seed(NULL)}).
+  in the same way across individual bootstrap operations within the same run
+  (e.g. models in a list), the same seed is set per operation, with the value
+  saved as an attribute to the bootrapped values (for reproducibility). The
+  seed can either be user-supplied or a randomly-generated five-digit number
+  (default), and is always re-initialised on exit (i.e.
+  \code{set.seed(NULL)}).
 
   Where \code{weights} are specified, bootstrapped effects will be a weighted
   average across the set of candidate models for each response variable,
   calculated after each model is first refit to the resampled dataset
   (specifying \code{weights = "equal"} will use a simple average instead). If
-  no weights are specified and \code{m} is a nested list of models, the
+  no weights are specified and \code{mod} is a nested list of models, the
   function will throw an error, as it will be expecting weights for a
   presumed model averaging scenario. If instead the user wishes to bootstrap
   each individual model, they should recursively apply the function using
-  \code{rMapply}.
+  \code{rMapply} (remember to set a seed).
 
-  Where names of models with correlated errors are supplied to
+  Where names of models with correlated errors are specified to
   \code{cor.err}, the function will also return bootstrapped Pearson
-  correlated errors (\code{weighted.residuals}) for those models. Where
-  \code{weights} are supplied and \code{m} is a nested list, residuals are
-  averaged across candidate models prior to correlating. If any two models
-  (or candidate sets) with correlated errors were fit to different subsets of
-  data observations, both models/sets are first refit to data containing only
-  the observations in common.
+  correlated errors (\code{weighted.residuals}) for those models. If
+  \code{weights} are supplied and \code{mod} is a nested list, residuals will
+  first be averaged across candidate models. If any two models (or candidate
+  sets) with correlated errors were fit to different subsets of data
+  observations, both models/sets are first refit to data containing only the
+  observations in common.
 
   For mixed models with nested random effects, the highest-level random
   effect (only) in the dataset is resampled, a procedure which should best
@@ -92,15 +93,15 @@ Bootstrap model effects (standardised coefficients) and optional
   \emph{et al.} 2010). Lower-level groups or individual observations are not
   themselves resampled, as these are not independent. The name of this random
   effect must be supplied to \code{ran.eff}, matching the name in the data.
-  This form of resampling will result in different sized datasets if
-  observations are unbalanced across groups - this should not be an issue
-  however as the number of independent units (groups), and hence the 'degrees
-  of freedom', remains
+  Incidentally, this form of resampling will result in different sized
+  datasets if observations are unbalanced across groups; however this should
+  not generally be an issue, as the number of independent units (groups), and
+  hence the 'degrees of freedom', remains
   \href{https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap}{unchanged}.
-  For non-nested random effects (\code{"crossed"}), group resampling will not
-  be appropriate, and (semi-)parametric bootstrapping is performed instead
-  via \code{bootMer} in the \pkg{lme4} package. Users should think carefully
-  about whether their random effects are
+  For non-nested random effects however (i.e. \code{"crossed"}), group
+  resampling will not be appropriate, and (semi-)parametric bootstrapping is
+  performed instead via \code{bootMer} in the \pkg{lme4} package. Users
+  should think carefully about whether their random effects are
   \href{https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified}{nested
   or not}. NOTE: As \code{bootMer} takes only a fitted model as its first
   argument, any model averaging is calculated 'post-hoc' using the estimates
@@ -118,12 +119,12 @@ Bootstrap model effects (standardised coefficients) and optional
   required objects and functions to this cluster using \code{clusterExport},
   after performing a (rough) match of all objects and functions in the
   current global environment to those referenced in the model call(s). Users
-  should load any required packages prior to calling the function.
+  should load any required external packages prior to calling the function.
 }
 \note{
-Bootstrapping mixed (or any other) models may take a very long time
-  when the number of replicates, observations, parameters, and/or models is
-  high. To decrease processing time, it may be worth trying different
+Bootstrapping mixed (or indeed any other) models may take a very long
+  time when the number of replicates, observations, parameters, and/or models
+  is high. To decrease processing time, it may be worth trying different
   optimizers and/or other options to generate faster estimates (always check
   results).
 }
@@ -133,8 +134,8 @@ Bootstrapping mixed (or any other) models may take a very long time
 
 \dontrun{
 
-## 45-60 mins with parallel processing and eight cores (YMMV)
-## (more complicated models will generally take longer...)
+## 45-60 mins with parallel processing using eight cores (YMMV)
+## (bigger operations and/or more complicated models will take longer...)
 system.time(
   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 )

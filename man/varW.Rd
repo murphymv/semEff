@@ -11,7 +11,7 @@ varW(x, w = NULL, na.rm = FALSE, ...)
 
 \item{w}{A numeric vector of weights of the same length as \code{x}.}
 
-\item{na.rm}{Logical, should NA's in \code{x} be removed?}
+\item{na.rm}{Logical, whether NA's in \code{x} should be removed.}
 
 \item{...}{Not currently used.}
 }
@@ -22,11 +22,10 @@ A numeric value, the weighted variance of \code{x}.
 Calculate the weighted variance of \code{x}.
 }
 \details{
-This function calculates the weighted variance of \code{x} via the
-  weighted covariance matrix (\code{cov.wt}). If no weights are supplied, the
-  simple variance is returned instead. As in \code{weighted.mean},
-  \code{NA}'s in \code{w} are not handled specially and will return \code{NA}
-  as result.
+Calculate the weighted variance of \code{x} via the weighted
+  covariance matrix (\code{cov.wt}). If no weights are supplied, the simple
+  variance is returned instead. As in \code{weighted.mean}, \code{NA}'s in
+  \code{w} are not handled specially and will return \code{NA} as result.
 }
 \examples{
 ## Weighted variance

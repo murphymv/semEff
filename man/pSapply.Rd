@@ -4,13 +4,13 @@
 \alias{pSapply}
 \title{Parallel Version of \code{sapply}}
 \usage{
-pSapply(x, f, parallel = "snow", ncpus = NULL, cl = NULL,
+pSapply(X, FUN, parallel = "snow", ncpus = NULL, cl = NULL,
   add.obj = NULL, ...)
 }
 \arguments{
-\item{x}{A vector object (numeric, character, or list).}
+\item{X}{A vector object (numeric, character, or list).}
 
-\item{f}{Function to apply to the elements of \code{x}.}
+\item{FUN}{Function to apply to the elements of \code{X}.}
 
 \item{parallel}{The type of parallel processing to use. Can be one of
 \code{"snow"}, \code{"multicore"}, or \code{"no"} (for none). If none,
@@ -29,7 +29,8 @@ or function cannot be found.}
 \item{...}{Arguments to \code{parSapply} or \code{sapply}.}
 }
 \value{
-The output of \code{f} in a list, vector, or matrix.
+The output of \code{FUN} in a list, or simplified to a vector or
+  array.
 }
 \description{
 Apply a function to a vector using parallel processing.
@@ -43,8 +44,8 @@ This is a wrapper for \code{parSapply} from the \pkg{parallel}
   number of cores. The function then exports the required objects and
   functions to this cluster using \code{clusterExport}, after performing a
   (rough) match of all objects and functions in the current global
-  environment to those referenced in the call to \code{f} (and also any calls
-  in \code{x}). Any additional required objects can be supplied using
+  environment to those referenced in the call to \code{FUN} (and also any
+  calls in \code{X}). Any additional required objects can be supplied using
   \code{add.obj}.
 }
 \seealso{

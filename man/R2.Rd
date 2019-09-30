@@ -4,10 +4,10 @@
 \alias{R2}
 \title{R-squared/Pseudo R-squared}
 \usage{
-R2(m, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL, ...)
+R2(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
 \code{"merMod"}, or a list or nested list of such objects.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
@@ -30,8 +30,8 @@ A numeric vector of the R-squared value(s), or an array, list of
 \description{
 Calculate R-squared or pseudo R-squared for a fitted model,
   defined as the squared multiple correlation between the observed and fitted
-  values for the response variable. 'adjusted' and 'predicted' R-squared
-  values are also calculated (see Details).
+  values for the response variable. 'Adjusted' and 'Predicted' versions are
+  also calculated (see Details).
 }
 \details{
 Various approaches to the calculation of a goodness-of-fit measure
@@ -55,11 +55,11 @@ Various approaches to the calculation of a goodness-of-fit measure
   sample - R-squared. This is achieved via an analytical formula which
   adjusts R-squared for the 'degrees of freedom' of the model (i.e. the ratio
   of observations to parameters). Here, this is calculated via the 'Pratt'
-  rather than standard 'Ezekiel/Wherry' formula, as this was shown in a
-  previous simulation to be the most effective of a range of existing
-  formulas at estimating the population R-squared across a range of model
-  specification scenarios (Yin & Fan 2001). Adjusted R-squared can be used to
-  safeguard against overfitting of the model to the original sample.
+  rather than standard 'Ezekiel/Wherry' formula, shown in a previous
+  simulation to be the most effective of a range of existing formulas at
+  estimating the population R-squared, across a range of model specification
+  scenarios (Yin & Fan 2001). Adjusted R-squared can be used to safeguard
+  against overfitting of the model to the original sample.
 
   If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned,
   which is calculated via the same formula as for R-squared but using
@@ -81,9 +81,9 @@ Various approaches to the calculation of a goodness-of-fit measure
 
   For mixed models, the function will, by default, calculate all R-squared
   metrics using fitted values incorporating both the fixed and random
-  effects, thus capturing all variation 'explained' by the model. This is
+  effects, thus encompassing all variation captured by the model. This is
   equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017).
-  To include selected or no random effects, simply set the appropriate
+  To include only some or no random effects, simply set the appropriate
   formula using the argument \code{re.form}, which is passed directly to
   \code{predict.merMod}. If \code{re.form = NA}, R-squared is calculated for
   the fixed effects only - equivalent to the 'marginal' R-squared of Nakagawa
@@ -96,8 +96,8 @@ Various approaches to the calculation of a goodness-of-fit measure
   relationship between the variables, which can be difficult to interpret in
   practice and in any case usually only occurs in rare situations, such as
   where the intercept is suppressed. Hence, for simplicity and ease of
-  interpretation, values less than zero are presented as a complete lack of
-  model fit.
+  interpretation, values less than zero are presented here as a complete lack
+  of model fit.
 }
 \note{
 Caution must be exercised in interpreting the values of any pseudo

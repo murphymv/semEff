@@ -4,17 +4,17 @@
 \alias{stdCoeff}
 \title{Standardised Coefficients}
 \usage{
-stdCoeff(m, weights = NULL, data = NULL, term.names = NULL,
+stdCoeff(mod, weights = NULL, data = NULL, term.names = NULL,
   cen.x = TRUE, cen.y = TRUE, std.x = TRUE, std.y = TRUE,
   unique.x = TRUE, r.squared = FALSE, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
 \code{"merMod"}, or a list or nested list of such objects.}
 
 \item{weights}{An optional numeric vector of weights to use for model
 averaging, or a named list of such vectors. The former should be supplied
-when \code{m} is a list, and the latter when it is a nested list (with
+when \code{mod} is a list, and the latter when it is a nested list (with
 matching list names). If set to \code{"equal"}, a simple average is
 calculated instead.}
 
@@ -88,7 +88,7 @@ Calculate fully standardised model coefficients in standard
   If \code{std.x = TRUE}, coefficients are standardised by multiplying by the
   standard deviations of predictor variables (or terms), while if \code{std.y
   = TRUE} they are divided by the standard deviation of the response. If the
-  model is a GLM, this latter is calculated from the link-transformed
+  model is a GLM, this latter is calculated using the link-transformed
   response (or its estimate) generated using the function \code{getY}. If
   both arguments are true, the coefficients are regarded as 'fully'
   standardised in the traditional sense, often referred to as 'betas'.
@@ -113,10 +113,10 @@ Calculate fully standardised model coefficients in standard
   variable is added last in the model - directly linking the measure to model
   fit and 'variance explained'. See
   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
-  for additional arguments in favour of the use of semipartial correlations.
+   for additional arguments in favour of the use of semipartial correlations.
 
-  If \code{r.squared = TRUE}, R-squared values are also returned via
-  \code{R2}.
+  If \code{r.squared = TRUE}, R-squared values are also returned via the
+  \code{R2} function.
 
   Finally, if \code{weights} are specified, the function calculates a
   weighted average of the standardised coefficients across models (Burnham &

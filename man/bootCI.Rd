@@ -4,14 +4,14 @@
 \alias{bootCI}
 \title{Bootstrap Confidence Intervals}
 \usage{
-bootCI(m, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
+bootCI(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or, alternatively, a boot object (class \code{"boot"}),
-containing bootstrapped model effects. \code{m} can also be a list or
-nested list of such objects.}
+\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\code{"merMod"}. Alternatively, a boot object (class \code{"boot"}),
+containing bootstrapped model effects. Can also be a list or nested list of
+such objects.}
 
 \item{conf}{A numeric value specifying the confidence level for the
 intervals.}
@@ -22,14 +22,14 @@ specification details.}
 
 \item{digits}{The number of significant digits to return for numeric values.}
 
-\item{bci.arg}{A named list of additional arguments to \code{boot.ci},
+\item{bci.arg}{A named list of any additional arguments to \code{boot.ci},
 excepting argument \code{index}.}
 
 \item{...}{Arguments to \code{bootEff}.}
 }
 \value{
-A data frame of the original effects and the bootstrapped confidence
-  intervals, or a list or nested list of same.
+A data frame of the effects and bootstrapped confidence intervals, or
+  a list or nested list of same.
 }
 \description{
 Calculate confidence intervals from bootstrapped model effects.
@@ -38,21 +38,21 @@ Calculate confidence intervals from bootstrapped model effects.
 This is essentially a wrapper for \code{boot.ci} from the \pkg{boot}
   package, returning confidence intervals of the specified type and level
   calculated from bootstrapped model effects. If a model or models is
-  supplied to \code{m}, bootstrapping will first be performed via
-  \code{bootEff}. Effects for which the confidence intervals do not contain
-  zero are highlighted with a star.
+  supplied, bootstrapping will first be performed via \code{bootEff}. Effects
+  for which the confidence intervals do not contain zero are highlighted with
+  a star.
 
   Nonparametric bias-corrected and accelerated confidence intervals
   (BC\emph{a}, Efron 1987) are calculated by default, which should provide
   the most accurate coverage across a range of bootstrap sampling
   distributions (Puth \emph{et al.} 2015). They will, however, be
   \href{https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot}{inappropriate}
-  for parametric resampling - in which case the default will be set to the
+   for parametric resampling - in which case the default will be set to the
   boostrap percentile method instead (\code{"perc"}).
 }
 \note{
-All bootstrapped confidence intervals will underestimate the true
-  nominal coverage to some extent when sample size is small (Chernick &
+All bootstrapped confidence intervals will tend to underestimate the
+  true nominal coverage to some extent when sample size is small (Chernick &
   Labudde 2009), so the appropriate caution should be exercised in
   interpretation in such cases. Comparison of different interval types may be
   informative. For example, normal-theory based intervals may outperform
@@ -66,6 +66,7 @@ All bootstrapped confidence intervals will underestimate the true
 bootCI(Shipley.SEM.Boot)
 
 ## From original SEM (models)
+## (not typically recommended - better to use saved boot objects)
 
 \dontrun{
 

@@ -4,22 +4,21 @@
 \alias{getY}
 \title{Get Model Response Variable}
 \usage{
-getY(m, family = NULL, data = NULL, link = FALSE, ...)
+getY(mod, family = NULL, data = NULL, link = FALSE, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}; or alternatively, a numeric vector corresponding to a
-variable to be transformed. \code{m} can also be a list or nested list of
-such objects.}
+\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\code{"merMod"}. Alternatively, a numeric vector, corresponding to a
+variable to be transformed. Can also be a list or nested list of such
+objects.}
 
 \item{family}{Optional, the error distribution family containing the link
 function which will be used to transform the response (see
 \code{\link[stats]{family}} for specification details).}
 
-\item{data}{An optional dataset used to first re-fit the model(s) (if
-\code{m} is a model object/list).}
+\item{data}{An optional dataset used to first re-fit the model(s).}
 
-\item{link}{Logical. If \code{TRUE}, return the GLM response variable on the
+\item{link}{Logical. If \code{TRUE}, return the response variable on the
 link scale (see Details).}
 
 \item{...}{Not currently used.}
@@ -30,16 +29,16 @@ A numeric vector comprising the response variable in the original or
 }
 \description{
 Extract the response variable from a fitted model in the
-  original or link scale.
+  original or link scale (for GLM's).
 }
 \details{
 \code{getY} will return the response variable from a model by
   summing the fitted values and the response residuals. If \code{link = TRUE}
-  and the model is a GLM, the response is transformed using the link
-  function. However, if the transformation results in undefined values, it is
-  replaced by an estimate based on the 'working' response variable of the GLM
-  (see below). The function can also be used to transform a variable
-  (supplied to \code{m}) using the link function from the specified
+  and the model is a GLM, the response is transformed using the model link
+  function. However, if this transformation results in undefined values, it
+  is replaced by an estimate based on the 'working' response variable of the
+  GLM (see below). The function can also be used to transform a variable
+  (supplied to \code{mod}) using the link function from the specified
   \code{family} - in which case the \code{link} argument is ignored.
 
   \strong{Estimating the link-transformed response}
@@ -66,7 +65,8 @@ Extract the response variable from a fitted model in the
   coefficients. An additional benefit for piecewise SEM's is that the
   transformed rather than original response can then be specified as a
   predictor in other models, ensuring that standardised indirect and total
-  effects are calculated correctly (i.e. using the same units).
+  effects are calculated correctly (i.e. using the same units for the
+  variable).
 
   To ensure a high level of 'accuracy' in the working response - in the sense
   that the inverse-transformed values are practically indistinguishable from
@@ -74,13 +74,14 @@ Extract the response variable from a fitted model in the
   procedure to calculate a 'final' working response:
 
   \enumerate{\item A new GLM of the same error family is fit with the
-  original response as the sole predictor, and using a single IWLS iteration.
-  \item The working response is calculated from this model \item The inverse
-  transformation of the working response is calculated \item If the result is
-  effectively equal to the original response (testing using \code{all.equal}
-  with the default tolerance), the working response is returned; otherwise,
-  the GLM is re-fit with the working response now as the sole predictor, and
-  steps 2-4 are repeated - each time with an additional IWLS iteration}
+  original response as both predictor and response, and using a single IWLS
+  iteration. \item The working response is calculated from this model \item
+  The inverse transformation of the working response is then calculated \item
+  If the inverse transformation is effectively equal to the original response
+  (testing using \code{all.equal} with the default tolerance), the working
+  response is returned; otherwise, the GLM is re-fit with the working
+  response now as the predictor, and steps 2-4 are repeated - each time with
+  an additional IWLS iteration}
 
   This approach will generate a very reasonable transformation of the
   response variable, which will also closely resemble the direct
@@ -91,19 +92,19 @@ Extract the response variable from a fitted model in the
 }
 \note{
 As we often cannot directly observe the response variable on the link
-  scale, any method estimating its values or statistics will be wrong to some
-  degree. The aim should be to try to minimise this error as far as
-  (reasonably) possible, while also generating standardised coefficients
-  whose interpretation most closely resembles those of the ordinary linear
-  model - something which the current method achieves. The solution of using
-  the working response from the GLM to scale coefficients is a purely
-  practical, but reasonable one, and one that takes advantage of modern
-  computing power to minimise error through iterative model fitting. An added
-  bonus is that the estimated variance is constant across models, which
-  cannot be said of previous methods (Menard 2011). The overall approach
-  would be classed as 'observed-empirical' by Grace \emph{et al.} (2018), as
-  it utilises model error variance (the working residuals) rather than
-  theoretical distribution-specific variance.
+  scale, any method estimating its values or statistics will be wrong to a
+  greater or lesser degree. The aim should be to try to minimise this error
+  as far as (reasonably) possible, while also generating standardised
+  coefficients whose interpretation most closely resembles those of the
+  ordinary linear model - something which the current method achieves. The
+  solution of using the working response from the GLM to scale coefficients
+  is a purely practical, but reasonable one, and one that takes advantage of
+  modern computing power to minimise error through iterative model fitting.
+  An added bonus is that the estimated variance is constant across models,
+  which cannot be said of previous methods (Menard 2011). The overall
+  approach would be classed as 'observed-empirical' by Grace \emph{et al.}
+  (2018), as it utilises model error variance (the working residuals) rather
+  than theoretical distribution-specific variance.
 }
 \examples{
 ## SEM responses (original scale)
@@ -112,13 +113,13 @@ getY(Shipley.SEM)
 ## Estimated response in link scale from binomial model
 m <- Shipley.SEM$Live
 getY(m, link = TRUE)
-getY(m, link = TRUE, family = binomial("probit"))  # diff. link function
+getY(m, link = TRUE, family = binomial("probit"))  # different link function
 
 ## Same estimate calculated using variable instead of model
 y <- Shipley$Live
 getY(y, binomial)
 
-## Compare an estimate with a direct link transformation
+## Compare estimate with a direct link transformation
 ## (test with a poisson model, log link)
 set.seed(1)
 y <- rpois(30, lambda = 10)
@@ -141,7 +142,7 @@ repeat {
 ## Effectively equal?
 all.equal(yl, log(y), check.names = FALSE)
 # TRUE
-## Actual difference
+## Actual difference...
 all.equal(yl, log(y), check.names = FALSE, tolerance = .Machine$double.eps)
 # "Mean relative difference: 1.05954e-12"
 }
@@ -163,5 +164,5 @@ Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
   \url{https://doi.org/bvxb6s}
 }
 \seealso{
-\code{\link[stats]{glm.fit}}, \code{\link[base]{all.equal}}
+\code{\link[stats]{glm}}, \code{\link[base]{all.equal}}
 }

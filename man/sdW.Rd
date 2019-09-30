@@ -16,8 +16,8 @@ A numeric value, the weighted standard deviation of \code{x}.
 Calculate the weighted standard deviation of \code{x}.
 }
 \details{
-This is a wrapper for \code{varW}, which applies the square root to
-  the output.
+This is simply a wrapper for \code{varW}, applying the square root
+  to the output.
 }
 \seealso{
 \code{\link[stats]{sd}}, \code{\link[semEff]{varW}}

@@ -4,10 +4,10 @@
 \alias{VIF}
 \title{Generalised Variance Inflation Factors}
 \usage{
-VIF(m, data = NULL, ...)
+VIF(mod, data = NULL, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
 \code{"merMod"}, or a list or nested list of such objects.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}

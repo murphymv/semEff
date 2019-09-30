@@ -11,14 +11,14 @@ Shipley.SEM.Boot
 }
 \description{
 Boostrapped estimates generated from the hypothesised SEM from
-  Shipley (2009) using \code{bootSEM}.
+  Shipley (2009), using \code{bootEff}.
 }
 \examples{
 ## Specification
 
 \dontrun{
 
-Shipley.SEM.Boot <- bootSEM(Shipley.SEM, ran.eff = "site", seed = 53908)
+Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 }
 }
 \references{

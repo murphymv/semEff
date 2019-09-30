@@ -7,7 +7,7 @@
 \alias{total}
 \title{Extract SEM Effects}
 \usage{
-Effects(e, type = "orig", responses = NULL)
+Effects(eff, type = "orig", responses = NULL)
 
 direct(...)
 
@@ -16,13 +16,13 @@ indirect(...)
 total(...)
 }
 \arguments{
-\item{e}{An object of class \code{"semEff"}.}
+\item{eff}{An object of class \code{"semEff"}.}
 
 \item{type}{The type of effects to return. Must be either \code{"orig"}
 (default) or \code{"boot"}.}
 
-\item{responses}{Names of response variables in the SEM for which to return
-effects. If \code{NULL} (default), all responses are used.}
+\item{responses}{Names of response (endogenous) variables in the SEM for
+which to return effects. If \code{NULL} (default), all responses are used.}
 
 \item{...}{Arguments (above) to be passed to \code{Effects} from other
 extractor functions.}

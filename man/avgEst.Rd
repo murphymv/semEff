@@ -4,16 +4,16 @@
 \alias{avgEst}
 \title{Weighted Average of Model Estimates}
 \usage{
-avgEst(e, weights = "equal", est.names = NULL, ...)
+avgEst(est, weights = "equal", est.names = NULL, ...)
 }
 \arguments{
-\item{e}{A list or nested list of numeric vectors, comprising the model
+\item{est}{A list or nested list of numeric vectors, comprising the model
 estimates. In the latter case, these should correspond to estimates for
 candidate models for each of a set of different response variables.}
 
 \item{weights}{An optional numeric vector of weights to use for model
 averaging, or a named list of such vectors. The former should be supplied
-when \code{e} is a list, and the latter when it is a nested list (with
+when \code{est} is a list, and the latter when it is a nested list (with
 matching list names). If \code{weights = "equal"} (default), a simple
 average is calculated instead.}
 
@@ -36,14 +36,14 @@ This function can be used to calculate a weighted average of model
   are typically competing candidate models fit to the same response variable.
   Weights are typically a 'weight of evidence' type metric such as Akaike
   model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which
-  can be conveniently calculated in \code{R} using packages such as
+  can be conveniently calculated in \emph{R} using packages such as
   \pkg{MuMIn} or \pkg{AICcmodavg}. However, numeric weights of any sort can
   be used. If none are supplied, the simple average is calculated instead.
 
   Averaging is performed via the 'full'/'zero' rather than
   'subset'/'conditional'/'natural' method, meaning that zero is substituted
-  for any 'missing' estimates (e.g. coefficients) prior to calculations. This
-  provides a form of shrinkage and thus reduces
+  for estimates for any 'missing' parameters (e.g. coefficients) prior to
+  calculations. This provides a form of shrinkage and thus reduces
   \href{https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false}{estimate
   bias} (Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
 }

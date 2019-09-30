@@ -25,7 +25,7 @@ specification details.}
 
 \item{digits}{The number of significant digits to return for numeric values.}
 
-\item{bci.arg}{A named list of additional arguments to \code{boot.ci},
+\item{bci.arg}{A named list of any additional arguments to \code{boot.ci},
 excepting argument \code{index}.}
 
 \item{...}{Arguments to \code{bootEff}.}
@@ -52,8 +52,8 @@ The eponymous function of this package calculates all direct,
   should represent a directed ('acyclic') causal model, which should be named
   (exactly) for each response variable and ordered from 'upstream' or
   'causal' variables through to 'downstream' (i.e. those at the end of the
-  pathway). If fitted models are supplied to \code{sem}, effects will first
-  be bootstrapped using \code{bootEff} (this may take a while!).
+  pathway). If \code{sem} is a list of fitted models, effects will first be
+  bootstrapped using \code{bootEff} (this may take a while!).
 
   Direct effects are calculated as fully standardised model coefficients for
   each response variable, while indirect effects are the product of these
@@ -72,7 +72,7 @@ The eponymous function of this package calculates all direct,
   Scharkow 2013). As indirect, total, and mediator effects are not directly
   bootstrapped using the fitted models for response variables (i.e. via
   \code{bootEff}), their equivalent 'bootstrapped' estimates are calculated
-  instead using the bootstrapped direct effects.
+  instead using each bootstrapped direct effect.
 
   Correlated errors (and confidence intervals) are also returned if their
   boostrapped values are present in \code{sem}, or, if \code{sem} is a list
@@ -97,12 +97,13 @@ semEff(Shipley.SEM.Boot, mediators = "DD")
 semEff(Shipley.SEM.Boot, responses = "Live")
 
 ## Effects calculated using original SEM (models)
+## (not typically recommended - better to use saved boot objects)
 system.time(
   Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 )
 }
 
-## Summary of effects
+## Summary
 Shipley.SEM.Eff
 }
 \references{

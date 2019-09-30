@@ -2,28 +2,28 @@
 % Please edit documentation in R/sem_eff_functions.R
 \name{predEff}
 \alias{predEff}
-\title{Predict SEM Effects}
+\title{Predict Effects}
 \usage{
-predEff(m, newdata = NULL, effects = NULL, eff.boot = NULL,
+predEff(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   re.form = NA, type = "link", ci.conf = 0.95, ci.type = "bca",
   interaction = NULL, digits = 3, bci.arg = NULL, parallel = "no",
   ncpus = NULL, cl = NULL, ...)
 }
 \arguments{
-\item{m}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
+\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
 \code{"merMod"}, or a list or nested list of such objects.}
 
 \item{newdata}{An optional data frame of new values to predict, which should
 contain all the variables named in \code{effects} or all those used to fit
-\code{m}.}
+\code{mod}.}
 
 \item{effects}{A numeric vector of effects to predict, or a list or nested
-list of such vectors. These will be calculated via \code{semEff},
-\code{bootEff}, or \code{stdCoeff}.}
+list of such vectors. These will typically have been calculated using
+\code{semEff}, \code{bootEff}, or \code{stdCoeff}.}
 
 \item{eff.boot}{A matrix of bootstrapped effects used to calculate confidence
 intervals for predictions, or a list or nested list of such matrices. These
-will be calculated via \code{semEff} or \code{bootEff}.}
+will have been calculated using \code{semEff} or \code{bootEff}.}
 
 \item{re.form}{For mixed models of class \code{"merMod"}, the formula for
 random effects to condition on when predicting effects. Defaults to
@@ -41,16 +41,16 @@ intervals on predictions (and any interactive effects).}
 specification details.}
 
 \item{interaction}{An optional name of an interactive effect, for which to
-return standardised effects for predictions of a main (continuous) variable
-across different values or levels of interacting variables (see Details).
-The name should be of the form \code{"a:b..."}, containing all the
-variables involved and matching the name of an interactive effect in the
-model(s) terms or in \code{effects}.}
+return standardised effects for predictions of the main (continuous)
+variable across different values or levels of interacting variables (see
+Details). The name should be of the form \code{"x1:x2..."}, containing all
+the variables involved and matching the name of an interactive effect in
+the model(s) terms or in \code{effects}.}
 
 \item{digits}{The number of significant digits to return for interactive
 effects.}
 
-\item{bci.arg}{A named list of additional arguments to \code{boot.ci},
+\item{bci.arg}{A named list of any additional arguments to \code{boot.ci},
 excepting argument \code{index}.}
 
 \item{parallel}{The type of parallel processing to use for calculating
@@ -70,7 +70,7 @@ A numeric vector of the predictions, or, if bootstrapped effects are
   supplied, a list containing the predictions and the upper and lower
   confidence intervals. Optional interactive effects may also be appended.
   Predictions may also be returned in a list or nested list, depending on the
-  structure of \code{m} (and other arguments).
+  structure of \code{mod} (and other arguments).
 }
 \description{
 Generate predicted values for SEM direct, indirect, or total
@@ -81,22 +81,22 @@ Generate predicted values for SEM direct, indirect, or total effects
   on a response variable, which should be supplied to \code{effects}. These
   are used in place of model coefficients in the standard prediction formula,
   with values for predictors drawn either from the data used to fit the
-  original model(s) (\code{m}) or from \code{newdata}. It is assumed that
+  original model(s) (\code{mod}) or from \code{newdata}. It is assumed that
   effects are fully standardised; however, if this is not the case, then the
   same arguments originally specified to \code{stdCoeff} should be
-  re-specified - which will then be used to standardise data. If no effects
-  are supplied, standardised model coefficients will be calculated and used
-  to generate predictions. These will equal the model(s) fitted values if
-  \code{newdata = NULL}, \code{unique.x = FALSE}, and \code{re.form = NULL}
-  (where applicable).
+  re-specified - which will then be used to standardise the data. If no
+  effects are supplied, standardised model coefficients will be calculated
+  and used to generate predictions. These will equal the model(s) fitted
+  values if \code{newdata = NULL}, \code{unique.x = FALSE}, and \code{re.form
+  = NULL} (where applicable).
 
   Model-averaged predictions can be generated if averaged \code{effects} are
-  supplied to the model \code{m}; or alternatively, if \code{weights} are
-  specified (passed to \code{stdCoeff}) and \code{m} is a list of candidate
-  models (\code{effects} can also be passed using this latter method). For
-  mixed model predictions where random effects are included (e.g.
-  \code{re.form = NULL}), the latter approach should be used, otherwise the
-  contribution of random effects will be taken from the single model \code{m}
+  supplied to the model in \code{mod}, or, alternatively, if \code{weights}
+  are specified (passed to \code{stdCoeff}) and \code{mod} is a list of
+  candidate models (\code{effects} can also be passed using this latter
+  method). For mixed model predictions where random effects are included
+  (e.g. \code{re.form = NULL}), the latter approach should be used, otherwise
+  the contribution of random effects will be taken from the single model
   instead of (correctly) being averaged over a candidate set.
 
   If bootstrapped effects are supplied to \code{eff.boot}, bootstrapped
@@ -157,8 +157,8 @@ f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
 ## Add CI's (need to bootstrap model - will take a while)
 \dontrun{
 
-system.time(mb <- bootEff(m, ran.eff = "site", R = 1000))
-est <- mb$t0; est.b <- mb$t  # estimates
+system.time(B <- bootEff(m, ran.eff = "site", R = 1000))
+est <- B$t0; est.b <- B$t  # estimates
 f <- predEff(m, nd, est, est.b, type = "response", interaction = "Growth:DD")
 }
 

@@ -24,7 +24,7 @@
 
 #' @title Hypothesised SEM from Shipley (2009)
 #' @format A list of fitted mixed models of class \code{"lmer"} and
-#'   \code{"glmer"} representing structured equations.
+#'   \code{"glmer"}, representing structured equations.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
 #'   \url{https://doi.org/bqd43d}
@@ -49,7 +49,7 @@
 #' @description A set of hypothetical competing models fit to the same response
 #'   variable ('Growth') using the simulated data in Shipley (2009), for which
 #'   model estimates can be compared and/or averaged.
-#' @format A list of mixed models of class \code{"lmer"} and \code{"glmer"} fit
+#' @format A list of mixed models of class \code{"lmer"} and \code{"glmer"}, fit
 #'   to the same response variable.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
@@ -71,7 +71,7 @@
 
 #' @title Bootstrapped SEM Estimates
 #' @description Boostrapped estimates generated from the hypothesised SEM from
-#'   Shipley (2009) using \code{bootSEM}.
+#'   Shipley (2009), using \code{bootEff}.
 #' @format A list of objects of class \code{"boot"}, representing bootstrapped
 #'   estimates from fitted mixed models.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
@@ -82,14 +82,14 @@
 #'
 #' \dontrun{
 #'
-#' Shipley.SEM.Boot <- bootSEM(Shipley.SEM, ran.eff = "site", seed = 53908)
+#' Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 #' }
 "Shipley.SEM.Boot"
 
 
 #' @title SEM Effects
 #' @description SEM effects calculated from bootstrapped estimates of the
-#'   hypothesised SEM from Shipley (2009) using \code{semEff}.
+#'   hypothesised SEM from Shipley (2009), using \code{semEff}.
 #' @format A list object of class \code{"semEff"}, containing SEM effects and
 #'   summary tables.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized

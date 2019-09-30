@@ -4,31 +4,31 @@
 \alias{rMapply}
 \title{Recursive Version of \code{mapply}}
 \usage{
-rMapply(f, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)
+rMapply(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)
 }
 \arguments{
-\item{f}{Function to apply.}
+\item{FUN}{Function to apply.}
 
-\item{...}{Object(s) to which \code{f} can be applied, or lists of such
+\item{...}{Object(s) to which \code{FUN} can be applied, or lists of such
 objects to iterate over (defined narrowly, as of class \code{"list"}).}
 
-\item{MoreArgs}{A list of additional arguments to \code{f}.}
+\item{MoreArgs}{A list of additional arguments to \code{FUN}.}
 
-\item{SIMPLIFY}{Logical, whether to simplify the results to a numeric vector
-or matrix.}
+\item{SIMPLIFY}{Logical, whether to simplify the results to a vector or
+array.}
 
 \item{USE.NAMES}{Logical, whether to use the names of the first list object
 in \code{...} for the output.}
 }
 \value{
-The output of \code{f} in a list or nested list, or simplified to a
+The output of \code{FUN} in a list or nested list, or simplified to a
   vector or array (or list of arrays).
 }
 \description{
 Recursively apply a function to a list or lists.
 }
 \details{
-\code{rMapply} recursively applies \code{f} to the elements of the
+\code{rMapply} recursively applies \code{FUN} to the elements of the
   lists in \code{...} via \code{mapply}. If only a single list is supplied,
   the function acts like a recursive version of \code{sapply}. The particular
   condition that determines if the function should stop recursing is if
@@ -40,8 +40,8 @@ Recursively apply a function to a list or lists.
   This is primarily a convenience function used internally to enable
   recursive application of functions to lists or nested lists. Its particular
   stop condition for recursing is also designed to either a) act as a wrapper
-  for \code{f} if the first object in \code{...} is not a list, or b) apply a
-  model averaging operation if the first object is a list and the second
+  for \code{FUN} if the first object in \code{...} is not a list, or b) apply
+  a model averaging operation if the first object is a list and the second
   object is a numeric vector (of weights).
 }
 \seealso{

@@ -5,7 +5,7 @@
 \alias{Shipley.SEM}
 \title{Hypothesised SEM from Shipley (2009)}
 \format{A list of fitted mixed models of class \code{"lmer"} and
-  \code{"glmer"} representing structured equations.}
+  \code{"glmer"}, representing structured equations.}
 \usage{
 Shipley.SEM
 }
