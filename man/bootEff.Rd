@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot_functions.R
 \name{bootEff}
 \alias{bootEff}
-\title{Bootstrap Model Effects}
+\title{Bootstrap Effects}
 \usage{
 bootEff(mod, data = NULL, ran.eff = NULL, cor.err = NULL,
   R = 10000, seed = NULL, catch.err = TRUE, parallel = "snow",

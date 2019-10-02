@@ -27,7 +27,7 @@ A data frame of the variables used to fit the model(s), or a list or
 Extract the data used to fit a model.
 }
 \details{
-This is a simple convenience function to extract the data used to
+This is a simple convenience function to return the data used to
   fit a model, by evaluating the 'data' slot of the model call object. If the
   'data' argument of the model call was not specified, or is not a data frame
   containing all variables referenced in the model formula, an error will be

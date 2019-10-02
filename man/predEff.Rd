@@ -121,8 +121,8 @@ Generate predicted values for SEM direct, indirect, or total effects
 ## Predict effects (direct, total)
 m <- Shipley.SEM
 e <- Shipley.SEM.Eff
-dir <- direct(e)
-tot <- total(e)
+dir <- dirEff(e)
+tot <- totEff(e)
 f.dir <- predEff(m, effects = dir, type = "response")
 f.tot <- predEff(m, effects = tot, type = "response")
 
@@ -137,8 +137,8 @@ f.tot <- predEff(m, nd, tot, type = "response")
 ## Add CI's
 \dontrun{
 
-dir.b <- direct(e, "boot")
-tot.b <- total(e, "boot")
+dir.b <- dirEff(e, "boot")
+tot.b <- totEff(e, "boot")
 f.dir <- predEff(m, nd, dir, dir.b, type = "response")
 f.tot <- predEff(m, nd, tot, tot.b, type = "response")
 }

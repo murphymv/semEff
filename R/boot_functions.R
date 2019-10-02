@@ -1,6 +1,6 @@
 
 
-#' @title Bootstrap Model Effects
+#' @title Bootstrap Effects
 #' @description Bootstrap model effects (standardised coefficients) and optional
 #'   SEM correlated errors.
 #' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or

@@ -1,6 +1,6 @@
 
 
-#' @title Calculate SEM Effects
+#' @title SEM Effects
 #' @description Automatically calculate direct, indirect, total, and mediator
 #'   effects for endogenous (response) variables in a 'piecewise' Structural
 #'   Equation Model (SEM).
@@ -422,7 +422,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 print.semEff <- function(x, ...) print(x$Summary)
 
 
-#' @title Extract SEM Effects
+#' @title Get SEM Effects
 #' @description Extract SEM direct, indirect, and/or total effects from an
 #'   object of class \code{"semEff"}.
 #' @param eff An object of class \code{"semEff"}.
@@ -430,17 +430,17 @@ print.semEff <- function(x, ...) print(x$Summary)
 #'   (default) or \code{"boot"}.
 #' @param responses Names of response (endogenous) variables in the SEM for
 #'   which to return effects. If \code{NULL} (default), all responses are used.
-#' @param ... Arguments (above) to be passed to \code{Effects} from other
+#' @param ... Arguments (above) to be passed to \code{getEff} from other
 #'   extractor functions.
 #' @details These are simple extractor functions for effects calculated using
 #'   \code{semEff}, intended for convenience (e.g. for use with \code{predEff}).
 #' @return A list containing the original or bootstrapped effects for each
 #'   response variable, as numeric vectors or matrices (respectively).
-#' @name Effects
+#' @name getEff
 NULL
-#' @describeIn Effects Extract all effects.
+#' @describeIn getEff Extract all effects.
 #' @export
-Effects <- function(eff, type = "orig", responses = NULL) {
+getEff <- function(eff, type = "orig", responses = NULL) {
   e <- eff; t <- type; r <- responses
   e <- if (t == "orig") e[[1]] else {
     if (t == "boot") e[[2]] else
@@ -448,20 +448,20 @@ Effects <- function(eff, type = "orig", responses = NULL) {
   }
   if (!is.null(r)) e[r] else e
 }
-#' @describeIn Effects Extract direct effects.
+#' @describeIn getEff Extract direct effects.
 #' @export
-direct <- function(...) {
-  lapply(Effects(...), "[[", 1)
+dirEff <- function(...) {
+  lapply(getEff(...), "[[", 1)
 }
-#' @describeIn Effects Extract indirect effects.
+#' @describeIn getEff Extract indirect effects.
 #' @export
-indirect <- function(...) {
-  lapply(Effects(...), "[[", 2)
+indEff <- function(...) {
+  lapply(getEff(...), "[[", 2)
 }
-#' @describeIn Effects Extract total effects.
+#' @describeIn getEff Extract total effects.
 #' @export
-total <- function(...) {
-  lapply(Effects(...), "[[", 3)
+totEff <- function(...) {
+  lapply(getEff(...), "[[", 3)
 }
 
 
@@ -559,8 +559,8 @@ total <- function(...) {
 #' ## Predict effects (direct, total)
 #' m <- Shipley.SEM
 #' e <- Shipley.SEM.Eff
-#' dir <- direct(e)
-#' tot <- total(e)
+#' dir <- dirEff(e)
+#' tot <- totEff(e)
 #' f.dir <- predEff(m, effects = dir, type = "response")
 #' f.tot <- predEff(m, effects = tot, type = "response")
 #'
@@ -575,8 +575,8 @@ total <- function(...) {
 #' ## Add CI's
 #' \dontrun{
 #'
-#' dir.b <- direct(e, "boot")
-#' tot.b <- total(e, "boot")
+#' dir.b <- dirEff(e, "boot")
+#' tot.b <- totEff(e, "boot")
 #' f.dir <- predEff(m, nd, dir, dir.b, type = "response")
 #' f.tot <- predEff(m, nd, tot, tot.b, type = "response")
 #' }

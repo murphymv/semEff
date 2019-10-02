@@ -2,7 +2,7 @@
 % Please edit documentation in R/sem_eff_functions.R
 \name{semEff}
 \alias{semEff}
-\title{Calculate SEM Effects}
+\title{SEM Effects}
 \usage{
 semEff(sem, predictors = NULL, mediators = NULL, responses = NULL,
   ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL, ...)

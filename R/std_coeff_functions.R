@@ -139,7 +139,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
 #'   list, a single dataset containing all variables used to fit models is
 #'   returned.
 #' @param ... Arguments to \code{eval}.
-#' @details This is a simple convenience function to extract the data used to
+#' @details This is a simple convenience function to return the data used to
 #'   fit a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
 #'   containing all variables referenced in the model formula, an error will be
