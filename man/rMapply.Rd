@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_fun.R
 \name{rMapply}
 \alias{rMapply}
-\title{Recursive Version of \code{mapply}}
+\title{Recursive \code{mapply}}
 \usage{
 rMapply(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)
 }

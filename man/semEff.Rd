@@ -37,13 +37,13 @@ A list object of class \code{"semEff"}, comprising: \enumerate{\item
 }
 \description{
 Automatically calculate direct, indirect, total, and mediator
-  effects for endogenous (response) variables in a 'piecewise' Structural
-  Equation Model (SEM).
+  effects for endogenous (response) variables in a 'piecewise' structural
+  equation model (SEM).
 }
 \details{
 The eponymous function of this package calculates all direct,
   indirect, total, and mediator effects for endogenous variables in a
-  'piecewise' Structural Equation Model (SEM), that is, one where parameter
+  'piecewise' structural equation model (SEM), that is, one where parameter
   estimation is local rather than global (Shipley 2000, 2009; Lefcheck 2016).
   The SEM simply takes the form of a list of fitted models, or bootstrapped
   estimates from such models, describing hypothesised causal pathways from

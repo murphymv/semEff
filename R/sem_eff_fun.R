@@ -2,8 +2,8 @@
 
 #' @title SEM Effects
 #' @description Automatically calculate direct, indirect, total, and mediator
-#'   effects for endogenous (response) variables in a 'piecewise' Structural
-#'   Equation Model (SEM).
+#'   effects for endogenous (response) variables in a 'piecewise' structural
+#'   equation model (SEM).
 #' @param sem A piecewise SEM, comprising a list of fitted model objects of
 #'   class \code{"lm"}, \code{"glm"}, or \code{"merMod"}, or, alternatively, of
 #'   boot objects (class \code{"boot"}), containing bootstrapped model effects.
@@ -21,7 +21,7 @@
 #' @param ... Arguments to \code{bootEff}.
 #' @details The eponymous function of this package calculates all direct,
 #'   indirect, total, and mediator effects for endogenous variables in a
-#'   'piecewise' Structural Equation Model (SEM), that is, one where parameter
+#'   'piecewise' structural equation model (SEM), that is, one where parameter
 #'   estimation is local rather than global (Shipley 2000, 2009; Lefcheck 2016).
 #'   The SEM simply takes the form of a list of fitted models, or bootstrapped
 #'   estimates from such models, describing hypothesised causal pathways from

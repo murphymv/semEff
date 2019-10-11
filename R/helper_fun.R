@@ -1,29 +1,29 @@
 
 
-#' @title Determine Class of Objects
+#' @title Object Types
 #' @keywords internal
-#' @description Functions to determine the class of an R object. Intended
-#'   largely for convenience and for internal use.
+#' @description Functions to determine the 'type' of an R object using classes.
+#'   Intended largely for convenience and for internal use.
 #' @param x An R object.
 #' @return A logical value.
-#' @name Class
+#' @name Object.Type
 NULL
-#' @describeIn Class Is object of class \code{"list"}?
+#' @describeIn Object.Type Is object of class \code{"list"}?
 isList <- function(x) class(x)[1] == "list"
-#' @describeIn Class Is object of class \code{"boot"}?
+#' @describeIn Object.Type Is object of class \code{"boot"}?
 isBoot <- function(x) class(x)[1] %in% c("boot", "bootMer")
-#' @describeIn Class Is object a linear or generalised linear (mixed) model?
+#' @describeIn Object.Type Is object a linear or generalised linear (mixed) model?
 isMod <- function(x) class(x)[1] %in% c("lm", "glm", "lmerMod", "glmerMod")
-#' @describeIn Class Is object a generalised linear (mixed) model?
+#' @describeIn Object.Type Is object a generalised linear (mixed) model?
 isGlm <- function(x) class(x)[1] %in% c("glm", "glmerMod")
-#' @describeIn Class Is object a mixed model (class \code{"merMod"})?
+#' @describeIn Object.Type Is object a mixed model (class \code{"merMod"})?
 isMerMod <- function(x) class(x)[1] %in% c("lmerMod", "glmerMod")
 
 
-#' @title Determine Model Parameter Types
+#' @title Parameter Types
 #' @keywords internal
 #' @description Functions to determine the presence/absence of certain model
-#'   parameters using their names. Intended largely for convenience and for
+#'   parameter types using their names. Intended largely for convenience and for
 #'   internal use.
 #' @param x A character vector of parameter names (e.g. names of coefficients
 #'   from \code{coef} or \code{stdCoeff}).
@@ -38,7 +38,7 @@ isInx <- function(x) grepl("(?<!:):(?!:)", x, perl = TRUE)
 isR2 <- function(x) grepl("r.squared", x)
 
 
-#' @title Recursive Version of \code{mapply}
+#' @title Recursive \code{mapply}
 #' @description Recursively apply a function to a list or lists.
 #' @param FUN Function to apply.
 #' @param ... Object(s) to which \code{FUN} can be applied, or lists of such
@@ -86,7 +86,7 @@ rMapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 }
 
 
-#' @title Parallel Version of \code{sapply}
+#' @title Parallel \code{sapply}
 #' @description Apply a function to a vector using parallel processing.
 #' @param X A vector object (numeric, character, or list).
 #' @param FUN Function to apply to the elements of \code{X}.

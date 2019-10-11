@@ -7,10 +7,9 @@
 \title{semEff: Automatic Calculation of Effects for Piecewise Structural Equation Models}
 \description{
 Provides functionality to automatically calculate direct, indirect, 
-    and total effects from 'piecewise' Structural Equation Models, comprising 
+    and total effects from 'piecewise' structural equation models, comprising 
     lists of fitted models representing structured equations. Confidence 
-    intervals are provided via bootstrapping. Currently supported model classes 
-    are "lm", "glm", and "merMod".
+    intervals are provided via bootstrapping.
 }
 \seealso{
 Useful links:

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_fun.R
 \name{pSapply}
 \alias{pSapply}
-\title{Parallel Version of \code{sapply}}
+\title{Parallel \code{sapply}}
 \usage{
 pSapply(X, FUN, parallel = "snow", ncpus = NULL, cl = NULL,
   add.obj = NULL, ...)
