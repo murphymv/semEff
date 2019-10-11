@@ -139,13 +139,13 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
 #'   list, a single dataset containing all variables used to fit models is
 #'   returned.
 #' @param ... Arguments to \code{eval}.
-#' @details This is a simple convenience function to return the data used to
-#'   fit a model, by evaluating the 'data' slot of the model call object. If the
+#' @details This is a simple convenience function to return the data used to fit
+#'   a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
-#'   containing all variables referenced in the model formula, an error will be
-#'   thrown - this restriction is largely to ensure that a single coherent
-#'   dataset of all model variables can be made available for resampling
-#'   purposes.
+#'   (or coercible to such) containing all variables referenced in the model
+#'   formula, an error will be thrown - this restriction is largely to ensure
+#'   that a single coherent dataset of all model variables can be made available
+#'   for resampling purposes.
 #'
 #'   If \code{mod} is a list of models and \code{merge = TRUE}, all (unique)
 #'   variables used to fit models are merged into a single data frame. This will
@@ -169,14 +169,14 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 
     ## Data from 'data' argument of model call
     mc <- getCall(m)
-    d <- eval(mc$data, ...)
+    d <- data.frame(eval(mc$data, ...))
 
     ## All var names from formula
     f <- c(formula(m), mc$weights, mc$offset)
     vn <- unlist(lapply(f, all.vars))
 
-    if (!is.data.frame(d) || !all(vn %in% names(d)))
-      stop("'data' argument must be specified as a data frame containing all variables.")
+    if (!all(vn %in% names(d)))
+      stop("'data' must contain all variables used to fit model.")
 
     ## Subset for model observations?
     if (subset) {

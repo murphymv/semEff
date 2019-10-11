@@ -428,8 +428,6 @@ print.semEff <- function(x, ...) print(x$Summary)
 #' @param eff An object of class \code{"semEff"}.
 #' @param type The type of effects to return. Must be either \code{"orig"}
 #'   (default) or \code{"boot"}.
-#' @param responses Names of response (endogenous) variables in the SEM for
-#'   which to return effects. If \code{NULL} (default), all responses are used.
 #' @param ... Arguments (above) to be passed to \code{getEff} from other
 #'   extractor functions.
 #' @details These are simple extractor functions for effects calculated using
@@ -440,13 +438,11 @@ print.semEff <- function(x, ...) print(x$Summary)
 NULL
 #' @describeIn getEff Extract all effects.
 #' @export
-getEff <- function(eff, type = "orig", responses = NULL) {
-  e <- eff; t <- type; r <- responses
-  e <- if (t == "orig") e[[1]] else {
-    if (t == "boot") e[[2]] else
+getEff <- function(eff, type = "orig") {
+  if (type == "orig") eff[[1]] else {
+    if (type == "boot") eff[[2]] else
       stop("Effect type must be either 'orig' (default) or 'boot'")
   }
-  if (!is.null(r)) e[r] else e
 }
 #' @describeIn getEff Extract direct effects.
 #' @export
@@ -610,8 +606,8 @@ totEff <- function(...) {
 #' stopifnot(all.equal(f1, f2))
 #' stopifnot(all.equal(f2, f3))
 #'
-#' ## Compare model fitted values from predEff with predict
-#' m <- Shipley.SEM$Growth
+#' ## Compare model fitted values: predEff vs. predict
+#' m <- Shipley.SEM$Live
 #' f1 <- predEff(m, unique.x = FALSE, re.form = NULL)
 #' f2 <- predict(m)
 #' stopifnot(all.equal(f1, f2))
@@ -714,7 +710,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
 
     ## Data to predict (standardise using original means/SD's)
-    d <- if (!is.null(nd)) nd else x
+    d <- if (!is.null(nd)) data.frame(nd) else x
     obs <- rownames(d)
     d <- sapply(en, function(i) {
       if (!isInt(i)) {

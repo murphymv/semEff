@@ -18,7 +18,9 @@ knitr::opts_chunk$set(
 [![Travis build status](https://travis-ci.org/murphymv/semEff.svg?branch=master)](https://travis-ci.org/murphymv/semEff)
 <!-- badges: end -->
 
-The goal of semEff is to ...
+semEff provides functionality to automatically calculate direct, indirect, and total effects from 'piecewise' Structural Equation Models, comprising lists of fitted models representing structured equations. Confidence intervals are provided via bootstrapping. 
+
+Currently supported model classes are "lm", "glm", and "merMod".
 
 ## Installation
 
@@ -36,25 +38,61 @@ devtools::install_github("murphymv/semEff")
 ```
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
 ```{r example}
+# install.packages(c("semEff", "ggplot2"))
 library(semEff)
-## basic example code
+library(ggplot2)
+
+## Simulated data from Shipley (2009) (?Shipley)
+head(Shipley)
+
+## Hypothesised SEM
+lapply(Shipley.SEM, formula)
+
+# ## Bootstrap model effects (will take a while...)
+# system.time(
+#   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+# )
+
+## Calculate SEM effects and CI's (use saved bootstrapped SEM)
+eff <- suppressWarnings(semEff(Shipley.SEM.Boot))
+
+## Summary of effects for response "Growth"
+eff$Summary$Growth
+
+## Extract total effects for "Growth"
+tot <- totEff(eff, type = "orig")[["Growth"]]
+tot.b <- totEff(eff, type = "boot")[["Growth"]]
+
+## Predict effects for "Date" (direct) and "DD" (indirect) on "Growth"
+mod <- Shipley.SEM$Growth
+dat <- na.omit(Shipley)
+fit <- sapply(c("Date", "DD"), function(i) {
+  x <- data.frame(seq(min(dat[i]), max(dat[i]), length = 100))
+  names(x) <- i
+  c(x, predEff(mod, newdata = x, effects = tot[i], eff.boot = tot.b))
+}, simplify = FALSE)
+
+## Function to plot predictions
+plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
+  x2 <- fit[[1]]; f <- fit[[2]]; ci.l <- fit[[3]]; ci.u <- fit[[4]]
+  ggplot () +
+  geom_point(aes(x, y)) +
+  geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u), fill = "blue", alpha = "0.15") +
+  geom_line(aes(x2, f), color = "blue", size = 1) +
+  xlab(x.lab) + ylab(y.lab) +
+  theme_bw() + theme(legend.position = "none")
+}
+
+## Direct effects of "Date"
+plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date, 
+        x.lab = "Date of Bud Burst", y.lab = "Stem Growth")
+
+## Indirect effects of "DD" (operating via "Date")
+plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD, 
+        x.lab = "Degree Days to Bud Burst", y.lab = "Stem Growth")
+
+## Huge amount of scatter around each fit as random effects explain most
+## variation in this model! Compare conditional vs. marginal R-squared:
+round(c(R2c = R2(mod)[[1]], R2m = R2(mod, re.form = NA)[[1]]), 3)
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
