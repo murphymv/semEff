@@ -10,7 +10,7 @@ status](https://travis-ci.org/murphymv/semEff.svg?branch=master)](https://travis
 <!-- badges: end -->
 
 semEff provides functionality to automatically calculate direct,
-indirect, and total effects from ‘piecewise’ Structural Equation Models,
+indirect, and total effects from ‘piecewise’ structural equation models,
 comprising lists of fitted models representing structured equations.
 Confidence intervals are provided via bootstrapping.
 
@@ -39,7 +39,7 @@ devtools::install_github("murphymv/semEff")
 library(semEff)
 library(ggplot2)
 
-## Simulated data from Shipley (2009) (?Shipley)
+## Simulated data from Shipley (2009) (see ?Shipley)
 head(Shipley)
 #>   site tree      lat year     Date       DD   Growth  Survival Live
 #> 1    1    1 40.38063 1970 115.4956 160.5703 61.36852 0.9996238    1
@@ -63,12 +63,12 @@ lapply(Shipley.SEM, formula)
 #> $Live
 #> Live ~ Growth + (1 | site) + (1 | tree)
 
-# ## Bootstrap model effects (will take a while...)
+# ## Bootstrap model effects (takes a while...)
 # system.time(
 #   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 # )
 
-## Calculate SEM effects and CI's (use saved bootstrapped SEM)
+## Calculate SEM effects and CI's (use bootstrapped SEM)
 eff <- suppressWarnings(semEff(Shipley.SEM.Boot))
 
 ## Summary of effects for response "Growth"
@@ -101,11 +101,11 @@ eff$Summary$Growth
 #> Upper CI 0.290 -0.048
 #>              *      *
 
-## Extract total effects for "Growth"
-tot <- totEff(eff, type = "orig")[["Growth"]]
+## Extract total effects for Growth
+tot <- totEff(eff)[["Growth"]]
 tot.b <- totEff(eff, type = "boot")[["Growth"]]
 
-## Predict effects for "Date" (direct) and "DD" (indirect) on "Growth"
+## Predict effects for "Date" (direct) and "DD" (indirect) on Growth
 mod <- Shipley.SEM$Growth
 dat <- na.omit(Shipley)
 fit <- sapply(c("Date", "DD"), function(i) {
@@ -125,7 +125,7 @@ plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
   theme_bw() + theme(legend.position = "none")
 }
 
-## Direct effects of "Date"
+## Direct effects of Date
 plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date, 
         x.lab = "Date of Bud Burst", y.lab = "Stem Growth")
 ```
@@ -134,7 +134,7 @@ plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date,
 
 ``` r
 
-## Indirect effects of "DD" (operating via "Date")
+## Indirect effects of DD (operating via Date)
 plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD, 
         x.lab = "Degree Days to Bud Burst", y.lab = "Stem Growth")
 ```
