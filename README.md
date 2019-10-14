@@ -39,7 +39,7 @@ devtools::install_github("murphymv/semEff")
 library(semEff)
 library(ggplot2)
 
-## Simulated data from Shipley (2009) (see ?Shipley)
+## Simulated data from Shipley (2009) on tree growth and survival (see ?Shipley)
 head(Shipley)
 #>   site tree      lat year     Date       DD   Growth  Survival Live
 #> 1    1    1 40.38063 1970 115.4956 160.5703 61.36852 0.9996238    1
@@ -49,7 +49,8 @@ head(Shipley)
 #> 5    1    5 40.38063 1970 120.9946 157.3778 50.02237 0.9759584    1
 #> 6    1    1 40.38063 1972 114.2315 160.6120 56.29615 0.9983398    1
 
-## Hypothesised SEM
+## Hypothesised SEM:
+## latitude -> degree days to bud burst -> date of burst -> growth -> survival
 lapply(Shipley.SEM, formula)
 #> $DD
 #> DD ~ lat + (1 | site) + (1 | tree)
@@ -109,20 +110,19 @@ tot.b <- totEff(eff, type = "boot")[["Growth"]]
 mod <- Shipley.SEM$Growth
 dat <- na.omit(Shipley)
 fit <- sapply(c("Date", "DD"), function(i) {
-  x <- data.frame(seq(min(dat[i]), max(dat[i]), length = 100))
-  names(x) <- i
+  x <- data.frame(seq(min(dat[i]), max(dat[i]), length = 100)); names(x) <- i
   c(x, predEff(mod, newdata = x, effects = tot[i], eff.boot = tot.b))
 }, simplify = FALSE)
 
 ## Function to plot predictions
 plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
   x2 <- fit[[1]]; f <- fit[[2]]; ci.l <- fit[[3]]; ci.u <- fit[[4]]
-  ggplot () +
-  geom_point(aes(x, y)) +
-  geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u), fill = "blue", alpha = "0.15") +
-  geom_line(aes(x2, f), color = "blue", size = 1) +
-  xlab(x.lab) + ylab(y.lab) +
-  theme_bw() + theme(legend.position = "none")
+  ggplot () + 
+    geom_point(aes(x, y)) +
+    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u), fill = "blue", alpha = "0.15") +
+    geom_line(aes(x2, f), color = "blue", size = 1) +
+    xlab(x.lab) + ylab(y.lab) +
+    theme_bw() + theme(legend.position = "none")
 }
 
 ## Direct effects of Date
