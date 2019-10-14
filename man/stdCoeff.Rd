@@ -48,7 +48,7 @@ Calculate fully standardised model coefficients in standard
 \code{stdCoeff} will calculate fully standardised coefficients in
   standard deviation units for linear, generalised linear, and mixed models.
   It achieves this via adjusting the 'raw' model coefficients, so no
-  standardisation of input variabes is required beforehand. Users can simply
+  standardisation of input variables is required beforehand. Users can simply
   specify the model with all variables in their original units and the
   function will do the rest. However, the user is free to scale and/or centre
   any input variables should they choose, which should not affect the outcome
@@ -62,11 +62,11 @@ Calculate fully standardised model coefficients in standard
   model where centring of x and y is specified, the intercept will be zero -
   the mean (or weighted mean) of y. In addition, if \code{cen.x = TRUE} and
   there are interacting terms in the model, all coefficients for lower order
-  terms of the interation are adjusted using an expression which ensures that
-  each main effect or lower order term is estimated at the mean values of the
-  terms they interact with (zero in a 'centred' model) - typically improving
-  the interpretation of coefficients. The expression used comprises a
-  weighted sum of all the coefficients that contain the lower order term,
+  terms of the interaction are adjusted using an expression which ensures
+  that each main effect or lower order term is estimated at the mean values
+  of the terms they interact with (zero in a 'centred' model) - typically
+  improving the interpretation of coefficients. The expression used comprises
+  a weighted sum of all the coefficients that contain the lower order term,
   with the weight for the term itself being zero and those for 'containing'
   terms being the product of the means of the other variables involved in
   that term (i.e. those not in the lower order term itself). For example, for

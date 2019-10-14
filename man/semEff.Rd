@@ -75,7 +75,7 @@ The eponymous function of this package calculates all direct,
   instead using each bootstrapped direct effect.
 
   Correlated errors (and confidence intervals) are also returned if their
-  boostrapped values are present in \code{sem}, or, if \code{sem} is a list
+  bootstrapped values are present in \code{sem}, or, if \code{sem} is a list
   of fitted models, if specified to argument \code{cor.err} (see
   \code{\link[semEff]{bootEff}}). These represent residual relationships
   among response variables, unaccounted for by the SEM.

@@ -36,7 +36,7 @@
 #'   confidence intervals in most situations. To ensure that data is resampled
 #'   in the same way across individual bootstrap operations within the same run
 #'   (e.g. models in a list), the same seed is set per operation, with the value
-#'   saved as an attribute to the bootrapped values (for reproducibility). The
+#'   saved as an attribute to the bootstrapped values (for reproducibility). The
 #'   seed can either be user-supplied or a randomly-generated five-digit number
 #'   (default), and is always re-initialised on exit (i.e.
 #'   \code{set.seed(NULL)}).
@@ -463,8 +463,8 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
 #'   the most accurate coverage across a range of bootstrap sampling
 #'   distributions (Puth \emph{et al.} 2015). They will, however, be
 #'   \href{https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot}{inappropriate}
-#'    for parametric resampling - in which case the default will be set to the
-#'   boostrap percentile method instead (\code{"perc"}).
+#'   for parametric resampling - in which case the default will be set to the
+#'   bootstrap percentile method instead (\code{"perc"}).
 #'
 #' @note All bootstrapped confidence intervals will tend to underestimate the
 #'   true nominal coverage to some extent when sample size is small (Chernick &

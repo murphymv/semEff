@@ -70,7 +70,7 @@
 
 
 #' @title Bootstrapped SEM Estimates
-#' @description Boostrapped estimates generated from the hypothesised SEM from
+#' @description Bootstrapped estimates generated from the hypothesised SEM from
 #'   Shipley (2009), using \code{bootEff}.
 #' @format A list of objects of class \code{"boot"}, representing bootstrapped
 #'   estimates from fitted mixed models.

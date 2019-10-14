@@ -47,8 +47,8 @@ This is essentially a wrapper for \code{boot.ci} from the \pkg{boot}
   the most accurate coverage across a range of bootstrap sampling
   distributions (Puth \emph{et al.} 2015). They will, however, be
   \href{https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot}{inappropriate}
-   for parametric resampling - in which case the default will be set to the
-  boostrap percentile method instead (\code{"perc"}).
+  for parametric resampling - in which case the default will be set to the
+  bootstrap percentile method instead (\code{"perc"}).
 }
 \note{
 All bootstrapped confidence intervals will tend to underestimate the

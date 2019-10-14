@@ -63,7 +63,7 @@ Bootstrap model effects (standardised coefficients) and optional
   confidence intervals in most situations. To ensure that data is resampled
   in the same way across individual bootstrap operations within the same run
   (e.g. models in a list), the same seed is set per operation, with the value
-  saved as an attribute to the bootrapped values (for reproducibility). The
+  saved as an attribute to the bootstrapped values (for reproducibility). The
   seed can either be user-supplied or a randomly-generated five-digit number
   (default), and is always re-initialised on exit (i.e.
   \code{set.seed(NULL)}).

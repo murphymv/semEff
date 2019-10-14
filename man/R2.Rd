@@ -45,7 +45,7 @@ Various approaches to the calculation of a goodness-of-fit measure
   units). This is simply the squared version of the correlation measure
   advocated by Zheng & Agresti (2000), itself an intuitive measure of
   goodness-of-fit describing the predictive power of a model. As the measure
-  does not depend on any specific error distibution or model estimating
+  does not depend on any specific error distribution or model estimating
   procedure, it is also generally comparable across many different types of
   model (Kvalseth 1985). In the case of the ordinary linear model, the
   measure equals the more traditional R-squared based on sums of squares.

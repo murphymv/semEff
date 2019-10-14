@@ -114,7 +114,7 @@ Generate predicted values for SEM direct, indirect, or total effects
   \code{interaction}, standardised effects (and confidence intervals) can be
   returned for predictions of a continuous 'main' variable across specified
   values or levels of interacting variable(s). The values for all variables
-  should be suppied in \code{newdata}, with the continuous variable being
+  should be supplied in \code{newdata}, with the continuous variable being
   automatically identified as having the most unique values.
 }
 \examples{

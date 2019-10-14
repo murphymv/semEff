@@ -53,7 +53,7 @@
 #'   instead using each bootstrapped direct effect.
 #'
 #'   Correlated errors (and confidence intervals) are also returned if their
-#'   boostrapped values are present in \code{sem}, or, if \code{sem} is a list
+#'   bootstrapped values are present in \code{sem}, or, if \code{sem} is a list
 #'   of fitted models, if specified to argument \code{cor.err} (see
 #'   \code{\link[semEff]{bootEff}}). These represent residual relationships
 #'   among response variables, unaccounted for by the SEM.
@@ -541,7 +541,7 @@ totEff <- function(...) {
 #'   \code{interaction}, standardised effects (and confidence intervals) can be
 #'   returned for predictions of a continuous 'main' variable across specified
 #'   values or levels of interacting variable(s). The values for all variables
-#'   should be suppied in \code{newdata}, with the continuous variable being
+#'   should be supplied in \code{newdata}, with the continuous variable being
 #'   automatically identified as having the most unique values.
 #' @return A numeric vector of the predictions, or, if bootstrapped effects are
 #'   supplied, a list containing the predictions and the upper and lower

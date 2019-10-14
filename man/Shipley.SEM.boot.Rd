@@ -10,7 +10,7 @@
 Shipley.SEM.Boot
 }
 \description{
-Boostrapped estimates generated from the hypothesised SEM from
+Bootstrapped estimates generated from the hypothesised SEM from
   Shipley (2009), using \code{bootEff}.
 }
 \examples{
