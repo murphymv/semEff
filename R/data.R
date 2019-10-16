@@ -31,7 +31,7 @@
 #' @examples
 #' ## Specification
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' Shipley.SEM <- list(
 #'   "DD" = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
@@ -57,7 +57,7 @@
 #' @examples
 #' ## Specification
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' Shipley.Growth <- list(
 #'   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
@@ -80,9 +80,10 @@
 #' @examples
 #' ## Specification
 #'
-#' \dontrun{
+#' \donttest{
 #'
-#' Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+#' Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
+#'                             ncpus = 2)
 #' }
 "Shipley.SEM.Boot"
 
@@ -98,7 +99,7 @@
 #' @examples
 #' ## Specification
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 #' }

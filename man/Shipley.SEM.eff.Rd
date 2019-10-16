@@ -16,7 +16,7 @@ SEM effects calculated from bootstrapped estimates of the
 \examples{
 ## Specification
 
-\dontrun{
+\donttest{
 
 Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 }

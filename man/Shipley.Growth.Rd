@@ -17,7 +17,7 @@ A set of hypothetical competing models fit to the same response
 \examples{
 ## Specification
 
-\dontrun{
+\donttest{
 
 Shipley.Growth <- list(
   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),

@@ -135,7 +135,7 @@ f.dir <- predEff(m, nd, dir, type = "response")
 f.tot <- predEff(m, nd, tot, type = "response")
 
 ## Add CI's
-\dontrun{
+\donttest{
 
 dir.b <- dirEff(e, "boot")
 tot.b <- totEff(e, "boot")
@@ -155,7 +155,7 @@ nd <- with(d, expand.grid(
 f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
 
 ## Add CI's (need to bootstrap model - will take a while)
-\dontrun{
+\donttest{
 
 system.time(B <- bootEff(m, ran.eff = "site", R = 1000))
 est <- B$t0; est.b <- B$t  # estimates

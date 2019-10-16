@@ -1,3 +1,16 @@
+## Resubmission
+This is a resubmission. The following issues were fixed:
+
+* Removed quotation marks from the word 'piecewise' in the DESCRIPTION file.
+
+* Added some explanation and provided references for the type of structural
+equation model (piecewise) in the description field of the DESCRIPTION file.
+
+* Replaced \dontrun{} with \donttest{} in all Rd-files.
+
+* Set no. of cores to two for all examples using parallel processing ("ncpus =
+2").
+
 ## Release
 This is a first submission to CRAN.
 

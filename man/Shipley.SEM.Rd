@@ -15,7 +15,7 @@ Hypothesised SEM from Shipley (2009)
 \examples{
 ## Specification
 
-\dontrun{
+\donttest{
 
 Shipley.SEM <- list(
   "DD" = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),

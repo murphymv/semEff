@@ -9,10 +9,11 @@
 status](https://travis-ci.org/murphymv/semEff.svg?branch=master)](https://travis-ci.org/murphymv/semEff)
 <!-- badges: end -->
 
-semEff provides functionality to automatically calculate direct,
+semEff Provides functionality to automatically calculate direct,
 indirect, and total effects from ‘piecewise’ structural equation models,
-comprising lists of fitted models representing structured equations.
-Confidence intervals are provided via bootstrapping.
+comprising lists of fitted models representing structured equations
+(with local estimation). Confidence intervals are provided via
+bootstrapping.
 
 Currently supported model classes are “lm”, “glm”, and “merMod”.
 

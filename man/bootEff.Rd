@@ -129,15 +129,14 @@ Bootstrapping mixed (or indeed any other) models may take a very long
   results).
 }
 \examples{
-## Bootstrap Shipley SEM
-## (set 'site' as random effect group for resampling - highest-level)
+## Bootstrap Shipley SEM (while take a while...)
+## Set 'site' as random effect group for resampling - highest-level
 
-\dontrun{
+\donttest{
 
-## 45-60 mins with parallel processing using eight cores (YMMV)
-## (bigger operations and/or more complicated models will take longer...)
 system.time(
-  Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+  Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
+                              ncpus = 2)
 )
 }
 

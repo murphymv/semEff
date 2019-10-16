@@ -68,10 +68,11 @@ bootCI(Shipley.SEM.Boot)
 ## From original SEM (models)
 ## (not typically recommended - better to use saved boot objects)
 
-\dontrun{
+\donttest{
 
 system.time(
-  Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)
+  Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908,
+                           ncpus = 2)
 )
 }
 }

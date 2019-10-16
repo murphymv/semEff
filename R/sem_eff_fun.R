@@ -94,7 +94,7 @@
 #'   \url{https://doi.org/bqd43d}
 #' @seealso \code{\link[semEff]{bootEff}}, \code{\link[semEff]{bootCI}}
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' ## SEM effects
 #' Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
@@ -107,7 +107,8 @@
 #' ## Effects calculated using original SEM (models)
 #' ## (not typically recommended - better to use saved boot objects)
 #' system.time(
-#'   Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+#'   Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908,
+#'                             ncpus = 2)
 #' )
 #' }
 #'
@@ -569,7 +570,7 @@ totEff <- function(...) {
 #' f.tot <- predEff(m, nd, tot, type = "response")
 #'
 #' ## Add CI's
-#' \dontrun{
+#' \donttest{
 #'
 #' dir.b <- dirEff(e, "boot")
 #' tot.b <- totEff(e, "boot")
@@ -589,7 +590,7 @@ totEff <- function(...) {
 #' f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
 #'
 #' ## Add CI's (need to bootstrap model - will take a while)
-#' \dontrun{
+#' \donttest{
 #'
 #' system.time(B <- bootEff(m, ran.eff = "site", R = 1000))
 #' est <- B$t0; est.b <- B$t  # estimates

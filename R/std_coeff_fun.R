@@ -649,7 +649,7 @@ VIF <- function(mod, data = NULL, ...) {
 #' ## Predicted R-squared: compare cross-validated predictions calculated/
 #' ## approximated via the hat matrix to standard method (leave-one-out)
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' ## Fit test models using Shipley data - compare lm vs glm
 #' d <- na.omit(Shipley)

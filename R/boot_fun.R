@@ -116,15 +116,14 @@
 #'   \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{weighted.residuals}},
 #'   \code{\link[semEff]{avgEst}}
 #' @examples
-#' ## Bootstrap Shipley SEM
-#' ## (set 'site' as random effect group for resampling - highest-level)
+#' ## Bootstrap Shipley SEM (while take a while...)
+#' ## Set 'site' as random effect group for resampling - highest-level
 #'
-#' \dontrun{
+#' \donttest{
 #'
-#' ## 45-60 mins with parallel processing using eight cores (YMMV)
-#' ## (bigger operations and/or more complicated models will take longer...)
 #' system.time(
-#'   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+#'   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
+#'                               ncpus = 2)
 #' )
 #' }
 #'
@@ -501,10 +500,11 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
 #' ## From original SEM (models)
 #' ## (not typically recommended - better to use saved boot objects)
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' system.time(
-#'   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)
+#'   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908,
+#'                            ncpus = 2)
 #' )
 #' }
 #' @export

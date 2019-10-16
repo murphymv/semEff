@@ -86,7 +86,7 @@ The eponymous function of this package calculates all direct,
   ordinary linear models with fully standardised effects).
 }
 \examples{
-\dontrun{
+\donttest{
 
 ## SEM effects
 Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
@@ -99,7 +99,8 @@ semEff(Shipley.SEM.Boot, responses = "Live")
 ## Effects calculated using original SEM (models)
 ## (not typically recommended - better to use saved boot objects)
 system.time(
-  Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+  Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908,
+                            ncpus = 2)
 )
 }
 

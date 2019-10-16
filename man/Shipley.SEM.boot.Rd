@@ -16,9 +16,10 @@ Bootstrapped estimates generated from the hypothesised SEM from
 \examples{
 ## Specification
 
-\dontrun{
+\donttest{
 
-Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
+                            ncpus = 2)
 }
 }
 \references{
