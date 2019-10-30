@@ -9,11 +9,11 @@
 status](https://travis-ci.org/murphymv/semEff.svg?branch=master)](https://travis-ci.org/murphymv/semEff)
 <!-- badges: end -->
 
-semEff Provides functionality to automatically calculate direct,
+semEff provides functionality to automatically calculate direct,
 indirect, and total effects from ‘piecewise’ structural equation models,
 comprising lists of fitted models representing structured equations
-(with local estimation). Confidence intervals are provided via
-bootstrapping.
+(Shipley 2000, 2009; Lefcheck 2016). Confidence intervals are provided
+via bootstrapping.
 
 Currently supported model classes are “lm”, “glm”, and “merMod”.
 
@@ -150,3 +150,15 @@ round(c(R2c = R2(mod)[[1]], R2m = R2(mod, re.form = NA)[[1]]), 3)
 #>   R2c   R2m 
 #> 0.794 0.048
 ```
+
+## References
+
+  - Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
+    modelling in r for ecology, evolution, and systematics. Methods in
+    Ecology and Evolution, 7(5), 573–579. <https://doi.org/f8s8rb>
+  - Shipley, B. (2000). A New Inferential Test for Path Models Based on
+    Directed Acyclic Graphs. Structural Equation Modeling: A
+    Multidisciplinary Journal, 7(2), 206–218. <https://doi.org/cqm32d>
+  - Shipley, B. (2009). Confirmatory path analysis in a generalized
+    multilevel context. Ecology, 90(2), 363–368.
+    <https://doi.org/bqd43d>

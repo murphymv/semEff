@@ -3,8 +3,8 @@ This is a resubmission. The following issues were fixed:
 
 * Removed quotation marks from the word 'piecewise' in the DESCRIPTION file.
 
-* Added some explanation and provided references for the type of structural
-equation model (piecewise) in the description field of the DESCRIPTION file.
+* Added a reference for 'piecewise' structural equation models in the
+description field of the DESCRIPTION file.
 
 * Replaced \dontrun{} with \donttest{} in all Rd-files.
 

@@ -8,11 +8,8 @@
 \description{
 Provides functionality to automatically calculate direct, indirect, 
     and total effects from piecewise structural equation models, comprising 
-    lists of fitted models representing structured equations (with local 
-    estimation). Confidence intervals are provided via bootstrapping. See 
-    Shipley (2000) <doi:10.1207/s15328007sem0702_4>, Shipley (2009) 
-    <doi:10.1890/08-1034.1>, and Lefcheck (2016) <doi:10.1111/2041-210x.12512>) 
-    for background.
+    lists of fitted models representing structured equations (Lefcheck 2016 
+    <doi:10/f8s8rb>). Confidence intervals are provided via bootstrapping.
 }
 \seealso{
 Useful links:
