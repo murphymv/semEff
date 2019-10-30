@@ -41,8 +41,13 @@ Found the following (possibly) invalid URLs:
     Status: Error
     Message: libcurl error code 56:
       	OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 10054
+  URL: https://doi.org/fnx7xk
+    From: man/semEff.Rd
+    Status: 404
+    Message: Not Found
 
-These links opened fine when tested locally (on multiple browsers).
+The first two links opened fine when tested locally (on multiple browsers). The
+third seems to be a temporary connection problem with Springer Nature.
 
 * checking installed package size ... NOTE
   installed size is  7.8Mb
