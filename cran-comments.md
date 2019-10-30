@@ -11,6 +11,8 @@ description field of the DESCRIPTION file.
 * Set no. of cores to two for all examples using parallel processing ("ncpus =
 2").
 
+I also updated the README file by adding some references.
+
 ## Release
 This is a first submission to CRAN.
 
