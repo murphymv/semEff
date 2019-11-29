@@ -4,7 +4,14 @@
 \alias{xNam}
 \title{Get Model Term Names}
 \usage{
-xNam(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...)
+xNam(
+  mod,
+  intercept = TRUE,
+  aliased = TRUE,
+  list = FALSE,
+  envir = parent.frame(),
+  ...
+)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}

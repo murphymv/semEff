@@ -4,7 +4,7 @@
 \alias{VIF}
 \title{Generalised Variance Inflation Factors}
 \usage{
-VIF(mod, data = NULL, ...)
+VIF(mod, data = NULL, envir = parent.frame(), ...)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}

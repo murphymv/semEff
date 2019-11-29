@@ -4,7 +4,7 @@
 \alias{getData}
 \title{Get Model Data}
 \usage{
-getData(mod, subset = FALSE, merge = FALSE, ...)
+getData(mod, subset = FALSE, merge = FALSE, envir = parent.frame(), ...)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}

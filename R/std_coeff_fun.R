@@ -1105,6 +1105,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         ## Re-fit model with centred predictors
         ## (to calculate correct VIF's for interacting terms)
         if (cen.x && inx) {
+          d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[, xnc]
           m <- update(m, data = d)

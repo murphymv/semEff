@@ -12,7 +12,7 @@ R2(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL, ...)
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
 \item{adj, pred}{Logical. If \code{TRUE} (default), adjusted and/or predicted
-R squared are also returned (the latter is not available for all models).}
+R-squared are also returned (the latter is not available for all models).}
 
 \item{re.form}{For mixed models of class \code{"merMod"}, the formula for
 random effects to condition on when generating fitted values used in the
