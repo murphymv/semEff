@@ -1046,7 +1046,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (k > 0) {
 
       ## Predictors
-      if (is.null(d)) d <- getData(m)
+      if (is.null(d)) d <- getData(m, envir = parent.frame())
       mm <- model.matrix(m, data = d)
       x <- mm[s, xn, drop = FALSE]
       obs <- rownames(x)
