@@ -24,6 +24,9 @@ xNam(
 \item{list}{Logical, whether names should be returned as a list, with all
 multi-coefficient terms grouped under their term names.}
 
+\item{envir}{The \code{\link[base]{environment}} in which to look for model
+data (data is needed to construct the model frame).}
+
 \item{...}{Not currently used.}
 }
 \value{

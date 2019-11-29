@@ -16,7 +16,10 @@ model(s) are returned (i.e. missing observations (\code{NA}) are removed).}
 list, a single dataset containing all variables used to fit models is
 returned.}
 
-\item{...}{Arguments to \code{eval}.}
+\item{envir}{The \code{\link[base]{environment}} in which to look for data
+(passed to \code{eval}).}
+
+\item{...}{Not currently used.}
 }
 \value{
 A data frame of the variables used to fit the model(s), or a list or

@@ -11,8 +11,10 @@ VIF(mod, data = NULL, envir = parent.frame(), ...)
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
-\item{...}{Arguments to \code{getData} (data needed to construct model
-frame).}
+\item{envir}{The \code{\link[base]{environment}} in which to look for model
+data (data is needed to construct the model frame).}
+
+\item{...}{Not currently used.}
 }
 \value{
 A numeric vector of the VIF's, or an array, list of vectors/arrays,

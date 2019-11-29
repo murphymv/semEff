@@ -62,7 +62,9 @@ sdW <- function(...) {
 #' @param merge Logical. If \code{TRUE}, and \code{mod} is a list or nested
 #'   list, a single dataset containing all variables used to fit models is
 #'   returned.
-#' @param ... Arguments to \code{eval}.
+#' @param envir The \code{\link[base]{environment}} in which to look for data
+#'   (passed to \code{eval}).
+#' @param ... Not currently used.
 #' @details This is a simple convenience function to return the data used to fit
 #'   a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
@@ -136,6 +138,8 @@ getData <- function(mod, subset = FALSE, merge = FALSE, envir = parent.frame(),
 #'   (see Details).
 #' @param list Logical, whether names should be returned as a list, with all
 #'   multi-coefficient terms grouped under their term names.
+#' @param envir The \code{\link[base]{environment}} in which to look for model
+#'   data (data is needed to construct the model frame).
 #' @param ... Not currently used.
 #' @details Extract term names from a fitted model. Names of terms for which
 #'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
@@ -426,8 +430,9 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 #'   fitted model via the variance-covariance matrix of coefficients.
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
-#' @param ... Arguments to \code{getData} (data needed to construct model
-#'   frame).
+#' @param envir The \code{\link[base]{environment}} in which to look for model
+#'   data (data is needed to construct the model frame).
+#' @param ... Not currently used.
 #' @details \code{VIF} calculates generalised variance inflation factors (GVIF)
 #'   as described in Fox & Monette (1992), and also implemented in the
 #'   \code{vif} function in the \pkg{car} package. However, whereas \code{vif}
