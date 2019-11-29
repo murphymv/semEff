@@ -7,8 +7,7 @@
 getData(mod, subset = FALSE, merge = FALSE, ...)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or a list or nested list of such objects.}
+\item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{subset}{Logical. If \code{TRUE}, only observations used to fit the
 model(s) are returned (i.e. missing observations (\code{NA}) are removed).}

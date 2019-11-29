@@ -4,13 +4,23 @@
 \alias{bootEff}
 \title{Bootstrap Effects}
 \usage{
-bootEff(mod, data = NULL, ran.eff = NULL, cor.err = NULL,
-  R = 10000, seed = NULL, catch.err = TRUE, parallel = "snow",
-  ncpus = NULL, cl = NULL, bM.arg = NULL, ...)
+bootEff(
+  mod,
+  data = NULL,
+  ran.eff = NULL,
+  cor.err = NULL,
+  R = 10000,
+  seed = NULL,
+  catch.err = TRUE,
+  parallel = "snow",
+  ncpus = NULL,
+  cl = NULL,
+  bM.arg = NULL,
+  ...
+)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or a list or nested list of such objects.}
+\item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
 

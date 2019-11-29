@@ -5,6 +5,7 @@
 \alias{isList}
 \alias{isBoot}
 \alias{isMod}
+\alias{isGls}
 \alias{isGlm}
 \alias{isMerMod}
 \title{Object Types}
@@ -14,6 +15,8 @@ isList(x)
 isBoot(x)
 
 isMod(x)
+
+isGls(x)
 
 isGlm(x)
 
@@ -36,6 +39,8 @@ Functions to determine the 'type' of an R object using classes.
 \item \code{isBoot}: Is object of class \code{"boot"}?
 
 \item \code{isMod}: Is object a linear or generalised linear (mixed) model?
+
+\item \code{isGls}: Is object a generalised least squares model?
 
 \item \code{isGlm}: Is object a generalised linear (mixed) model?
 

@@ -15,7 +15,8 @@ comprising lists of fitted models representing structured equations
 (Shipley 2000, 2009; Lefcheck 2016). Confidence intervals are provided
 via bootstrapping.
 
-Currently supported model classes are “lm”, “glm”, and “merMod”.
+Currently supported model classes are “lm”, “glm”, “lmerMod”,
+“glmerMod”, “gls”, and “lm.gls”.
 
 ## Installation
 

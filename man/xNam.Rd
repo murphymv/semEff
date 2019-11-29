@@ -7,8 +7,7 @@
 xNam(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or a list or nested list of such objects.}
+\item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{intercept}{Logical, whether the intercept term should be included.}
 
@@ -39,10 +38,13 @@ xNam(m)
 xNam(m, intercept = FALSE)  # only predictors
 
 ## Model with different types of predictor (some multi-coefficient terms)
-x1 <- poly(rnorm(100), 2)  # polynomial
-x2 <- as.factor(rep(c("a", "b", "c", "d"), each = 25))  # categorical
-x3 <- rep(1, 100)  # no variation
-m <- lm(rnorm(100) ~ x1 + x2 + x3)
+d <- data.frame(
+  y = rnorm(100),
+  x1 = poly(rnorm(100), 2),  # polynomial
+  x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),  # categorical
+  x3 = rep(1, 100)  # no variation
+)
+m <- lm(y ~ x1.1 + x1.2 + x2 + x3, data = d)
 xNam(m)
 xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 xNam(m, aliased = FALSE, list = TRUE)  # as named list

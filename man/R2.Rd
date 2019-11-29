@@ -7,13 +7,12 @@
 R2(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL, ...)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or a list or nested list of such objects.}
+\item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
 \item{adj, pred}{Logical. If \code{TRUE} (default), adjusted and/or predicted
-R squared are also returned.}
+R squared are also returned (the latter is not available for all models).}
 
 \item{re.form}{For mixed models of class \code{"merMod"}, the formula for
 random effects to condition on when generating fitted values used in the
@@ -153,7 +152,6 @@ all.equal(cvf1, cvf2)
 # lm: TRUE; glm: "Mean relative difference: 1.977725e-06"
 cor(cvf1, cvf2)
 # lm: 1; glm: 0.9999987
-
 }
 
 # NOTE: comparison not tested here for mixed models, as hierarchical data can

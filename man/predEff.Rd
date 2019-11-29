@@ -4,14 +4,26 @@
 \alias{predEff}
 \title{Predict Effects}
 \usage{
-predEff(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
-  re.form = NA, type = "link", ci.conf = 0.95, ci.type = "bca",
-  interaction = NULL, digits = 3, bci.arg = NULL, parallel = "no",
-  ncpus = NULL, cl = NULL, ...)
+predEff(
+  mod,
+  newdata = NULL,
+  effects = NULL,
+  eff.boot = NULL,
+  re.form = NA,
+  type = "link",
+  ci.conf = 0.95,
+  ci.type = "bca",
+  interaction = NULL,
+  digits = 3,
+  bci.arg = NULL,
+  parallel = "no",
+  ncpus = NULL,
+  cl = NULL,
+  ...
+)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or a list or nested list of such objects.}
+\item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{newdata}{An optional data frame of new values to predict, which should
 contain all the variables named in \code{effects} or all those used to fit

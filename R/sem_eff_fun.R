@@ -4,9 +4,9 @@
 #' @description Automatically calculate direct, indirect, total, and mediator
 #'   effects for endogenous (response) variables in a 'piecewise' structural
 #'   equation model (SEM).
-#' @param sem A piecewise SEM, comprising a list of fitted model objects of
-#'   class \code{"lm"}, \code{"glm"}, or \code{"merMod"}, or, alternatively, of
-#'   boot objects (class \code{"boot"}), containing bootstrapped model effects.
+#' @param sem A piecewise SEM, comprising a list of fitted model objects, or,
+#'   alternatively, of boot objects (class \code{"boot"}), containing
+#'   bootstrapped model effects.
 #' @param predictors,mediators,responses Names of variables for/through which to
 #'   calculate effects. If \code{NULL} (default), all predictors, endogenous
 #'   predictors (mediators), and endogenous variables (responses) will be used.
@@ -390,7 +390,6 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
         rbind(e, " " = stars)
       } else NA
     })
-
   })
 
   ## Add correlated errors
@@ -465,8 +464,7 @@ totEff <- function(...) {
 #' @title Predict Effects
 #' @description Generate predicted values for SEM direct, indirect, or total
 #'   effects.
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}, or a list or nested list of such objects.
+#' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param newdata An optional data frame of new values to predict, which should
 #'   contain all the variables named in \code{effects} or all those used to fit
 #'   \code{mod}.
@@ -672,7 +670,8 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     w <- if (is.null(w)) rep(1, nrow(d)) else w[w > 0]
 
     ## Offset(s)
-    o <- model.offset(model.frame(m1)[obs, ])
+    mf <- model.frame(m1, data = d)
+    o <- model.offset(mf[obs, ])
     om <- if (cen.x && !is.null(o)) weighted.mean(o, w) else 0
     if (!is.null(nd)) {
       tt <- terms(m1)

@@ -54,85 +54,9 @@ sdW <- function(...) {
 }
 
 
-#' @title Get Model Term Names
-#' @description Extract term names from a fitted model object.
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}, or a list or nested list of such objects.
-#' @param intercept Logical, whether the intercept term should be included.
-#' @param aliased Logical, whether names of aliased terms should be included
-#'   (see Details).
-#' @param list Logical, whether names should be returned as a list, with all
-#'   multi-coefficient terms grouped under their term names.
-#' @param ... Not currently used.
-#' @details Extract term names from a fitted model. Names of terms for which
-#'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
-#'   (default). These may be terms which are perfectly correlated with other
-#'   terms in the model, so that the model design matrix is rank deficient.
-#' @return A character vector or list/nested list of term names.
-#' @examples
-#' ## Term names from Shipley SEM
-#' m <- Shipley.SEM
-#' xNam(m)
-#' xNam(m, intercept = FALSE)  # only predictors
-#'
-#' ## Model with different types of predictor (some multi-coefficient terms)
-#' x1 <- poly(rnorm(100), 2)  # polynomial
-#' x2 <- as.factor(rep(c("a", "b", "c", "d"), each = 25))  # categorical
-#' x3 <- rep(1, 100)  # no variation
-#' m <- lm(rnorm(100) ~ x1 + x2 + x3)
-#' xNam(m)
-#' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
-#' xNam(m, aliased = FALSE, list = TRUE)  # as named list
-#' @export
-xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
-
-  m <- mod
-
-  ## Function
-  xNam <- function(m) {
-
-    ## All names as list
-    xn <- labels(terms(m))
-    xn2 <- rownames(summary(m)$coef)
-    xn <- c(xn2[isInt(xn2)], xn)
-    mf <- model.frame(m)
-    XN <- sapply(xn, function(i) {
-      if (i %in% names(mf)) {
-        xi <- mf[, i]
-        xic <- class(xi)
-        if ("factor" %in% xic) {
-          paste0(i, levels(xi)[-1])
-        } else {
-          if ("matrix" %in% xic) {
-            paste0(i, colnames(xi))
-          } else i
-        }
-      } else i
-    }, simplify = FALSE)
-
-    ## Drop intercept?
-    if (!intercept) XN <- XN[!isInt(names(XN))]
-
-    ## Drop aliased terms?
-    if (!aliased) {
-      XN <- XN[sapply(XN, function(i) all(i %in% xn2))]
-    }
-
-    ## Return as list?
-    if (!list) unlist(unname(XN)) else XN
-
-  }
-
-  ## Apply recursively
-  rMapply(xNam, m, SIMPLIFY = FALSE)
-
-}
-
-
 #' @title Get Model Data
 #' @description Extract the data used to fit a model.
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}, or a list or nested list of such objects.
+#' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param subset Logical. If \code{TRUE}, only observations used to fit the
 #'   model(s) are returned (i.e. missing observations (\code{NA}) are removed).
 #' @param merge Logical. If \code{TRUE}, and \code{mod} is a list or nested
@@ -176,7 +100,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
     vn <- unlist(lapply(f, all.vars))
 
     if (!all(vn %in% names(d)))
-      stop("'data' must contain all variables used to fit model.")
+      stop("'data' not found or does not contain all model variables.")
 
     ## Subset for model observations?
     if (subset) {
@@ -203,13 +127,95 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 }
 
 
+#' @title Get Model Term Names
+#' @description Extract term names from a fitted model object.
+#' @param mod A fitted model object, or a list or nested list of such objects.
+#' @param intercept Logical, whether the intercept term should be included.
+#' @param aliased Logical, whether names of aliased terms should be included
+#'   (see Details).
+#' @param list Logical, whether names should be returned as a list, with all
+#'   multi-coefficient terms grouped under their term names.
+#' @param ... Not currently used.
+#' @details Extract term names from a fitted model. Names of terms for which
+#'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
+#'   (default). These may be terms which are perfectly correlated with other
+#'   terms in the model, so that the model design matrix is rank deficient.
+#' @return A character vector or list/nested list of term names.
+#' @examples
+#' ## Term names from Shipley SEM
+#' m <- Shipley.SEM
+#' xNam(m)
+#' xNam(m, intercept = FALSE)  # only predictors
+#'
+#' ## Model with different types of predictor (some multi-coefficient terms)
+#' d <- data.frame(
+#'   y = rnorm(100),
+#'   x1 = poly(rnorm(100), 2),  # polynomial
+#'   x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),  # categorical
+#'   x3 = rep(1, 100)  # no variation
+#' )
+#' m <- lm(y ~ x1.1 + x1.2 + x2 + x3, data = d)
+#' xNam(m)
+#' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
+#' xNam(m, aliased = FALSE, list = TRUE)  # as named list
+#' @export
+xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
+
+  m <- mod
+
+  ## Function
+  xNam <- function(m) {
+
+    ## All names as list (expand multi-coefficient terms)
+    xn <- labels(terms(m))
+    xn2 <- rownames(summary(m)$coef)
+    xn <- c(xn2[isInt(xn2)], xn)
+    mf <- model.frame(m, data = getData(m))
+    XN <- sapply(xn, function(i) {
+      if (i %in% names(mf)) {
+        xi <- mf[, i]
+        xic <- class(xi)
+        if ("factor" %in% xic) {
+          paste0(i, levels(xi)[-1])
+        } else {
+          if ("matrix" %in% xic) {
+            paste0(i, colnames(xi))
+          } else i
+        }
+      } else i
+    }, simplify = FALSE)
+    XN <- sapply(xn, function(i) {
+      if (isInx(i)) {
+        i <- unlist(strsplit(i, ":"))
+        apply(expand.grid(XN[i]), 1, paste, collapse = ":")
+      } else XN[[i]]
+    }, simplify = FALSE)
+
+    ## Drop intercept?
+    if (!intercept) XN <- XN[!isInt(names(XN))]
+
+    ## Drop aliased terms?
+    if (!aliased) {
+      XN <- XN[sapply(XN, function(i) all(i %in% xn2))]
+    }
+
+    ## Return as list?
+    if (!list) unlist(unname(XN)) else XN
+
+  }
+
+  ## Apply recursively
+  rMapply(xNam, m, SIMPLIFY = FALSE)
+
+}
+
+
 #' @title Get Model Response Variable
 #' @description Extract the response variable from a fitted model in the
 #'   original or link scale (for GLM's).
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}. Alternatively, a numeric vector, corresponding to a
-#'   variable to be transformed. Can also be a list or nested list of such
-#'   objects.
+#' @param mod A fitted model object. Alternatively, a numeric vector,
+#'   corresponding to a variable to be transformed. Can also be a list or nested
+#'   list of such objects.
 #' @param family Optional, the error distribution family containing the link
 #'   function which will be used to transform the response (see
 #'   \code{\link[stats]{family}} for specification details).
@@ -416,10 +422,10 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 #' @title Generalised Variance Inflation Factors
 #' @description Calculate generalised variance inflation factors for terms in a
 #'   fitted model via the variance-covariance matrix of coefficients.
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}, or a list or nested list of such objects.
+#' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
-#' @param ... Not currently used.
+#' @param ... Arguments to \code{getData} (data needed to construct model
+#'   frame).
 #' @details \code{VIF} calculates generalised variance inflation factors (GVIF)
 #'   as described in Fox & Monette (1992), and also implemented in the
 #'   \code{vif} function in the \pkg{car} package. However, whereas \code{vif}
@@ -447,10 +453,13 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 #' VIF(update(m, . ~ . - DD))  # drop DD
 #'
 #' ## Model with different types of predictor (some multi-coefficient terms)
-#' x1 <- poly(rnorm(100), 2)  # polynomial
-#' x2 <- as.factor(rep(c("a", "b", "c", "d"), each = 25))  # categorical
-#' x3 <- rep(1, 100)  # no variation
-#' m <- lm(rnorm(100) ~ x1 + x2 + x3)
+#' d <- data.frame(
+#'   y = rnorm(100),
+#'   x1 = poly(rnorm(100), 2),  # polynomial
+#'   x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),  # categorical
+#'   x3 = rep(1, 100)  # no variation
+#' )
+#' m <- lm(y ~ x1.1 + x1.2 + x2 + x3, data = d)
 #' VIF(m)
 #' @export
 VIF <- function(mod, data = NULL, ...) {
@@ -463,32 +472,29 @@ VIF <- function(mod, data = NULL, ...) {
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
-    ## Term names (all)
+    ## Term names
     XN <- xNam(m, intercept = FALSE, list = TRUE)
-    xn <- unlist(unname(XN))
-
-    ## Term names (drop aliased)
-    XN2 <- xNam(m, intercept = FALSE, list = TRUE, aliased = FALSE)
-    xn2 <- unlist(unname(XN2))
+    xn <- xNam(m, intercept = FALSE, aliased = FALSE)
 
     ## VIF's
-    if (length(xn2) > 1) {
+    if (length(xn) > 1) {
 
       ## T/F for terms as matrices
-      mf <- model.frame(m)
+      if (is.null(d)) d <- getData(m, ...)
+      mf <- model.frame(m, data = d)
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
       })
 
       ## var-cov & cor matrix
-      V <- as.matrix(vcov(m))[xn2, xn2]
+      V <- as.matrix(vcov(m))[xn, xn]
       R <- cov2cor(V)
       det.R <- det(R)
 
       ## Function
       VIF <- function(i) {
-        if (all(i %in% xn2)) {
-          ni <- !xn2 %in% i
+        if (all(i %in% xn)) {
+          ni <- !xn %in% i
           Ri <- R[i, i, drop = FALSE]
           Rni <- R[ni, ni, drop = FALSE]
           vif <- det(Ri) * det(Rni) / det.R
@@ -506,7 +512,9 @@ VIF <- function(mod, data = NULL, ...) {
       unlist(unname(vif))
 
     } else {
-      sapply(xn, function(i) if (i %in% xn2) 1 else NA)
+      sapply(unlist(unname(XN)), function(i) {
+        if (i %in% xn) 1 else NA
+      })
     }
 
   }
@@ -522,11 +530,10 @@ VIF <- function(mod, data = NULL, ...) {
 #'   defined as the squared multiple correlation between the observed and fitted
 #'   values for the response variable. 'Adjusted' and 'Predicted' versions are
 #'   also calculated (see Details).
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}, or a list or nested list of such objects.
+#' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param adj,pred Logical. If \code{TRUE} (default), adjusted and/or predicted
-#'   R squared are also returned.
+#'   R-squared are also returned (the latter is not available for all models).
 #' @param re.form For mixed models of class \code{"merMod"}, the formula for
 #'   random effects to condition on when generating fitted values used in the
 #'   calculation of R-squared. Defaults to \code{NULL}, meaning all random
@@ -672,7 +679,6 @@ VIF <- function(mod, data = NULL, ...) {
 #' # lm: TRUE; glm: "Mean relative difference: 1.977725e-06"
 #' cor(cvf1, cvf2)
 #' # lm: 1; glm: 0.9999987
-#'
 #' }
 #'
 #' # NOTE: comparison not tested here for mixed models, as hierarchical data can
@@ -715,13 +721,13 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
       if (R2 > 0) {
         R2a <- 1 - ((n - 3) * (1 - R2) / (n - k - i)) *
           (1 + (2 * (1 - R2) / (n - k - 2.3)))
-        # R2a <- 1 - (1 - R2) * (n - i) / (n - k - i)  # standard formula (Ezekiel/Wherry)
+        # R2a <- 1 - (1 - R2) * (n - i) / (n - k - i)  # 'standard' formula (Ezekiel/Wherry)
         if (R2a > 0) R2a else 0
       } else 0
     }
 
     ## Predictive R squared
-    R2p <- if (pred) {
+    R2p <- if (pred && !isGls(m)) {
       if (R2 > 0) {
         hii <- suppressWarnings(hatvalues(m))
         s <- hii < 1
@@ -859,8 +865,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #' @title Standardised Coefficients
 #' @description Calculate fully standardised model coefficients in standard
 #'   deviation units, adjusted for multicollinearity among predictors.
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}, or a list or nested list of such objects.
+#' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param weights An optional numeric vector of weights to use for model
 #'   averaging, or a named list of such vectors. The former should be supplied
 #'   when \code{mod} is a list, and the latter when it is a nested list (with
@@ -1038,7 +1043,9 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (k > 0) {
 
       ## Predictors
-      x <- model.matrix(m)[s, xn, drop = FALSE]
+      if (is.null(d)) d <- getData(m)
+      mm <- model.matrix(m, data = d)
+      x <- mm[s, xn, drop = FALSE]
       obs <- rownames(x)
 
       ## Interactions?
@@ -1095,33 +1102,15 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
         ## Re-fit model with centred predictors
         ## (to calculate correct VIF's for interacting terms)
-        m2 <- if (cen.x && inx) {
-
-          ## Add centred predictors to data
-          if (is.null(d)) d <- getData(m)
-          d <- c(list(x = x), as.list(d[obs, ]))
-
-          ## Add any offset(s)
-          o <- model.offset(model.frame(m)[s, ])
-          if (is.null(o)) o <- rep(0, n)
-          d <- c(list(o = o), d)
-
-          ## New model formula (rand. effs: https://bit.ly/2V1yDeu)
-          re <- if (isMerMod(m)) {
-            sapply(lme4::findbars(formula(m)), function(i) {
-              paste0("(", deparse(i), ")")
-            })
-          }
-          f <- reformulate(c("x", re), response = ".")
-
-          ## Update model
-          update(m, f, data = d, offset = o)
-
-        } else m
+        if (cen.x && inx) {
+          xnc <- xn[xn %in% names(d)]
+          d[xnc] <- x[, xnc]
+          m <- update(m, data = d)
+        }
 
         ## Divide coefs by square root of VIF's
-        vif <- na.omit(VIF(m2))
-        b[xn] <- b[xn] / sqrt(vif)
+        vif <- VIF(m, envir = environment())
+        b[xn] <- b[xn] / sqrt(vif)[xn]
 
       }
 

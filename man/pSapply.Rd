@@ -4,8 +4,15 @@
 \alias{pSapply}
 \title{Parallel \code{sapply}}
 \usage{
-pSapply(X, FUN, parallel = "snow", ncpus = NULL, cl = NULL,
-  add.obj = NULL, ...)
+pSapply(
+  X,
+  FUN,
+  parallel = "snow",
+  ncpus = NULL,
+  cl = NULL,
+  add.obj = NULL,
+  ...
+)
 }
 \arguments{
 \item{X}{A vector object (numeric, character, or list).}

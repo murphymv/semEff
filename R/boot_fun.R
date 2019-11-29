@@ -3,8 +3,7 @@
 #' @title Bootstrap Effects
 #' @description Bootstrap model effects (standardised coefficients) and optional
 #'   SEM correlated errors.
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}, or a list or nested list of such objects.
+#' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param ran.eff For mixed models with nested random effects, the name of the
 #'   variable comprising the highest-level random effect. For non-nested random
@@ -316,9 +315,11 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
     if (is.null(d)) d <- getData(m, merge = TRUE)
     obs <- rownames(d)
 
-    ## Function to get resids/avg. resids from model/boot obj./list
+    ## Function to get (weighted) resids/avg. resids from model/boot obj./list
     res <- function(x, w = NULL) {
-      f <- weighted.residuals
+      f <- function(m) {
+        if (!isGls(m)) weighted.residuals(m) else resid(m)
+      }
       if (isList(x)) {
         if (all(sapply(x, isBoot))) {
           r <- lapply(x, "[[", 1)
@@ -437,10 +438,9 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
 
 #' @title Bootstrap Confidence Intervals
 #' @description Calculate confidence intervals from bootstrapped model effects.
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}. Alternatively, a boot object (class \code{"boot"}),
-#'   containing bootstrapped model effects. Can also be a list or nested list of
-#'   such objects.
+#' @param mod A fitted model object. Alternatively, a boot object (class
+#'   \code{"boot"}), containing bootstrapped model effects. Can also be a list
+#'   or nested list of such objects.
 #' @param conf A numeric value specifying the confidence level for the
 #'   intervals.
 #' @param type The type of confidence interval to return (defaults to

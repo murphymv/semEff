@@ -4,13 +4,22 @@
 \alias{semEff}
 \title{SEM Effects}
 \usage{
-semEff(sem, predictors = NULL, mediators = NULL, responses = NULL,
-  ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL, ...)
+semEff(
+  sem,
+  predictors = NULL,
+  mediators = NULL,
+  responses = NULL,
+  ci.conf = 0.95,
+  ci.type = "bca",
+  digits = 3,
+  bci.arg = NULL,
+  ...
+)
 }
 \arguments{
-\item{sem}{A piecewise SEM, comprising a list of fitted model objects of
-class \code{"lm"}, \code{"glm"}, or \code{"merMod"}, or, alternatively, of
-boot objects (class \code{"boot"}), containing bootstrapped model effects.}
+\item{sem}{A piecewise SEM, comprising a list of fitted model objects, or,
+alternatively, of boot objects (class \code{"boot"}), containing
+bootstrapped model effects.}
 
 \item{predictors, mediators, responses}{Names of variables for/through which to
 calculate effects. If \code{NULL} (default), all predictors, endogenous
