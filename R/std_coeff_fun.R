@@ -62,9 +62,7 @@ sdW <- function(...) {
 #' @param merge Logical. If \code{TRUE}, and \code{mod} is a list or nested
 #'   list, a single dataset containing all variables used to fit models is
 #'   returned.
-#' @param envir The \code{\link[base]{environment}} in which to look for data
-#'   (passed to \code{eval}).
-#' @param ... Not currently used.
+#' @param ... Arguments to \code{eval}.
 #' @details This is a simple convenience function to return the data used to fit
 #'   a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
@@ -86,8 +84,7 @@ sdW <- function(...) {
 #' getData(Shipley.SEM)  # from SEM (list)
 #' getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
 #' @export
-getData <- function(mod, subset = FALSE, merge = FALSE, envir = parent.frame(),
-                    ...) {
+getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 
   m <- mod
 
@@ -96,7 +93,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, envir = parent.frame(),
 
     ## Data from 'data' argument of model call
     mc <- getCall(m)
-    d <- data.frame(eval(mc$data, envir = envir))
+    d <- data.frame(eval(mc$data, ...))
 
     ## All var names from formula
     f <- c(formula(m), mc$weights, mc$offset)
@@ -138,8 +135,6 @@ getData <- function(mod, subset = FALSE, merge = FALSE, envir = parent.frame(),
 #'   (see Details).
 #' @param list Logical, whether names should be returned as a list, with all
 #'   multi-coefficient terms grouped under their term names.
-#' @param envir The \code{\link[base]{environment}} in which to look for model
-#'   data (data is needed to construct the model frame).
 #' @param ... Not currently used.
 #' @details Extract term names from a fitted model. Names of terms for which
 #'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
@@ -150,7 +145,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, envir = parent.frame(),
 #' ## Term names from Shipley SEM
 #' m <- Shipley.SEM
 #' xNam(m)
-#' xNam(m, intercept = FALSE)  # only predictors
+#' xNam(m, intercept = FALSE)
 #'
 #' ## Model with different types of predictor (some multi-coefficient terms)
 #' d <- data.frame(
@@ -164,8 +159,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, envir = parent.frame(),
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 #' xNam(m, aliased = FALSE, list = TRUE)  # as named list
 #' @export
-xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
-                 envir = parent.frame(), ...) {
+xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
 
   m <- mod
 
@@ -174,9 +168,10 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 
     ## All names as list (expand multi-coefficient terms)
     xn <- labels(terms(m))
-    xn2 <- rownames(summary(m)$coef)
+    b <- summary(m)$coef
+    xn2 <- if (is.matrix(b)) rownames(b) else names(b)
     xn <- c(xn2[isInt(xn2)], xn)
-    mf <- model.frame(m, data = getData(m, envir = envir))
+    mf <- model.frame(m, data = getData(m))
     XN <- sapply(xn, function(i) {
       if (i %in% names(mf)) {
         xi <- mf[, i]
@@ -381,6 +376,8 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
       y <- as.numeric(m)
       setNames(y, names(m))
     }
+    a <- names(attributes(y))
+    attributes(y)[a != "names"] <- NULL
 
     ## Return in original or link scale
     if (isGlm(m) && link || !mod && !is.null(f)) {
@@ -430,8 +427,6 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 #'   fitted model via the variance-covariance matrix of coefficients.
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
-#' @param envir The \code{\link[base]{environment}} in which to look for model
-#'   data (data is needed to construct the model frame).
 #' @param ... Not currently used.
 #' @details \code{VIF} calculates generalised variance inflation factors (GVIF)
 #'   as described in Fox & Monette (1992), and also implemented in the
@@ -469,7 +464,7 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 #' m <- lm(y ~ x1.1 + x1.2 + x2 + x3, data = d)
 #' VIF(m)
 #' @export
-VIF <- function(mod, data = NULL, envir = parent.frame(), ...) {
+VIF <- function(mod, data = NULL, ...) {
 
   m <- mod; d <- data
 
@@ -480,14 +475,14 @@ VIF <- function(mod, data = NULL, envir = parent.frame(), ...) {
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Term names
-    XN <- xNam(m, intercept = FALSE, list = TRUE, envir = envir)
-    xn <- xNam(m, intercept = FALSE, aliased = FALSE, envir = envir)
+    XN <- xNam(m, intercept = FALSE, list = TRUE)
+    xn <- xNam(m, intercept = FALSE, aliased = FALSE)
 
     ## VIF's
     if (length(xn) > 1) {
 
       ## T/F for terms as matrices
-      if (is.null(d)) d <- getData(m, envir = envir)
+      if (is.null(d)) d <- getData(m, ...)
       mf <- model.frame(m, data = d)
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
@@ -708,8 +703,9 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## R squared
+    b <- summary(m)$coef
     i <- attr(terms(m), "intercept")
-    k <- nrow(summary(m)$coef) - i
+    k <- (if (is.matrix(b)) nrow(b) else length(b)) - i
     if (isMerMod(m)) k <- k + length(m@theta)
     R2 <- if (k > 0) {
       y <- getY(m)
@@ -1032,7 +1028,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
     ## Coefficients
     b <- summary(m)$coef
-    b <- setNames(b[, 1], rownames(b))
+    if (is.matrix(b)) b <- setNames(b[, 1], rownames(b))
     xn <- names(b)
 
     ## Intercept?

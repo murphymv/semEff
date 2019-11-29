@@ -4,14 +4,7 @@
 \alias{xNam}
 \title{Get Model Term Names}
 \usage{
-xNam(
-  mod,
-  intercept = TRUE,
-  aliased = TRUE,
-  list = FALSE,
-  envir = parent.frame(),
-  ...
-)
+xNam(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
@@ -23,9 +16,6 @@ xNam(
 
 \item{list}{Logical, whether names should be returned as a list, with all
 multi-coefficient terms grouped under their term names.}
-
-\item{envir}{The \code{\link[base]{environment}} in which to look for model
-data (data is needed to construct the model frame).}
 
 \item{...}{Not currently used.}
 }
@@ -45,7 +35,7 @@ Extract term names from a fitted model. Names of terms for which
 ## Term names from Shipley SEM
 m <- Shipley.SEM
 xNam(m)
-xNam(m, intercept = FALSE)  # only predictors
+xNam(m, intercept = FALSE)
 
 ## Model with different types of predictor (some multi-coefficient terms)
 d <- data.frame(

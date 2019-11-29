@@ -4,15 +4,12 @@
 \alias{VIF}
 \title{Generalised Variance Inflation Factors}
 \usage{
-VIF(mod, data = NULL, envir = parent.frame(), ...)
+VIF(mod, data = NULL, ...)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
-
-\item{envir}{The \code{\link[base]{environment}} in which to look for model
-data (data is needed to construct the model frame).}
 
 \item{...}{Not currently used.}
 }
