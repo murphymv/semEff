@@ -84,7 +84,8 @@ sdW <- function(...) {
 #' getData(Shipley.SEM)  # from SEM (list)
 #' getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
 #' @export
-getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
+getData <- function(mod, subset = FALSE, merge = FALSE, envir = parent.frame(),
+                    ...) {
 
   m <- mod
 
@@ -93,7 +94,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 
     ## Data from 'data' argument of model call
     mc <- getCall(m)
-    d <- data.frame(eval(mc$data, ...))
+    d <- data.frame(eval(mc$data, envir = envir))
 
     ## All var names from formula
     f <- c(formula(m), mc$weights, mc$offset)
@@ -159,7 +160,8 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 #' xNam(m, aliased = FALSE, list = TRUE)  # as named list
 #' @export
-xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
+xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
+                 envir = parent.frame(), ...) {
 
   m <- mod
 
@@ -170,7 +172,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
     xn <- labels(terms(m))
     xn2 <- rownames(summary(m)$coef)
     xn <- c(xn2[isInt(xn2)], xn)
-    mf <- model.frame(m, data = getData(m))
+    mf <- model.frame(m, data = getData(m, envir = envir))
     XN <- sapply(xn, function(i) {
       if (i %in% names(mf)) {
         xi <- mf[, i]
@@ -462,7 +464,7 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 #' m <- lm(y ~ x1.1 + x1.2 + x2 + x3, data = d)
 #' VIF(m)
 #' @export
-VIF <- function(mod, data = NULL, ...) {
+VIF <- function(mod, data = NULL, envir = parent.frame(), ...) {
 
   m <- mod; d <- data
 
@@ -473,14 +475,14 @@ VIF <- function(mod, data = NULL, ...) {
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Term names
-    XN <- xNam(m, intercept = FALSE, list = TRUE)
-    xn <- xNam(m, intercept = FALSE, aliased = FALSE)
+    XN <- xNam(m, intercept = FALSE, list = TRUE, envir = envir)
+    xn <- xNam(m, intercept = FALSE, aliased = FALSE, envir = envir)
 
     ## VIF's
     if (length(xn) > 1) {
 
       ## T/F for terms as matrices
-      if (is.null(d)) d <- getData(m, ...)
+      if (is.null(d)) d <- getData(m, envir = envir)
       mf <- model.frame(m, data = d)
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
