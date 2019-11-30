@@ -93,14 +93,15 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 
     ## Data from 'data' argument of model call
     mc <- getCall(m)
-    d <- data.frame(eval(mc$data, ...))
+    d <- eval(mc$data, ...)
+    if (!is.null(d)) d <- data.frame(d) else
+      stop("'data' argument of model call not specified.")
 
     ## All var names from formula
     f <- c(formula(m), mc$weights, mc$offset)
     vn <- unlist(lapply(f, all.vars))
-
     if (!all(vn %in% names(d)))
-      stop("'data' not found or does not contain all model variables.")
+      stop("'data' does not contain all model variables.")
 
     ## Subset for model observations?
     if (subset) {
