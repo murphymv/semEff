@@ -1046,7 +1046,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (k > 0) {
 
       ## Predictors
-      if (is.null(d)) d <- getData(m, envir = parent.frame())
+      if (is.null(d)) d <- getData(m)
       mm <- model.matrix(m, data = d)
       x <- mm[s, xn, drop = FALSE]
       obs <- rownames(x)
@@ -1128,7 +1128,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    sapply(xNam(m), function(i) unname(b[i]))
+    sapply(xNam(m, envir = parent.frame()), function(i) unname(b[i]))
 
   }
 
