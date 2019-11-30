@@ -1118,7 +1118,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[, xnc]
 
-          env <- environment()
+          env <- parent.frame()
           VIF(m, data = d, envir = env)
 
         } else VIF(m)
