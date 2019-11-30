@@ -477,7 +477,7 @@ VIF <- function(mod, data = NULL, ...) {
   ## Function
   VIF <- function(m) {
 
-    getData(m, ...)
+    xNam(m, intercept = FALSE, list = TRUE, ...)
 
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
