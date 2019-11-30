@@ -1109,16 +1109,14 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       ## Calculate unique effects of predictors (adjust for multicollinearity)
       if (unique.x && k > 1) {
 
-        ## Calculate VIF's
-        ## (use centred predictors for any interacting terms)
+        ## Re-fit model with centred predictors
+        ## (to calculate correct VIF's for interacting terms)
         if (cen.x && inx) {
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[, xnc]
-
           m <- update(m, data = d)
-
-        } #else VIF(m, envir = environment())
+        }
 
         ## Divide coefs by square root of VIF's
         vif <- VIF(m, envir = environment())
@@ -1136,7 +1134,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    sapply(xNam(m, data = d), function(i) unname(b[i]))
+    sapply(xNam(m, envir = environment()), function(i) unname(b[i]))
 
   }
 
