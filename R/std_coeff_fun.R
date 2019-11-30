@@ -1118,7 +1118,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[, xnc]
 
-          VIF(m, data = d, envir = d)
+          VIF(m, data = d, envir = environment())
 
         } else VIF(m)
 
