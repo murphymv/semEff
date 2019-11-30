@@ -1120,7 +1120,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         }
 
         ## Divide coefs by square root of VIF's
-        vif <- VIF(m, envir = env)
+        vif <- VIF(m, envir = environment())
         b[xn] <- b[xn] / sqrt(vif)[xn]
 
       }
