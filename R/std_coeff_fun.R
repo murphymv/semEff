@@ -170,7 +170,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
   xNam <- function(m) {
 
     ## Model frame
-    if (is.null(d)) d <- getData(m)
+    if (is.null(d)) d <- getData(m, ...)
     mf <- model.frame(m, data = d)
 
     ## All names as list (expand multi-coefficient terms)
@@ -1118,8 +1118,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[, xnc]
 
-          env <- parent.frame()
-          VIF(m, data = d, envir = env)
+          VIF(m, data = d, envir = d)
 
         } else VIF(m)
 
