@@ -477,7 +477,7 @@ VIF <- function(mod, data = NULL, ...) {
   ## Function
   VIF <- function(m) {
 
-    getData(m, parent.frame())
+    getData(m, envir = parent.frame())
 
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
