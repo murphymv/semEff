@@ -475,14 +475,14 @@ VIF <- function(mod, data = NULL, ...) {
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Term names
-    XN <- xNam(m, intercept = FALSE, list = TRUE, envir = parent.frame())
-    xn <- xNam(m, intercept = FALSE, aliased = FALSE, envir = parent.frame())
+    XN <- xNam(m, intercept = FALSE, list = TRUE)
+    xn <- xNam(m, intercept = FALSE, aliased = FALSE)
 
     ## VIF's
     if (length(xn) > 1) {
 
       ## T/F for terms as matrices
-      if (is.null(d)) d <- getData(m, ...)
+      if (is.null(d)) d <- getData(m)
       mf <- model.frame(m, data = d)
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
@@ -1105,15 +1105,21 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
         ## Re-fit model with centred predictors
         ## (to calculate correct VIF's for interacting terms)
-        if (cen.x && inx) {
+        # if (cen.x && inx) {
+        #   d <- d[obs, ]
+        #   xnc <- xn[xn %in% names(d)]
+        #   d[xnc] <- x[, xnc]
+        #   m <- update(m, data = d)
+        # }
+
+        d <- if (cen.x && inx) {
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
-          d[xnc] <- x[, xnc]
-          m <- update(m, data = d)
+          d[xnc] <- x[, xnc]; d
         }
 
         ## Divide coefs by square root of VIF's
-        vif <- VIF(m, envir = environment())
+        vif <- VIF(m, data = d)
         b[xn] <- b[xn] / sqrt(vif)[xn]
 
       }
