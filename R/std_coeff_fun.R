@@ -475,8 +475,8 @@ VIF <- function(mod, data = NULL, ...) {
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Term names
-    XN <- xNam(m, intercept = FALSE, list = TRUE, ...)
-    xn <- xNam(m, intercept = FALSE, aliased = FALSE, ...)
+    XN <- xNam(m, intercept = FALSE, list = TRUE)#, ...)
+    xn <- xNam(m, intercept = FALSE, aliased = FALSE)#, ...)
 
     ## VIF's
     if (length(xn) > 1) {
@@ -1128,7 +1128,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    sapply(xNam(m, envir = parent.frame()), function(i) unname(b[i]))
+    xn2 <- xNam(m, envir = parent.frame())
+    sapply(xn2, function(i) unname(b[i]))
 
   }
 
