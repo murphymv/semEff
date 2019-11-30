@@ -1135,7 +1135,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    xn2 <- xNam(m, envir = d)
+    xn2 <- xNam(m, envir = parent.frame())
     sapply(xn2, function(i) unname(b[i]))
 
   }
