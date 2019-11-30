@@ -131,6 +131,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' @title Get Model Term Names
 #' @description Extract term names from a fitted model object.
 #' @param mod A fitted model object, or a list or nested list of such objects.
+#' @param data An optional dataset used to construct the model frame.
 #' @param intercept Logical, whether the intercept should be included.
 #' @param aliased Logical, whether names of aliased terms should be included
 #'   (see Details).
@@ -160,9 +161,10 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 #' xNam(m, aliased = FALSE, list = TRUE)  # as named list
 #' @export
-xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
+xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
+                 list = FALSE, ...) {
 
-  m <- mod
+  m <- mod; d <- data
 
   ## Function
   xNam <- function(m) {
@@ -1027,9 +1029,6 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   ## Function
   stdCoeff <- function(m) {
 
-    ## Function environment
-    env <- environment()
-
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
@@ -1135,9 +1134,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    b
-    # xn2 <- xNam(m, envir = parent.frame())
-    # sapply(xn2, function(i) unname(b[i]))
+    xn2 <- xNam(m, data = d)
+    sapply(xn2, function(i) unname(b[i]))
 
   }
 
