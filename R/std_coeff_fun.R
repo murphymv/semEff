@@ -472,12 +472,15 @@ VIF <- function(mod, data = NULL, ...) {
   ## Function
   VIF <- function(m) {
 
-    ## Update model with any supplied data
-    if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
+    # ## Update model with any supplied data
+    # if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Term names
     XN <- xNam(m, intercept = FALSE, list = TRUE)#, envir = parent.frame())
     xn <- xNam(m, intercept = FALSE, aliased = FALSE)#, envir = parent.frame())
+
+    ## Update model with any supplied data
+    if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## VIF's
     if (length(xn) > 1) {
