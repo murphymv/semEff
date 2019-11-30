@@ -131,11 +131,12 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' @title Get Model Term Names
 #' @description Extract term names from a fitted model object.
 #' @param mod A fitted model object, or a list or nested list of such objects.
-#' @param intercept Logical, whether the intercept term should be included.
+#' @param data An optional dataset used to construct the model frame.
+#' @param intercept Logical, whether the intercept should be included.
 #' @param aliased Logical, whether names of aliased terms should be included
 #'   (see Details).
 #' @param list Logical, whether names should be returned as a list, with all
-#'   multi-coefficient terms grouped under their term names.
+#'   multi-coefficient terms grouped under their main term names.
 #' @param ... Not currently used.
 #' @details Extract term names from a fitted model. Names of terms for which
 #'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
@@ -160,19 +161,23 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 #' xNam(m, aliased = FALSE, list = TRUE)  # as named list
 #' @export
-xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
+xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
+                 list = FALSE, ...) {
 
-  m <- mod
+  m <- mod; d <- data
 
   ## Function
   xNam <- function(m) {
+
+    ## Model frame
+    if (is.null(d)) d <- getData(m)
+    mf <- model.frame(m, data = d)
 
     ## All names as list (expand multi-coefficient terms)
     xn <- labels(terms(m))
     b <- summary(m)$coef
     xn2 <- if (is.matrix(b)) rownames(b) else names(b)
     xn <- c(xn2[isInt(xn2)], xn)
-    mf <- model.frame(m, data = getData(m, ...))
     XN <- sapply(xn, function(i) {
       if (i %in% names(mf)) {
         xi <- mf[, i]
@@ -472,15 +477,12 @@ VIF <- function(mod, data = NULL, ...) {
   ## Function
   VIF <- function(m) {
 
-    # ## Update model with any supplied data
-    # if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
-
-    ## Term names
-    XN <- xNam(m, intercept = FALSE, list = TRUE)#, envir = parent.frame())
-    xn <- xNam(m, intercept = FALSE, aliased = FALSE)#, envir = parent.frame())
-
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
+
+    ## Term names
+    XN <- xNam(m, intercept = FALSE, list = TRUE, data = d)
+    xn <- xNam(m, intercept = FALSE, aliased = FALSE, data = d)
 
     ## VIF's
     if (length(xn) > 1) {
@@ -1107,23 +1109,16 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       ## Calculate unique effects of predictors (adjust for multicollinearity)
       if (unique.x && k > 1) {
 
-        ## Re-fit model with centred predictors
-        ## (to calculate correct VIF's for interacting terms)
-        # if (cen.x && inx) {
-        #   d <- d[obs, ]
-        #   xnc <- xn[xn %in% names(d)]
-        #   d[xnc] <- x[, xnc]
-        #   m <- update(m, data = d)
-        # }
-
-        d <- if (cen.x && inx) {
+        ## Calculate VIF's
+        ## (use centred predictors for any interacting terms)
+        vif <- if (cen.x && inx) {
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
-          d[xnc] <- x[, xnc]; d
-        }
+          d[xnc] <- x[, xnc]
+          VIF(m, data = d)
+        } else VIF(m)
 
         ## Divide coefs by square root of VIF's
-        vif <- VIF(m, data = d)
         b[xn] <- b[xn] / sqrt(vif)[xn]
 
       }
@@ -1138,8 +1133,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    xn2 <- xNam(m, envir = parent.frame())
-    sapply(xn2, function(i) unname(b[i]))
+    sapply(xNam(m, data = d), function(i) unname(b[i]))
 
   }
 
