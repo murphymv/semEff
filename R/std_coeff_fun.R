@@ -476,8 +476,8 @@ VIF <- function(mod, data = NULL, ...) {
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Term names
-    XN <- xNam(m, intercept = FALSE, list = TRUE, envir = parent.frame())
-    xn <- xNam(m, intercept = FALSE, aliased = FALSE, envir = parent.frame())
+    XN <- xNam(m, intercept = FALSE, list = TRUE)#, envir = parent.frame())
+    xn <- xNam(m, intercept = FALSE, aliased = FALSE)#, envir = parent.frame())
 
     ## VIF's
     if (length(xn) > 1) {
