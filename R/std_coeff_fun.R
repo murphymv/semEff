@@ -482,7 +482,7 @@ VIF <- function(mod, data = NULL, ...) {
     if (length(xn) > 1) {
 
       ## T/F for terms as matrices
-      if (is.null(d)) d <- getData(m, ...)
+      if (is.null(d)) d <- getData(m, envir = parent.frame())
       mf <- model.frame(m, data = d)
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
