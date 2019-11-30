@@ -171,7 +171,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
     b <- summary(m)$coef
     xn2 <- if (is.matrix(b)) rownames(b) else names(b)
     xn <- c(xn2[isInt(xn2)], xn)
-    mf <- model.frame(m, data = getData(m))
+    mf <- model.frame(m, data = getData(m, ...))
     XN <- sapply(xn, function(i) {
       if (i %in% names(mf)) {
         xi <- mf[, i]
