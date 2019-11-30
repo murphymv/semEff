@@ -477,7 +477,7 @@ VIF <- function(mod, data = NULL, ...) {
   ## Function
   VIF <- function(m) {
 
-    xNam(m, data = NULL, intercept = FALSE, list = TRUE)
+    getData(m, parent.frame())
 
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
@@ -490,7 +490,7 @@ VIF <- function(mod, data = NULL, ...) {
     if (length(xn) > 1) {
 
       ## T/F for terms as matrices
-      if (is.null(d)) d <- getData(m, ...)
+      if (is.null(d)) d <- getData(m)
       mf <- model.frame(m, data = d)
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
