@@ -1116,8 +1116,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[, xnc]
-          m <- update(m, data = d)
-          # m <- eval(update(m, data = d, evaluate = FALSE))
+          # m <- update(m, data = d)
+          m <- eval(update(m, data = d, evaluate = FALSE))
         }
 
         ## Divide coefs by square root of VIF's
