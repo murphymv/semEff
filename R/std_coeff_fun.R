@@ -131,7 +131,6 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' @title Get Model Term Names
 #' @description Extract term names from a fitted model object.
 #' @param mod A fitted model object, or a list or nested list of such objects.
-#' @param data An optional dataset used to construct the model frame.
 #' @param intercept Logical, whether the intercept should be included.
 #' @param aliased Logical, whether names of aliased terms should be included
 #'   (see Details).
@@ -161,10 +160,9 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 #' xNam(m, aliased = FALSE, list = TRUE)  # as named list
 #' @export
-xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
-                 list = FALSE, ...) {
+xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
 
-  m <- mod; d <- data
+  m <- mod
 
   ## Function
   xNam <- function(m) {
@@ -1035,6 +1033,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     ## Coefficients
     b <- summary(m)$coef
     if (is.matrix(b)) b <- setNames(b[, 1], rownames(b))
+
+    ## Predictor names
     xn <- names(b)
     xn2 <- xNam(m)
 
@@ -1117,10 +1117,11 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[, xnc]
           m <- update(m, data = d)
+          # m <- eval(update(m, data = d, evaluate = FALSE))
         }
 
         ## Divide coefs by square root of VIF's
-        vif <- VIF(m, envir = environment())
+        vif <- VIF(m)#, envir = environment())
         b[xn] <- b[xn] / sqrt(vif)[xn]
 
       }
