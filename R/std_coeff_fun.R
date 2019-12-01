@@ -1036,6 +1036,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     b <- summary(m)$coef
     if (is.matrix(b)) b <- setNames(b[, 1], rownames(b))
     xn <- names(b)
+    xn2 <- xNam(m)
 
     ## Intercept?
     int <- isInt(xn)
@@ -1134,7 +1135,6 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    xn2 <- xNam(m)#, data = d)
     sapply(xn2, function(i) unname(b[i]))
 
   }
