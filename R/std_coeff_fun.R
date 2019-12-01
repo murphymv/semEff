@@ -167,13 +167,14 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
   ## Function
   xNam <- function(m) {
 
+    ## Coefficients
+    b <- summary(m)$coef
+
     ## Model frame
-    # if (is.null(d)) d <- getData(m, ...)
     mf <- model.frame(m, data = getData(m, ...))
 
-    ## All names as list (expand multi-coefficient terms)
+    ## All term names as list (expand multi-coefficient terms)
     xn <- labels(terms(m))
-    b <- summary(m)$coef
     xn2 <- if (is.matrix(b)) rownames(b) else names(b)
     xn <- c(xn2[isInt(xn2)], xn)
     XN <- sapply(xn, function(i) {
@@ -1116,12 +1117,11 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[, xnc]
-          # m <- update(m, data = d)
-          m <- eval(update(m, data = d, evaluate = FALSE), environment())
+          m <- update(m, data = d)
         }
 
         ## Divide coefs by square root of VIF's
-        vif <- VIF(m)#, envir = environment())
+        vif <- VIF(m, envir = environment())
         b[xn] <- b[xn] / sqrt(vif)[xn]
 
       }
