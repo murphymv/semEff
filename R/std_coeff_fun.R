@@ -1037,7 +1037,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
     ## Predictor names
     xn <- names(b)
-    xn2 <- xNam(m)
+    xn2 <- xn#xNam(m)
 
     ## Intercept?
     int <- isInt(xn)
