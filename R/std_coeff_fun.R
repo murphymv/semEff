@@ -168,8 +168,8 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
   xNam <- function(m) {
 
     ## Model frame
-    if (is.null(d)) d <- getData(m, ...)
-    mf <- model.frame(m, data = d)
+    # if (is.null(d)) d <- getData(m, ...)
+    mf <- model.frame(m, data = getData(m, ...))
 
     ## All names as list (expand multi-coefficient terms)
     xn <- labels(terms(m))
@@ -1116,8 +1116,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[, xnc]
-          # m <- update(m, data = d)
-          m <- eval(update(m, data = d, evaluate = FALSE))
+          m <- update(m, data = d)
+          # m <- eval(update(m, data = d, evaluate = FALSE))
         }
 
         ## Divide coefs by square root of VIF's
