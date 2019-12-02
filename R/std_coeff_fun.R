@@ -131,6 +131,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' @title Get Model Term Names
 #' @description Extract term names from a fitted model object.
 #' @param mod A fitted model object, or a list or nested list of such objects.
+#' @param data An optional dataset used to construct the model frame.
 #' @param intercept Logical, whether the intercept should be included.
 #' @param aliased Logical, whether names of aliased terms should be included
 #'   (see Details).
@@ -160,21 +161,21 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 #' xNam(m, aliased = FALSE, list = TRUE)  # as named list
 #' @export
-xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE, ...) {
+xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
+                 list = FALSE, ...) {
 
-  m <- mod
+  m <- mod; d <- data
 
   ## Function
   xNam <- function(m) {
 
-    ## Coefficients
-    b <- summary(m)$coef
-
     ## Model frame
-    mf <- model.frame(m, data = getData(m, ...))
+    if (is.null(d)) d <- getData(m, ...)
+    mf <- model.frame(m, data = d)
 
     ## All term names as list (expand multi-coefficient terms)
     xn <- labels(terms(m))
+    b <- summary(m)$coef
     xn2 <- if (is.matrix(b)) rownames(b) else names(b)
     xn <- c(xn2[isInt(xn2)], xn)
     XN <- sapply(xn, function(i) {
@@ -1034,10 +1035,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     ## Coefficients
     b <- summary(m)$coef
     if (is.matrix(b)) b <- setNames(b[, 1], rownames(b))
-
-    ## Predictor names
     xn <- names(b)
-    xn2 <- xn#xNam(m)
 
     ## Intercept?
     int <- isInt(xn)
@@ -1055,8 +1053,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
       ## Predictors
       if (is.null(d)) d <- getData(m)
-      mm <- model.matrix(m, data = d)
-      x <- mm[s, xn, drop = FALSE]
+      x <- model.matrix(m, data = d)[s, xn, drop = FALSE]
+      x <- data.frame(x, check.names = FALSE)
       obs <- rownames(x)
 
       ## Interactions?
@@ -1092,21 +1090,20 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           ## Centre predictors (for correct SD's/VIF's)
           if (std.x || unique.x) {
             x <- sapply(XN, function(i) {
-              xi <- x[, i, drop = FALSE]
-              xi <- sweep(xi, 2, xm[i])
+              xi <- sweep(x[i], 2, xm[i])
               apply(xi, 1, prod)
             })
           }
 
         }
 
-        ## Adjust intercept (weighted mean of predicted y)
+        ## Adjust intercept (set to weighted mean of predicted y)
         if (int) b[1] <- weighted.mean(predict(m, re.form = NA)[s], w)
 
       }
 
       ## Standardise by x
-      if (std.x) b[xn] <- b[xn] * apply(x, 2, sdW, w)
+      if (std.x) b[xn] <- b[xn] * sapply(x, sdW, w)
 
       ## Calculate unique effects of predictors (adjust for multicollinearity)
       if (unique.x && k > 1) {
@@ -1116,7 +1113,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         if (cen.x && inx) {
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
-          d[xnc] <- x[, xnc]
+          d[xnc] <- x[xnc]
           m <- update(m, data = d)
         }
 
@@ -1136,7 +1133,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    sapply(xn2, function(i) unname(b[i]))
+    sapply(xNam(m, d), function(i) unname(b[i]))
 
   }
 
@@ -1152,7 +1149,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   if (!is.null(w) && isList(b)) avgEst(b, w, bn)
   else {
     if (!is.null(bn)) {
-      rMapply(function(i) i[bn[bn %in% names(i)]], b, SIMPLIFY = FALSE)
+      f <- function(i) i[bn[bn %in% names(i)]]
+      rMapply(f, b, SIMPLIFY = FALSE)
     } else b
   }
 

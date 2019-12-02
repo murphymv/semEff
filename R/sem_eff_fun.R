@@ -762,8 +762,8 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       if (type == "response") fb <- lI(fb)
 
       ## Create dummy boot object (for CI's)
-      x <- data.frame(rep(1, n))  # dummy data
       set.seed(seed)
+      x <- data.frame(rep(1, n))  # dummy data
       B <- list(
         t0 = f, t = fb, R = R, data = x, seed = .Random.seed, sim = sim,
         stype = "i", strata = x[, 1]
