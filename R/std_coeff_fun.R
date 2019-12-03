@@ -1047,6 +1047,9 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (is.null(w)) w <- rep(1, n)
     s <- w > 0; w <- w[s]
 
+    ## Response
+    y <- getY(m)
+
     ## Centre/standardise x
     k <- length(xn)
     if (k > 0) {
@@ -1114,9 +1117,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[xnc]
-          # update(m, data = d)
-          d <- cbind(y = getY(m), d)
-          update(m, y ~ ., data = d)
+          d <- cbind(y, w, d)
+          update(m, y ~ ., weights = w, data = d)
         } else m
 
         ## Divide coefs by square root of VIF's
@@ -1129,23 +1131,17 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
     ## Centre/standardise y
     if (cen.y && int) {
-      ym <- weighted.mean(getY(m), w)
+      ym <- weighted.mean(y, w)
       if (isGlm(m)) ym <- family(m)$linkfun(ym)
       b[1] <- b[1] - ym
     }
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    # sapply(xNam(m, d), function(i) unname(b[i]))
     b <- sapply(xNam(m, d), function(i) unname(b[i]))
     if (r.squared) c(b, R2(m, ...)) else b
 
   }
-
-  # ## Add R-squared?
-  # stdCoeff2 <- if (r.squared) {
-  #   function(m) c(stdCoeff(m), R2(m, d, ...))
-  # } else stdCoeff
 
   ## Apply recursively
   b <- rMapply(stdCoeff, m, SIMPLIFY = FALSE)
