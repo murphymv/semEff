@@ -23,8 +23,8 @@ total effects from 'piecewise' structural equation models, comprising lists of
 fitted models representing structured equations (Shipley 2000, 2009; Lefcheck
 2016). Confidence intervals are provided via bootstrapping.
 
-Currently supported model classes are "lm", "glm", "lmerMod", "glmerMod", "gls",
-and "lm.gls".
+Currently supported model classes are "lm", "glm", "lmerMod", "glmerMod", and
+"gls".
 
 ## Installation
 
@@ -83,7 +83,7 @@ plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
   x2 <- fit[[1]]; f <- fit[[2]]; ci.l <- fit[[3]]; ci.u <- fit[[4]]
   ggplot () + 
     geom_point(aes(x, y)) +
-    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u), fill = "blue", alpha = "0.15") +
+    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u, alpha = "0.15"), fill = "blue") +
     geom_line(aes(x2, f), color = "blue", size = 1) +
     xlab(x.lab) + ylab(y.lab) +
     theme_bw() + theme(legend.position = "none")

@@ -2,7 +2,7 @@
 
 New features:
 
-* Added support for generalised least squares models ("gls", "lm.gls")
+* Added support for generalised least squares models (class "gls")
 
 Bugs fixed:
 
