@@ -1128,7 +1128,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     ## Centre/standardise y
     if (cen.y && int) {
       ym <- weighted.mean(getY(m), w)
-      b[1] <- b[1] - family(m)$linkfun(ym)
+      if (isGlm(m)) ym <- family(m)$linkfun(ym)
+      b[1] <- b[1] - ym
     }
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
