@@ -1110,15 +1110,17 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
         ## Re-fit model with centred predictors
         ## (to calculate correct VIF's for interacting terms)
-        if (cen.x && inx) {
+        m2 <- if (cen.x && inx) {
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[xnc]
-          m <- update(m, data = d)
-        }
+          update(m, data = d)
+          # d <- cbind(y = getY(m), d)
+          # update(m, y ~ ., data = d)
+        } else m
 
         ## Divide coefs by square root of VIF's
-        vif <- VIF(m, envir = environment())
+        vif <- VIF(m2, envir = environment())
         b[xn] <- b[xn] / sqrt(vif)[xn]
 
       }
@@ -1134,16 +1136,16 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    sapply(xNam(m, d), function(i) unname(b[i]))
-    # b <- sapply(xNam(m, d), function(i) unname(b[i]))
-    # if (r.squared) c(b, R2(m, ...)) else b
+    # sapply(xNam(m, d), function(i) unname(b[i]))
+    b <- sapply(xNam(m, d), function(i) unname(b[i]))
+    if (r.squared) c(b, R2(m, ...)) else b
 
   }
 
-  ## Add R-squared?
-  stdCoeff2 <- if (r.squared) {
-    function(m) c(stdCoeff(m), R2(m, d, ...))
-  } else stdCoeff
+  # ## Add R-squared?
+  # stdCoeff2 <- if (r.squared) {
+  #   function(m) c(stdCoeff(m), R2(m, d, ...))
+  # } else stdCoeff
 
   # ## Add R-squared?
   # stdCoeff2 <- function(m) {
