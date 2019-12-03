@@ -1029,8 +1029,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   ## Function
   stdCoeff <- function(m) {
 
-    # ## Update model with any supplied data
-    # if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
+    ## Update model with any supplied data
+    if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Coefficients
     b <- summary(m)$coef
