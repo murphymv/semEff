@@ -1114,9 +1114,9 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[xnc]
-          update(m, data = d)
-          # d <- cbind(y = getY(m), d)
-          # update(m, y ~ ., data = d)
+          # update(m, data = d)
+          d <- cbind(y = getY(m), d)
+          update(m, y ~ ., data = d)
         } else m
 
         ## Divide coefs by square root of VIF's
@@ -1146,16 +1146,6 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   # stdCoeff2 <- if (r.squared) {
   #   function(m) c(stdCoeff(m), R2(m, d, ...))
   # } else stdCoeff
-
-  # ## Add R-squared?
-  # stdCoeff2 <- function(m) {
-  #
-  #   ## Update model with any supplied data
-  #   if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
-  #
-  #   if (r.squared) c(stdCoeff(m), R2(m, ...)) else stdCoeff(m)
-  #
-  # }
 
   ## Apply recursively
   b <- rMapply(stdCoeff, m, SIMPLIFY = FALSE)
