@@ -730,7 +730,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
       if (R2 > 0) {
         R2a <- 1 - ((n - 3) * (1 - R2) / (n - k - i)) *
           (1 + (2 * (1 - R2) / (n - k - 2.3)))
-        # R2a <- 1 - (1 - R2) * (n - i) / (n - k - i)  # 'standard' formula (Ezekiel/Wherry)
+        # R2a <- 1 - (1 - R2) * (n - i) / (n - k - i)  # 'standard' formula
         if (R2a > 0) R2a else 0
       } else 0
     }
@@ -1029,8 +1029,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   ## Function
   stdCoeff <- function(m) {
 
-    ## Update model with any supplied data
-    if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
+    # ## Update model with any supplied data
+    # if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Coefficients
     b <- summary(m)$coef
@@ -1134,17 +1134,28 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    sapply(xNam(m, d), function(i) unname(b[i]))
+    b <- sapply(xNam(m, d), function(i) unname(b[i]))
+    if (r.squared) c(b, R2(m, ...)) else b
 
   }
 
-  ## Add R-squared?
-  stdCoeff2 <- if (r.squared) {
-    function(m) c(stdCoeff(m), R2(m, d, ...))
-  } else stdCoeff
+  # ## Add R-squared?
+  # stdCoeff2 <- if (r.squared) {
+  #   function(m) c(stdCoeff(m), R2(m, d, ...))
+  # } else stdCoeff
+
+  # ## Add R-squared?
+  # stdCoeff2 <- function(m) {
+  #
+  #   ## Update model with any supplied data
+  #   if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
+  #
+  #   if (r.squared) c(stdCoeff(m), R2(m, ...)) else stdCoeff(m)
+  #
+  # }
 
   ## Apply recursively
-  b <- rMapply(stdCoeff2, m, SIMPLIFY = FALSE)
+  b <- rMapply(stdCoeff, m, SIMPLIFY = FALSE)
 
   ## Output coefs or weighted average
   if (!is.null(w) && isList(b)) avgEst(b, w, bn)
