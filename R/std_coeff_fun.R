@@ -97,8 +97,8 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
     if (!is.null(d)) d <- data.frame(d) else
       stop("'data' argument of model call not specified.")
 
-    ## All var names from formula
-    f <- c(formula(m), mc$weights, mc$offset)
+    ## All var names from model call
+    f <- c(formula(m), mc$subset, mc$weights, mc$offset, mc$correlation)
     vn <- unlist(lapply(f, all.vars))
     if (!all(vn %in% names(d)))
       stop("'data' does not contain all model variables.")
@@ -1117,8 +1117,10 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[xnc]
-          d <- cbind(y, w, d)
-          update(m, y ~ ., weights = w, data = d)
+          if (isGlm(m)) {
+            d <- cbind(y, w, d)
+            update(m, y ~ ., weights = w, data = d)
+          } else update(m, data = d)
         } else m
 
         ## Divide coefs by square root of VIF's
