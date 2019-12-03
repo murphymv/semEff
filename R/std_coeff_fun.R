@@ -1134,15 +1134,16 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    b <- sapply(xNam(m, d), function(i) unname(b[i]))
-    if (r.squared) c(b, R2(m, ...)) else b
+    sapply(xNam(m, d), function(i) unname(b[i]))
+    # b <- sapply(xNam(m, d), function(i) unname(b[i]))
+    # if (r.squared) c(b, R2(m, ...)) else b
 
   }
 
-  # ## Add R-squared?
-  # stdCoeff2 <- if (r.squared) {
-  #   function(m) c(stdCoeff(m), R2(m, d, ...))
-  # } else stdCoeff
+  ## Add R-squared?
+  stdCoeff2 <- if (r.squared) {
+    function(m) c(stdCoeff(m), R2(m, d, ...))
+  } else stdCoeff
 
   # ## Add R-squared?
   # stdCoeff2 <- function(m) {
@@ -1155,7 +1156,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   # }
 
   ## Apply recursively
-  b <- rMapply(stdCoeff, m, SIMPLIFY = FALSE)
+  b <- rMapply(stdCoeff2, m, SIMPLIFY = FALSE)
 
   ## Output coefs or weighted average
   if (!is.null(w) && isList(b)) avgEst(b, w, bn)
