@@ -1158,7 +1158,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   # }
 
   ## Apply recursively
-  b <- rMapply(stdCoeff2, m, SIMPLIFY = FALSE)
+  b <- rMapply(stdCoeff, m, SIMPLIFY = FALSE)
 
   ## Output coefs or weighted average
   if (!is.null(w) && isList(b)) avgEst(b, w, bn)
