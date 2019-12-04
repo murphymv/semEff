@@ -169,41 +169,50 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
   ## Function
   xNam <- function(m) {
 
-    ## Model frame
+    ## Term names (vector)
+    tt <- terms(m)
+    xn <- labels(tt)
+    int <- attr(tt, "intercept")
+    if (int) xn <- c("(Intercept)", xn)
+
+    ## Variables
     if (is.null(d)) d <- getData(m, ...)
     mf <- model.frame(m, data = d)
+    x <- sapply(mf[names(mf) %in% xn], "[", simplify = FALSE)
+    fac <- sapply(x, function(i) "factor" %in% class(i))
 
-    ## All term names as list (expand multi-coefficient terms)
-    xn <- labels(terms(m))
-    b <- summary(m)$coef
-    xn2 <- if (is.matrix(b)) rownames(b) else names(b)
-    xn <- c(xn2[isInt(xn2)], xn)
+    ## Expand factor/matrix terms (list)
     XN <- sapply(xn, function(i) {
-      if (i %in% names(mf)) {
-        xi <- mf[, i]
-        xic <- class(xi)
-        if ("factor" %in% xic) {
-          paste0(i, levels(xi)[-1])
-        } else {
-          if ("matrix" %in% xic) {
-            paste0(i, colnames(xi))
-          } else i
-        }
+      if (i %in% names(x)) {
+        j <- c(levels(x[[i]])[-1], colnames(x[[i]]))
+        paste0(i, j)
       } else i
     }, simplify = FALSE)
+
+    ## Expand interaction terms involving factors/matrices
     XN <- sapply(xn, function(i) {
       if (isInx(i)) {
-        i <- unlist(strsplit(i, ":"))
-        apply(expand.grid(XN[i]), 1, paste, collapse = ":")
+        j <- unlist(strsplit(i, ":"))
+        j <- expand.grid(XN[j])
+        apply(j, 1, paste, collapse = ":")
       } else XN[[i]]
     }, simplify = FALSE)
 
+    ## If no intercept, add reference level to first factor
+    if (!int && any(fac)) {
+      f1 <- names(fac[fac][1])
+      XN[[f1]] <- paste0(f1, levels(x[[f1]]))
+    }
+
     ## Drop intercept?
-    if (!intercept) XN <- XN[!isInt(names(XN))]
+    if (!intercept && int) XN <- XN[-1]
 
     ## Drop aliased terms?
     if (!aliased) {
-      XN <- XN[sapply(XN, function(i) all(i %in% xn2))]
+      b <- summary(m)$coef
+      xn2 <- if (is.matrix(b)) rownames(b) else names(b)
+      XN <- lapply(XN, function(i) i[i %in% xn2])
+      XN <- XN[sapply(XN, length) > 0]
     }
 
     ## Return as list?
@@ -1038,8 +1047,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     xn <- names(b)
 
     ## Intercept?
-    int <- isInt(xn)
-    int <- if (any(int)) {xn <- xn[!int]; TRUE} else FALSE
+    int <- isInt(xn[1])
+    if (int) xn <- xn[-1]
 
     ## Model weights
     n <- nobs(m)

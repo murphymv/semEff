@@ -8,6 +8,8 @@ Bugs fixed:
 
 * function 'xNam' does not generate correct term names for interactions
 involving multi-coefficient terms (e.g. factors)
+* function 'xNam' does not generate correct term names for factors in models
+where the intercept is suppressed
 
 
 ## semEff 0.1.0
