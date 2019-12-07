@@ -6,10 +6,12 @@ New features:
 
 Bugs fixed:
 
-* function 'xNam' does not generate correct term names for interactions
-involving multi-coefficient terms (e.g. factors)
-* function 'xNam' does not generate correct term names for factors in models
-where the intercept is suppressed
+* 'xNam' does not generate correct term names for interactions involving
+multi-coefficient terms (e.g. factors)
+* 'xNam' does not generate correct term names for factors in models where the
+intercept is suppressed
+* 'R2' with argument 'pred = TRUE' does not work for models with zero weights
+
 
 
 ## semEff 0.1.0

@@ -747,7 +747,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
     ## Predictive R squared
     R2p <- if (pred && !isGls(m)) {
       if (R2 > 0) {
-        hii <- suppressWarnings(hatvalues(m))
+        hii <- suppressWarnings(hatvalues(m)[s])
         s <- hii < 1
         f <- y - (y - f) / (1 - hii)
         Rp <- cov.wt(cbind(y, f)[s, ], w[s], cor = TRUE)$cor[1, 2]
