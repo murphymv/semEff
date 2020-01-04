@@ -18,8 +18,8 @@ isMod <- function(x) {
 }
 #' @describeIn Object.Type Is object a generalised least squares model?
 isGls <- function(x) "gls" %in% class(x)
-#' #' @describeIn Object.Type Is object a beta regression model?
-#' isBet <- function(x) "betareg" %in% class(x)
+#' @describeIn Object.Type Is object a beta regression model?
+isBet <- function(x) "betareg" %in% class(x)
 #' @describeIn Object.Type Is object a generalised linear model?
 isGlm <- function(x) any(c("glm", "glmerMod", "betareg") %in% class(x))
 #' @describeIn Object.Type Is object a mixed model (class \code{"merMod"})?
