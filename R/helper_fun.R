@@ -8,16 +8,18 @@
 #' @return A logical value.
 #' @name Object.Type
 NULL
-#' @describeIn Object.Type Is object of class \code{"list"}?
+#' @describeIn Object.Type Is object a list (class \code{"list"})?
 isList <- function(x) class(x)[1] == "list"
-#' @describeIn Object.Type Is object of class \code{"boot"}?
+#' @describeIn Object.Type Is object a boot object (class \code{"boot"})?
 isBoot <- function(x) "boot" %in% class(x)
-#' @describeIn Object.Type Is object a linear or generalised linear (mixed) model?
-isMod <- function(x) any(c("lm", "lmerMod", "glmerMod", "gls") %in% class(x))
+#' @describeIn Object.Type Is object a fitted model?
+isMod <- function(x) {
+  any(c("lm", "lmerMod", "glmerMod", "gls", "betareg") %in% class(x))
+}
 #' @describeIn Object.Type Is object a generalised least squares model?
 isGls <- function(x) "gls" %in% class(x)
-#' @describeIn Object.Type Is object a generalised linear (mixed) model?
-isGlm <- function(x) any(c("glm", "glmerMod") %in% class(x))
+#' @describeIn Object.Type Is object a generalised linear model?
+isGlm <- function(x) any(c("glm", "glmerMod", "betareg") %in% class(x))
 #' @describeIn Object.Type Is object a mixed model (class \code{"merMod"})?
 isMerMod <- function(x) any(c("lmerMod", "glmerMod") %in% class(x))
 

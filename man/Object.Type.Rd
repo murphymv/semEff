@@ -34,15 +34,15 @@ Functions to determine the 'type' of an R object using classes.
 }
 \section{Functions}{
 \itemize{
-\item \code{isList}: Is object of class \code{"list"}?
+\item \code{isList}: Is object a list (class \code{"list"})?
 
-\item \code{isBoot}: Is object of class \code{"boot"}?
+\item \code{isBoot}: Is object a boot object (class \code{"boot"})?
 
-\item \code{isMod}: Is object a linear or generalised linear (mixed) model?
+\item \code{isMod}: Is object a fitted model?
 
 \item \code{isGls}: Is object a generalised least squares model?
 
-\item \code{isGlm}: Is object a generalised linear (mixed) model?
+\item \code{isGlm}: Is object a generalised linear model?
 
 \item \code{isMerMod}: Is object a mixed model (class \code{"merMod"})?
 }}

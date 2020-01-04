@@ -52,12 +52,12 @@
 #'
 #'   Where names of models with correlated errors are specified to
 #'   \code{cor.err}, the function will also return bootstrapped Pearson
-#'   correlated errors (\code{weighted.residuals}) for those models. If
-#'   \code{weights} are supplied and \code{mod} is a nested list, residuals will
-#'   first be averaged across candidate models. If any two models (or candidate
-#'   sets) with correlated errors were fit to different subsets of data
-#'   observations, both models/sets are first refit to data containing only the
-#'   observations in common.
+#'   correlated errors (weighted residuals) for those models. If \code{weights}
+#'   are supplied and \code{mod} is a nested list, residuals will first be
+#'   averaged across candidate models. If any two models (or candidate sets)
+#'   with correlated errors were fit to different subsets of data observations,
+#'   both models/sets are first refit to data containing only the observations
+#'   in common.
 #'
 #'   For mixed models with nested random effects, the highest-level random
 #'   effect (only) in the dataset is resampled, a procedure which should best
@@ -112,7 +112,7 @@
 #'   Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
 #'   Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
 #' @seealso \code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
-#'   \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{weighted.residuals}},
+#'   \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{residuals}},
 #'   \code{\link[semEff]{avgEst}}
 #' @examples
 #' ## Bootstrap Shipley SEM (while take a while...)
@@ -318,7 +318,7 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
     ## Function to get (weighted) resids/avg. resids from model/boot obj./list
     res <- function(x, w = NULL) {
       f <- function(m) {
-        if (!isGls(m)) weighted.residuals(m) else resid(m)
+        if (!isGls(m) && !isGlm(m)) resid(m, "deviance") else resid(m)
       }
       if (isList(x)) {
         if (all(sapply(x, isBoot))) {

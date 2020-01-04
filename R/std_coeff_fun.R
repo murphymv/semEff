@@ -210,8 +210,8 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     ## Drop aliased terms?
     if (!aliased) {
       b <- summary(m)$coef
-      xn2 <- if (is.matrix(b)) rownames(b) else names(b)
-      XN <- lapply(XN, function(i) i[i %in% xn2])
+      b <- as.matrix(if (isList(b)) b[[1]] else b)
+      XN <- lapply(XN, function(i) i[i %in% rownames(b)])
       XN <- XN[sapply(XN, length) > 0]
     }
 
@@ -550,7 +550,8 @@ VIF <- function(mod, data = NULL, ...) {
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param adj,pred Logical. If \code{TRUE} (default), adjusted and/or predicted
-#'   R-squared are also returned (the latter is not available for all models).
+#'   R-squared are also returned (the latter is not available for all model
+#'   types).
 #' @param re.form For mixed models of class \code{"merMod"}, the formula for
 #'   random effects to condition on when generating fitted values used in the
 #'   calculation of R-squared. Defaults to \code{NULL}, meaning all random
@@ -719,8 +720,9 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
 
     ## R squared
     b <- summary(m)$coef
+    b <- as.matrix(if (isList(b)) b[[1]] else b)
     i <- attr(terms(m), "intercept")
-    k <- (if (is.matrix(b)) nrow(b) else length(b)) - i
+    k <- nrow(b) - i
     if (isMerMod(m)) k <- k + length(m@theta)
     R2 <- if (k > 0) {
       y <- getY(m)
@@ -1045,6 +1047,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
     ## Coefficients
     b <- summary(m)$coef
+    if (isList(b)) b <- b[[1]]
     if (is.matrix(b)) b <- setNames(b[, 1], rownames(b))
     xn <- names(b)
 
@@ -1131,10 +1134,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[xnc]
-          if (isGlm(m)) {
-            d <- cbind(y, w, d)
-            update(m, y ~ ., weights = w, data = d)
-          } else update(m, data = d)
+          d <- cbind(y, w, d)
+          update(m, y ~ ., weights = w, data = d)
         } else m
 
         ## Divide coefs by square root of VIF's
