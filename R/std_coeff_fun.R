@@ -137,7 +137,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #'   (see Details).
 #' @param list Logical, whether names should be returned as a list, with all
 #'   multi-coefficient terms grouped under their main term names.
-#' @param ... Not currently used.
+#' @param ... Arguments to \code{eval} (for evaluating model data).
 #' @details Extract term names from a fitted model. Names of terms for which
 #'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
 #'   (default). These may be terms which are perfectly correlated with other
@@ -169,7 +169,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
   ## Function
   xNam <- function(m) {
 
-    ## Term names (vector)
+    ## Term names (as vector)
     tt <- terms(m)
     xn <- labels(tt)
     int <- attr(tt, "intercept")
@@ -179,7 +179,6 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     if (is.null(d)) d <- getData(m, ...)
     mf <- model.frame(m, data = d)
     x <- sapply(mf[names(mf) %in% xn], "[", simplify = FALSE)
-    fac <- sapply(x, function(i) "factor" %in% class(i))
 
     ## Expand factor/matrix terms (list)
     XN <- sapply(xn, function(i) {
@@ -199,6 +198,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     }, simplify = FALSE)
 
     ## If no intercept, add reference level to first factor
+    fac <- sapply(x, function(i) "factor" %in% class(i))
     if (!int && any(fac)) {
       f1 <- names(fac[fac][1])
       XN[[f1]] <- paste0(f1, levels(x[[f1]]))
@@ -442,7 +442,7 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 #'   fitted model via the variance-covariance matrix of coefficients.
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
-#' @param ... Not currently used.
+#' @param ... Arguments to \code{eval} (for evaluating model data).
 #' @details \code{VIF} calculates generalised variance inflation factors (GVIF)
 #'   as described in Fox & Monette (1992), and also implemented in the
 #'   \code{vif} function in the \pkg{car} package. However, whereas \code{vif}
@@ -503,7 +503,7 @@ VIF <- function(mod, data = NULL, ...) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
       })
 
-      ## var-cov & cor matrix
+      ## Var-cov/cor matrix
       V <- as.matrix(vcov(m))[xn, xn]
       R <- cov2cor(V)
       det.R <- det(R)
@@ -745,14 +745,16 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
     }
 
     ## Predictive R squared
-    R2p <- if (pred && !isGls(m)) {
-      if (R2 > 0) {
-        hii <- suppressWarnings(hatvalues(m)[s])
-        s <- hii < 1
-        f <- y - (y - f) / (1 - hii)
-        Rp <- cov.wt(cbind(y, f)[s, ], w[s], cor = TRUE)$cor[1, 2]
-        if (Rp > 0) Rp^2 else 0
-      } else 0
+    R2p <- if (pred) {
+      if (!isGls(m)) {
+        if (R2 > 0) {
+          hii <- suppressWarnings(hatvalues(m)[s])
+          s <- hii < 1
+          f <- y - (y - f) / (1 - hii)
+          Rp <- cov.wt(cbind(y, f)[s, ], w[s], cor = TRUE)$cor[1, 2]
+          if (Rp > 0) Rp^2 else 0
+        } else 0
+      } else NA
     }
 
     ## Return values
@@ -1046,21 +1048,20 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (is.matrix(b)) b <- setNames(b[, 1], rownames(b))
     xn <- names(b)
 
-    ## Intercept?
+    ## Intercept/no. parameters
     int <- isInt(xn[1])
     if (int) xn <- xn[-1]
+    k <- length(xn)
 
     ## Model weights
-    n <- nobs(m)
     w <- weights(m)
-    if (is.null(w)) w <- rep(1, n)
+    if (is.null(w)) w <- rep(1, nobs(m))
     s <- w > 0; w <- w[s]
 
     ## Response
     y <- getY(m)
 
     ## Centre/standardise x
-    k <- length(xn)
     if (k > 0) {
 
       ## Predictors
@@ -1087,7 +1088,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           xm <- colMeans(x)
 
           ## Adjust lower-order coefs
-          ## (ti = terms containing term i, ni = non-i components of ti)
+          ## (ti = terms containing term i; ni = non-i components of ti)
           b[xn] <- sapply(xn, function(i) {
             bi <- b[[i]]; XNi <- XN[[i]]
             ti <- xn[sapply(xn, function(j) all(XNi %in% XN[[j]])) & xn != i]
@@ -1101,16 +1102,20 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
           ## Centre predictors (for correct SD's/VIF's)
           if (std.x || unique.x) {
-            x <- data.frame(sapply(XN, function(i) {
+            x <- sapply(XN, function(i) {
               xi <- sweep(x[i], 2, xm[i])
               apply(xi, 1, prod)
-            }), check.names = FALSE)
+            })
+            x <- data.frame(x, check.names = FALSE)
           }
 
         }
 
         ## Adjust intercept (set to weighted mean of predicted y)
-        if (int) b[1] <- weighted.mean(predict(m, re.form = NA)[s], w)
+        if (int) {
+          f <- predict(m, re.form = NA)[s]
+          b[1] <- weighted.mean(f, w)
+        }
 
       }
 

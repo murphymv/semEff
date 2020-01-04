@@ -19,7 +19,7 @@ xNam(mod, data = NULL, intercept = TRUE, aliased = TRUE, list = FALSE, ...)
 \item{list}{Logical, whether names should be returned as a list, with all
 multi-coefficient terms grouped under their main term names.}
 
-\item{...}{Not currently used.}
+\item{...}{Arguments to \code{eval} (for evaluating model data).}
 }
 \value{
 A character vector or list/nested list of term names.

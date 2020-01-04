@@ -11,7 +11,7 @@ VIF(mod, data = NULL, ...)
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
-\item{...}{Not currently used.}
+\item{...}{Arguments to \code{eval} (for evaluating model data).}
 }
 \value{
 A numeric vector of the VIF's, or an array, list of vectors/arrays,
