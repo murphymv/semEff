@@ -223,7 +223,7 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
       mc <- P(unlist(rMapply(function(i) P(getCall(i)), m)))
       o <- unlist(lapply(search(), ls))
       o <- o[sapply(o, function(i) grepl(i, mc, fixed = TRUE))]
-      o <- c(o, ls("package:semEff"))
+      o <- c(o, ls("package:semEff"), "family")
       parallel::clusterExport(cl, o)
 
     }

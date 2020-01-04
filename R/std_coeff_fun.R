@@ -403,6 +403,9 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
       }
       if (is.function(f)) f <- f()
       if (is.null(f)) f <- family(m)
+      # if (is.null(f)) {
+      #   f <- if (isBet(m)) m$link$mean else m$family
+      # }
 
       ## Transform response to link scale
       yl <- f$linkfun(y)
@@ -1115,11 +1118,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         }
 
         ## Adjust intercept (set to weighted mean of predicted y)
-        if (int) {
-          f <- predict(m, re.form = NA)[s]
-          b[1] <- weighted.mean(f, w)
-        }
-
+        if (int) b[1] <- weighted.mean(predict(m, re.form = NA)[s], w)
       }
 
       ## Standardise by x
@@ -1149,8 +1148,12 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     ## Centre/standardise y
     if (cen.y && int) {
       ym <- weighted.mean(y, w)
-      if (isGlm(m)) ym <- family(m)$linkfun(ym)
-      b[1] <- b[1] - ym
+      # if (isGlm(m)) {
+      #   f <- if (isBet(m)) m$link$mean else family(m)
+      #   ym <- f$linkfun(ym)
+      # }
+      # b[1] <- b[1] - ym
+      b[1] <- b[1] - family(m)$linkfun(ym)
     }
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
