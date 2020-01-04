@@ -402,10 +402,9 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
         f <- get(f, mode = "function", envir = parent.frame())
       }
       if (is.function(f)) f <- f()
-      if (is.null(f)) f <- family(m)
-      # if (is.null(f)) {
-      #   f <- if (isBet(m)) m$link$mean else m$family
-      # }
+      if (is.null(f)) {
+        f <- if (isBet(m)) m$link$mean else family(m)
+      }
 
       ## Transform response to link scale
       yl <- f$linkfun(y)
@@ -1148,12 +1147,11 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     ## Centre/standardise y
     if (cen.y && int) {
       ym <- weighted.mean(y, w)
-      # if (isGlm(m)) {
-      #   f <- if (isBet(m)) m$link$mean else family(m)
-      #   ym <- f$linkfun(ym)
-      # }
-      # b[1] <- b[1] - ym
-      b[1] <- b[1] - family(m)$linkfun(ym)
+      if (isGlm(m)) {
+        f <- if (isBet(m)) m$link$mean else family(m)
+        ym <- f$linkfun(ym)
+      }
+      b[1] <- b[1] - ym
     }
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
