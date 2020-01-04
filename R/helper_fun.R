@@ -10,7 +10,7 @@
 NULL
 #' @describeIn Object.Type Is object a list (class \code{"list"})?
 isList <- function(x) class(x)[1] == "list"
-#' @describeIn Object.Type Is object a boot object (class \code{"boot"})?
+#' @describeIn Object.Type Is object a boot object?
 isBoot <- function(x) "boot" %in% class(x)
 #' @describeIn Object.Type Is object a fitted model?
 isMod <- function(x) {
@@ -20,7 +20,8 @@ isMod <- function(x) {
 isGls <- function(x) "gls" %in% class(x)
 #' @describeIn Object.Type Is object a beta regression model?
 isBet <- function(x) "betareg" %in% class(x)
-#' @describeIn Object.Type Is object a generalised linear model?
+#' @describeIn Object.Type Is object a generalised linear model (i.e. uses a
+#'   link function)?
 isGlm <- function(x) any(c("glm", "glmerMod", "betareg") %in% class(x))
 #' @describeIn Object.Type Is object a mixed model (class \code{"merMod"})?
 isMerMod <- function(x) any(c("lmerMod", "glmerMod") %in% class(x))
