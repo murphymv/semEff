@@ -3,7 +3,7 @@
 #' @title Object Types
 #' @keywords internal
 #' @description Functions to determine the 'type' of an R object using classes.
-#'   Intended largely for convenience and for internal use.
+#'   Intended largely for convenience and internal use.
 #' @param x An R object.
 #' @return A logical value.
 #' @name Object.Type
@@ -30,7 +30,7 @@ isMerMod <- function(x) any(c("lmerMod", "glmerMod") %in% class(x))
 #' @title Parameter Types
 #' @keywords internal
 #' @description Functions to determine the presence/absence of certain model
-#'   parameter types using their names. Intended largely for convenience and for
+#'   parameter types using their names. Intended largely for convenience and
 #'   internal use.
 #' @param x A character vector of parameter names (e.g. names of coefficients
 #'   from \code{coef} or \code{stdCoeff}).
