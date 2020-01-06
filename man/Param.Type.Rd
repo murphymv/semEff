@@ -22,7 +22,7 @@ A logical vector of the same length as \code{x}.
 }
 \description{
 Functions to determine the presence/absence of certain model
-  parameter types using their names. Intended largely for convenience and for
+  parameter types using their names. Intended largely for convenience and
   internal use.
 }
 \section{Functions}{
