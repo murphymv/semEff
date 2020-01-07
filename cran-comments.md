@@ -1,5 +1,5 @@
 ## Release
-This is a second minor release (0.2.0), with some new features and bug fixes.
+This is a second minor release (0.2.0).
 
 ## Test environments
 * Windows 10 version 1909, R 3.6.2 (local)
