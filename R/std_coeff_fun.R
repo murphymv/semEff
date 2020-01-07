@@ -725,7 +725,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
     b <- as.matrix(if (isList(b)) b[[1]] else b)
     i <- attr(terms(m), "intercept")
     k <- nrow(b) - i
-    if (isMerMod(m)) k <- k + length(m@theta)
+    if (isMer(m)) k <- k + length(m@theta)
     R2 <- if (k > 0) {
       y <- getY(m)
       n <- length(y)

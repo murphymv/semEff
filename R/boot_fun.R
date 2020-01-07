@@ -167,7 +167,7 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
   }
 
   ## Mixed models?
-  mer <- all(unlist(rMapply(isMerMod, m)))
+  mer <- all(unlist(rMapply(isMer, m)))
   if (mer && is.null(re))
     stop("Name of highest-level random effect to sample must be specified to 'ran.eff' (or specify 'crossed').")
   mer2 <- mer && re == "crossed"

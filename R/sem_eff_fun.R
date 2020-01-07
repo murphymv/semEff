@@ -404,9 +404,10 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   s <- subNam("_", ".", s)
 
   ## Output effects
-  e <- list("Effects" = e, "Boot. Effects" = eb, "Summary" = s)
-  class(e) <- c("semEff", "list")
-  e
+  # e <- list("Effects" = e, "Boot. Effects" = eb, "Summary" = s)
+  # class(e) <- c("semEff", "list")
+  # e
+  I
 
 
 }
@@ -657,7 +658,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     m1 <- if (isList(m)) m[[1]] else m
 
     ## Random effects
-    is.re <- isMerMod(m1) && !identical(rf, NA) && !identical(rf, ~ 0)
+    is.re <- isMer(m1) && !identical(rf, NA) && !identical(rf, ~ 0)
     re <- if (is.re) {
       pRE <- function(i) predict(i, nd, re.form = rf, random.only = TRUE)
       re <- rMapply(pRE, m, SIMPLIFY = FALSE)

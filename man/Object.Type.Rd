@@ -5,10 +5,10 @@
 \alias{isList}
 \alias{isBoot}
 \alias{isMod}
+\alias{isGlm}
+\alias{isMer}
 \alias{isGls}
 \alias{isBet}
-\alias{isGlm}
-\alias{isMerMod}
 \title{Object Types}
 \usage{
 isList(x)
@@ -17,13 +17,13 @@ isBoot(x)
 
 isMod(x)
 
+isGlm(x)
+
+isMer(x)
+
 isGls(x)
 
 isBet(x)
-
-isGlm(x)
-
-isMerMod(x)
 }
 \arguments{
 \item{x}{An R object.}
@@ -37,20 +37,22 @@ Functions to determine the 'type' of an R object using classes.
 }
 \section{Functions}{
 \itemize{
-\item \code{isList}: Is object a list (class \code{"list"})?
+\item \code{isList}: Is object a list (class \code{"list"} only)?
 
-\item \code{isBoot}: Is object a boot object?
+\item \code{isBoot}: Is object a boot object (class \code{"boot"})?
 
 \item \code{isMod}: Is object a fitted model?
-
-\item \code{isGls}: Is object a generalised least squares model?
-
-\item \code{isBet}: Is object a beta regression model?
 
 \item \code{isGlm}: Is object a generalised linear model (i.e. uses a
 link function)?
 
-\item \code{isMerMod}: Is object a mixed model (class \code{"merMod"})?
+\item \code{isMer}: Is object a mixed model (class \code{"merMod"})?
+
+\item \code{isGls}: Is object a generalised least squares model (class
+\code{"gls"})?
+
+\item \code{isBet}: Is object a beta regression model (class
+\code{"betareg"})?
 }}
 
 \keyword{internal}
