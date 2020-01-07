@@ -1,5 +1,5 @@
 ## Release
-This is a second minor release (0.2.0)
+This is a second minor release (0.2.0), with some new features and bug fixes.
 
 ## Test environments
 * Windows 10 version 1909, R 3.6.2 (local)
@@ -11,7 +11,8 @@ This is a second minor release (0.2.0)
 ## R CMD check results
 There were two NOTES:
 
-* checking CRAN incoming feasibility ...NB: need Internet access to use CRAN incoming checks
+* checking CRAN incoming feasibility ...NB: need Internet access to use CRAN
+incoming checks
  NOTE
 Maintainer: ‘Mark Murphy <murphymv@gmail.com>’
 
@@ -34,7 +35,7 @@ Found the following (possibly) invalid URLs:
   sub-directories of 1Mb or more:
     data   7.5Mb
     
-The word in DESCRIPTION is an author's name. The URLs open fine when tested
+The word in DESCRIPTION is an author's name, and the URLs open fine when tested
 locally (multiple browsers).
 
 * checking installed package size ... NOTE
