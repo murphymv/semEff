@@ -3,8 +3,7 @@
 #' @title Bootstrap Effects
 #' @description Bootstrap model effects (standardised coefficients) and optional
 #'   SEM correlated errors.
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}, or a list or nested list of such objects.
+#' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param ran.eff For mixed models with nested random effects, the name of the
 #'   variable comprising the highest-level random effect. For non-nested random
@@ -53,12 +52,12 @@
 #'
 #'   Where names of models with correlated errors are specified to
 #'   \code{cor.err}, the function will also return bootstrapped Pearson
-#'   correlated errors (\code{weighted.residuals}) for those models. If
-#'   \code{weights} are supplied and \code{mod} is a nested list, residuals will
-#'   first be averaged across candidate models. If any two models (or candidate
-#'   sets) with correlated errors were fit to different subsets of data
-#'   observations, both models/sets are first refit to data containing only the
-#'   observations in common.
+#'   correlated errors (weighted residuals) for those models. If \code{weights}
+#'   are supplied and \code{mod} is a nested list, residuals will first be
+#'   averaged across candidate models. If any two models (or candidate sets)
+#'   with correlated errors were fit to different subsets of data observations,
+#'   both models/sets are first refit to data containing only the observations
+#'   in common.
 #'
 #'   For mixed models with nested random effects, the highest-level random
 #'   effect (only) in the dataset is resampled, a procedure which should best
@@ -113,7 +112,7 @@
 #'   Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
 #'   Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
 #' @seealso \code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
-#'   \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{weighted.residuals}},
+#'   \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{residuals}},
 #'   \code{\link[semEff]{avgEst}}
 #' @examples
 #' ## Bootstrap Shipley SEM (while take a while...)
@@ -168,7 +167,7 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
   }
 
   ## Mixed models?
-  mer <- all(unlist(rMapply(isMerMod, m)))
+  mer <- all(unlist(rMapply(isMer, m)))
   if (mer && is.null(re))
     stop("Name of highest-level random effect to sample must be specified to 'ran.eff' (or specify 'crossed').")
   mer2 <- mer && re == "crossed"
@@ -316,9 +315,11 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
     if (is.null(d)) d <- getData(m, merge = TRUE)
     obs <- rownames(d)
 
-    ## Function to get resids/avg. resids from model/boot obj./list
+    ## Function to get (weighted) resids/avg. resids from model/boot obj./list
     res <- function(x, w = NULL) {
-      f <- weighted.residuals
+      f <- function(m) {
+        if (!isGls(m) && !isGlm(m)) resid(m, "deviance") else resid(m)
+      }
       if (isList(x)) {
         if (all(sapply(x, isBoot))) {
           r <- lapply(x, "[[", 1)
@@ -437,10 +438,9 @@ bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
 
 #' @title Bootstrap Confidence Intervals
 #' @description Calculate confidence intervals from bootstrapped model effects.
-#' @param mod A fitted model object of class \code{"lm"}, \code{"glm"}, or
-#'   \code{"merMod"}. Alternatively, a boot object (class \code{"boot"}),
-#'   containing bootstrapped model effects. Can also be a list or nested list of
-#'   such objects.
+#' @param mod A fitted model object. Alternatively, a boot object (class
+#'   \code{"boot"}), containing bootstrapped model effects. Can also be a list
+#'   or nested list of such objects.
 #' @param conf A numeric value specifying the confidence level for the
 #'   intervals.
 #' @param type The type of confidence interval to return (defaults to

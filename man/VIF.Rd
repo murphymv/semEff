@@ -7,12 +7,11 @@
 VIF(mod, data = NULL, ...)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or a list or nested list of such objects.}
+\item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
-\item{...}{Not currently used.}
+\item{...}{Arguments to \code{eval} (for evaluating model data).}
 }
 \value{
 A numeric vector of the VIF's, or an array, list of vectors/arrays,
@@ -43,10 +42,13 @@ VIF(m)  # Date & DD somewhat correlated
 VIF(update(m, . ~ . - DD))  # drop DD
 
 ## Model with different types of predictor (some multi-coefficient terms)
-x1 <- poly(rnorm(100), 2)  # polynomial
-x2 <- as.factor(rep(c("a", "b", "c", "d"), each = 25))  # categorical
-x3 <- rep(1, 100)  # no variation
-m <- lm(rnorm(100) ~ x1 + x2 + x3)
+d <- data.frame(
+  y = rnorm(100),
+  x1 = poly(rnorm(100), 2),  # polynomial
+  x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),  # categorical
+  x3 = rep(1, 100)  # no variation
+)
+m <- lm(y ~ x1.1 + x1.2 + x2 + x3, data = d)
 VIF(m)
 }
 \references{

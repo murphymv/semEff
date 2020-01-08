@@ -4,13 +4,22 @@
 \alias{stdCoeff}
 \title{Standardised Coefficients}
 \usage{
-stdCoeff(mod, weights = NULL, data = NULL, term.names = NULL,
-  cen.x = TRUE, cen.y = TRUE, std.x = TRUE, std.y = TRUE,
-  unique.x = TRUE, r.squared = FALSE, ...)
+stdCoeff(
+  mod,
+  weights = NULL,
+  data = NULL,
+  term.names = NULL,
+  cen.x = TRUE,
+  cen.y = TRUE,
+  std.x = TRUE,
+  std.y = TRUE,
+  unique.x = TRUE,
+  r.squared = FALSE,
+  ...
+)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or a list or nested list of such objects.}
+\item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{weights}{An optional numeric vector of weights to use for model
 averaging, or a named list of such vectors. The former should be supplied

@@ -7,10 +7,9 @@
 getY(mod, family = NULL, data = NULL, link = FALSE, ...)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}. Alternatively, a numeric vector, corresponding to a
-variable to be transformed. Can also be a list or nested list of such
-objects.}
+\item{mod}{A fitted model object. Alternatively, a numeric vector,
+corresponding to a variable to be transformed. Can also be a list or nested
+list of such objects.}
 
 \item{family}{Optional, the error distribution family containing the link
 function which will be used to transform the response (see

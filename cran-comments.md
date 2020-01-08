@@ -1,23 +1,8 @@
-## Resubmission
-This is a resubmission. The following issues were fixed:
-
-* Removed quotation marks from the word 'piecewise' in the DESCRIPTION file.
-
-* Added a reference for 'piecewise' structural equation models in the
-description field of the DESCRIPTION file.
-
-* Replaced \dontrun{} with \donttest{} in all Rd-files.
-
-* Set no. of cores to two for all examples using parallel processing ("ncpus =
-2").
-
-I also updated the README file by adding some references.
-
 ## Release
-This is a first submission to CRAN.
+This is a second minor release (0.2.0).
 
 ## Test environments
-* Windows 10 version 1903, R 3.6.1 (local)
+* Windows 10 version 1909, R 3.6.2 (local)
 * Ubuntu Linux 16.04 LTS, R 3.6.1 (travis-ci)
 * Windows Server 2008 R2 SP1, R-devel, 32/64 bit (R-hub builder)
 * Ubuntu Linux 16.04 LTS, R-release, GCC (R-hub builder)
@@ -26,10 +11,13 @@ This is a first submission to CRAN.
 ## R CMD check results
 There were two NOTES:
 
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Mark Murphy <murphymv@gmail.com>'
+* checking CRAN incoming feasibility ...NB: need Internet access to use CRAN
+incoming checks
+ NOTE
+Maintainer: ‘Mark Murphy <murphymv@gmail.com>’
 
-New submission
+Possibly mis-spelled words in DESCRIPTION:
+  Lefcheck (10:63)
 
 Found the following (possibly) invalid URLs:
   URL: https://doi.org/b8b782
@@ -40,14 +28,15 @@ Found the following (possibly) invalid URLs:
     From: man/getY.Rd
     Status: Error
     Message: libcurl error code 56:
-      	OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 10054
-  URL: https://doi.org/fnx7xk
-    From: man/semEff.Rd
-    Status: 404
-    Message: Not Found
+      	OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 104
 
-The first two links opened fine when tested locally (on multiple browsers). The
-third seems to be a temporary connection problem with Springer Nature.
+* checking installed package size ... NOTE
+  installed size is  7.8Mb
+  sub-directories of 1Mb or more:
+    data   7.5Mb
+    
+The word in DESCRIPTION is an author's name, and the URLs open fine when tested
+locally (multiple browsers).
 
 * checking installed package size ... NOTE
   installed size is  7.8Mb

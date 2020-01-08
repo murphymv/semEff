@@ -3,7 +3,7 @@
 \docType{data}
 \name{Shipley.SEM.Eff}
 \alias{Shipley.SEM.Eff}
-\title{SEM Effects}
+\title{Effects for Shipley SEM}
 \format{A list object of class \code{"semEff"}, containing SEM effects and
   summary tables.}
 \usage{

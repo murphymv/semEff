@@ -4,14 +4,12 @@
 \alias{bootCI}
 \title{Bootstrap Confidence Intervals}
 \usage{
-bootCI(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
-  ...)
+bootCI(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL, ...)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}. Alternatively, a boot object (class \code{"boot"}),
-containing bootstrapped model effects. Can also be a list or nested list of
-such objects.}
+\item{mod}{A fitted model object. Alternatively, a boot object (class
+\code{"boot"}), containing bootstrapped model effects. Can also be a list
+or nested list of such objects.}
 
 \item{conf}{A numeric value specifying the confidence level for the
 intervals.}

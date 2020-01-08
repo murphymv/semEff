@@ -15,7 +15,8 @@ comprising lists of fitted models representing structured equations
 (Shipley 2000, 2009; Lefcheck 2016). Confidence intervals are provided
 via bootstrapping.
 
-Currently supported model classes are “lm”, “glm”, and “merMod”.
+Currently supported model classes are “lm”, “glm”, “lmerMod”,
+“glmerMod”, “gls”, and “betareg”.
 
 ## Installation
 
@@ -30,7 +31,7 @@ And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("murphymv/semEff")
+devtools::install_github("murphymv/semEff@develop")
 ```
 
 ## Example
@@ -120,7 +121,7 @@ plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
   x2 <- fit[[1]]; f <- fit[[2]]; ci.l <- fit[[3]]; ci.u <- fit[[4]]
   ggplot () + 
     geom_point(aes(x, y)) +
-    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u), fill = "blue", alpha = "0.15") +
+    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u, alpha = "0.15"), fill = "blue") +
     geom_line(aes(x2, f), color = "blue", size = 1) +
     xlab(x.lab) + ylab(y.lab) +
     theme_bw() + theme(legend.position = "none")
@@ -129,6 +130,7 @@ plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
 ## Direct effects of Date
 plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date, 
         x.lab = "Date of Bud Burst", y.lab = "Stem Growth")
+#> Warning: Using alpha for a discrete variable is not advised.
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />
@@ -138,6 +140,7 @@ plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date,
 ## Indirect effects of DD (operating via Date)
 plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD, 
         x.lab = "Degree Days to Bud Burst", y.lab = "Stem Growth")
+#> Warning: Using alpha for a discrete variable is not advised.
 ```
 
 <img src="man/figures/README-example-2.png" width="100%" />

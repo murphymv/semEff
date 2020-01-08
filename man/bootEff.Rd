@@ -4,13 +4,23 @@
 \alias{bootEff}
 \title{Bootstrap Effects}
 \usage{
-bootEff(mod, data = NULL, ran.eff = NULL, cor.err = NULL,
-  R = 10000, seed = NULL, catch.err = TRUE, parallel = "snow",
-  ncpus = NULL, cl = NULL, bM.arg = NULL, ...)
+bootEff(
+  mod,
+  data = NULL,
+  ran.eff = NULL,
+  cor.err = NULL,
+  R = 10000,
+  seed = NULL,
+  catch.err = TRUE,
+  parallel = "snow",
+  ncpus = NULL,
+  cl = NULL,
+  bM.arg = NULL,
+  ...
+)
 }
 \arguments{
-\item{mod}{A fitted model object of class \code{"lm"}, \code{"glm"}, or
-\code{"merMod"}, or a list or nested list of such objects.}
+\item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
@@ -80,12 +90,12 @@ Bootstrap model effects (standardised coefficients) and optional
 
   Where names of models with correlated errors are specified to
   \code{cor.err}, the function will also return bootstrapped Pearson
-  correlated errors (\code{weighted.residuals}) for those models. If
-  \code{weights} are supplied and \code{mod} is a nested list, residuals will
-  first be averaged across candidate models. If any two models (or candidate
-  sets) with correlated errors were fit to different subsets of data
-  observations, both models/sets are first refit to data containing only the
-  observations in common.
+  correlated errors (weighted residuals) for those models. If \code{weights}
+  are supplied and \code{mod} is a nested list, residuals will first be
+  averaged across candidate models. If any two models (or candidate sets)
+  with correlated errors were fit to different subsets of data observations,
+  both models/sets are first refit to data containing only the observations
+  in common.
 
   For mixed models with nested random effects, the highest-level random
   effect (only) in the dataset is resampled, a procedure which should best
@@ -161,6 +171,6 @@ Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
 }
 \seealso{
 \code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
-  \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{weighted.residuals}},
+  \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{residuals}},
   \code{\link[semEff]{avgEst}}
 }

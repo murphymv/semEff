@@ -3,7 +3,7 @@
 \docType{data}
 \name{Shipley.SEM.Boot}
 \alias{Shipley.SEM.Boot}
-\title{Bootstrapped SEM Estimates}
+\title{Bootstrapped Estimates for Shipley SEM}
 \format{A list of objects of class \code{"boot"}, representing bootstrapped
   estimates from fitted mixed models.}
 \usage{

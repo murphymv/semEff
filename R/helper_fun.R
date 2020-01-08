@@ -3,27 +3,36 @@
 #' @title Object Types
 #' @keywords internal
 #' @description Functions to determine the 'type' of an R object using classes.
-#'   Intended largely for convenience and for internal use.
+#'   Intended largely for convenience and internal use.
 #' @param x An R object.
 #' @return A logical value.
 #' @name Object.Type
 NULL
-#' @describeIn Object.Type Is object of class \code{"list"}?
+#' @describeIn Object.Type Is object a list (class \code{"list"} only)?
 isList <- function(x) class(x)[1] == "list"
-#' @describeIn Object.Type Is object of class \code{"boot"}?
-isBoot <- function(x) class(x)[1] %in% c("boot", "bootMer")
-#' @describeIn Object.Type Is object a linear or generalised linear (mixed) model?
-isMod <- function(x) class(x)[1] %in% c("lm", "glm", "lmerMod", "glmerMod")
-#' @describeIn Object.Type Is object a generalised linear (mixed) model?
-isGlm <- function(x) class(x)[1] %in% c("glm", "glmerMod")
+#' @describeIn Object.Type Is object a boot object (class \code{"boot"})?
+isBoot <- function(x) "boot" %in% class(x)
+#' @describeIn Object.Type Is object a fitted model?
+isMod <- function(x) {
+  any(c("lm", "glm", "lmerMod", "glmerMod", "gls", "betareg") %in% class(x))
+}
+#' @describeIn Object.Type Is object a generalised linear model (i.e. uses a
+#'   link function)?
+isGlm <- function(x) any(c("glm", "glmerMod", "betareg") %in% class(x))
 #' @describeIn Object.Type Is object a mixed model (class \code{"merMod"})?
-isMerMod <- function(x) class(x)[1] %in% c("lmerMod", "glmerMod")
+isMer <- function(x) any(c("lmerMod", "glmerMod") %in% class(x))
+#' @describeIn Object.Type Is object a generalised least squares model (class
+#'   \code{"gls"})?
+isGls <- function(x) "gls" %in% class(x)
+#' @describeIn Object.Type Is object a beta regression model (class
+#'   \code{"betareg"})?
+isBet <- function(x) "betareg" %in% class(x)
 
 
 #' @title Parameter Types
 #' @keywords internal
 #' @description Functions to determine the presence/absence of certain model
-#'   parameter types using their names. Intended largely for convenience and for
+#'   parameter types using their names. Intended largely for convenience and
 #'   internal use.
 #' @param x A character vector of parameter names (e.g. names of coefficients
 #'   from \code{coef} or \code{stdCoeff}).

@@ -45,7 +45,7 @@
 "Shipley.SEM"
 
 
-#' @title Candidate Model Set
+#' @title Candidate Model Set from Shipley 'Growth' Model
 #' @description A set of hypothetical competing models fit to the same response
 #'   variable ('Growth') using the simulated data in Shipley (2009), for which
 #'   model estimates can be compared and/or averaged.
@@ -69,7 +69,7 @@
 "Shipley.Growth"
 
 
-#' @title Bootstrapped SEM Estimates
+#' @title Bootstrapped Estimates for Shipley SEM
 #' @description Bootstrapped estimates generated from the hypothesised SEM from
 #'   Shipley (2009), using \code{bootEff}.
 #' @format A list of objects of class \code{"boot"}, representing bootstrapped
@@ -88,7 +88,7 @@
 "Shipley.SEM.Boot"
 
 
-#' @title SEM Effects
+#' @title Effects for Shipley SEM
 #' @description SEM effects calculated from bootstrapped estimates of the
 #'   hypothesised SEM from Shipley (2009), using \code{semEff}.
 #' @format A list object of class \code{"semEff"}, containing SEM effects and
