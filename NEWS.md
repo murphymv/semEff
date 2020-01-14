@@ -1,3 +1,9 @@
+## semEff 0.2.1
+
+Bugs fixed:
+
+* Function 'semEff' does not output effects properly
+
 ## semEff 0.2.0
 
 New features:
