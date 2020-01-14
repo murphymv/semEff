@@ -404,10 +404,9 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   s <- subNam("_", ".", s)
 
   ## Output effects
-  # e <- list("Effects" = e, "Boot. Effects" = eb, "Summary" = s)
-  # class(e) <- c("semEff", "list")
-  # e
-  I
+  e <- list("Effects" = e, "Boot. Effects" = eb, "Summary" = s)
+  class(e) <- c("semEff", "list")
+  e
 
 
 }
