@@ -20,7 +20,7 @@ function which will be used to transform the response (see
 \item{link}{Logical. If \code{TRUE}, return the response variable on the
 link scale (see Details).}
 
-\item{...}{Not currently used.}
+\item{...}{Arguments to \code{all.equal}.}
 }
 \value{
 A numeric vector comprising the response variable in the original or
@@ -77,10 +77,10 @@ Extract the response variable from a fitted model in the
   iteration. \item The working response is calculated from this model \item
   The inverse transformation of the working response is then calculated \item
   If the inverse transformation is effectively equal to the original response
-  (testing using \code{all.equal} with the default tolerance), the working
-  response is returned; otherwise, the GLM is re-fit with the working
-  response now as the predictor, and steps 2-4 are repeated - each time with
-  an additional IWLS iteration}
+  (testing using \code{all.equal}), the working response is returned;
+  otherwise, the GLM is re-fit with the working response now as the
+  predictor, and steps 2-4 are repeated - each time with an additional IWLS
+  iteration}
 
   This approach will generate a very reasonable transformation of the
   response variable, which will also closely resemble the direct

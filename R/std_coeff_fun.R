@@ -238,7 +238,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param link Logical. If \code{TRUE}, return the response variable on the
 #'   link scale (see Details).
-#' @param ... Not currently used.
+#' @param ... Arguments to \code{all.equal}.
 #' @details \code{getY} will return the response variable from a model by
 #'   summing the fitted values and the response residuals. If \code{link = TRUE}
 #'   and the model is a GLM, the response is transformed using the model link
@@ -285,10 +285,10 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'   iteration. \item The working response is calculated from this model \item
 #'   The inverse transformation of the working response is then calculated \item
 #'   If the inverse transformation is effectively equal to the original response
-#'   (testing using \code{all.equal} with the default tolerance), the working
-#'   response is returned; otherwise, the GLM is re-fit with the working
-#'   response now as the predictor, and steps 2-4 are repeated - each time with
-#'   an additional IWLS iteration}
+#'   (testing using \code{all.equal}), the working response is returned;
+#'   otherwise, the GLM is re-fit with the working response now as the
+#'   predictor, and steps 2-4 are repeated - each time with an additional IWLS
+#'   iteration}
 #'
 #'   This approach will generate a very reasonable transformation of the
 #'   response variable, which will also closely resemble the direct
@@ -419,7 +419,7 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
         repeat {
           yl <- predict(m) + resid(m, "working")
           yli <- f$linkinv(yl)
-          eql <- isTRUE(all.equal(yli, y, check.names = FALSE))
+          eql <- isTRUE(all.equal(yli, y, check.names = FALSE, ...))
           if (eql) return(yl) else {
             i <- i + 1
             suppressWarnings(
