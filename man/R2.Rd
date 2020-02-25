@@ -108,7 +108,7 @@ Caution must be exercised in interpreting the values of any pseudo
   comparing the measures to their equivalents from ordinary linear models.
   This is particularly the case for the adjusted and predicted versions,
   which have previously only been defined for ordinary linear models, and
-  which could be described as 'approximations to approximations' of what they
+  which could be described as 'approximations of approximations' of what they
   intend to measure. For example, for the adjusted R-squared for mixed
   models, it's not entirely clear what the sample size (n) in the formula
   should represent - the no. of observations? independent groups? something

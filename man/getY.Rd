@@ -91,7 +91,7 @@ Extract the response variable from a fitted model in the
 }
 \note{
 As we often cannot directly observe the response variable on the link
-  scale, any method estimating its values or statistics will be wrong to a
+  scale, any method estimating its values or statistics will be 'wrong' to a
   greater or lesser degree. The aim should be to try to minimise this error
   as far as (reasonably) possible, while also generating standardised
   coefficients whose interpretation most closely resembles those of the
@@ -139,10 +139,10 @@ repeat {
   }
 }
 ## Effectively equal?
-all.equal(yl, log(y), check.names = FALSE)
+all.equal(log(y), yl, check.names = FALSE)
 # TRUE
 ## Actual difference...
-all.equal(yl, log(y), check.names = FALSE, tolerance = .Machine$double.eps)
+all.equal(log(y), yl, check.names = FALSE, tolerance = .Machine$double.eps)
 # "Mean relative difference: 1.05954e-12"
 }
 \references{

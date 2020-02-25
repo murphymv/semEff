@@ -298,7 +298,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'   function - and so facilitates model comparisons, selection, and averaging.
 #'
 #' @note As we often cannot directly observe the response variable on the link
-#'   scale, any method estimating its values or statistics will be wrong to a
+#'   scale, any method estimating its values or statistics will be 'wrong' to a
 #'   greater or lesser degree. The aim should be to try to minimise this error
 #'   as far as (reasonably) possible, while also generating standardised
 #'   coefficients whose interpretation most closely resembles those of the
@@ -363,10 +363,10 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'   }
 #' }
 #' ## Effectively equal?
-#' all.equal(yl, log(y), check.names = FALSE)
+#' all.equal(log(y), yl, check.names = FALSE)
 #' # TRUE
 #' ## Actual difference...
-#' all.equal(yl, log(y), check.names = FALSE, tolerance = .Machine$double.eps)
+#' all.equal(log(y), yl, check.names = FALSE, tolerance = .Machine$double.eps)
 #' # "Mean relative difference: 1.05954e-12"
 #' @export
 getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
@@ -419,7 +419,7 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
         repeat {
           yl <- predict(m) + resid(m, "working")
           yli <- f$linkinv(yl)
-          eql <- isTRUE(all.equal(yli, y, check.names = FALSE, ...))
+          eql <- isTRUE(all.equal(y, yli, check.names = FALSE, ...))
           if (eql) return(yl) else {
             i <- i + 1
             suppressWarnings(
@@ -633,7 +633,7 @@ VIF <- function(mod, data = NULL, ...) {
 #'   comparing the measures to their equivalents from ordinary linear models.
 #'   This is particularly the case for the adjusted and predicted versions,
 #'   which have previously only been defined for ordinary linear models, and
-#'   which could be described as 'approximations to approximations' of what they
+#'   which could be described as 'approximations of approximations' of what they
 #'   intend to measure. For example, for the adjusted R-squared for mixed
 #'   models, it's not entirely clear what the sample size (n) in the formula
 #'   should represent - the no. of observations? independent groups? something
@@ -907,15 +907,15 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #' @param r.squared Logical, whether R-squared values should also be returned.
 #' @param ... Arguments to \code{R2}.
 #' @details \code{stdCoeff} will calculate fully standardised coefficients in
-#'   standard deviation units for linear, generalised linear, and mixed models.
-#'   It achieves this via adjusting the 'raw' model coefficients, so no
-#'   standardisation of input variables is required beforehand. Users can simply
-#'   specify the model with all variables in their original units and the
-#'   function will do the rest. However, the user is free to scale and/or centre
-#'   any input variables should they choose, which should not affect the outcome
-#'   of standardisation (provided any scaling is by standard deviations). This
-#'   may be desirable in some cases, such as to increase numerical stability
-#'   during model fitting when variables are on widely different scales.
+#'   standard deviation units for a fitted model or list of models. It achieves
+#'   this via adjusting the 'raw' model coefficients, so no standardisation of
+#'   input variables is required beforehand. Users can simply specify the model
+#'   with all variables in their original units and the function will do the
+#'   rest. However, the user is free to scale and/or centre any input variables
+#'   should they choose, which should not affect the outcome of standardisation
+#'   (provided any scaling is by standard deviations). This may be desirable in
+#'   some cases, such as to increase numerical stability during model fitting
+#'   when variables are on widely different scales.
 #'
 #'   If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, model estimates
 #'   will be calculated as if all predictors (x) and/or the response variable
@@ -968,13 +968,13 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'   infinity (as in the case of betas) - putting them on the same scale as the
 #'   bivariate correlation between predictor and response. In the case of GLM's
 #'   however, the measure is analogous but not exactly equal to the semipartial
-#'   correlation, so its values may not be always be bound between +/-1 (such
-#'   cases are likely rare). Crucially, for ordinary linear models, the square
-#'   of the semipartial correlation equals the increase in R-squared when that
-#'   variable is added last in the model - directly linking the measure to model
-#'   fit and 'variance explained'. See
+#'   correlation, so its values may not always be bound between +/-1 (such cases
+#'   are likely rare). Crucially, for ordinary linear models, the square of the
+#'   semipartial correlation equals the increase in R-squared when that variable
+#'   is added last in the model - directly linking the measure to model fit and
+#'   'variance explained'. See
 #'   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
-#'    for additional arguments in favour of the use of semipartial correlations.
+#'   for additional arguments in favour of the use of semipartial correlations.
 #'
 #'   If \code{r.squared = TRUE}, R-squared values are also returned via the
 #'   \code{R2} function.

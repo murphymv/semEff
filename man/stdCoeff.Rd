@@ -55,15 +55,15 @@ Calculate fully standardised model coefficients in standard
 }
 \details{
 \code{stdCoeff} will calculate fully standardised coefficients in
-  standard deviation units for linear, generalised linear, and mixed models.
-  It achieves this via adjusting the 'raw' model coefficients, so no
-  standardisation of input variables is required beforehand. Users can simply
-  specify the model with all variables in their original units and the
-  function will do the rest. However, the user is free to scale and/or centre
-  any input variables should they choose, which should not affect the outcome
-  of standardisation (provided any scaling is by standard deviations). This
-  may be desirable in some cases, such as to increase numerical stability
-  during model fitting when variables are on widely different scales.
+  standard deviation units for a fitted model or list of models. It achieves
+  this via adjusting the 'raw' model coefficients, so no standardisation of
+  input variables is required beforehand. Users can simply specify the model
+  with all variables in their original units and the function will do the
+  rest. However, the user is free to scale and/or centre any input variables
+  should they choose, which should not affect the outcome of standardisation
+  (provided any scaling is by standard deviations). This may be desirable in
+  some cases, such as to increase numerical stability during model fitting
+  when variables are on widely different scales.
 
   If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, model estimates
   will be calculated as if all predictors (x) and/or the response variable
@@ -116,13 +116,13 @@ Calculate fully standardised model coefficients in standard
   infinity (as in the case of betas) - putting them on the same scale as the
   bivariate correlation between predictor and response. In the case of GLM's
   however, the measure is analogous but not exactly equal to the semipartial
-  correlation, so its values may not be always be bound between +/-1 (such
-  cases are likely rare). Crucially, for ordinary linear models, the square
-  of the semipartial correlation equals the increase in R-squared when that
-  variable is added last in the model - directly linking the measure to model
-  fit and 'variance explained'. See
+  correlation, so its values may not always be bound between +/-1 (such cases
+  are likely rare). Crucially, for ordinary linear models, the square of the
+  semipartial correlation equals the increase in R-squared when that variable
+  is added last in the model - directly linking the measure to model fit and
+  'variance explained'. See
   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
-   for additional arguments in favour of the use of semipartial correlations.
+  for additional arguments in favour of the use of semipartial correlations.
 
   If \code{r.squared = TRUE}, R-squared values are also returned via the
   \code{R2} function.
