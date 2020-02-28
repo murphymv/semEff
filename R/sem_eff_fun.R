@@ -698,12 +698,14 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     x <- cbind(x[obs, ], d)
     x <- x[unique(names(x))]
     x <- sapply(en, function(i) {
-      pT <- function(j) parse(text = j)
-      if (isInx(i)) {
-        xi <- sapply(pT(EN[[i]]), eval, x)
-        if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
-        apply(xi, 1, prod)
-      } else eval(pT(i), x)
+      if (!isInt(i)) {
+        pT <- function(j) parse(text = j)
+        if (isInx(i)) {
+          xi <- sapply(pT(EN[[i]]), eval, x)
+          if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
+          apply(xi, 1, prod)
+        } else eval(pT(i), x)
+      } else 1
     }, simplify = FALSE)
     x <- data.frame(x, row.names = obs, check.names = FALSE)
 
