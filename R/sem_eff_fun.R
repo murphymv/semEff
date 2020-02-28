@@ -688,18 +688,26 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     if (is.null(o)) o <- 0
     o <- o - om
 
-    ## Predictor means/SD's
+    ## Predictors
+    x <- if (isList(m)) {
+      x <- lapply(m, model.matrix, data = d)
+      do.call(cbind, unname(x))
+    } else {
+      model.matrix(m, data = d)
+    }
+    x <- cbind(x[obs, ], d)
+    x <- x[unique(names(x))]
     x <- sapply(en, function(i) {
-      if (!isInt(i)) {
-        pT <- function(j) parse(text = j)
-        if (isInx(i)) {
-          xi <- sapply(pT(EN[[i]]), eval, d)
-          if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
-          apply(xi, 1, prod)
-        } else eval(pT(i), d)
-      } else 1
+      pT <- function(j) parse(text = j)
+      if (isInx(i)) {
+        xi <- sapply(pT(EN[[i]]), eval, x)
+        if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
+        apply(xi, 1, prod)
+      } else eval(pT(i), x)
     }, simplify = FALSE)
     x <- data.frame(x, row.names = obs, check.names = FALSE)
+
+    ## Predictor means/SDs
     xm <- sapply(x, function(i) if (cen.x) mean(i) else 0)
     xmw <- sapply(x, function(i) if (cen.x) weighted.mean(i, w) else 0)
     xs <- sapply(x, function(i) if (std.x) sdW(i, w) else 1)
