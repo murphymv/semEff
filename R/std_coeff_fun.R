@@ -413,7 +413,8 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
       if (any(is.infinite(yl))) {
         y2 <- y
         suppressWarnings(
-          m <- do.call(glm, list(y ~ y2, f, control = list(maxit = 1)))
+          m <- do.call(glm, list(y ~ y2, f, control = list(maxit = 1),
+                                 na.action = na.exclude))
         )
         i <- 0
         repeat {
