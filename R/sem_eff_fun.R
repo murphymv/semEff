@@ -689,12 +689,8 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     o <- o - om
 
     ## Predictors
-    x <- if (isList(m)) {
-      x <- lapply(m, model.matrix, data = d)
-      do.call(cbind, unname(x))
-    } else {
-      model.matrix(m, data = d)
-    }
+    x <- rMapply(function(i) model.matrix(i, data = d), m, SIMPLIFY = FALSE)
+    if (isList(x)) x <- do.call(cbind, unname(x))
     x <- cbind(x[obs, ], d)
     x <- x[unique(names(x))]
     x <- sapply(en, function(i) {
