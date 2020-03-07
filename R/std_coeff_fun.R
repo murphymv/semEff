@@ -905,6 +905,8 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'   standard deviations of variables.
 #' @param unique.x Logical, whether coefficients should be adjusted for
 #'   multicollinearity among predictors.
+#' @param refit.x Logical, whether the model should be re-fit with centred
+#'   predictors.
 #' @param r.squared Logical, whether R-squared values should also be returned.
 #' @param ... Arguments to \code{R2}.
 #' @details \code{stdCoeff} will calculate fully standardised coefficients in
@@ -965,17 +967,25 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'   interpretable and useful than the traditional standardised coefficient, as
 #'   it is always estimated independent of other predictors and so can more
 #'   readily be compared both within and across models. Values range from zero
-#'   (no effect) to +/-1 (perfect relationship), rather than from zero to +/-
-#'   infinity (as in the case of betas) - putting them on the same scale as the
-#'   bivariate correlation between predictor and response. In the case of GLM's
-#'   however, the measure is analogous but not exactly equal to the semipartial
-#'   correlation, so its values may not always be bound between +/-1 (such cases
-#'   are likely rare). Crucially, for ordinary linear models, the square of the
-#'   semipartial correlation equals the increase in R-squared when that variable
-#'   is added last in the model - directly linking the measure to model fit and
-#'   'variance explained'. See
+#'   to +/-1 rather than +/- infinity (as in the case of betas) - putting them
+#'   on the same scale as the bivariate correlation between predictor and
+#'   response. In the case of GLM's however, the measure is analogous but not
+#'   exactly equal to the semipartial correlation, so its values may not always
+#'   be bound between +/-1 (such cases are likely rare). Crucially, for ordinary
+#'   linear models, the square of the semipartial correlation equals the
+#'   increase in R-squared when that variable is added last in the model -
+#'   directly linking the measure to model fit and 'variance explained'. See
 #'   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
 #'   for additional arguments in favour of the use of semipartial correlations.
+#'
+#'   If \code{refit.x = TRUE}, the model will be re-fit with any (newly-)centred
+#'   continuous predictors. This will occur (and will normally be desired) when
+#'   \code{cen.x} and \code{unique.x} are \code{TRUE} and there are interaction
+#'   terms in the model, in order to calculate correct VIF's from the var-cov
+#'   matrix. However, re-fitting may not be necessary in some cases, for example
+#'   where the predictors have already been centred (and will not be resampled),
+#'   and disabling this option may save time with larger models and/or bootstrap
+#'   runs.
 #'
 #'   If \code{r.squared = TRUE}, R-squared values are also returned via the
 #'   \code{R2} function.
@@ -1038,7 +1048,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #' @export
 stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
                      cen.x = TRUE, cen.y = TRUE, std.x = TRUE, std.y = TRUE,
-                     unique.x = TRUE, r.squared = FALSE, ...) {
+                     unique.x = TRUE, refit.x = TRUE, r.squared = FALSE, ...) {
 
   m <- mod; w <- weights; d <- data; bn <- term.names
 
@@ -1129,7 +1139,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
         ## Re-fit model with centred predictors
         ## (to calculate correct VIF's for interacting terms)
-        m2 <- if (cen.x && inx) {
+        m2 <- if (cen.x && inx && refit.x) {
           d <- d[obs, ]
           xnc <- xn[xn %in% names(d)]
           d[xnc] <- x[xnc]
