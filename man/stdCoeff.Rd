@@ -132,9 +132,9 @@ Calculate fully standardised model coefficients in standard
   \code{cen.x} and \code{unique.x} are \code{TRUE} and there are interaction
   terms in the model, in order to calculate correct VIF's from the var-cov
   matrix. However, re-fitting may not be necessary in some cases, for example
-  where the predictors have already been centred (and will not be resampled),
-  and disabling this option may save time with larger models and/or bootstrap
-  runs.
+  where predictors have already been centred (and will not subsequently be
+  resampled), and disabling this option may save time with larger models
+  and/or bootstrap runs.
 
   If \code{r.squared = TRUE}, R-squared values are also returned via the
   \code{R2} function.
