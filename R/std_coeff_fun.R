@@ -1103,7 +1103,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           ## Predictor means
           xm <- colMeans(x)
 
-          ## Adjust lower-order coefs
+          ## Adjust lower-order terms
           ## (ti = terms containing term i; ni = non-i components of ti)
           b[xn] <- sapply(xn, function(i) {
             bi <- b[[i]]; XNi <- XN[[i]]
@@ -1116,7 +1116,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
             } else bi
           })
 
-          ## Centre predictors (for correct SD's/VIF's)
+          ## Centre predictors (for correct SDs/VIFs)
           if (std.x || unique.x) {
             x <- sapply(XN, function(i) {
               xi <- sweep(x[i], 2, xm[i])

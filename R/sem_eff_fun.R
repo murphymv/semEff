@@ -355,8 +355,8 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
             if (is.B) {
               I <- B$t[, isInt(colnames(B$t)), drop = FALSE]
               eb <- cbind(I, e)
-              an <- c("sim", "seed", "n")
-              attributes(eb)[an] <- attributes(B$t)[an]
+              a <- c("sim", "seed", "n")
+              attributes(eb)[a] <- attributes(B$t)[a]
               eb
             } else {
               I <- B$t0[isInt(names(B$t0))]
@@ -470,7 +470,8 @@ totEff <- function(...) {
 #'   \code{mod}.
 #' @param effects A numeric vector of effects to predict, or a list or nested
 #'   list of such vectors. These will typically have been calculated using
-#'   \code{semEff}, \code{bootEff}, or \code{stdCoeff}.
+#'   \code{semEff}, \code{bootEff}, or \code{stdCoeff}. Alternatively, a boot
+#'   object produced by \code{bootEff} can be supplied.
 #' @param eff.boot A matrix of bootstrapped effects used to calculate confidence
 #'   intervals for predictions, or a list or nested list of such matrices. These
 #'   will have been calculated using \code{semEff} or \code{bootEff}.
@@ -509,8 +510,8 @@ totEff <- function(...) {
 #'   with values for predictors drawn either from the data used to fit the
 #'   original model(s) (\code{mod}) or from \code{newdata}. It is assumed that
 #'   effects are fully standardised; however, if this is not the case, then the
-#'   same arguments originally specified to \code{stdCoeff} should be
-#'   re-specified - which will then be used to standardise the data. If no
+#'   same standardisation options originally specified to \code{stdCoeff} should
+#'   be re-specified - which will then be used to standardise the data. If no
 #'   effects are supplied, standardised model coefficients will be calculated
 #'   and used to generate predictions. These will equal the model(s) fitted
 #'   values if \code{newdata = NULL}, \code{unique.x = FALSE}, and \code{re.form
@@ -525,12 +526,13 @@ totEff <- function(...) {
 #'   the contribution of random effects will be taken from the single model
 #'   instead of (correctly) being averaged over a candidate set.
 #'
-#'   If bootstrapped effects are supplied to \code{eff.boot}, bootstrapped
-#'   predictions are calculated by predicting from each effect. Confidence
-#'   intervals can then be returned, for which the \code{type} should be
-#'   appropriate for the original form of bootstrap sampling (defaults to
-#'   \code{"bca"}). If the number of observations to predict is very large,
-#'   parallel processing may speed up the calculation of intervals.
+#'   If bootstrapped effects are supplied to \code{eff.boot} (or to
+#'   \code{effects} as part of a boot object), bootstrapped predictions are
+#'   calculated by predicting from each effect. Confidence intervals can then be
+#'   returned, for which the \code{type} should be appropriate for the original
+#'   form of bootstrap sampling (defaults to \code{"bca"}). If the number of
+#'   observations to predict is very large, parallel processing may speed up the
+#'   calculation of intervals.
 #'
 #'   Predictions are always returned in the original (typically unstandardised)
 #'   units of the (link-)response variable. For GLM's, they can be returned in
@@ -641,6 +643,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
     ## Effects
     if (is.null(e)) e <- do.call(stdCoeff, c(list(m, w), a))
+    if (isBoot(e)) {eb <- e$t; e <- e$t0}
     e <- e[!is.na(e) & !isR2(names(e))]
 
     ## Effect names
