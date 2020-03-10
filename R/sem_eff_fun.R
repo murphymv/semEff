@@ -479,7 +479,7 @@ totEff <- function(...) {
 #'   random effects to condition on when predicting effects. Defaults to
 #'   \code{NA}, meaning random effects are averaged over. See
 #'   \code{\link[lme4]{predict.merMod}} for further specification details.
-#' @param type The type of prediction to return (for GLM's). Can be either
+#' @param type The type of prediction to return (for GLMs). Can be either
 #'   \code{"link"} (default) or \code{"response"}.
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on predictions (and any interactive effects).
@@ -535,7 +535,7 @@ totEff <- function(...) {
 #'   calculation of intervals.
 #'
 #'   Predictions are always returned in the original (typically unstandardised)
-#'   units of the (link-)response variable. For GLM's, they can be returned in
+#'   units of the (link-)response variable. For GLMs, they can be returned in
 #'   the response scale if \code{type = "response"}.
 #'
 #'   Additionally, if the name of an interactive effect is supplied to
