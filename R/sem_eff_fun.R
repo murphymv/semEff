@@ -691,12 +691,11 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     if (is.null(o)) o <- 0
     o <- o - om
 
-    ## Predictors
+    ## Predictors (model matrix + data)
     x <- rMapply(function(i) model.matrix(i, data = d), m, SIMPLIFY = FALSE)
     if (isList(x)) x <- do.call(cbind, unname(x))
-    x <- cbind(x[obs, ], d)
-    x <- x[unique(names(x))]
-    x <- sapply(en, function(i) {
+    x <- cbind(x[obs, ], Filter(is.numeric, d))
+    x <- sapply(unique(names(x)), function(i) {
       if (!isInt(i)) {
         pT <- function(j) parse(text = j)
         if (isInx(i)) {
@@ -718,7 +717,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ym <- if (cen.y) lF(weighted.mean(getY(m1), w)) else 0
     ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
 
-    ## Data to predict (standardise using original means/SD's)
+    ## Data to predict (standardise using original means/SDs)
     d <- if (!is.null(nd)) data.frame(nd) else x
     obs <- rownames(d)
     d <- sapply(en, function(i) {
