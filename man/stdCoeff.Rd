@@ -108,7 +108,7 @@ Calculate fully standardised model coefficients in standard
 
   If \code{unique.x = TRUE} (default), coefficients are adjusted for
   multicollinearity among predictors by dividing by the square root of the
-  VIF's (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
+  VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
   standardised by the standard deviations of x and y, this converts them to
   semipartial correlations, i.e. the correlation between the unique
   components of predictors (residualised on other predictors) and the
@@ -118,7 +118,7 @@ Calculate fully standardised model coefficients in standard
   readily be compared both within and across models. Values range from zero
   to +/-1 rather than +/- infinity (as in the case of betas) - putting them
   on the same scale as the bivariate correlation between predictor and
-  response. In the case of GLM's however, the measure is analogous but not
+  response. In the case of GLMs however, the measure is analogous but not
   exactly equal to the semipartial correlation, so its values may not always
   be bound between +/-1 (such cases are likely rare). Crucially, for ordinary
   linear models, the square of the semipartial correlation equals the
@@ -130,7 +130,7 @@ Calculate fully standardised model coefficients in standard
   If \code{refit.x = TRUE}, the model will be re-fit with any (newly-)centred
   continuous predictors. This will occur (and will normally be desired) when
   \code{cen.x} and \code{unique.x} are \code{TRUE} and there are interaction
-  terms in the model, in order to calculate correct VIF's from the var-cov
+  terms in the model, in order to calculate correct VIFs from the var-cov
   matrix. However, re-fitting may not be necessary in some cases, for example
   where predictors have already been centred (and will not subsequently be
   resampled), and disabling this option may save time with larger models

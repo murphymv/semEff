@@ -228,7 +228,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 
 #' @title Get Model Response Variable
 #' @description Extract the response variable from a fitted model in the
-#'   original or link scale (for GLM's).
+#'   original or link scale (for GLMs).
 #' @param mod A fitted model object. Alternatively, a numeric vector,
 #'   corresponding to a variable to be transformed. Can also be a list or nested
 #'   list of such objects.
@@ -458,7 +458,7 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 #'   be returned per coefficient for multi-coefficient terms. Finally, \code{NA}
 #'   is returned for any coefficients which could not be estimated in the model
 #'   (e.g. aliased terms).
-#' @return A numeric vector of the VIF's, or an array, list of vectors/arrays,
+#' @return A numeric vector of the VIFs, or an array, list of vectors/arrays,
 #'   or nested list.
 #' @references Fox, J. and Monette, G. (1992) Generalized Collinearity
 #'   Diagnostics. \emph{Journal of the American Statistical Association}
@@ -496,7 +496,7 @@ VIF <- function(mod, data = NULL, ...) {
     XN <- xNam(m, intercept = FALSE, list = TRUE, ...)
     xn <- xNam(m, intercept = FALSE, aliased = FALSE, ...)
 
-    ## VIF's
+    ## VIFs
     if (length(xn) > 1) {
 
       ## T/F for terms as matrices
@@ -562,7 +562,7 @@ VIF <- function(mod, data = NULL, ...) {
 #'   specification details.
 #' @param ... Not currently used.
 #' @details Various approaches to the calculation of a goodness-of-fit measure
-#'   for GLM's analogous to R-squared in the ordinary linear model have been
+#'   for GLMs analogous to R-squared in the ordinary linear model have been
 #'   proposed. Generally termed 'pseudo R-squared' measures, they include
 #'   variance-based, likelihood-based, and distribution-specific approaches.
 #'   Here however, a more straightforward definition is used, which can be
@@ -695,7 +695,7 @@ VIF <- function(mod, data = NULL, ...) {
 #' f <- fitted(m)
 #' cvf2 <- y - (y - f) / (1 - hatvalues(m))
 #'
-#' ## Compare predictions (not exactly equal for GLM's)
+#' ## Compare predictions (not exactly equal for GLMs)
 #' all.equal(cvf1, cvf2)
 #' # lm: TRUE; glm: "Mean relative difference: 1.977725e-06"
 #' cor(cvf1, cvf2)
@@ -708,7 +708,7 @@ VIF <- function(mod, data = NULL, ...) {
 #' # matrix) to estimate CV predictions shouldn't generalise (roughly?) to the
 #' # mixed model case. In any case, users should exercise the appropriate
 #' # caution in interpretation of the predicted R-squared for mixed models,
-#' # especially GLMM's.
+#' # especially GLMMs.
 #' @export
 R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
                ...) {
@@ -959,7 +959,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'
 #'   If \code{unique.x = TRUE} (default), coefficients are adjusted for
 #'   multicollinearity among predictors by dividing by the square root of the
-#'   VIF's (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
+#'   VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
 #'   standardised by the standard deviations of x and y, this converts them to
 #'   semipartial correlations, i.e. the correlation between the unique
 #'   components of predictors (residualised on other predictors) and the
@@ -969,7 +969,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'   readily be compared both within and across models. Values range from zero
 #'   to +/-1 rather than +/- infinity (as in the case of betas) - putting them
 #'   on the same scale as the bivariate correlation between predictor and
-#'   response. In the case of GLM's however, the measure is analogous but not
+#'   response. In the case of GLMs however, the measure is analogous but not
 #'   exactly equal to the semipartial correlation, so its values may not always
 #'   be bound between +/-1 (such cases are likely rare). Crucially, for ordinary
 #'   linear models, the square of the semipartial correlation equals the
@@ -981,7 +981,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'   If \code{refit.x = TRUE}, the model will be re-fit with any (newly-)centred
 #'   continuous predictors. This will occur (and will normally be desired) when
 #'   \code{cen.x} and \code{unique.x} are \code{TRUE} and there are interaction
-#'   terms in the model, in order to calculate correct VIF's from the var-cov
+#'   terms in the model, in order to calculate correct VIFs from the var-cov
 #'   matrix. However, re-fitting may not be necessary in some cases, for example
 #'   where predictors have already been centred (and will not subsequently be
 #'   resampled), and disabling this option may save time with larger models
@@ -1080,11 +1080,11 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     ## Centre/standardise x
     if (k > 0) {
 
-      ## Predictors
+      ## Predictors (model matrix + data)
       if (is.null(d)) d <- getData(m)
       x <- model.matrix(m, data = d)[s, xn, drop = FALSE]
-      x <- data.frame(x, check.names = FALSE)
-      obs <- rownames(x)
+      x <- cbind(x, d[rownames(x), ])
+      x <- x[unique(names(x))]
 
       ## Interactions?
       inx <- any(isInx(xn))
@@ -1101,12 +1101,13 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           })
 
           ## Predictor means
-          xm <- colMeans(x)
+          xm <- colMeans(Filter(is.numeric, x))
 
           ## Adjust lower-order terms
           ## (ti = terms containing term i; ni = non-i components of ti)
           b[xn] <- sapply(xn, function(i) {
-            bi <- b[[i]]; XNi <- XN[[i]]
+            XNi <- XN[[i]]
+            bi <- b[[i]]
             ti <- xn[sapply(xn, function(j) all(XNi %in% XN[[j]])) & xn != i]
             if (length(ti) > 0) {
               bi + sum(sapply(ti, function(j) {
@@ -1118,9 +1119,13 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
           ## Centre predictors (for correct SDs/VIFs)
           if (std.x || unique.x) {
-            x <- sapply(XN, function(i) {
-              xi <- sweep(x[i], 2, xm[i])
-              apply(xi, 1, prod)
+            x <- sapply(names(x), function(i) {
+              xi <- x[, i]
+              if (is.numeric(xi)) {
+                if (i %in% xn) i <- XN[[i]]
+                xi <- sweep(x[i], 2, xm[i])
+                apply(xi, 1, prod)
+              } else xi
             })
             x <- data.frame(x, check.names = FALSE)
           }
@@ -1132,22 +1137,19 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       }
 
       ## Standardise by x
-      if (std.x) b[xn] <- b[xn] * sapply(x, sdW, w)
+      if (std.x) b[xn] <- b[xn] * sapply(x[xn], sdW, w)
 
       ## Calculate unique effects of predictors (adjust for multicollinearity)
       if (unique.x && k > 1) {
 
         ## Re-fit model with centred predictors
-        ## (to calculate correct VIF's for interacting terms)
+        ## (to calculate correct VIFs for interacting terms)
         m2 <- if (cen.x && inx && refit.x) {
-          d <- d[obs, ]
-          xnc <- xn[xn %in% names(d)]
-          d[xnc] <- x[xnc]
-          d <- cbind(y, w, d)
-          update(m, y ~ ., weights = w, data = d)
+          x <- cbind(y, w, x)
+          update(m, y ~ ., weights = w, data = x)
         } else m
 
-        ## Divide coefs by square root of VIF's
+        ## Divide coefs by square root of VIFs
         vif <- VIF(m2, envir = environment())
         b[xn] <- b[xn] / sqrt(vif)[xn]
 

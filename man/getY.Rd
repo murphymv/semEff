@@ -28,7 +28,7 @@ A numeric vector comprising the response variable in the original or
 }
 \description{
 Extract the response variable from a fitted model in the
-  original or link scale (for GLM's).
+  original or link scale (for GLMs).
 }
 \details{
 \code{getY} will return the response variable from a model by

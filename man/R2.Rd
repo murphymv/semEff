@@ -35,7 +35,7 @@ Calculate R-squared or pseudo R-squared for a fitted model,
 }
 \details{
 Various approaches to the calculation of a goodness-of-fit measure
-  for GLM's analogous to R-squared in the ordinary linear model have been
+  for GLMs analogous to R-squared in the ordinary linear model have been
   proposed. Generally termed 'pseudo R-squared' measures, they include
   variance-based, likelihood-based, and distribution-specific approaches.
   Here however, a more straightforward definition is used, which can be
@@ -148,7 +148,7 @@ y <- getY(m)
 f <- fitted(m)
 cvf2 <- y - (y - f) / (1 - hatvalues(m))
 
-## Compare predictions (not exactly equal for GLM's)
+## Compare predictions (not exactly equal for GLMs)
 all.equal(cvf1, cvf2)
 # lm: TRUE; glm: "Mean relative difference: 1.977725e-06"
 cor(cvf1, cvf2)
@@ -161,7 +161,7 @@ cor(cvf1, cvf2)
 # matrix) to estimate CV predictions shouldn't generalise (roughly?) to the
 # mixed model case. In any case, users should exercise the appropriate
 # caution in interpretation of the predicted R-squared for mixed models,
-# especially GLMM's.
+# especially GLMMs.
 }
 \references{
 Allen, D. M. (1974). The Relationship Between Variable Selection

@@ -14,7 +14,7 @@ VIF(mod, data = NULL, ...)
 \item{...}{Arguments to \code{eval} (for evaluating model data).}
 }
 \value{
-A numeric vector of the VIF's, or an array, list of vectors/arrays,
+A numeric vector of the VIFs, or an array, list of vectors/arrays,
   or nested list.
 }
 \description{
