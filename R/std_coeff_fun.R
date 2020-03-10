@@ -1126,7 +1126,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
                 xi <- sweep(x[i], 2, xm[i])
                 apply(xi, 1, prod)
               } else xi
-            })
+            }, simplify = FALSE)
             x <- data.frame(x, check.names = FALSE)
           }
 
@@ -1145,8 +1145,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         ## Re-fit model with centred predictors
         ## (to calculate correct VIFs for interacting terms)
         m2 <- if (cen.x && inx && refit.x) {
-          x <- cbind(y, w, x)
-          update(m, y ~ ., weights = w, data = x)
+          update(m, y ~ ., weights = w, data = cbind(y, w, x))
         } else m
 
         ## Divide coefs by square root of VIFs
