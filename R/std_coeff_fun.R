@@ -181,9 +181,15 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     x <- sapply(mf[names(mf) %in% xn], "[", simplify = FALSE)
 
     ## Expand factor/matrix terms (list)
+    fac <- sapply(x, function(i) "factor" %in% class(i))
     XN <- sapply(xn, function(i) {
       if (i %in% names(x)) {
-        j <- c(levels(x[[i]])[-1], colnames(x[[i]]))
+        xi <- x[[i]]
+        j <- if (fac[i]) {
+          xic <- contrasts(xi)
+          j <- colnames(xic)
+          if (is.null(j)) as.character(1:ncol(xic)) else j
+        } else colnames(xi)
         paste0(i, j)
       } else i
     }, simplify = FALSE)
@@ -191,14 +197,12 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     ## Expand interaction terms involving factors/matrices
     XN <- sapply(xn, function(i) {
       if (isInx(i)) {
-        j <- unlist(strsplit(i, ":"))
-        j <- expand.grid(XN[j])
-        apply(j, 1, paste, collapse = ":")
+        i <- unlist(strsplit(i, ":"))
+        apply(expand.grid(XN[i]), 1, paste, collapse = ":")
       } else XN[[i]]
     }, simplify = FALSE)
 
     ## If no intercept, add reference level to first factor
-    fac <- sapply(x, function(i) "factor" %in% class(i))
     if (!int && any(fac)) {
       f1 <- names(fac[fac][1])
       XN[[f1]] <- paste0(f1, levels(x[[f1]]))
