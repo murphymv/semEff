@@ -1153,7 +1153,11 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
         ## Re-fit model with centred predictors
         ## (to calculate correct VIFs for interacting terms)
+<<<<<<< HEAD
         ct <- options("contrasts")
+=======
+        cnt <- options("contrasts")
+>>>>>>> 475fc9b5a1ad46f63f20a14113bdd2070d13d141
         m2 <- if (cen.x && inx && refit.x) {
           options(contrasts = c("contr.sum", "contr.poly"))
           update(m, y ~ ., weights = w, data = cbind(y, w, x))
@@ -1162,7 +1166,11 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         ## Divide coefs by square root of VIFs
         vif <- na.omit(VIF(m2, envir = environment()))
         b[xn] <- b[xn] / sqrt(vif)
+<<<<<<< HEAD
         options(ct)
+=======
+        options(cnt)
+>>>>>>> 475fc9b5a1ad46f63f20a14113bdd2070d13d141
 
       }
 
