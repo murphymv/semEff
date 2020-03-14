@@ -169,11 +169,16 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
   ## Function
   xNam <- function(m) {
 
-    ## Term names (as vector)
+    ## Term names (vector)
     tt <- terms(m)
     xn <- labels(tt)
     int <- attr(tt, "intercept")
     if (int) xn <- c("(Intercept)", xn)
+
+    ## Coefficients
+    b <- summary(m)$coef
+    b <- as.matrix(if (isList(b)) b[[1]] else b)
+    bn <- rownames(b)
 
     ## Variables
     if (is.null(d)) d <- getData(m, ...)
@@ -181,14 +186,17 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     x <- sapply(mf[names(mf) %in% xn], "[", simplify = FALSE)
 
     ## Expand factor/matrix terms (list)
-    fac <- sapply(x, function(i) "factor" %in% class(i))
+    f <- sapply(x, function(i) "factor" %in% class(i))
     XN <- sapply(xn, function(i) {
       if (i %in% names(x)) {
         xi <- x[[i]]
-        j <- if (fac[i]) {
+        j <- if (f[i]) {
           xic <- contrasts(xi)
           j <- colnames(xic)
-          if (is.null(j)) as.character(1:ncol(xic)) else j
+          if (!is.null(j)) {
+            j <- if (any(sapply(j, function(k) any(grepl(k, bn))))) j
+          }
+          if (is.null(j)) j <- as.character(1:ncol(xic))
         } else colnames(xi)
         paste0(i, j)
       } else i
@@ -197,14 +205,14 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     ## Expand interaction terms involving factors/matrices
     XN <- sapply(xn, function(i) {
       if (isInx(i)) {
-        i <- unlist(strsplit(i, ":"))
+        i <- unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
         apply(expand.grid(XN[i]), 1, paste, collapse = ":")
       } else XN[[i]]
     }, simplify = FALSE)
 
     ## If no intercept, add reference level to first factor
-    if (!int && any(fac)) {
-      f1 <- names(fac[fac][1])
+    if (!int && any(f)) {
+      f1 <- names(f[f][1])
       XN[[f1]] <- paste0(f1, levels(x[[f1]]))
     }
 
@@ -213,9 +221,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 
     ## Drop aliased terms?
     if (!aliased) {
-      b <- summary(m)$coef
-      b <- as.matrix(if (isList(b)) b[[1]] else b)
-      XN <- lapply(XN, function(i) i[i %in% rownames(b)])
+      XN <- lapply(XN, function(i) i[i %in% bn])
       XN <- XN[sapply(XN, length) > 0]
     }
 
@@ -1136,7 +1142,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
         }
 
-        ## Adjust intercept (set to weighted mean of predicted y)
+        ## Adjust intercept (set to mean of predicted y)
         if (int) b[1] <- weighted.mean(predict(m, re.form = NA)[s], w)
       }
 
@@ -1148,13 +1154,16 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
         ## Re-fit model with centred predictors
         ## (to calculate correct VIFs for interacting terms)
+        cnt <- options("contrasts")
         m2 <- if (cen.x && inx && refit.x) {
+          options(contrasts = c("contr.sum", "contr.poly"))
           update(m, y ~ ., weights = w, data = cbind(y, w, x))
         } else m
 
         ## Divide coefs by square root of VIFs
-        vif <- VIF(m2, envir = environment())
-        b[xn] <- b[xn] / sqrt(vif)[xn]
+        vif <- na.omit(VIF(m2, envir = environment()))
+        b[xn] <- b[xn] / sqrt(vif)
+        options(cnt)
 
       }
 
