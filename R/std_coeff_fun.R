@@ -194,9 +194,11 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
           xic <- contrasts(xi)
           j <- colnames(xic)
           if (!is.null(j)) {
-            j <- if (any(sapply(j, function(k) any(grepl(k, bn))))) j
+            j <- if (any(sapply(paste0(i, j), function(k) {
+              any(grepl(k, bn, fixed = TRUE))
+            }))) j
           }
-          if (is.null(j)) j <- as.character(1:ncol(xic))
+          if (is.null(j)) as.character(1:ncol(xic)) else j
         } else colnames(xi)
         paste0(i, j)
       } else i
