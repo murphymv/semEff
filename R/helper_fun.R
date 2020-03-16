@@ -14,13 +14,16 @@ isList <- function(x) class(x)[1] == "list"
 isBoot <- function(x) "boot" %in% class(x)
 #' @describeIn Object.Type Is object a fitted model?
 isMod <- function(x) {
-  any(c("lm", "glm", "lmerMod", "glmerMod", "gls", "betareg") %in% class(x))
+  any(c("lm", "glm", "lmerMod", "glmerMod", "lmerModLmerTest", "gls", "betareg")
+      %in% class(x))
 }
 #' @describeIn Object.Type Is object a generalised linear model (i.e. uses a
 #'   link function)?
 isGlm <- function(x) any(c("glm", "glmerMod", "betareg") %in% class(x))
 #' @describeIn Object.Type Is object a mixed model (class \code{"merMod"})?
-isMer <- function(x) any(c("lmerMod", "glmerMod") %in% class(x))
+isMer <- function(x) {
+  any(c("lmerMod", "glmerMod", "lmerModLmerTest") %in% class(x))
+}
 #' @describeIn Object.Type Is object a generalised least squares model (class
 #'   \code{"gls"})?
 isGls <- function(x) "gls" %in% class(x)
