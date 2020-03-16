@@ -1158,7 +1158,9 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         ct <- options("contrasts")
         m2 <- if (cen.x && inx && refit.x) {
           options(contrasts = c("contr.sum", "contr.poly"))
-          update(m, y ~ ., weights = w, data = cbind(y, w, x))
+          # update(m, y ~ ., weights = w, data = cbind(y, w, x))
+          eval(update(m, y ~ ., weights = w, data = cbind(y, w, x),
+                      evaluate = FALSE))
         } else m
 
         ## Divide coefs by square root of VIFs
