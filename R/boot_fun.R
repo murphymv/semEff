@@ -4,6 +4,9 @@
 #' @description Bootstrap model effects (standardised coefficients) and optional
 #'   SEM correlated errors.
 #' @param mod A fitted model object, or a list or nested list of such objects.
+#' @param R Number of bootstrap replicates to generate.
+#' @param seed Seed for the random number generator. If not provided, a random
+#'   five-digit integer is used (see Details).
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param ran.eff For mixed models with nested random effects, the name of the
 #'   variable comprising the highest-level random effect. For non-nested random
@@ -12,9 +15,6 @@
 #' @param cor.err Optional, names of SEM correlated errors to be bootstrapped.
 #'   Should be of the form: \code{c("mod1 ~~ mod2", "mod3 ~~ mod4", ...)}
 #'   (spaces optional), with names matching model names.
-#' @param R Number of bootstrap replicates to generate.
-#' @param seed Seed for the random number generator. If not provided, a random
-#'   five-digit integer is used (see Details).
 #' @param catch.err Logical, should errors generated during model fitting or
 #'   estimation be caught and \code{NA} returned for estimates? If \code{FALSE},
 #'   any such errors will cause the function to exit.
@@ -132,8 +132,8 @@
 #' ## Bootstrapped estimates
 #' lapply(Shipley.SEM.Boot, function(i) head(i$t))
 #' @export
-bootEff <- function(mod, data = NULL, ran.eff = NULL, cor.err = NULL, R = 10000,
-                    seed = NULL, catch.err = TRUE, parallel = "snow",
+bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
+                    cor.err = NULL, catch.err = TRUE, parallel = "snow",
                     ncpus = NULL, cl = NULL, bM.arg = NULL, ...) {
 
   m <- mod; d <- data; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
