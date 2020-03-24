@@ -4,7 +4,8 @@
 \name{Shipley}
 \alias{Shipley}
 \title{Simulated Data from Shipley (2009)}
-\format{A data frame with 1900 observations and 9 variables:
+\format{
+A data frame with 1900 observations and 9 variables:
 \describe{
 \item{site}{a numeric code giving the site from which the observation comes}
 \item{tree}{a numeric code giving the tree from which the observation comes}
@@ -17,7 +18,8 @@
 for the simulation)}
 \item{Live}{a binary value (1 = tree lived the following winter, 0 = tree
 died the following winter)}
-}}
+}
+}
 \source{
 \url{https://doi.org/c886}
 }

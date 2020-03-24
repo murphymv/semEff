@@ -296,7 +296,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
     ## Throw warning if any model fits produced errors
     n.err <- sum(apply(rbind(B$t0, B$t), 1, function(i) any(is.na(i))))
     if (n.err > 0)
-      warning(paste(n.err, "model fit(s) or parameter estimation(s) failed. NA's reported/generated."))
+      warning(paste(n.err, "model fit(s) or parameter estimation(s) failed. NAs reported/generated."))
 
     ## Set attributes and output
     colnames(B$t) <- names(B$t0)
@@ -413,7 +413,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
       ## Throw a warning if any model fits produced errors
       n.err <- sum(apply(rbind(B$t0, B$t), 1, function(i) any(is.na(i))))
       if (n.err > 0)
-        warning(paste(n.err, "or more model fit(s) or estimation(s) failed. NA's reported/generated."))
+        warning(paste(n.err, "model fit(s) or parameter estimation(s) failed. NAs reported/generated."))
 
       ## Set attributes and output
       names(B$t0) <- j; colnames(B$t) <- j

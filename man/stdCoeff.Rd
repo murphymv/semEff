@@ -71,15 +71,16 @@ Calculate fully standardised model coefficients in standard
 
   If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, model estimates
   will be calculated as if all predictors (x) and/or the response variable
-  (y) were mean-centred prior to model-fitting. Thus, for an ordinary linear
-  model where centring of x and y is specified, the intercept will be zero -
-  the mean (or weighted mean) of y. In addition, if \code{cen.x = TRUE} and
-  there are interacting terms in the model, all coefficients for lower order
-  terms of the interaction are adjusted using an expression which ensures
-  that each main effect or lower order term is estimated at the mean values
-  of the terms they interact with (zero in a 'centred' model) - typically
-  improving the interpretation of coefficients. The expression used comprises
-  a weighted sum of all the coefficients that contain the lower order term,
+  (y) were mean-centred prior to model-fitting (including any dummy variables
+  arising from categorical predictors). Thus, for an ordinary linear model
+  where centring of x and y is specified, the intercept will be zero - the
+  mean (or weighted mean) of y. In addition, if \code{cen.x = TRUE} and there
+  are interacting terms in the model, all coefficients for lower order terms
+  of the interaction are adjusted using an expression which ensures that each
+  main effect or lower order term is estimated at the mean values of the
+  terms they interact with (zero in a 'centred' model) - typically improving
+  the interpretation of coefficients. The expression used comprises a
+  weighted sum of all the coefficients that contain the lower order term,
   with the weight for the term itself being zero and those for 'containing'
   terms being the product of the means of the other variables involved in
   that term (i.e. those not in the lower order term itself). For example, for
@@ -102,8 +103,8 @@ Calculate fully standardised model coefficients in standard
   standard deviations of predictor variables (or terms), while if \code{std.y
   = TRUE} they are divided by the standard deviation of the response. If the
   model is a GLM, this latter is calculated using the link-transformed
-  response (or its estimate) generated using the function \code{getY}. If
-  both arguments are true, the coefficients are regarded as 'fully'
+  response (or an estimate of same) generated using the function \code{getY}.
+  If both arguments are true, the coefficients are regarded as 'fully'
   standardised in the traditional sense, often referred to as 'betas'.
 
   If \code{unique.x = TRUE} (default), coefficients are adjusted for
@@ -131,10 +132,10 @@ Calculate fully standardised model coefficients in standard
   continuous predictors. This will occur (and will normally be desired) when
   \code{cen.x} and \code{unique.x} are \code{TRUE} and there are interaction
   terms in the model, in order to calculate correct VIFs from the var-cov
-  matrix. However, re-fitting may not be necessary in some cases, for example
-  where predictors have already been centred (and will not subsequently be
-  resampled), and disabling this option may save time with larger models
-  and/or bootstrap runs.
+  matrix. However, re-fitting may not be necessary in some cases - for
+  example where predictors have already been centred (and whose values will
+  not subsequently be resampled during bootstrapping) - and disabling this
+  option may save time with larger models and/or bootstrap runs.
 
   If \code{r.squared = TRUE}, R-squared values are also returned via the
   \code{R2} function.
@@ -155,7 +156,8 @@ stdCoeff(m, cen.x = FALSE, cen.y = FALSE)  # standardised only
 stdCoeff(m, r.squared = TRUE)  # add R-squared
 
 ## Demonstrate equality with manually-standardised variables (gaussian)
-m <- Shipley.Growth[[3]]
+# m <- Shipley.Growth[[3]]
+m <- lm(Growth ~ Date + DD + lat, data = Shipley)
 d <- data.frame(scale(na.omit(Shipley)))
 b1 <- stdCoeff(m, unique.x = FALSE)
 b2 <- coef(summary(update(m, data = d)))[, 1]

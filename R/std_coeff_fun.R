@@ -4,11 +4,11 @@
 #' @description Calculate the weighted variance of \code{x}.
 #' @param x A numeric vector.
 #' @param w A numeric vector of weights of the same length as \code{x}.
-#' @param na.rm Logical, whether NA's in \code{x} should be removed.
+#' @param na.rm Logical, whether NAs in \code{x} should be removed.
 #' @param ... Not currently used.
 #' @details Calculate the weighted variance of \code{x} via the weighted
 #'   covariance matrix (\code{cov.wt}). If no weights are supplied, the simple
-#'   variance is returned instead. As in \code{weighted.mean}, \code{NA}'s in
+#'   variance is returned instead. As in \code{weighted.mean}, \code{NA}s in
 #'   \code{w} are not handled specially and will return \code{NA} as result.
 #' @return A numeric value, the weighted variance of \code{x}.
 #' @seealso \code{\link[stats]{var}}, \code{\link[stats]{cov.wt}},
@@ -240,17 +240,17 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 
 #' @title Get Model Response Variable
 #' @description Extract the response variable from a fitted model in the
-#'   original or link scale (for GLMs).
+#'   original or link scale.
 #' @param mod A fitted model object. Alternatively, a numeric vector,
 #'   corresponding to a variable to be transformed. Can also be a list or nested
 #'   list of such objects.
-#' @param family Optional, the error distribution family containing the link
-#'   function which will be used to transform the response (see
-#'   \code{\link[stats]{family}} for specification details).
 #' @param data An optional dataset used to first re-fit the model(s).
-#' @param link Logical. If \code{TRUE}, return the response variable on the
+#' @param link Logical. If \code{TRUE}, return the GLM response variable on the
 #'   link scale (see Details).
-#' @param ... Arguments to \code{all.equal}.
+#' @param family Optional, the error distribution family containing the link
+#'   function which will be used to transform the response variable for GLMs
+#'   (see \code{\link[stats]{family}} for specification details).
+#' @param ... Not currently used.
 #' @details \code{getY} will return the response variable from a model by
 #'   summing the fitted values and the response residuals. If \code{link = TRUE}
 #'   and the model is a GLM, the response is transformed using the model link
@@ -284,8 +284,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'   coefficients. An additional benefit for piecewise SEM's is that the
 #'   transformed rather than original response can then be specified as a
 #'   predictor in other models, ensuring that standardised indirect and total
-#'   effects are calculated correctly (i.e. using the same units for the
-#'   variable).
+#'   effects are calculated correctly (i.e. using common units).
 #'
 #'   To ensure a high level of 'accuracy' in the working response - in the sense
 #'   that the inverse-transformed values are practically indistinguishable from
@@ -294,10 +293,10 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'
 #'   \enumerate{\item A new GLM of the same error family is fit with the
 #'   original response as both predictor and response, and using a single IWLS
-#'   iteration. \item The working response is calculated from this model \item
+#'   iteration. \item The working response is extracted from this model \item
 #'   The inverse transformation of the working response is then calculated \item
 #'   If the inverse transformation is effectively equal to the original response
-#'   (testing using \code{all.equal}), the working response is returned;
+#'   (tested using \code{all.equal}), the working response is returned;
 #'   otherwise, the GLM is re-fit with the working response now as the
 #'   predictor, and steps 2-4 are repeated - each time with an additional IWLS
 #'   iteration}
@@ -352,7 +351,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'
 #' ## Same estimate calculated using variable instead of model
 #' y <- Shipley$Live
-#' getY(y, binomial)
+#' getY(y, family = binomial)
 #'
 #' ## Compare estimate with a direct link transformation
 #' ## (test with a poisson model, log link)
@@ -360,13 +359,13 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #' y <- rpois(30, lambda = 10)
 #' y2 <- y
 #' m <- suppressWarnings(
-#'   glm(y ~ y2, poisson, control = list(maxit = 1))
+#'   glm(y ~ y2, family = poisson, control = list(maxit = 1))
 #' )
 #' i <- 0
 #' repeat {
 #'   yl <- predict(m) + resid(m, "working")
 #'   yli <- family(m)$linkinv(yl)
-#'   eql <- isTRUE(all.equal(yli, y, check.names = FALSE))
+#'   eql <- isTRUE(all.equal(y, yli, check.names = FALSE))
 #'   if (eql) return(yl) else {
 #'     i <- i + 1
 #'     m <- suppressWarnings(
@@ -381,9 +380,9 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #' all.equal(log(y), yl, check.names = FALSE, tolerance = .Machine$double.eps)
 #' # "Mean relative difference: 1.05954e-12"
 #' @export
-getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
+getY <- function(mod, data = NULL, link = FALSE, family = NULL, ...) {
 
-  m <- mod; f <- family; d <- data
+  m <- mod; d <- data; f <- family
 
   ## Function
   getY <- function(m) {
@@ -425,14 +424,14 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
       if (any(is.infinite(yl))) {
         y2 <- y
         suppressWarnings(
-          m <- do.call(glm, list(y ~ y2, f, control = list(maxit = 1),
+          m <- do.call(glm, list(y ~ y2, family = f, control = list(maxit = 1),
                                  na.action = na.exclude))
         )
         i <- 0
         repeat {
           yl <- predict(m) + resid(m, "working")
           yli <- f$linkinv(yl)
-          eql <- isTRUE(all.equal(y, yli, check.names = FALSE, ...))
+          eql <- isTRUE(all.equal(y, yli, check.names = FALSE))
           if (eql) return(yl) else {
             i <- i + 1
             suppressWarnings(
@@ -448,6 +447,54 @@ getY <- function(mod, family = NULL, data = NULL, link = FALSE, ...) {
 
   ## Apply recursively
   rMapply(getY, m)
+
+}
+
+
+#' @title Generalised Link Transformation
+#' @description Transform a numeric vector using a GLM link function.
+#' @param x a positive numeric vector, corresponding to a variable to be
+#'   transformed. Can also be a list or nested list of such objects.
+#' @param family Optional, the error distribution family containing the link
+#'   function which will be used to transform \code{x} (see
+#'   \code{\link[stats]{family}} for specification details).
+#' @details \code{glt(x)} is a shortcut to \code{getY(x, family = family)},
+#'   where \code{x} is a positive numeric vector and \code{family} is its error
+#'   distribution family. If this is not specified (default), then it is
+#'   determined (roughly) from \code{x}, with \code{binomial(link = "logit")}
+#'   used when all x <= 1 and \code{poisson(link = "log")} otherwise. If the
+#'   transformation results in undefined values, an estimate based on the
+#'   'working' response variable of the GLM is returned instead (see
+#'   \code{\link[semEff]{getY}}).
+#'
+#'   Although \code{glt} is generally intended for binomial or poisson
+#'   variables, any variable which can be fit using \code{glm} can be supplied.
+#' @return A numeric vector of the transformed values, or an array, list of
+#'   vectors/arrays, or nested list.
+#' @seealso \code{\link[stats]{glm}}
+#' @export
+glt <- function(x, family = NULL) {
+
+  f <- family
+
+  ## Function
+  glt <- function(x) {
+
+    if (!is.numeric(x))
+      stop("'x' must be a numeric vector.")
+
+    ## Family containing link function (binomial = logit, poisson = log)
+    if (is.null(f)) {
+      f <- if (all(x <= 1)) binomial() else poisson()
+    }
+
+    ## Transformation
+    getY(x, family = f)
+
+  }
+
+  ## Apply recursively
+  rMapply(glt, x)
 
 }
 
@@ -696,7 +743,7 @@ VIF <- function(mod, data = NULL, ...) {
 #' # m <- lm(Live ~ Date + DD + lat, d)
 #' m <- glm(Live ~ Date + DD + lat, binomial, d)
 #'
-#' ## Manual cv predictions (leave-one-out)
+#' ## Manual CV predictions (leave-one-out)
 #' cvf1 <- sapply(1:nrow(d), function(i) {
 #'   m.ni <- update(m, data = d[-i, ])
 #'   predict(m.ni, d[i, ], type = "response")
@@ -934,15 +981,16 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'
 #'   If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, model estimates
 #'   will be calculated as if all predictors (x) and/or the response variable
-#'   (y) were mean-centred prior to model-fitting. Thus, for an ordinary linear
-#'   model where centring of x and y is specified, the intercept will be zero -
-#'   the mean (or weighted mean) of y. In addition, if \code{cen.x = TRUE} and
-#'   there are interacting terms in the model, all coefficients for lower order
-#'   terms of the interaction are adjusted using an expression which ensures
-#'   that each main effect or lower order term is estimated at the mean values
-#'   of the terms they interact with (zero in a 'centred' model) - typically
-#'   improving the interpretation of coefficients. The expression used comprises
-#'   a weighted sum of all the coefficients that contain the lower order term,
+#'   (y) were mean-centred prior to model-fitting (including any dummy variables
+#'   arising from categorical predictors). Thus, for an ordinary linear model
+#'   where centring of x and y is specified, the intercept will be zero - the
+#'   mean (or weighted mean) of y. In addition, if \code{cen.x = TRUE} and there
+#'   are interacting terms in the model, all coefficients for lower order terms
+#'   of the interaction are adjusted using an expression which ensures that each
+#'   main effect or lower order term is estimated at the mean values of the
+#'   terms they interact with (zero in a 'centred' model) - typically improving
+#'   the interpretation of coefficients. The expression used comprises a
+#'   weighted sum of all the coefficients that contain the lower order term,
 #'   with the weight for the term itself being zero and those for 'containing'
 #'   terms being the product of the means of the other variables involved in
 #'   that term (i.e. those not in the lower order term itself). For example, for
@@ -965,8 +1013,8 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'   standard deviations of predictor variables (or terms), while if \code{std.y
 #'   = TRUE} they are divided by the standard deviation of the response. If the
 #'   model is a GLM, this latter is calculated using the link-transformed
-#'   response (or its estimate) generated using the function \code{getY}. If
-#'   both arguments are true, the coefficients are regarded as 'fully'
+#'   response (or an estimate of same) generated using the function \code{getY}.
+#'   If both arguments are true, the coefficients are regarded as 'fully'
 #'   standardised in the traditional sense, often referred to as 'betas'.
 #'
 #'   If \code{unique.x = TRUE} (default), coefficients are adjusted for
@@ -994,10 +1042,10 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'   continuous predictors. This will occur (and will normally be desired) when
 #'   \code{cen.x} and \code{unique.x} are \code{TRUE} and there are interaction
 #'   terms in the model, in order to calculate correct VIFs from the var-cov
-#'   matrix. However, re-fitting may not be necessary in some cases, for example
-#'   where predictors have already been centred (and will not subsequently be
-#'   resampled), and disabling this option may save time with larger models
-#'   and/or bootstrap runs.
+#'   matrix. However, re-fitting may not be necessary in some cases - for
+#'   example where predictors have already been centred (and whose values will
+#'   not subsequently be resampled during bootstrapping) - and disabling this
+#'   option may save time with larger models and/or bootstrap runs.
 #'
 #'   If \code{r.squared = TRUE}, R-squared values are also returned via the
 #'   \code{R2} function.
@@ -1035,7 +1083,8 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #' stdCoeff(m, r.squared = TRUE)  # add R-squared
 #'
 #' ## Demonstrate equality with manually-standardised variables (gaussian)
-#' m <- Shipley.Growth[[3]]
+#' # m <- Shipley.Growth[[3]]
+#' m <- lm(Growth ~ Date + DD + lat, data = Shipley)
 #' d <- data.frame(scale(na.omit(Shipley)))
 #' b1 <- stdCoeff(m, unique.x = FALSE)
 #' b2 <- coef(summary(update(m, data = d)))[, 1]

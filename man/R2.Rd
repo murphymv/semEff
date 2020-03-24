@@ -137,7 +137,7 @@ d <- na.omit(Shipley)
 # m <- lm(Live ~ Date + DD + lat, d)
 m <- glm(Live ~ Date + DD + lat, binomial, d)
 
-## Manual cv predictions (leave-one-out)
+## Manual CV predictions (leave-one-out)
 cvf1 <- sapply(1:nrow(d), function(i) {
   m.ni <- update(m, data = d[-i, ])
   predict(m.ni, d[i, ], type = "response")

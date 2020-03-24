@@ -4,23 +4,23 @@
 \alias{getY}
 \title{Get Model Response Variable}
 \usage{
-getY(mod, family = NULL, data = NULL, link = FALSE, ...)
+getY(mod, data = NULL, link = FALSE, family = NULL, ...)
 }
 \arguments{
 \item{mod}{A fitted model object. Alternatively, a numeric vector,
 corresponding to a variable to be transformed. Can also be a list or nested
 list of such objects.}
 
-\item{family}{Optional, the error distribution family containing the link
-function which will be used to transform the response (see
-\code{\link[stats]{family}} for specification details).}
-
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
-\item{link}{Logical. If \code{TRUE}, return the response variable on the
+\item{link}{Logical. If \code{TRUE}, return the GLM response variable on the
 link scale (see Details).}
 
-\item{...}{Arguments to \code{all.equal}.}
+\item{family}{Optional, the error distribution family containing the link
+function which will be used to transform the response variable for GLMs
+(see \code{\link[stats]{family}} for specification details).}
+
+\item{...}{Not currently used.}
 }
 \value{
 A numeric vector comprising the response variable in the original or
@@ -28,7 +28,7 @@ A numeric vector comprising the response variable in the original or
 }
 \description{
 Extract the response variable from a fitted model in the
-  original or link scale (for GLMs).
+  original or link scale.
 }
 \details{
 \code{getY} will return the response variable from a model by
@@ -64,8 +64,7 @@ Extract the response variable from a fitted model in the
   coefficients. An additional benefit for piecewise SEM's is that the
   transformed rather than original response can then be specified as a
   predictor in other models, ensuring that standardised indirect and total
-  effects are calculated correctly (i.e. using the same units for the
-  variable).
+  effects are calculated correctly (i.e. using common units).
 
   To ensure a high level of 'accuracy' in the working response - in the sense
   that the inverse-transformed values are practically indistinguishable from
@@ -74,10 +73,10 @@ Extract the response variable from a fitted model in the
 
   \enumerate{\item A new GLM of the same error family is fit with the
   original response as both predictor and response, and using a single IWLS
-  iteration. \item The working response is calculated from this model \item
+  iteration. \item The working response is extracted from this model \item
   The inverse transformation of the working response is then calculated \item
   If the inverse transformation is effectively equal to the original response
-  (testing using \code{all.equal}), the working response is returned;
+  (tested using \code{all.equal}), the working response is returned;
   otherwise, the GLM is re-fit with the working response now as the
   predictor, and steps 2-4 are repeated - each time with an additional IWLS
   iteration}
@@ -116,7 +115,7 @@ getY(m, link = TRUE, family = binomial("probit"))  # different link function
 
 ## Same estimate calculated using variable instead of model
 y <- Shipley$Live
-getY(y, binomial)
+getY(y, family = binomial)
 
 ## Compare estimate with a direct link transformation
 ## (test with a poisson model, log link)
@@ -124,13 +123,13 @@ set.seed(1)
 y <- rpois(30, lambda = 10)
 y2 <- y
 m <- suppressWarnings(
-  glm(y ~ y2, poisson, control = list(maxit = 1))
+  glm(y ~ y2, family = poisson, control = list(maxit = 1))
 )
 i <- 0
 repeat {
   yl <- predict(m) + resid(m, "working")
   yli <- family(m)$linkinv(yl)
-  eql <- isTRUE(all.equal(yli, y, check.names = FALSE))
+  eql <- isTRUE(all.equal(y, yli, check.names = FALSE))
   if (eql) return(yl) else {
     i <- i + 1
     m <- suppressWarnings(

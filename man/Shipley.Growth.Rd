@@ -4,8 +4,10 @@
 \name{Shipley.Growth}
 \alias{Shipley.Growth}
 \title{Candidate Model Set from Shipley 'Growth' Model}
-\format{A list of mixed models of class \code{"lmer"} and \code{"glmer"}, fit
-  to the same response variable.}
+\format{
+A list of mixed models of class \code{"lmer"} and \code{"glmer"}, fit
+  to the same response variable.
+}
 \usage{
 Shipley.Growth
 }
