@@ -16,7 +16,7 @@ comprising lists of fitted models representing structured equations
 via bootstrapping.
 
 Currently supported model classes are “lm”, “glm”, “lmerMod”,
-“glmerMod”, “gls”, and “betareg”.
+“glmerMod”, “lmerModLmerTest”, “gls”, and “betareg”.
 
 ## Installation
 

@@ -14,7 +14,7 @@ Other changes:
 matrix (e.g. a 'missing' main effect for an interaction)
 * Added ability to pass a boot object (from 'bootEff') to the 'effects' argument
 of 'predEff'
-* Added a 'refit.x' argument to 'stdCoeff' - allowing control over whether to
+* Added a 'refit.x' argument to 'stdCoeff', allowing control over whether to
 refit the model with centred predictors (for correct VIFs)
 * Various updates to documentation
 
@@ -25,7 +25,7 @@ contrast types other than 'contr.treatment'
 * 'stdCoeff' did not correctly adjust for multicollinearity for a model
 containing categorical variables when centring was specified ('cen.x = TRUE')
 * 'getY' failed to generate an estimated working response when a variable with
-missing values (NAs) was supplied to 'mod'
+missing values (NAs) was supplied (this functionality now in 'glt')
 * 'predEff' failed for models with categorical variables (did not access dummy
 variables in model matrix)
 
