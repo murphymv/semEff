@@ -12,7 +12,7 @@ This is a third minor release (0.3.0).
 NOTES:
 
 * checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Mark Murphy <murphymv@gmail.com>'
+Maintainer: ‘Mark Murphy <murphymv@gmail.com>’
 
 Found the following (possibly) invalid URLs:
   URL: https://doi.org/b8b782
@@ -20,10 +20,10 @@ Found the following (possibly) invalid URLs:
     Status: 403
     Message: Forbidden
   URL: https://doi.org/bvxb6s
-    From: man/getY.Rd
+    From: man/glt.Rd
     Status: Error
     Message: libcurl error code 56:
-      	OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 10054
+      	OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 104
 
 These URLs open fine when tested locally (multiple browsers).
 
@@ -37,10 +37,9 @@ quick examples, and every effort has been made to minimise file size without
 loss of demonstrative value to the end user.
 
 * checking examples ... NOTE
-Examples with CPU or elapsed time > 5s
-         user system elapsed
-predEff 3.564  0.052  10.365
-** found \donttest examples: check also with --run-donttest
+Examples with CPU (user + system) or elapsed time > 5s
+        user system elapsed
+predEff 3.24  0.024   9.553
 
 Testing of examples apparently only exceeds recommended time limits on Linux
 systems (R-hub builder)?
