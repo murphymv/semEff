@@ -238,80 +238,88 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 }
 
 
-#' @title Get Model Response Variable
-#' @description Extract the response variable from a fitted model in the
-#'   original or link scale.
-#' @param mod A fitted model object. Alternatively, a numeric vector,
-#'   corresponding to a variable to be transformed. Can also be a list or nested
-#'   list of such objects.
-#' @param data An optional dataset used to first re-fit the model(s).
-#' @param link Logical. If \code{TRUE}, return the GLM response variable on the
-#'   link scale (see Details).
+#' @title Generalised Link Transformation
+#' @description Transform a numeric vector using a GLM link function, or return
+#'   an estimate of same (see Details).
+#' @param x a positive numeric vector, corresponding to a variable to be
+#'   transformed. Can also be a list or nested list of such vectors.
 #' @param family Optional, the error distribution family containing the link
-#'   function which will be used to transform the response variable for GLMs
-#'   (see \code{\link[stats]{family}} for specification details).
+#'   function which will be used to transform \code{x} (see
+#'   \code{\link[stats]{family}} for specification details). If not supplied, it
+#'   is automatically determined (see Details).
+#' @param force.est Logical, whether to force the return of the estimated rather
+#'   than direct transformation, where the latter is available (i.e. does not
+#'   contain undefined values).
 #' @param ... Not currently used.
-#' @details \code{getY} will return the response variable from a model by
-#'   summing the fitted values and the response residuals. If \code{link = TRUE}
-#'   and the model is a GLM, the response is transformed using the model link
-#'   function. However, if this transformation results in undefined values, it
-#'   is replaced by an estimate based on the 'working' response variable of the
-#'   GLM (see below). The function can also be used to transform a variable
-#'   (supplied to \code{mod}) using the link function from the specified
-#'   \code{family} - in which case the \code{link} argument is ignored.
+#' @details \code{glt} can be used to provide a 'generalised' transformation for
+#'   a numeric vector using the link function from a generalised linear model
+#'   (GLM). The transformation is generalised in the sense that it can always be
+#'   produced, even where a standard link transformation would produce undefined
+#'   values (it achieves this via an estimate based on the 'working' response
+#'   variable of the GLM - see below). If the error distribution \code{family}
+#'   is not specified (default), then it is determined (roughly) from \code{x},
+#'   with \code{binomial(link = "logit")} used when all x <= 1 and
+#'   \code{poisson(link = "log")} otherwise. Although the function is generally
+#'   intended for binomial or poisson variables, any variable which can be fit
+#'   using \code{glm} can be supplied. One of the key purposes of \code{glt} is
+#'   to allow the calculation of fully standardised model coefficients for GLMs
+#'   (where \code{x} = the response variable), comparable to those from ordinary
+#'   linear models. It can also facilitate the proper calculation of SEM
+#'   indirect effects (see below).
 #'
-#'   \strong{Estimating the link-transformed response}
+#'   \strong{Estimating the link transformation}
 #'
 #'   A key challenge in generating fully standardised model coefficients for a
-#'   generalised linear model (GLM) with a non-gaussian link function is the
-#'   difficulty in calculating appropriate standardised ranges (typically the
-#'   standard deviation) for the response variable in the link scale. This is
-#'   because directly transforming the response will often produce undefined
-#'   values. Although methods for circumventing this issue by indirectly
-#'   estimating the variance of the link-transformed response have been proposed
-#'   - including a latent-theoretic approach for binomial models (McKelvey &
-#'   Zavoina 1975) and a more general variance-based method using a pseudo
-#'   R-squared (Menard 2011) - here an alternative approach is used. Where
-#'   transformed values are undefined, the function will instead return the
-#'   synthetic 'working' response from the iteratively reweighted least squares
-#'   (IRLS) algorithm of the GLM (McCullagh & Nelder 1989). This is
-#'   reconstructed as the sum of the linear predictor and the working residuals
-#'   - with the latter comprising the error of the model in the link scale. The
-#'   advantage of this approach is that a relatively straightforward
-#'   'transformation' of any non-gaussian response is readily attainable in all
-#'   cases. The standard deviation (or other relevant range) can then be
-#'   calculated using values of the transformed response and used to scale the
-#'   coefficients. An additional benefit for piecewise SEM's is that the
-#'   transformed rather than original response can then be specified as a
-#'   predictor in other models, ensuring that standardised indirect and total
-#'   effects are calculated correctly (i.e. using common units).
+#'   GLM with a non-gaussian link function is the difficulty in calculating
+#'   appropriate standardised ranges (typically the standard deviation) for the
+#'   response variable in the link scale. This is because directly transforming
+#'   the response will often produce undefined values. Although methods for
+#'   circumventing this issue by indirectly estimating the variance of the
+#'   link-transformed response have been proposed - including a latent-theoretic
+#'   approach for binomial models (McKelvey & Zavoina 1975) and a more general
+#'   variance-based method using a pseudo R-squared (Menard 2011) - here an
+#'   alternative approach is used. Where transformed values are undefined, the
+#'   function will instead return the synthetic 'working' response from the
+#'   iteratively reweighted least squares algorithm (IRLS, McCullagh & Nelder
+#'   1989) of a GLM fit to the response variable. This is reconstructed as the
+#'   sum of the linear predictor and the working residuals - with the latter
+#'   comprising the error of the model in the link scale. The advantage of this
+#'   approach is that a relatively straightforward 'transformation' of any
+#'   non-gaussian response is readily attainable in all cases. The standard
+#'   deviation (or other relevant range) can then be calculated using values of
+#'   the transformed response and used to scale the coefficients. An additional
+#'   benefit for piecewise SEM's is that the transformed rather than original
+#'   response can then be specified as a predictor in other models, ensuring
+#'   that standardised indirect and total effects are calculated correctly (i.e.
+#'   using the same units).
 #'
 #'   To ensure a high level of 'accuracy' in the working response - in the sense
-#'   that the inverse-transformed values are practically indistinguishable from
-#'   the original response - the function uses the following iterative fitting
-#'   procedure to calculate a 'final' working response:
+#'   that the inverse-transformation is practically indistinguishable from the
+#'   original response variable - the function uses the following iterative
+#'   fitting procedure to calculate a 'final' working response:
 #'
 #'   \enumerate{\item A new GLM of the same error family is fit with the
-#'   original response as both predictor and response, and using a single IWLS
-#'   iteration. \item The working response is extracted from this model \item
-#'   The inverse transformation of the working response is then calculated \item
-#'   If the inverse transformation is effectively equal to the original response
-#'   (tested using \code{all.equal}), the working response is returned;
-#'   otherwise, the GLM is re-fit with the working response now as the
+#'   original response variable as both predictor and response, and using a
+#'   single IWLS iteration. \item The working response is extracted from this
+#'   model \item The inverse transformation of the working response is then
+#'   calculated \item If the inverse transformation is effectively equal to the
+#'   original response (tested using \code{all.equal}), the working response is
+#'   returned; otherwise, the GLM is re-fit with the working response now as the
 #'   predictor, and steps 2-4 are repeated - each time with an additional IWLS
 #'   iteration}
 #'
 #'   This approach will generate a very reasonable transformation of the
-#'   response variable, which will also closely resemble the direct
-#'   transformation where this can be compared - see Examples. It also ensures
-#'   that the transformed values, and hence the standard deviation, are the same
-#'   for any GLM fitting the same response - provided it uses the same link
-#'   function - and so facilitates model comparisons, selection, and averaging.
+#'   response variable, which will also be practically indistinguishable from
+#'   the direct transformation (where this can be compared - see Examples). It
+#'   also ensures that the transformed values, and hence the standard deviation,
+#'   are the same for any GLM fitting the same response - provided it uses the
+#'   same link function - facilitating model comparisons, selection, and
+#'   averaging.
 #'
-#' @note As we often cannot directly observe the response variable on the link
-#'   scale, any method estimating its values or statistics will be 'wrong' to a
-#'   greater or lesser degree. The aim should be to try to minimise this error
-#'   as far as (reasonably) possible, while also generating standardised
+#' @note As we often cannot directly observe the GLM response variable on the
+#'   link scale, any method estimating its values or statistics will be 'wrong'
+#'   to a greater or lesser degree. The aim should be to try to minimise this
+#'   error as far as (reasonably) possible, while also generating standardised
 #'   coefficients whose interpretation most closely resembles those of the
 #'   ordinary linear model - something which the current method achieves. The
 #'   solution of using the working response from the GLM to scale coefficients
@@ -322,8 +330,8 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'   approach would be classed as 'observed-empirical' by Grace \emph{et al.}
 #'   (2018), as it utilises model error variance (the working residuals) rather
 #'   than theoretical distribution-specific variance.
-#' @return A numeric vector comprising the response variable in the original or
-#'   link scale, or an array, list of vectors/arrays, or nested list.
+#' @return A numeric vector of the transformed values, or an array, list of
+#'   vectors/arrays, or nested list.
 #' @references Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
 #'   (2018) Quantifying relative importance: computing standardized effects in
 #'   models with binary outcomes. \emph{Ecosphere} \strong{9}, e02283.
@@ -341,38 +349,11 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'   \url{https://doi.org/bvxb6s}
 #' @seealso \code{\link[stats]{glm}}, \code{\link[base]{all.equal}}
 #' @examples
-#' ## SEM responses (original scale)
-#' getY(Shipley.SEM)
-#'
-#' ## Estimated response in link scale from binomial model
-#' m <- Shipley.SEM$Live
-#' getY(m, link = TRUE)
-#' getY(m, link = TRUE, family = binomial("probit"))  # different link function
-#'
-#' ## Same estimate calculated using variable instead of model
-#' y <- Shipley$Live
-#' getY(y, family = binomial)
-#'
 #' ## Compare estimate with a direct link transformation
 #' ## (test with a poisson model, log link)
 #' set.seed(1)
 #' y <- rpois(30, lambda = 10)
-#' y2 <- y
-#' m <- suppressWarnings(
-#'   glm(y ~ y2, family = poisson, control = list(maxit = 1))
-#' )
-#' i <- 0
-#' repeat {
-#'   yl <- predict(m) + resid(m, "working")
-#'   yli <- family(m)$linkinv(yl)
-#'   eql <- isTRUE(all.equal(y, yli, check.names = FALSE))
-#'   if (eql) return(yl) else {
-#'     i <- i + 1
-#'     m <- suppressWarnings(
-#'       update(m, . ~ yl, control = list(maxit = i))
-#'     )
-#'   }
-#' }
+#' yl <- glt(y, force.est = TRUE)
 #' ## Effectively equal?
 #' all.equal(log(y), yl, check.names = FALSE)
 #' # TRUE
@@ -380,66 +361,102 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #' all.equal(log(y), yl, check.names = FALSE, tolerance = .Machine$double.eps)
 #' # "Mean relative difference: 1.05954e-12"
 #' @export
-getY <- function(mod, data = NULL, link = FALSE, family = NULL, ...) {
+glt <- function(x, family = NULL, force.est = FALSE, ...) {
 
-  m <- mod; d <- data; f <- family
+  f <- family
+
+  ## Function
+  glt <- function(x) {
+
+    ## Error family
+    if (is.character(f)) {
+      f <- get(f, mode = "function", envir = parent.frame())
+    }
+    if (is.function(f)) f <- f()
+    if (is.null(f)) {
+      f <- if (all(x <= 1)) binomial() else poisson()
+    }
+
+    ## Transform variable to link scale
+    xl <- f$linkfun(x)
+
+    ## Return transformation or estimation (GLM working response)
+    if (any(is.infinite(xl)) || force.est) {
+      x2 <- x
+      suppressWarnings(
+        m <- do.call(glm, list(x ~ x2, family = f, control = list(maxit = 1),
+                               na.action = na.exclude))
+      )
+      i <- 0
+      repeat {
+        xl <- predict(m) + resid(m, "working")
+        xli <- f$linkinv(xl)
+        eql <- isTRUE(all.equal(x, xli, check.names = FALSE))
+        if (eql) return(xl) else {
+          i <- i + 1
+          suppressWarnings(
+            m <- update(m, . ~ xl, control = list(maxit = i))
+          )
+        }
+      }
+    } else xl
+
+  }
+
+  ## Apply recursively
+  rMapply(glt, x)
+
+}
+
+
+#' @title Get Model Response Variable
+#' @description Extract the response variable from a fitted model on the
+#'   original or link scale.
+#' @param mod A fitted model object, or a list or nested list of such objects.
+#' @param data An optional dataset used to first re-fit the model(s).
+#' @param link Logical. If \code{TRUE}, return the GLM response variable on the
+#'   link scale (see Details).
+#' @param ... Arguments to \code{glt} (not including \code{family}, which is
+#'   determined from \code{mod}).
+#' @details \code{getY} will return the response variable from a model by
+#'   summing the fitted values and the response residuals. If \code{link = TRUE}
+#'   and the model is a GLM, the response is returned on the link scale. If this
+#'   results in undefined values, it is replaced by an estimate based on the
+#'   'working' response variable of the GLM (see \code{\link[semEff]{glt}}).
+#' @return A numeric vector comprising the response variable on the original or
+#'   link scale, or an array, list of vectors/arrays, or nested list.
+#' @examples
+#' ## All SEM responses (original scale)
+#' getY(Shipley.SEM)
+#'
+#' ## Estimated response in link scale from binomial model
+#' getY(Shipley.SEM$Live, link = TRUE)
+#' @export
+getY <- function(mod, data = NULL, link = FALSE, ...) {
+
+  m <- mod; d <- data
 
   ## Function
   getY <- function(m) {
 
     ## Update model with any supplied data
-    mod <- isMod(m)
-    if (mod && !is.null(d)) {
-      m <- eval(update(m, data = d, evaluate = FALSE))
-    }
+    if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Model response
-    y <- if (mod) {
-      y <- fitted(m) + resid(m, "response")
-      w <- weights(m)
-      if (!is.null(w)) y[w > 0] else y
-    } else {
-      y <- as.numeric(m)
-      setNames(y, names(m))
-    }
+    y <- fitted(m) + resid(m, "response")
+    w <- weights(m)
+    if (!is.null(w)) y <- y[w > 0]
     a <- names(attributes(y))
     attributes(y)[a != "names"] <- NULL
 
-    ## Return in original or link scale
-    if (isGlm(m) && link || !mod && !is.null(f)) {
+    ## Return on original or link scale
+    if (isGlm(m) && link) {
 
       ## Error family
-      if (is.character(f)) {
-        f <- get(f, mode = "function", envir = parent.frame())
-      }
-      if (is.function(f)) f <- f()
-      if (is.null(f)) {
-        f <- if (isBet(m)) m$link$mean else family(m)
-      }
+      f <- if (isBet(m)) m$link$mean else family(m)
 
-      ## Transform response to link scale
-      yl <- f$linkfun(y)
-
-      ## Return the transformed or working response
-      if (any(is.infinite(yl))) {
-        y2 <- y
-        suppressWarnings(
-          m <- do.call(glm, list(y ~ y2, family = f, control = list(maxit = 1),
-                                 na.action = na.exclude))
-        )
-        i <- 0
-        repeat {
-          yl <- predict(m) + resid(m, "working")
-          yli <- f$linkinv(yl)
-          eql <- isTRUE(all.equal(y, yli, check.names = FALSE))
-          if (eql) return(yl) else {
-            i <- i + 1
-            suppressWarnings(
-              m <- update(m, . ~ yl, control = list(maxit = i))
-            )
-          }
-        }
-      } else yl
+      ## Response on link scale
+      glt(y, family = f, ...)
 
     } else y
 
@@ -447,55 +464,6 @@ getY <- function(mod, data = NULL, link = FALSE, family = NULL, ...) {
 
   ## Apply recursively
   rMapply(getY, m)
-
-}
-
-
-#' @title Generalised Link Transformation
-#' @description Transform a numeric vector using a GLM link function.
-#' @param x a positive numeric vector, corresponding to a variable to be
-#'   transformed. Can also be a list or nested list of such objects.
-#' @param family Optional, the error distribution family containing the link
-#'   function which will be used to transform \code{x} (see
-#'   \code{\link[stats]{family}} for specification details).
-#' @details \code{glt} can be used to provide a 'generalised' transformation for
-#'   a numeric vector based on a GLM link function. It is generalised in the
-#'   sense that the transformation can always be produced, even where a normal
-#'   link transformation would produce undefined values. The function is
-#'   essentially a convenient shortcut to \code{getY(x, family = family)}, where
-#'   \code{x} is the (positive) vector and \code{family} is the error
-#'   distribution family. If the latter is not specified (default), then it is
-#'   determined (roughly) from \code{x}, with \code{binomial(link = "logit")}
-#'   used when all x <= 1 and \code{poisson(link = "log")} otherwise.
-#'
-#'   Although the function is generally intended for binomial or poisson
-#'   variables, any variable which can be fit using \code{glm} can be supplied.
-#' @return A numeric vector of the transformed values, or an array, list of
-#'   vectors/arrays, or nested list.
-#' @seealso \code{\link[semEff]{getY}}
-#' @export
-glt <- function(x, family = NULL) {
-
-  f <- family
-
-  ## Function
-  glt <- function(x) {
-
-    if (!is.numeric(x))
-      stop("'x' must be a numeric vector.")
-
-    ## Family containing link function (binomial = logit, poisson = log)
-    if (is.null(f)) {
-      f <- if (all(x <= 1)) binomial() else poisson()
-    }
-
-    ## Transformation
-    getY(x, family = f)
-
-  }
-
-  ## Apply recursively
-  rMapply(glt, x)
 
 }
 

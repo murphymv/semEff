@@ -3,12 +3,13 @@
 New features:
 
 * Support for mixed models of class "lmerModLmerTest"
-* New function 'glt' for calculating link transformations for non-gaussian
-variables
+* New function 'glt', for calculating 'generalised' link transformations for
+non-gaussian variables
 
 Other changes:
 
-* Minor changes to argument order in 'bootEff' and 'getY'
+* Transfer of some functionality from 'getY' to 'glt'
+* Minor changes to arguments in 'bootEff' and 'getY'
 * Added ability in 'stdCoeff' to use variables not present in the model design
 matrix (e.g. a 'missing' main effect for an interaction)
 * Added ability to pass a boot object (from 'bootEff') to the 'effects' argument
