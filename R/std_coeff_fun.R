@@ -459,8 +459,8 @@ getY <- function(mod, data = NULL, link = FALSE, family = NULL, ...) {
 #'   function which will be used to transform \code{x} (see
 #'   \code{\link[stats]{family}} for specification details).
 #' @details \code{glt(x)} is a shortcut to \code{getY(x, family = family)},
-#'   where \code{x} is a positive numeric vector and \code{family} is its error
-#'   distribution family. If this is not specified (default), then it is
+#'   where \code{x} is a positive numeric vector and \code{family} is the error
+#'   distribution family. If the latter is not specified (default), then it is
 #'   determined (roughly) from \code{x}, with \code{binomial(link = "logit")}
 #'   used when all x <= 1 and \code{poisson(link = "log")} otherwise. If the
 #'   transformation results in undefined values, an estimate based on the
@@ -471,7 +471,6 @@ getY <- function(mod, data = NULL, link = FALSE, family = NULL, ...) {
 #'   variables, any variable which can be fit using \code{glm} can be supplied.
 #' @return A numeric vector of the transformed values, or an array, list of
 #'   vectors/arrays, or nested list.
-#' @seealso \code{\link[stats]{glm}}
 #' @export
 glt <- function(x, family = NULL) {
 
