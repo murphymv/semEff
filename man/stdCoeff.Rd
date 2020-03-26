@@ -14,6 +14,7 @@ stdCoeff(
   std.x = TRUE,
   std.y = TRUE,
   unique.x = TRUE,
+  refit.x = TRUE,
   r.squared = FALSE,
   ...
 )
@@ -41,6 +42,9 @@ standard deviations of variables.}
 \item{unique.x}{Logical, whether coefficients should be adjusted for
 multicollinearity among predictors.}
 
+\item{refit.x}{Logical, whether the model should be re-fit with centred
+predictors.}
+
 \item{r.squared}{Logical, whether R-squared values should also be returned.}
 
 \item{...}{Arguments to \code{R2}.}
@@ -55,27 +59,28 @@ Calculate fully standardised model coefficients in standard
 }
 \details{
 \code{stdCoeff} will calculate fully standardised coefficients in
-  standard deviation units for linear, generalised linear, and mixed models.
-  It achieves this via adjusting the 'raw' model coefficients, so no
-  standardisation of input variables is required beforehand. Users can simply
-  specify the model with all variables in their original units and the
-  function will do the rest. However, the user is free to scale and/or centre
-  any input variables should they choose, which should not affect the outcome
-  of standardisation (provided any scaling is by standard deviations). This
-  may be desirable in some cases, such as to increase numerical stability
-  during model fitting when variables are on widely different scales.
+  standard deviation units for a fitted model or list of models. It achieves
+  this via adjusting the 'raw' model coefficients, so no standardisation of
+  input variables is required beforehand. Users can simply specify the model
+  with all variables in their original units and the function will do the
+  rest. However, the user is free to scale and/or centre any input variables
+  should they choose, which should not affect the outcome of standardisation
+  (provided any scaling is by standard deviations). This may be desirable in
+  some cases, such as to increase numerical stability during model fitting
+  when variables are on widely different scales.
 
   If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, model estimates
   will be calculated as if all predictors (x) and/or the response variable
-  (y) were mean-centred prior to model-fitting. Thus, for an ordinary linear
-  model where centring of x and y is specified, the intercept will be zero -
-  the mean (or weighted mean) of y. In addition, if \code{cen.x = TRUE} and
-  there are interacting terms in the model, all coefficients for lower order
-  terms of the interaction are adjusted using an expression which ensures
-  that each main effect or lower order term is estimated at the mean values
-  of the terms they interact with (zero in a 'centred' model) - typically
-  improving the interpretation of coefficients. The expression used comprises
-  a weighted sum of all the coefficients that contain the lower order term,
+  (y) were mean-centred prior to model-fitting (including any dummy variables
+  arising from categorical predictors). Thus, for an ordinary linear model
+  where centring of x and y is specified, the intercept will be zero - the
+  mean (or weighted mean) of y. In addition, if \code{cen.x = TRUE} and there
+  are interacting terms in the model, all coefficients for lower order terms
+  of the interaction are adjusted using an expression which ensures that each
+  main effect or lower order term is estimated at the mean values of the
+  terms they interact with (zero in a 'centred' model) - typically improving
+  the interpretation of coefficients. The expression used comprises a
+  weighted sum of all the coefficients that contain the lower order term,
   with the weight for the term itself being zero and those for 'containing'
   terms being the product of the means of the other variables involved in
   that term (i.e. those not in the lower order term itself). For example, for
@@ -98,13 +103,13 @@ Calculate fully standardised model coefficients in standard
   standard deviations of predictor variables (or terms), while if \code{std.y
   = TRUE} they are divided by the standard deviation of the response. If the
   model is a GLM, this latter is calculated using the link-transformed
-  response (or its estimate) generated using the function \code{getY}. If
-  both arguments are true, the coefficients are regarded as 'fully'
+  response (or an estimate of same) generated using the function \code{getY}.
+  If both arguments are true, the coefficients are regarded as 'fully'
   standardised in the traditional sense, often referred to as 'betas'.
 
   If \code{unique.x = TRUE} (default), coefficients are adjusted for
   multicollinearity among predictors by dividing by the square root of the
-  VIF's (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
+  VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
   standardised by the standard deviations of x and y, this converts them to
   semipartial correlations, i.e. the correlation between the unique
   components of predictors (residualised on other predictors) and the
@@ -112,17 +117,25 @@ Calculate fully standardised model coefficients in standard
   interpretable and useful than the traditional standardised coefficient, as
   it is always estimated independent of other predictors and so can more
   readily be compared both within and across models. Values range from zero
-  (no effect) to +/-1 (perfect relationship), rather than from zero to +/-
-  infinity (as in the case of betas) - putting them on the same scale as the
-  bivariate correlation between predictor and response. In the case of GLM's
-  however, the measure is analogous but not exactly equal to the semipartial
-  correlation, so its values may not be always be bound between +/-1 (such
-  cases are likely rare). Crucially, for ordinary linear models, the square
-  of the semipartial correlation equals the increase in R-squared when that
-  variable is added last in the model - directly linking the measure to model
-  fit and 'variance explained'. See
+  to +/-1 rather than +/- infinity (as in the case of betas) - putting them
+  on the same scale as the bivariate correlation between predictor and
+  response. In the case of GLMs however, the measure is analogous but not
+  exactly equal to the semipartial correlation, so its values may not always
+  be bound between +/-1 (such cases are likely rare). Crucially, for ordinary
+  linear models, the square of the semipartial correlation equals the
+  increase in R-squared when that variable is added last in the model -
+  directly linking the measure to model fit and 'variance explained'. See
   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
-   for additional arguments in favour of the use of semipartial correlations.
+  for additional arguments in favour of the use of semipartial correlations.
+
+  If \code{refit.x = TRUE}, the model will be re-fit with any (newly-)centred
+  continuous predictors. This will occur (and will normally be desired) when
+  \code{cen.x} and \code{unique.x} are \code{TRUE} and there are interaction
+  terms in the model, in order to calculate correct VIFs from the var-cov
+  matrix. However, re-fitting may not be necessary in some cases - for
+  example where predictors have already been centred (and whose values will
+  not subsequently be resampled during bootstrapping) - and disabling this
+  option may save time with larger models and/or bootstrap runs.
 
   If \code{r.squared = TRUE}, R-squared values are also returned via the
   \code{R2} function.
@@ -143,7 +156,8 @@ stdCoeff(m, cen.x = FALSE, cen.y = FALSE)  # standardised only
 stdCoeff(m, r.squared = TRUE)  # add R-squared
 
 ## Demonstrate equality with manually-standardised variables (gaussian)
-m <- Shipley.Growth[[3]]
+# m <- Shipley.Growth[[3]]
+m <- lm(Growth ~ Date + DD + lat, data = Shipley)
 d <- data.frame(scale(na.omit(Shipley)))
 b1 <- stdCoeff(m, unique.x = FALSE)
 b2 <- coef(summary(update(m, data = d)))[, 1]

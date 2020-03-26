@@ -355,8 +355,8 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
             if (is.B) {
               I <- B$t[, isInt(colnames(B$t)), drop = FALSE]
               eb <- cbind(I, e)
-              an <- c("sim", "seed", "n")
-              attributes(eb)[an] <- attributes(B$t)[an]
+              a <- c("sim", "seed", "n")
+              attributes(eb)[a] <- attributes(B$t)[a]
               eb
             } else {
               I <- B$t0[isInt(names(B$t0))]
@@ -470,7 +470,8 @@ totEff <- function(...) {
 #'   \code{mod}.
 #' @param effects A numeric vector of effects to predict, or a list or nested
 #'   list of such vectors. These will typically have been calculated using
-#'   \code{semEff}, \code{bootEff}, or \code{stdCoeff}.
+#'   \code{semEff}, \code{bootEff}, or \code{stdCoeff}. Alternatively, a boot
+#'   object produced by \code{bootEff} can be supplied.
 #' @param eff.boot A matrix of bootstrapped effects used to calculate confidence
 #'   intervals for predictions, or a list or nested list of such matrices. These
 #'   will have been calculated using \code{semEff} or \code{bootEff}.
@@ -478,7 +479,7 @@ totEff <- function(...) {
 #'   random effects to condition on when predicting effects. Defaults to
 #'   \code{NA}, meaning random effects are averaged over. See
 #'   \code{\link[lme4]{predict.merMod}} for further specification details.
-#' @param type The type of prediction to return (for GLM's). Can be either
+#' @param type The type of prediction to return (for GLMs). Can be either
 #'   \code{"link"} (default) or \code{"response"}.
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on predictions (and any interactive effects).
@@ -509,8 +510,8 @@ totEff <- function(...) {
 #'   with values for predictors drawn either from the data used to fit the
 #'   original model(s) (\code{mod}) or from \code{newdata}. It is assumed that
 #'   effects are fully standardised; however, if this is not the case, then the
-#'   same arguments originally specified to \code{stdCoeff} should be
-#'   re-specified - which will then be used to standardise the data. If no
+#'   same standardisation options originally specified to \code{stdCoeff} should
+#'   be re-specified - which will then be used to standardise the data. If no
 #'   effects are supplied, standardised model coefficients will be calculated
 #'   and used to generate predictions. These will equal the model(s) fitted
 #'   values if \code{newdata = NULL}, \code{unique.x = FALSE}, and \code{re.form
@@ -525,15 +526,16 @@ totEff <- function(...) {
 #'   the contribution of random effects will be taken from the single model
 #'   instead of (correctly) being averaged over a candidate set.
 #'
-#'   If bootstrapped effects are supplied to \code{eff.boot}, bootstrapped
-#'   predictions are calculated by predicting from each effect. Confidence
-#'   intervals can then be returned, for which the \code{type} should be
-#'   appropriate for the original form of bootstrap sampling (defaults to
-#'   \code{"bca"}). If the number of observations to predict is very large,
-#'   parallel processing may speed up the calculation of intervals.
+#'   If bootstrapped effects are supplied to \code{eff.boot} (or to
+#'   \code{effects} as part of a boot object), bootstrapped predictions are
+#'   calculated by predicting from each effect. Confidence intervals can then be
+#'   returned, for which the \code{type} should be appropriate for the original
+#'   form of bootstrap sampling (defaults to \code{"bca"}). If the number of
+#'   observations to predict is very large, parallel processing may speed up the
+#'   calculation of intervals.
 #'
 #'   Predictions are always returned in the original (typically unstandardised)
-#'   units of the (link-)response variable. For GLM's, they can be returned in
+#'   units of the (link-)response variable. For GLMs, they can be returned in
 #'   the response scale if \code{type = "response"}.
 #'
 #'   Additionally, if the name of an interactive effect is supplied to
@@ -641,6 +643,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
     ## Effects
     if (is.null(e)) e <- do.call(stdCoeff, c(list(m, w), a))
+    if (isBoot(e)) {eb <- e$t; e <- e$t0}
     e <- e[!is.na(e) & !isR2(names(e))]
 
     ## Effect names
@@ -688,18 +691,23 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     if (is.null(o)) o <- 0
     o <- o - om
 
-    ## Predictor means/SD's
-    x <- sapply(en, function(i) {
+    ## Predictors (model matrix + data)
+    x <- rMapply(function(i) model.matrix(i, data = d), m, SIMPLIFY = FALSE)
+    if (isList(x)) x <- do.call(cbind, unname(x))
+    x <- cbind(x[obs, ], Filter(is.numeric, d))
+    x <- sapply(unique(names(x)), function(i) {
       if (!isInt(i)) {
         pT <- function(j) parse(text = j)
         if (isInx(i)) {
-          xi <- sapply(pT(EN[[i]]), eval, d)
+          xi <- sapply(pT(EN[[i]]), eval, x)
           if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
           apply(xi, 1, prod)
-        } else eval(pT(i), d)
+        } else eval(pT(i), x)
       } else 1
     }, simplify = FALSE)
     x <- data.frame(x, row.names = obs, check.names = FALSE)
+
+    ## Predictor means/SDs
     xm <- sapply(x, function(i) if (cen.x) mean(i) else 0)
     xmw <- sapply(x, function(i) if (cen.x) weighted.mean(i, w) else 0)
     xs <- sapply(x, function(i) if (std.x) sdW(i, w) else 1)
@@ -709,7 +717,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ym <- if (cen.y) lF(weighted.mean(getY(m1), w)) else 0
     ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
 
-    ## Data to predict (standardise using original means/SD's)
+    ## Data to predict (standardise using original means/SDs)
     d <- if (!is.null(nd)) data.frame(nd) else x
     obs <- rownames(d)
     d <- sapply(en, function(i) {

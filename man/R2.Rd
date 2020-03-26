@@ -35,7 +35,7 @@ Calculate R-squared or pseudo R-squared for a fitted model,
 }
 \details{
 Various approaches to the calculation of a goodness-of-fit measure
-  for GLM's analogous to R-squared in the ordinary linear model have been
+  for GLMs analogous to R-squared in the ordinary linear model have been
   proposed. Generally termed 'pseudo R-squared' measures, they include
   variance-based, likelihood-based, and distribution-specific approaches.
   Here however, a more straightforward definition is used, which can be
@@ -108,7 +108,7 @@ Caution must be exercised in interpreting the values of any pseudo
   comparing the measures to their equivalents from ordinary linear models.
   This is particularly the case for the adjusted and predicted versions,
   which have previously only been defined for ordinary linear models, and
-  which could be described as 'approximations to approximations' of what they
+  which could be described as 'approximations of approximations' of what they
   intend to measure. For example, for the adjusted R-squared for mixed
   models, it's not entirely clear what the sample size (n) in the formula
   should represent - the no. of observations? independent groups? something
@@ -137,7 +137,7 @@ d <- na.omit(Shipley)
 # m <- lm(Live ~ Date + DD + lat, d)
 m <- glm(Live ~ Date + DD + lat, binomial, d)
 
-## Manual cv predictions (leave-one-out)
+## Manual CV predictions (leave-one-out)
 cvf1 <- sapply(1:nrow(d), function(i) {
   m.ni <- update(m, data = d[-i, ])
   predict(m.ni, d[i, ], type = "response")
@@ -148,7 +148,7 @@ y <- getY(m)
 f <- fitted(m)
 cvf2 <- y - (y - f) / (1 - hatvalues(m))
 
-## Compare predictions (not exactly equal for GLM's)
+## Compare predictions (not exactly equal for GLMs)
 all.equal(cvf1, cvf2)
 # lm: TRUE; glm: "Mean relative difference: 1.977725e-06"
 cor(cvf1, cvf2)
@@ -161,7 +161,7 @@ cor(cvf1, cvf2)
 # matrix) to estimate CV predictions shouldn't generalise (roughly?) to the
 # mixed model case. In any case, users should exercise the appropriate
 # caution in interpretation of the predicted R-squared for mixed models,
-# especially GLMM's.
+# especially GLMMs.
 }
 \references{
 Allen, D. M. (1974). The Relationship Between Variable Selection

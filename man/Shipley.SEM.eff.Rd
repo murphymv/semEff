@@ -4,8 +4,10 @@
 \name{Shipley.SEM.Eff}
 \alias{Shipley.SEM.Eff}
 \title{Effects for Shipley SEM}
-\format{A list object of class \code{"semEff"}, containing SEM effects and
-  summary tables.}
+\format{
+A list object of class \code{"semEff"}, containing SEM effects and
+  summary tables.
+}
 \usage{
 Shipley.SEM.Eff
 }

@@ -6,11 +6,11 @@
 \usage{
 bootEff(
   mod,
+  R = 10000,
+  seed = NULL,
   data = NULL,
   ran.eff = NULL,
   cor.err = NULL,
-  R = 10000,
-  seed = NULL,
   catch.err = TRUE,
   parallel = "snow",
   ncpus = NULL,
@@ -22,6 +22,11 @@ bootEff(
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
+\item{R}{Number of bootstrap replicates to generate.}
+
+\item{seed}{Seed for the random number generator. If not provided, a random
+five-digit integer is used (see Details).}
+
 \item{data}{An optional dataset used to first re-fit the model(s).}
 
 \item{ran.eff}{For mixed models with nested random effects, the name of the
@@ -32,11 +37,6 @@ effects, specify \code{"crossed"}. Non-specification of this argument when
 \item{cor.err}{Optional, names of SEM correlated errors to be bootstrapped.
 Should be of the form: \code{c("mod1 ~~ mod2", "mod3 ~~ mod4", ...)}
 (spaces optional), with names matching model names.}
-
-\item{R}{Number of bootstrap replicates to generate.}
-
-\item{seed}{Seed for the random number generator. If not provided, a random
-five-digit integer is used (see Details).}
 
 \item{catch.err}{Logical, should errors generated during model fitting or
 estimation be caught and \code{NA} returned for estimates? If \code{FALSE},
