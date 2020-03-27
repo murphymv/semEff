@@ -38,7 +38,7 @@ This is essentially a wrapper for \code{boot.ci} from the \pkg{boot}
   calculated from bootstrapped model effects. If a model or models is
   supplied, bootstrapping will first be performed via \code{bootEff}. Effects
   for which the confidence intervals do not contain zero are highlighted with
-  a star.
+  an asterix.
 
   Nonparametric bias-corrected and accelerated confidence intervals
   (BC\emph{a}, Efron 1987) are calculated by default, which should provide

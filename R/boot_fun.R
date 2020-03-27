@@ -163,7 +163,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
       all(i %in% names(m)) && all(i %in% names(w))
     })]
     if (length(cv) < 1)
-      stop("Names of var(s) with correlated errors missing from list of models and/or weights.")
+      stop("Names of variable(s) with correlated errors missing from list of models and/or weights.")
   }
 
   ## Mixed models?
@@ -370,8 +370,14 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
               d[d[, re] == j, ]
             }))
           } else x[i, ]
-          m1 <- rMapply(function(i) update(i, data = xi), m1, SIMPLIFY = FALSE)
-          m2 <- rMapply(function(i) update(i, data = xi), m2, SIMPLIFY = FALSE)
+          # m1 <- rMapply(function(i) update(i, data = xi), m1, SIMPLIFY = FALSE)
+          # m2 <- rMapply(function(i) update(i, data = xi), m2, SIMPLIFY = FALSE)
+          m1 <- rMapply(function(i) {
+            eval(update(i, data = xi, evaluate = FALSE))
+          }, m1, SIMPLIFY = FALSE)
+          m2 <- rMapply(function(i) {
+            eval(update(i, data = xi, evaluate = FALSE))
+          }, m2, SIMPLIFY = FALSE)
           r1 <- res(m1, w1)
           r2 <- res(m2, w2)
           cor(r1, r2)
@@ -455,7 +461,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 #'   calculated from bootstrapped model effects. If a model or models is
 #'   supplied, bootstrapping will first be performed via \code{bootEff}. Effects
 #'   for which the confidence intervals do not contain zero are highlighted with
-#'   a star.
+#'   an asterix.
 #'
 #'   Nonparametric bias-corrected and accelerated confidence intervals
 #'   (BC\emph{a}, Efron 1987) are calculated by default, which should provide
