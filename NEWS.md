@@ -1,3 +1,10 @@
+## semEff 0.3.0.9000
+
+Bugs fixed:
+
+* 'bootEff' specified with correlated errors failed for mixed models of class
+"lmerModLmerTest" (issue with 'update' inside the function)
+
 ## semEff 0.3.0
 
 New features:
