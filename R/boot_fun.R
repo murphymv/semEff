@@ -373,10 +373,10 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
           # m1 <- rMapply(function(i) update(i, data = xi), m1, SIMPLIFY = FALSE)
           # m2 <- rMapply(function(i) update(i, data = xi), m2, SIMPLIFY = FALSE)
           m1 <- rMapply(function(i) {
-            eval(update(i, data = xi, evaluate = FALSE))
+            eval(update(i, data = xi))
           }, m1, SIMPLIFY = FALSE)
           m2 <- rMapply(function(i) {
-            eval(update(i, data = xi, evaluate = FALSE))
+            eval(update(i, data = xi))
           }, m2, SIMPLIFY = FALSE)
           r1 <- res(m1, w1)
           r2 <- res(m2, w2)
