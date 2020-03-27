@@ -201,7 +201,9 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 
   ## Update models with any supplied data
   if (!is.null(d)) {
-    m <- rMapply(function(i) update(i, data = d), m, SIMPLIFY = FALSE)
+    m <- rMapply(function(i) {
+      eval(update(i, data = d, evaluate = FALSE))
+    }, m, SIMPLIFY = FALSE)
   }
 
   ## Set up parallel processing
@@ -357,8 +359,12 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
         x <- if (mer) unique(d[re]) else d
       } else {
         if (!all(o)) {
-          m1 <- rMapply(function(i) update(i, data = d), m1, SIMPLIFY = FALSE)
-          m2 <- rMapply(function(i) update(i, data = d), m2, SIMPLIFY = FALSE)
+          m1 <- rMapply(function(i) {
+            eval(update(i, data = d, evaluate = FALSE))
+          }, m1, SIMPLIFY = FALSE)
+          m2 <- rMapply(function(i) {
+            eval(update(i, data = d, evaluate = FALSE))
+          }, m2, SIMPLIFY = FALSE)
         }
       }
 
@@ -370,13 +376,11 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
               d[d[, re] == j, ]
             }))
           } else x[i, ]
-          # m1 <- rMapply(function(i) update(i, data = xi), m1, SIMPLIFY = FALSE)
-          # m2 <- rMapply(function(i) update(i, data = xi), m2, SIMPLIFY = FALSE)
           m1 <- rMapply(function(i) {
-            eval(update(i, data = xi))
+            eval(update(i, data = xi, evaluate = FALSE))
           }, m1, SIMPLIFY = FALSE)
           m2 <- rMapply(function(i) {
-            eval(update(i, data = xi))
+            eval(update(i, data = xi, evaluate = FALSE))
           }, m2, SIMPLIFY = FALSE)
           r1 <- res(m1, w1)
           r2 <- res(m2, w2)
