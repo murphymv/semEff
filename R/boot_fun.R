@@ -201,13 +201,10 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 
   ## Update models with any supplied data
   upd <- function(m, d) {
-    rMapply(function(i) {
-      eval(update(i, data = d, evaluate = FALSE))
-    }, m, SIMPLIFY = FALSE)
+    f <- function(i) eval(update(i, data = d, evaluate = FALSE))
+    rMapply(f, m, SIMPLIFY = FALSE)
   }
-  if (!is.null(d)) {
-    m <- rMapply(upd, m, SIMPLIFY = FALSE)
-  }
+  if (!is.null(d)) m <- upd(m, d)
 
   ## Set up parallel processing
   if (p != "no") {
@@ -361,10 +358,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
       if (!mer2) {
         x <- if (mer) unique(d[re]) else d
       } else {
-        if (!all(o)) {
-          m1 <- rMapply(upd, m1, SIMPLIFY = FALSE)
-          m2 <- rMapply(upd, m2, SIMPLIFY = FALSE)
-        }
+        if (!all(o)) {m1 <- upd(m1, d); m2 <- upd(m2, d)}
       }
 
       ## Bootstrap statistic (s)
@@ -375,12 +369,8 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
               d[d[, re] == j, ]
             }))
           } else x[i, ]
-          # m1 <- rMapply(upd, m1, SIMPLIFY = FALSE)
-          # m2 <- rMapply(upd, m2, SIMPLIFY = FALSE)
-          m1 <- upd(m1, xi)
-          m2 <- upd(m2, xi)
-          r1 <- res(m1, w1)
-          r2 <- res(m2, w2)
+          r1 <- res(upd(m1, xi), w1)
+          r2 <- res(upd(m2, xi), w2)
           cor(r1, r2)
         }
       } else res
