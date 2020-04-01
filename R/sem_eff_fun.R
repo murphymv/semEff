@@ -387,7 +387,10 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
           } else ""
         })))
         e <- format(e, nsmall = digits)
-        rbind(e, " " = stars)
+        e <- rbind(e, " " = stars)
+        attr(e, "ci.conf") <- ci.conf
+        attr(e, "ci.type") <- ci.type
+        e
       } else NA
     })
   })

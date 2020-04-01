@@ -176,7 +176,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     if (int) xn <- c("(Intercept)", xn)
 
     ## Coefficients
-    b <- summary(m)$coef
+    b <- coef(summary(m))
     b <- as.matrix(if (isList(b)) b[[1]] else b)
     bn <- rownames(b)
 
@@ -248,23 +248,24 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'   \code{\link[stats]{family}} for specification details). If not supplied, it
 #'   is determined from \code{x} (see Details).
 #' @param force.est Logical, whether to force the return of the estimated rather
-#'   than direct transformation, where the latter can be produced (i.e. does not
+#'   than direct transformation, where the latter is available (i.e. does not
 #'   contain undefined values).
 #' @param ... Not currently used.
 #' @details \code{glt} can be used to provide a 'generalised' transformation of
 #'   a numeric variable using the link function from a generalised linear model
-#'   (GLM). The transformation is generalised in the sense that it can always be
-#'   produced, even where a standard link transformation would produce undefined
-#'   values. It achieves this via an estimate based on the 'working' response
-#'   variable of the GLM (see below). If the error distribution \code{family} is
-#'   not specified (default), then it is determined (roughly) from \code{x},
-#'   with \code{binomial(link = "logit")} used when all x <= 1 and
-#'   \code{poisson(link = "log")} otherwise. Although the function is generally
-#'   intended for binomial or poisson variables, any variable which can be fit
-#'   using \code{glm} can be supplied. One of the key purposes of \code{glt} is
-#'   to allow the calculation of fully standardised model coefficients for GLMs
-#'   (in which case \code{x} = the response variable), while it can also
-#'   facilitate the proper calculation of SEM indirect effects (see below).
+#'   (GLM) fit to the variable. The transformation is generalised in the sense
+#'   that it can always be generated, even where a standard link transformation
+#'   would produce undefined values. It achieves this via an estimate based on
+#'   the 'working' response variable of the GLM (see below). If the error
+#'   distribution \code{family} is not specified (default), then it is
+#'   determined (roughly) from \code{x}, with \code{binomial(link = "logit")}
+#'   used when all x <= 1 and \code{poisson(link = "log")} otherwise. Although
+#'   the function is generally intended for binomial or poisson variables, any
+#'   variable which can be fit using \code{glm} can be supplied. One of the key
+#'   purposes of \code{glt} is to allow the calculation of fully standardised
+#'   model coefficients for GLMs (in which case \code{x} = the response
+#'   variable), while it can also facilitate the proper calculation of SEM
+#'   indirect effects (see below).
 #'
 #'   \strong{Estimating the link transformation}
 #'
@@ -274,22 +275,23 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'   response variable in the link scale. This is because directly transforming
 #'   the response will often produce undefined values. Although methods for
 #'   circumventing this issue by indirectly estimating the variance of the
-#'   link-transformed response have been proposed - including a latent-theoretic
-#'   approach for binomial models (McKelvey & Zavoina 1975) and a more general
-#'   variance-based method using a pseudo R-squared (Menard 2011) - here an
-#'   alternative approach is used. Where transformed values are undefined, the
-#'   function will instead return the synthetic 'working' response from the
-#'   iteratively reweighted least squares algorithm (IRLS) of the GLM (McCullagh
-#'   & Nelder 1989). This is reconstructed as the sum of the linear predictor
-#'   and the working residuals - with the latter comprising the error of the
-#'   model in the link scale. The advantage of this approach is that a
-#'   relatively straightforward 'transformation' of any non-gaussian response is
-#'   readily attainable in all cases. The standard deviation (or other relevant
-#'   range) can then be calculated using values of the transformed response and
-#'   used to scale the coefficients. An additional benefit for piecewise SEMs is
-#'   that the transformed rather than original response can then be specified as
-#'   a predictor in other models, ensuring that standardised indirect and total
-#'   effects are calculated correctly (i.e. using the same units).
+#'   response on the link scale have been proposed - including a
+#'   latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
+#'   a more general variance-based method using a pseudo R-squared (Menard 2011)
+#'   - here an alternative approach is used. Where transformed values are
+#'   undefined, the function will instead return the synthetic 'working'
+#'   response from the iteratively reweighted least squares algorithm (IRLS) of
+#'   the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
+#'   linear predictor and the working residuals - with the latter comprising the
+#'   error of the model on the link scale. The advantage of this approach is
+#'   that a relatively straightforward 'transformation' of any non-gaussian
+#'   response is readily attainable in all cases. The standard deviation (or
+#'   other relevant range) can then be calculated using values of the
+#'   transformed response and used to scale the coefficients. An additional
+#'   benefit for piecewise SEMs is that the transformed rather than original
+#'   response can be specified as a predictor in other models, ensuring that
+#'   standardised indirect and total effects are calculated correctly (i.e.
+#'   using the same units).
 #'
 #'   To ensure a high level of 'accuracy' in the working response - in the sense
 #'   that the inverse-transformation is practically indistinguishable from the
@@ -300,7 +302,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'   original response variable as both predictor and response, and using a
 #'   single IWLS iteration. \item The working response is extracted from this
 #'   model. \item The inverse transformation of the working response is then
-#'   calculated. \item If the inverse transformation is 'effectively' equal to
+#'   calculated. \item If the inverse transformation is 'effectively equal' to
 #'   the original response (tested using \code{all.equal}), the working response
 #'   is returned; otherwise, the GLM is re-fit with the working response now as
 #'   the predictor, and steps 2-4 are repeated - each time with an additional
@@ -308,7 +310,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
 #'
 #'   This approach will generate a very reasonable transformation of the
 #'   response variable, which will also be practically indistinguishable from
-#'   the direct transformation (where this can be compared - see Examples). It
+#'   the direct transformation where this can be compared (see Examples). It
 #'   also ensures that the transformed values, and hence the standard deviation,
 #'   are the same for any GLM fitting the same response - provided it uses the
 #'   same link function - facilitating model comparisons, selection, and
@@ -613,7 +615,7 @@ VIF <- function(mod, data = NULL, ...) {
 #'   of observations to parameters). Here, this is calculated via the 'Pratt'
 #'   rather than standard 'Ezekiel/Wherry' formula, shown in a previous
 #'   simulation to be the most effective of a range of existing formulas at
-#'   estimating the population R-squared, across a range of model specification
+#'   estimating the population R-squared across a range of model specification
 #'   scenarios (Yin & Fan 2001). Adjusted R-squared can be used to safeguard
 #'   against overfitting of the model to the original sample.
 #'
@@ -627,16 +629,16 @@ VIF <- function(mod, data = NULL, ...) {
 #'   leave-one-out cross-validation procedure (in a GLM they will not be exactly
 #'   equal to such predictions). The resulting R-squared is an estimate of the
 #'   R-squared that would occur were the model to be fitted to new data, and
-#'   will be lower than the original R-squared, and likely also the adjusted
-#'   R-squared - highlighting the loss of explanatory power when predicting new
-#'   data. This measure is a variant of an
+#'   will be lower than the original - and likely also the adjusted - R-squared,
+#'   highlighting the loss of explanatory power when predicting to new data.
+#'   This measure is a variant of an
 #'   \href{https://www.r-bloggers.com/can-we-do-better-than-r-squared/}{existing
 #'   one}, calculated by substituting the 'PRESS' statistic, i.e. the sum of
 #'   squares of the predicted residuals (Allen 1974), for the residual sum of
 #'   squares in the classic R-squared formula.
 #'
 #'   For mixed models, the function will, by default, calculate all R-squared
-#'   metrics using fitted values incorporating both the fixed and random
+#'   measures using fitted values incorporating both the fixed and random
 #'   effects, thus encompassing all variation captured by the model. This is
 #'   equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017).
 #'   To include only some or no random effects, simply set the appropriate
@@ -733,16 +735,16 @@ VIF <- function(mod, data = NULL, ...) {
 #'
 #' # NOTE: comparison not tested here for mixed models, as hierarchical data can
 #' # complicate the choice of an appropriate leave-one-out procedure. However,
-#' # there is no reason why use of the leverage values (diagonals of the hat
-#' # matrix) to estimate CV predictions shouldn't generalise (roughly?) to the
-#' # mixed model case. In any case, users should exercise the appropriate
+#' # there is no obvious reason why use of the leverage values (diagonals of the
+#' # hat matrix) to estimate CV predictions shouldn't generalise (roughly?) to
+#' # the mixed model case. In any case, users should exercise the appropriate
 #' # caution in interpretation of the predicted R-squared for mixed models,
-#' # especially GLMMs.
+#' # particularly GLMMs.
 #' @export
 R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
                ...) {
 
-  m <- mod; d <- data
+  m <- mod; d <- data; rf <- re.form
 
   ## Function
   R2 <- function(m) {
@@ -751,7 +753,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## R squared
-    b <- summary(m)$coef
+    b <- coef(summary(m))
     b <- as.matrix(if (isList(b)) b[[1]] else b)
     i <- attr(terms(m), "intercept")
     k <- nrow(b) - i
@@ -762,7 +764,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
       w <- weights(m)
       if (is.null(w)) w <- rep(1, n)
       s <- w > 0; w <- w[s]
-      f <- predict(m, type = "response", re.form = re.form)[s]
+      f <- predict(m, type = "response", re.form = rf)[s]
       R <- cov.wt(cbind(y, f), w, cor = TRUE)$cor[1, 2]
       if (is.na(R)) R <- 0
       if (R > 0) R^2 else 0
@@ -1090,7 +1092,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Coefficients
-    b <- summary(m)$coef
+    b <- coef(summary(m))
     if (isList(b)) b <- b[[1]]
     if (is.matrix(b)) b <- setNames(b[, 1], rownames(b))
     xn <- names(b)

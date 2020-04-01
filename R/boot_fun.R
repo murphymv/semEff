@@ -549,7 +549,8 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
     })))
     e <- format(e, nsmall = digits)
     e <- rbind(e, " " = stars)
-    attr(e, "seed") <- attr(B, "seed")
+    attr(e, "ci.conf") <- conf
+    attr(e, "ci.type") <- type
     e
 
   }
