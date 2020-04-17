@@ -57,7 +57,7 @@ Various approaches to the calculation of a goodness-of-fit measure
   of observations to parameters). Here, this is calculated via the 'Pratt'
   rather than standard 'Ezekiel/Wherry' formula, shown in a previous
   simulation to be the most effective of a range of existing formulas at
-  estimating the population R-squared, across a range of model specification
+  estimating the population R-squared across a range of model specification
   scenarios (Yin & Fan 2001). Adjusted R-squared can be used to safeguard
   against overfitting of the model to the original sample.
 
@@ -71,16 +71,16 @@ Various approaches to the calculation of a goodness-of-fit measure
   leave-one-out cross-validation procedure (in a GLM they will not be exactly
   equal to such predictions). The resulting R-squared is an estimate of the
   R-squared that would occur were the model to be fitted to new data, and
-  will be lower than the original R-squared, and likely also the adjusted
-  R-squared - highlighting the loss of explanatory power when predicting new
-  data. This measure is a variant of an
+  will be lower than the original - and likely also the adjusted - R-squared,
+  highlighting the loss of explanatory power when predicting to new data.
+  This measure is a variant of an
   \href{https://www.r-bloggers.com/can-we-do-better-than-r-squared/}{existing
   one}, calculated by substituting the 'PRESS' statistic, i.e. the sum of
   squares of the predicted residuals (Allen 1974), for the residual sum of
   squares in the classic R-squared formula.
 
   For mixed models, the function will, by default, calculate all R-squared
-  metrics using fitted values incorporating both the fixed and random
+  measures using fitted values incorporating both the fixed and random
   effects, thus encompassing all variation captured by the model. This is
   equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017).
   To include only some or no random effects, simply set the appropriate
@@ -157,11 +157,11 @@ cor(cvf1, cvf2)
 
 # NOTE: comparison not tested here for mixed models, as hierarchical data can
 # complicate the choice of an appropriate leave-one-out procedure. However,
-# there is no reason why use of the leverage values (diagonals of the hat
-# matrix) to estimate CV predictions shouldn't generalise (roughly?) to the
-# mixed model case. In any case, users should exercise the appropriate
+# there is no obvious reason why use of the leverage values (diagonals of the
+# hat matrix) to estimate CV predictions shouldn't generalise (roughly?) to
+# the mixed model case. In any case, users should exercise the appropriate
 # caution in interpretation of the predicted R-squared for mixed models,
-# especially GLMMs.
+# particularly GLMMs.
 }
 \references{
 Allen, D. M. (1974). The Relationship Between Variable Selection

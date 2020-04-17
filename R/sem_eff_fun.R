@@ -196,19 +196,19 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   ## Function to calculate all indirect effects for predictors
   indEff <- function(D) {
 
-    ## Function to extract names from estimates
-    eNam <- function(x) {
-      eNam <- function(i) if (is.matrix(i)) colnames(i) else names(i)
-      unique(unlist(rMapply(eNam, x)))
+    ## Function to extract effect names
+    effNam <- function(x) {
+      effNam <- function(x) if (is.matrix(x)) colnames(x) else names(x)
+      unique(unlist(rMapply(effNam, x)))
     }
 
     ## Function to multiply effects to calculate indirect effects
     ## (for each endogenous predictor on a response, multiply its effect by all
     ## direct effects on that predictor)
-    mEffs <- function(x) {
+    multEff <- function(x) {
 
       ## Function
-      mEffs <- function(x) {
+      multEff <- function(x) {
         if (is.matrix(x)) {
           x <- x[, colnames(x) %in% m, drop = FALSE]
           Map(function(i, j) {
@@ -225,13 +225,13 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
       }
 
       ## Apply recursively
-      rMapply(mEffs, x, SIMPLIFY = FALSE)
+      rMapply(multEff, x, SIMPLIFY = FALSE)
 
     }
 
     ## Function to collapse a nested list of vectors/matrices into a single
     ## vector/list of vectors
-    unl <- function(x) {
+    unlist2 <- function(x) {
       if (all(rapply(x, is.matrix))) {
         x <- rapply(x, function(i) {
           as.list(data.frame(i, check.names = FALSE))
@@ -243,13 +243,13 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
     ## Calculate indirect effects: start with last response and move backwards,
     ## repeat for n = no. of responses
     lapply(D, function(i) {
-      if (any(m %in% eNam(i))) {
+      if (any(m %in% effNam(i))) {
         I <- list()
-        I[[1]] <- mEffs(i)
+        I[[1]] <- multEff(i)
         for (j in 1:length(i)) {
-          I[[j + 1]] <- if (any(m %in% eNam(I[j]))) mEffs(I[j])
+          I[[j + 1]] <- if (any(m %in% effNam(I[j]))) multEff(I[j])
         }
-        unl(I)  # collapse results
+        unlist2(I)  # collapse results
       } else NA
     })
 
@@ -665,7 +665,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ## Random effects
     is.re <- isMer(m1) && !identical(rf, NA) && !identical(rf, ~ 0)
     re <- if (is.re) {
-      pRE <- function(i) predict(i, nd, re.form = rf, random.only = TRUE)
+      pRE <- function(x) predict(x, nd, re.form = rf, random.only = TRUE)
       re <- rMapply(pRE, m, SIMPLIFY = FALSE)
       if (isList(re)) re <- avgEst(re, w)
       if (is.null(nd)) re[obs] else re
@@ -694,21 +694,33 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     if (is.null(o)) o <- 0
     o <- o - om
 
-    ## Predictors (model matrix + data)
-    x <- rMapply(function(i) model.matrix(i, data = d), m, SIMPLIFY = FALSE)
-    if (isList(x)) x <- do.call(cbind, unname(x))
-    x <- cbind(x[obs, ], Filter(is.numeric, d))
-    x <- sapply(unique(names(x)), function(i) {
+    ## Predictors
+    # x <- rMapply(function(i) model.matrix(i, data = d), m, SIMPLIFY = FALSE)
+    # if (isList(x)) x <- do.call(cbind, unname(x))
+    # x <- cbind(x[obs, ], Filter(is.numeric, d))
+    # x <- sapply(unique(names(x)), function(i) {
+    #   if (!isInt(i)) {
+    #     pT <- function(j) parse(text = j)
+    #     if (isInx(i)) {
+    #       xi <- sapply(pT(EN[[i]]), eval, x)
+    #       if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
+    #       apply(xi, 1, prod)
+    #     } else eval(pT(i), x)
+    #   } else 1
+    # }, simplify = FALSE)
+    # x <- data.frame(x, row.names = obs, check.names = FALSE)
+    dF <- function(x, ...) data.frame(x, check.names = FALSE, ...)
+    eT <- function(x, ...) eval(parse(text = x), ...)
+    x <- dF(model.matrix(reformulate(names(d)), data = d))
+    x <- dF(sapply(en, function(i) {
       if (!isInt(i)) {
-        pT <- function(j) parse(text = j)
         if (isInx(i)) {
-          xi <- sapply(pT(EN[[i]]), eval, x)
+          xi <- sapply(EN[[i]], eT, x)
           if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
           apply(xi, 1, prod)
-        } else eval(pT(i), x)
+        } else eT(i, x)
       } else 1
-    }, simplify = FALSE)
-    x <- data.frame(x, row.names = obs, check.names = FALSE)
+    }))
 
     ## Predictor means/SDs
     xm <- sapply(x, function(i) if (cen.x) mean(i) else 0)
@@ -721,21 +733,36 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
 
     ## Data to predict (standardise using original means/SDs)
-    d <- if (!is.null(nd)) data.frame(nd) else x
-    obs <- rownames(d)
-    d <- sapply(en, function(i) {
+    # d <- if (!is.null(nd)) data.frame(nd) else x
+    # obs <- rownames(d)
+    # d <- sapply(en, function(i) {
+    #   if (!isInt(i)) {
+    #     pT <- function(j) parse(text = j)
+    #     di <- if (isInx(i)) {
+    #       ENi <- EN[[i]]
+    #       di <- sapply(pT(ENi), eval, d)
+    #       di <- sweep(di, 2, xm[ENi])
+    #       apply(di, 1, prod)
+    #     } else eval(pT(i), d)
+    #     (di - xmw[i]) / xs[i]
+    #   } else 1
+    # }, simplify = FALSE)
+    # d <- data.frame(d, row.names = obs, check.names = FALSE)
+    if (!is.null(nd)) {
+      nd <- dF(nd); obs <- rownames(nd)
+      x <- dF(model.matrix(reformulate(names(nd)), data = nd))
+    }
+    d <- dF(sapply(en, function(i) {
       if (!isInt(i)) {
-        pT <- function(j) parse(text = j)
-        di <- if (isInx(i)) {
-          ENi <- EN[[i]]
-          di <- sapply(pT(ENi), eval, d)
-          di <- sweep(di, 2, xm[ENi])
-          apply(di, 1, prod)
-        } else eval(pT(i), d)
-        (di - xmw[i]) / xs[i]
+        xi <- if (isInx(i)) {
+          j <- EN[[i]]
+          xi <- sapply(j, eT, x)
+          xi <- sweep(xi, 2, xm[j])
+          apply(xi, 1, prod)
+        } else eT(i, x)
+        (xi - xmw[i]) / xs[i]
       } else 1
-    }, simplify = FALSE)
-    d <- data.frame(d, row.names = obs, check.names = FALSE)
+    }), row.names = obs)
 
     ## Predictions
     f <- colSums(e * t(d))
@@ -774,10 +801,10 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
       ## Create dummy boot object (for CI's)
       set.seed(seed)
-      x <- data.frame(rep(1, n))  # dummy data
+      dd <- dF(rep(1, n))  # dummy data
       B <- list(
-        t0 = f, t = fb, R = R, data = x, seed = .Random.seed, sim = sim,
-        stype = "i", strata = x[, 1]
+        t0 = f, t = fb, R = R, data = dd, seed = .Random.seed, sim = sim,
+        stype = "i", strata = dd[, 1]
       )
       class(B) <- "boot"
       attr(B, "boot_type") <- "boot"
@@ -800,7 +827,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       ## Names of variables involved in interaction
       ## (ab = all, a = main, b = interacting, a.b = interaction(s))
       ab <- EN[[ix]]; n <- length(ab)
-      a <- ab[which.max(sapply(nd[ab], function(i) length(unique(i))))]
+      a <- ab[which.max(sapply(x[ab], function(i) length(unique(i))))]
       b <- ab[!ab %in% a]
       a.b <- if (n > 2) {
         a.b <- unlist(lapply(2:n, function(i) {
@@ -810,14 +837,14 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       } else ix
 
       ## Values for interacting variable(s) (b)
-      db <- sweep(unique(nd[b]), 2, xm[b])  # centred
-      db <- lapply(EN[a.b], function(i) {
-        apply(db[i[i %in% b]], 1, prod)
+      xb <- sweep(unique(x[b]), 2, xm[b])  # centred
+      xb <- lapply(EN[a.b], function(i) {
+        apply(xb[i[i %in% b]], 1, prod)
       })
 
       ## Effects
       e <- e * ys / xs
-      e <- e[a] + rowSums(mapply("*", e[a.b], db))
+      e <- e[a] + rowSums(mapply("*", e[a.b], xb))
       e <- e * xs[a] / ys
       names(e) <- paste(ix, 1:length(e), sep = "_")
 
@@ -827,7 +854,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
         ## Bootstrapped effects
         eb <- t(sapply(1:R, function(i) {
           ei <- eb[i, ] * ys / xs
-          ei <- ei[a] + rowSums(mapply("*", ei[a.b], db))
+          ei <- ei[a] + rowSums(mapply("*", ei[a.b], xb))
           ei * xs[a] / ys
         }))
         if (nrow(eb) != R) eb <- t(eb)
