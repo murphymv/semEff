@@ -490,11 +490,8 @@ totEff <- function(...) {
 #'   \code{"bca"} - see Details). See \code{\link[boot]{boot.ci}} for further
 #'   specification details.
 #' @param interaction An optional name of an interactive effect, for which to
-#'   return standardised effects for predictions of the main (continuous)
-#'   variable across different values or levels of interacting variables (see
-#'   Details). The name should be of the form \code{"x1:x2..."}, containing all
-#'   the variables involved and matching the name of an interactive effect in
-#'   the model(s) terms or in \code{effects}.
+#'   return standardised effects for a 'main' continuous variable across
+#'   different values or levels of interacting variables (see Details).
 #' @param digits The number of significant digits to return for interactive
 #'   effects.
 #' @param bci.arg A named list of any additional arguments to \code{boot.ci},
@@ -530,7 +527,7 @@ totEff <- function(...) {
 #'   instead of (correctly) being averaged over a candidate set.
 #'
 #'   If bootstrapped effects are supplied to \code{eff.boot} (or to
-#'   \code{effects} as part of a boot object), bootstrapped predictions are
+#'   \code{effects}, as part of a boot object), bootstrapped predictions are
 #'   calculated by predicting from each effect. Confidence intervals can then be
 #'   returned, for which the \code{type} should be appropriate for the original
 #'   form of bootstrap sampling (defaults to \code{"bca"}). If the number of
@@ -543,10 +540,13 @@ totEff <- function(...) {
 #'
 #'   Additionally, if the name of an interactive effect is supplied to
 #'   \code{interaction}, standardised effects (and confidence intervals) can be
-#'   returned for predictions of a continuous 'main' variable across specified
-#'   values or levels of interacting variable(s). The values for all variables
-#'   should be supplied in \code{newdata}, with the continuous variable being
-#'   automatically identified as having the most unique values.
+#'   returned for effects of a continuous 'main' variable across different
+#'   values or levels of interacting variable(s). The name should be of the form
+#'   \code{"x1:x2..."}, containing all the variables involved and matching the
+#'   name of an interactive effect in the model(s) terms or in \code{effects}.
+#'   The values for all variables should be supplied in \code{newdata}, with the
+#'   continuous variable being automatically identified as having the most
+#'   unique values.
 #' @return A numeric vector of the predictions, or, if bootstrapped effects are
 #'   supplied, a list containing the predictions and the upper and lower
 #'   confidence intervals. Optional interactive effects may also be appended.
@@ -695,20 +695,6 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     o <- o - om
 
     ## Predictors
-    # x <- rMapply(function(i) model.matrix(i, data = d), m, SIMPLIFY = FALSE)
-    # if (isList(x)) x <- do.call(cbind, unname(x))
-    # x <- cbind(x[obs, ], Filter(is.numeric, d))
-    # x <- sapply(unique(names(x)), function(i) {
-    #   if (!isInt(i)) {
-    #     pT <- function(j) parse(text = j)
-    #     if (isInx(i)) {
-    #       xi <- sapply(pT(EN[[i]]), eval, x)
-    #       if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
-    #       apply(xi, 1, prod)
-    #     } else eval(pT(i), x)
-    #   } else 1
-    # }, simplify = FALSE)
-    # x <- data.frame(x, row.names = obs, check.names = FALSE)
     dF <- function(x, ...) data.frame(x, check.names = FALSE, ...)
     eT <- function(x, ...) eval(parse(text = x), ...)
     x <- dF(model.matrix(reformulate(names(d)), data = d))
@@ -733,21 +719,6 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
 
     ## Data to predict (standardise using original means/SDs)
-    # d <- if (!is.null(nd)) data.frame(nd) else x
-    # obs <- rownames(d)
-    # d <- sapply(en, function(i) {
-    #   if (!isInt(i)) {
-    #     pT <- function(j) parse(text = j)
-    #     di <- if (isInx(i)) {
-    #       ENi <- EN[[i]]
-    #       di <- sapply(pT(ENi), eval, d)
-    #       di <- sweep(di, 2, xm[ENi])
-    #       apply(di, 1, prod)
-    #     } else eval(pT(i), d)
-    #     (di - xmw[i]) / xs[i]
-    #   } else 1
-    # }, simplify = FALSE)
-    # d <- data.frame(d, row.names = obs, check.names = FALSE)
     if (!is.null(nd)) {
       nd <- dF(nd); obs <- rownames(nd)
       x <- dF(model.matrix(reformulate(names(nd)), data = nd))

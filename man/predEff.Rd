@@ -54,11 +54,8 @@ intervals on predictions (and any interactive effects).}
 specification details.}
 
 \item{interaction}{An optional name of an interactive effect, for which to
-return standardised effects for predictions of the main (continuous)
-variable across different values or levels of interacting variables (see
-Details). The name should be of the form \code{"x1:x2..."}, containing all
-the variables involved and matching the name of an interactive effect in
-the model(s) terms or in \code{effects}.}
+return standardised effects for a 'main' continuous variable across
+different values or levels of interacting variables (see Details).}
 
 \item{digits}{The number of significant digits to return for interactive
 effects.}
@@ -113,7 +110,7 @@ Generate predicted values for SEM direct, indirect, or total effects
   instead of (correctly) being averaged over a candidate set.
 
   If bootstrapped effects are supplied to \code{eff.boot} (or to
-  \code{effects} as part of a boot object), bootstrapped predictions are
+  \code{effects}, as part of a boot object), bootstrapped predictions are
   calculated by predicting from each effect. Confidence intervals can then be
   returned, for which the \code{type} should be appropriate for the original
   form of bootstrap sampling (defaults to \code{"bca"}). If the number of
@@ -126,10 +123,13 @@ Generate predicted values for SEM direct, indirect, or total effects
 
   Additionally, if the name of an interactive effect is supplied to
   \code{interaction}, standardised effects (and confidence intervals) can be
-  returned for predictions of a continuous 'main' variable across specified
-  values or levels of interacting variable(s). The values for all variables
-  should be supplied in \code{newdata}, with the continuous variable being
-  automatically identified as having the most unique values.
+  returned for effects of a continuous 'main' variable across different
+  values or levels of interacting variable(s). The name should be of the form
+  \code{"x1:x2..."}, containing all the variables involved and matching the
+  name of an interactive effect in the model(s) terms or in \code{effects}.
+  The values for all variables should be supplied in \code{newdata}, with the
+  continuous variable being automatically identified as having the most
+  unique values.
 }
 \examples{
 ## Predict effects (direct, total)
