@@ -42,12 +42,12 @@ xNam(m, intercept = FALSE)
 ## Model with different types of predictor (some multi-coefficient terms)
 d <- data.frame(
   y = rnorm(100),
-  x1 = poly(rnorm(100), 2),  # polynomial
-  x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),  # categorical
-  x3 = rep(1, 100)  # no variation
+  x1 = rnorm(100),
+  x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),
+  x3 = rep(1, 100)
 )
-m <- lm(y ~ x1.1 + x1.2 + x2 + x3, data = d)
+m <- lm(y ~ poly(x1, 2) + x2 + x3, data = d)
 xNam(m)
 xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
-xNam(m, aliased = FALSE, list = TRUE)  # as named list
+xNam(m, aliased = FALSE, list = TRUE)  # names as list
 }

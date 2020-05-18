@@ -156,8 +156,7 @@ stdCoeff(m, cen.x = FALSE, cen.y = FALSE)  # standardised only
 stdCoeff(m, r.squared = TRUE)  # add R-squared
 
 ## Demonstrate equality with manually-standardised variables (gaussian)
-# m <- Shipley.Growth[[3]]
-m <- lm(Growth ~ Date + DD + lat, data = Shipley)
+m <- Shipley.Growth[[3]]
 d <- data.frame(scale(na.omit(Shipley)))
 b1 <- stdCoeff(m, unique.x = FALSE)
 b2 <- coef(summary(update(m, data = d)))[, 1]

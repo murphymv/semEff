@@ -680,6 +680,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     o <- model.offset(mf[obs, ])
     om <- if (cen.x && !is.null(o)) weighted.mean(o, w) else 0
     if (!is.null(nd)) {
+      nd <- data.frame(nd)
       tt <- terms(m1)
       on <- attr(tt, "offset")
       on <- if (!is.null(on)) {
@@ -695,8 +696,15 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     o <- o - om
 
     ## Predictors
-    dF <- function(x, ...) data.frame(x, check.names = FALSE, ...)
-    eT <- function(x, ...) eval(parse(text = x), ...)
+    dF <- function(...) data.frame(..., check.names = FALSE)
+    eT <- function(x, d) {
+      eT <- function(x) eval(parse(text = x), d)
+      if (grepl("poly\\(.*[0-9]$", x)) {
+        n <- nchar(x)
+        xd <- eT(substr(x, 1, n - 1))
+        xd[, substr(x, n, n)]
+      } else eT(x)
+    }
     x <- dF(model.matrix(reformulate(names(d)), data = d))
     x <- dF(sapply(en, function(i) {
       if (!isInt(i)) {
@@ -720,15 +728,14 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
     ## Data to predict (standardise using original means/SDs)
     if (!is.null(nd)) {
-      nd <- dF(nd); obs <- rownames(nd)
+      obs <- rownames(nd)
       x <- dF(model.matrix(reformulate(names(nd)), data = nd))
     }
     d <- dF(sapply(en, function(i) {
       if (!isInt(i)) {
         xi <- if (isInx(i)) {
-          j <- EN[[i]]
-          xi <- sapply(j, eT, x)
-          xi <- sweep(xi, 2, xm[j])
+          xi <- sapply(EN[[i]], eT, x)
+          xi <- sweep(xi, 2, xm[colnames(xi)])
           apply(xi, 1, prod)
         } else eT(i, x)
         (xi - xmw[i]) / xs[i]
@@ -808,7 +815,8 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       } else ix
 
       ## Values for interacting variable(s) (b)
-      xb <- sweep(unique(x[b]), 2, xm[b])  # centred
+      xb <- unique(dF(sapply(b, eT, x)))
+      xb <- sweep(xb, 2, xm[b])
       xb <- lapply(EN[a.b], function(i) {
         apply(xb[i[i %in% b]], 1, prod)
       })

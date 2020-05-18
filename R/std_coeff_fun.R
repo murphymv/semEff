@@ -152,14 +152,14 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' ## Model with different types of predictor (some multi-coefficient terms)
 #' d <- data.frame(
 #'   y = rnorm(100),
-#'   x1 = poly(rnorm(100), 2),  # polynomial
-#'   x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),  # categorical
-#'   x3 = rep(1, 100)  # no variation
+#'   x1 = rnorm(100),
+#'   x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),
+#'   x3 = rep(1, 100)
 #' )
-#' m <- lm(y ~ x1.1 + x1.2 + x2 + x3, data = d)
+#' m <- lm(y ~ poly(x1, 2) + x2 + x3, data = d)
 #' xNam(m)
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
-#' xNam(m, aliased = FALSE, list = TRUE)  # as named list
+#' xNam(m, aliased = FALSE, list = TRUE)  # names as list
 #' @export
 xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
                  list = FALSE, ...) {
@@ -169,25 +169,31 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
   ## Function
   xNam <- function(m) {
 
-    ## Term names (vector)
+    ## Term names
     tt <- terms(m)
     xn <- labels(tt)
     int <- attr(tt, "intercept")
     if (int) xn <- c("(Intercept)", xn)
 
-    ## Coefficients
+    ## Coefficient names
     b <- coef(summary(m))
     b <- as.matrix(if (isList(b)) b[[1]] else b)
     bn <- rownames(b)
 
+    ## Main effect names for all terms (list)
+    XN <- sapply(xn, function(i) {
+      unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
+    })
+
     ## Variables
     if (is.null(d)) d <- getData(m, ...)
     mf <- model.frame(m, data = d)
-    x <- sapply(mf[names(mf) %in% xn], "[", simplify = FALSE)
+    x <- mf[names(mf) %in% unlist(unname(XN))]
+    x <- sapply(x, "[", simplify = FALSE)
 
     ## Expand factor/matrix terms (list)
     f <- sapply(x, function(i) "factor" %in% class(i))
-    XN <- sapply(xn, function(i) {
+    XN2 <- sapply(xn, function(i) {
       if (i %in% names(x)) {
         xi <- x[[i]]
         j <- if (f[i]) {
@@ -207,9 +213,9 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     ## Expand interaction terms involving factors/matrices
     XN <- sapply(xn, function(i) {
       if (isInx(i)) {
-        i <- unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
-        apply(expand.grid(XN[i]), 1, paste, collapse = ":")
-      } else XN[[i]]
+        j <- expand.grid(XN2[XN[[i]]])
+        apply(j, 1, paste, collapse = ":")
+      } else XN2[[i]]
     }, simplify = FALSE)
 
     ## If no intercept, add reference level to first factor
@@ -506,11 +512,11 @@ getY <- function(mod, data = NULL, link = FALSE, ...) {
 #' ## Model with different types of predictor (some multi-coefficient terms)
 #' d <- data.frame(
 #'   y = rnorm(100),
-#'   x1 = poly(rnorm(100), 2),  # polynomial
-#'   x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),  # categorical
-#'   x3 = rep(1, 100)  # no variation
+#'   x1 = rnorm(100),
+#'   x2 = as.factor(rep(c("a", "b", "c", "d"), each = 25)),
+#'   x3 = rep(1, 100)
 #' )
-#' m <- lm(y ~ x1.1 + x1.2 + x2 + x3, data = d)
+#' m <- lm(y ~ poly(x1, 2) + x2 + x3, data = d)
 #' VIF(m)
 #' @export
 VIF <- function(mod, data = NULL, ...) {
@@ -1055,8 +1061,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #' stdCoeff(m, r.squared = TRUE)  # add R-squared
 #'
 #' ## Demonstrate equality with manually-standardised variables (gaussian)
-#' # m <- Shipley.Growth[[3]]
-#' m <- lm(Growth ~ Date + DD + lat, data = Shipley)
+#' m <- Shipley.Growth[[3]]
 #' d <- data.frame(scale(na.omit(Shipley)))
 #' b1 <- stdCoeff(m, unique.x = FALSE)
 #' b2 <- coef(summary(update(m, data = d)))[, 1]
@@ -1098,13 +1103,11 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     xn <- names(b)
 
     ## Intercept/no. parameters
-    int <- isInt(xn[1])
-    if (int) xn <- xn[-1]
+    int <- isInt(xn[1]); if (int) xn <- xn[-1]
     k <- length(xn)
 
     ## Model weights
-    w <- weights(m)
-    if (is.null(w)) w <- rep(1, nobs(m))
+    w <- weights(m); if (is.null(w)) w <- rep(1, nobs(m))
     s <- w > 0; w <- w[s]
 
     ## Response
@@ -1113,11 +1116,10 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     ## Centre/standardise x
     if (k > 0) {
 
-      ## Predictors (model matrix + data)
-      if (is.null(d)) d <- getData(m)
-      x <- model.matrix(m, data = d)[s, xn, drop = FALSE]
-      x <- cbind(x, d[rownames(x), ])
-      x <- x[unique(names(x))]
+      ## Predictors
+      dF <- function(...) data.frame(..., check.names = FALSE)
+      if (is.null(d)) d <- getData(m, subset = TRUE)
+      x <- dF(model.matrix(m, data = d))[xn]
 
       ## Interactions?
       inx <- any(isInx(xn))
@@ -1128,37 +1130,35 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         ## For interactions, adjust coefs and centre predictors
         if (inx) {
 
-          ## Main effect names for all terms
-          XN <- sapply(xn, function(i) {
-            unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
-          })
-
           ## Predictor means
-          xm <- colMeans(x[unique(unlist(unname(XN)))])
+          sI <- function(x) {
+            unlist(strsplit(x, "(?<!:):(?!:)", perl = TRUE))
+          }
+          XN <- lapply(labels(terms(m)), sI)
+          x2 <- dF(model.matrix(reformulate(unlist(XN)), data = d))
+          xm <- colMeans(x2)
 
           ## Adjust lower-order terms
           ## (ti = terms containing term i; ni = non-i components of ti)
           b[xn] <- sapply(xn, function(i) {
-            bi <- b[[i]]; XNi <- XN[[i]]
-            ti <- xn[xn != i & sapply(xn, function(j) all(XNi %in% XN[[j]]))]
+            bi <- b[[i]]; ii <- sI(i)
+            ti <- xn[xn != i & sapply(xn, function(j) all(ii %in% sI(j)))]
             if (length(ti) > 0) {
               bi + sum(sapply(ti, function(j) {
-                ni <- XN[[j]][!XN[[j]] %in% XNi]
+                jj <- sI(j)
+                ni <- jj[!jj %in% ii]
                 prod(b[j], xm[ni])
               }))
             } else bi
           })
 
-          ## Centre predictors (for correct SDs/VIFs)
-          if (std.x || unique.x) {
-            x <- sapply(names(x), function(i) {
-              if (i %in% xn) {
-                i <- XN[[i]]
-                xi <- sweep(x[i], 2, xm[i])
-                apply(xi, 1, prod)
-              } else x[, i]
-            }, simplify = FALSE)
-            x <- data.frame(x, check.names = FALSE)
+          ## Centre predictors (for correct product term SDs)
+          if (std.x) {
+            x <- dF(sapply(xn, function(i) {
+              ii <- sI(i)
+              xi <- sweep(x2[ii], 2, xm[ii])
+              apply(xi, 1, prod)
+            }))
           }
 
         }
@@ -1169,24 +1169,61 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       }
 
       ## Standardise by x
-      if (std.x) b[xn] <- b[xn] * sapply(x[xn], sdW, w)
+      if (std.x) b[xn] <- b[xn] * sapply(x, sdW, w)
 
       ## Calculate unique effects of predictors (adjust for multicollinearity)
       if (unique.x && k > 1) {
 
         ## Re-fit model with centred predictors
         ## (to calculate correct VIFs for interacting terms)
-        ct <- options("contrasts")
         m2 <- if (cen.x && inx && refit.x) {
-          options(contrasts = c("contr.sum", "contr.poly"))
-          eval(update(m, y ~ ., weights = w, data = cbind(y, w, x),
-                      evaluate = FALSE))
+
+          ## Model offset
+          mf <- model.frame(m, data = d)[s, ]
+          o <- model.offset(mf); if (is.null(o)) o <- 0
+
+          ## Update dataset
+          ## (add response, weights, offset; set sum contrasts for factors)
+          d2 <- data.frame(y, w, o, d); z <- names(d2)[1:3]
+          d2 <- dF(sapply(d2, function(i) {
+            if (!is.numeric(i)) {
+              i <- factor(i); contrasts(i) <- contr.sum(levels(i)); i
+            } else i
+          }))
+
+          ## Update term names (scale numeric predictors)
+          xn2 <- unlist(lapply(XN, function(i) {
+            paste(sapply(i, function(j) {
+              if (is.numeric(mf[, j])) paste0("scale(", j, ")") else j
+            }), collapse = ":")
+          }))
+
+          ## Add random effects
+          if (isMer(m)) {
+            re <- lme4::findbars(formula(m))
+            re <- sapply(re, function(i) paste0("(", deparse(i), ")"))
+            xn2 <- c(xn2, re)
+          }
+
+          ## Rename any "y", "w", "o" in terms
+          if (any(z %in% names(d))) {
+            xn2 <- sapply(xn2, function(i) {
+              i <- gsub("([()+\\-*/^, ])", "~\\1~", i, perl = TRUE)
+              i <- unlist(strsplit(i, "~"))
+              i[i %in% z] <- paste0(i[i %in% z], ".1")
+              paste(i, collapse = "")
+            })
+          }
+
+          ## Re-fit model
+          eval(update(m, reformulate(xn2, "y", int), data = d2, weights = w,
+                      offset = o, contrasts = NULL, evaluate = FALSE))
+
         } else m
 
         ## Divide coefs by square root of VIFs
         vif <- na.omit(VIF(m2, envir = environment()))
         b[xn] <- b[xn] / sqrt(vif)
-        options(ct)
 
       }
 
