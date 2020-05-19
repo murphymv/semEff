@@ -1208,7 +1208,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           ## Rename any "y", "w", "o" in terms
           if (any(z %in% names(d))) {
             xn2 <- sapply(xn2, function(i) {
-              i <- gsub("([()+\\-*/^, ])", "~\\1~", i, perl = TRUE)
+              i <- gsub("([^\\w.])", "~\\1~", i, perl = TRUE)
               i <- unlist(strsplit(i, "~"))
               i[i %in% z] <- paste0(i[i %in% z], ".1")
               paste(i, collapse = "")
