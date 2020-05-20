@@ -180,20 +180,21 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     b <- as.matrix(if (isList(b)) b[[1]] else b)
     bn <- rownames(b)
 
-    ## Main effect names for all terms (list)
+    ## Main effect names for interactions (list)
     XN <- sapply(xn, function(i) {
       unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
     })
 
-    ## Variables
+    ## Predictor values
     if (is.null(d)) d <- getData(m, ...)
     mf <- model.frame(m, data = d)
     x <- mf[names(mf) %in% unlist(unname(XN))]
     x <- sapply(x, "[", simplify = FALSE)
+    f <- sapply(x, is.factor)
 
     ## Expand factor/matrix terms (list)
-    f <- sapply(x, function(i) "factor" %in% class(i))
-    XN2 <- sapply(xn, function(i) {
+    xn2 <- unique(c(xn, names(x)))
+    XN2 <- sapply(xn2, function(i) {
       if (i %in% names(x)) {
         xi <- x[[i]]
         j <- if (f[i]) {
