@@ -105,8 +105,8 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 
     ## Subset for model observations?
     if (subset) {
-      obs <- names(fitted(m))
       w <- weights(m)
+      obs <- names(fitted(m))
       if (!is.null(w)) obs <- obs[w > 0]
       d[obs, ]
     } else d
@@ -175,43 +175,44 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     int <- attr(tt, "intercept")
     if (int) xn <- c("(Intercept)", xn)
 
-    ## Coefficient names
-    b <- coef(summary(m))
-    b <- as.matrix(if (isList(b)) b[[1]] else b)
-    bn <- rownames(b)
+    ## Expand interaction terms (list)
+    sI <- function(x) {
+      unlist(strsplit(x, "(?<!:):(?!:)", perl = TRUE))
+    }
+    XN <- sapply(xn, sI)
 
-    ## Main effect names for interactions (list)
-    XN <- sapply(xn, function(i) {
-      unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
-    })
+    ## Coefficient names
+    b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
+    bn <- names(b)
 
     ## Predictor values
     if (is.null(d)) d <- getData(m, ...)
-    mf <- model.frame(m, data = d)
+    mf <- suppressWarnings(model.frame(m, data = d))
     x <- mf[names(mf) %in% unlist(unname(XN))]
     x <- sapply(x, "[", simplify = FALSE)
-    f <- sapply(x, is.factor)
 
     ## Expand factor/matrix terms (list)
+    f <- sapply(x, is.factor); f1 <- names(f[f][1])
     xn2 <- unique(c(xn, names(x)))
     XN2 <- sapply(xn2, function(i) {
       if (i %in% names(x)) {
         xi <- x[[i]]
         j <- if (f[i]) {
-          xic <- contrasts(xi)
-          j <- colnames(xic)
-          if (!is.null(j)) {
-            j <- if (any(sapply(paste0(i, j), function(k) {
-              any(grepl(k, bn, fixed = TRUE))
-            }))) j
-          }
-          if (is.null(j)) as.character(1:ncol(xic)) else j
+          if (!int && i == f1) bn <- bn[isInx(bn)]
+          bn <- unlist(lapply(bn, sI))
+          l <- levels(xi)
+          ct <- contr.treatment(l); n <- ncol(ct)
+          cp <- contr.poly(l); cs <- contr.SAS(l)
+          j <- list(colnames(ct), colnames(cp), colnames(cs), 1:n)
+          j <- lapply(j, function(k) if (all(paste0(i, k) %in% bn)) k)
+          unique(unlist(j))
         } else colnames(xi)
+        if (is.null(j) && isTRUE(ncol(xi) > 1)) j <- 1:ncol(xi)
         paste0(i, j)
       } else i
     }, simplify = FALSE)
 
-    ## Expand interaction terms involving factors/matrices
+    ## Expand interaction terms involving factors/matrices (list)
     XN <- sapply(xn, function(i) {
       if (isInx(i)) {
         j <- expand.grid(XN2[XN[[i]]])
@@ -219,18 +220,15 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
       } else XN2[[i]]
     }, simplify = FALSE)
 
-    ## If no intercept, add reference level to first factor
-    if (!int && any(f)) {
-      f1 <- names(f[f][1])
-      XN[[f1]] <- paste0(f1, levels(x[[f1]]))
-    }
+    ## If no intercept, generate all levels for first factor
+    if (!int && any(f)) XN[[f1]] <- paste0(f1, levels(x[[f1]]))
 
     ## Drop intercept?
     if (!intercept && int) XN <- XN[-1]
 
     ## Drop aliased terms?
     if (!aliased) {
-      XN <- lapply(XN, function(i) i[i %in% bn])
+      XN <- lapply(XN, function(i) i[i %in% bn[!is.na(b)]])
       XN <- XN[sapply(XN, length) > 0]
     }
 
@@ -539,7 +537,7 @@ VIF <- function(mod, data = NULL, ...) {
 
       ## T/F for terms as matrices
       if (is.null(d)) d <- getData(m, ...)
-      mf <- model.frame(m, data = d)
+      mf <- suppressWarnings(model.frame(m, data = d))
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
       })
@@ -760,16 +758,14 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## R squared
-    b <- coef(summary(m))
-    b <- as.matrix(if (isList(b)) b[[1]] else b)
+    b <- na.omit(if (isMer(m)) lme4::fixef(m) else coef(m))
     i <- attr(terms(m), "intercept")
-    k <- nrow(b) - i
+    k <- length(b) - 1
     if (isMer(m)) k <- k + length(m@theta)
     R2 <- if (k > 0) {
       y <- getY(m)
       n <- length(y)
-      w <- weights(m)
-      if (is.null(w)) w <- rep(1, n)
+      w <- weights(m); if (is.null(w)) w <- rep(1, n)
       s <- w > 0; w <- w[s]
       f <- predict(m, type = "response", re.form = rf)[s]
       R <- cov.wt(cbind(y, f), w, cor = TRUE)$cor[1, 2]
@@ -1098,9 +1094,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
     ## Coefficients
-    b <- coef(summary(m))
-    if (isList(b)) b <- b[[1]]
-    if (is.matrix(b)) b <- setNames(b[, 1], rownames(b))
+    b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
+    bn <- names(b); b <- na.omit(b)
     xn <- names(b)
 
     ## Intercept/no. parameters
@@ -1180,7 +1175,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         m2 <- if (cen.x && inx && refit.x) {
 
           ## Model offset
-          mf <- model.frame(m, data = d)[s, ]
+          mf <- suppressWarnings(model.frame(m, data = d)[s, ])
           o <- model.offset(mf); if (is.null(o)) o <- 0
 
           ## Update dataset
@@ -1242,7 +1237,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    b <- sapply(xNam(m, d), function(i) unname(b[i]))
+    # b <- sapply(xNam(m, d), function(i) unname(b[i]))
+    b <- sapply(bn, function(i) unname(b[i]))
     if (r.squared) c(b, R2(m, ...)) else b
 
   }
