@@ -196,25 +196,17 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     xn2 <- unique(c(xn, names(x)))
     XN2 <- sapply(xn2, function(i) {
       if (i %in% names(x)) {
-        xi <- x[[i]]
+        xi <- x[[i]]; n <- ncol(xi)
         j <- if (f[i]) {
-          # if (!int && i == f1) bn <- bn[isInx(bn)]
-          # bn <- unlist(lapply(bn, sI))
-          # l <- levels(xi)
-          # ct <- contr.treatment(l); n <- ncol(ct)
-          # cp <- contr.poly(l); cs <- contr.SAS(l)
-          # j <- list(colnames(ct), colnames(cp), colnames(cs), 1:n)
-          # j <- lapply(j, function(k) if (all(paste0(i, k) %in% bn)) k)
-          # unique(unlist(j))
           ct <- getCall(m)$contrasts
           ct <- if (!is.null(ct)) {
             ct <- ct[names(ct) %in% i][[1]]
             ct <- eval(if (is.character(ct)) parse(text = ct) else ct)
-            if (is.function(ct)) ct(l) else ct
+            if (is.function(ct)) ct(levels(xi)) else ct
           } else contrasts(d[[i]])
           colnames(ct)
         } else colnames(xi)
-        if (is.null(j) && isTRUE(ncol(xi) > 1)) j <- 1:ncol(xi)
+        if (is.null(j) && isTRUE(n > 1)) j <- 1:n
         paste0(i, j)
       } else i
     }, simplify = FALSE)
