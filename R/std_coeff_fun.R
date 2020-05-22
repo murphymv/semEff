@@ -202,8 +202,9 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
           ct <- getCall(m)$contrasts
           xi <- if (!is.null(ct)) {
             ci <- ct[names(ct) %in% i][[1]]
-            ci <- eval(if (is.character(ci)) parse(text = ci) else ci)
-            if (is.function(ci)) ci(length(l)) else ci
+            ci <- eval(if (is.character(ci)) parse(text = ci)
+                       else {l <- length(l); ci})
+            if (is.function(ci)) ci(l) else ci
           } else contrasts(d[[i]])
         }
         j <- colnames(xi); n <- ncol(xi)
