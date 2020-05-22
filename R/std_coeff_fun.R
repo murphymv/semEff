@@ -198,11 +198,12 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
       if (i %in% names(x)) {
         xi <- x[[i]]
         if (f[i]) {
+          l <- levels(xi)
           ct <- getCall(m)$contrasts
           xi <- if (!is.null(ct)) {
-            ct <- ct[names(ct) %in% i][[1]]
-            ct <- eval(if (is.character(ct)) parse(text = ct) else ct)
-            if (is.function(ct)) ct(levels(xi)) else ct
+            ci <- ct[names(ct) %in% i][[1]]
+            ci <- eval(if (is.character(ci)) parse(text = ci) else ci)
+            if (is.function(ci)) ct(length(l)) else ci
           } else contrasts(d[[i]])
         }
         j <- colnames(xi); n <- ncol(xi)
