@@ -206,7 +206,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
           } else contrasts(d[[i]])
         }
         j <- colnames(xi); n <- ncol(xi)
-        if (is.null(j) && f[i] || isTRUE(n > 1)) j <- 1:n
+        if (is.null(j) && (f[i] || isTRUE(n > 1))) j <- 1:n
         paste0(i, j)
       } else i
     }, simplify = FALSE)
