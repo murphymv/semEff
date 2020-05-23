@@ -17,11 +17,7 @@ SEM effects calculated from bootstrapped estimates of the
 }
 \examples{
 ## Specification
-
-\donttest{
-
-Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
-}
+# Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized

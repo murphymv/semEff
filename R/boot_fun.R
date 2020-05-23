@@ -115,22 +115,13 @@
 #'   \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{residuals}},
 #'   \code{\link[semEff]{avgEst}}
 #' @examples
-#' ## Bootstrap Shipley SEM (while take a while...)
-#' ## Set 'site' as random effect group for resampling - highest-level
+#' ## Bootstrap Shipley SEM (test)
+#' ## (set 'site' as group for resampling - highest-level random effect)
+#' bootEff(Shipley.SEM, ran.eff = "site", R = 3, parallel = "no")
 #'
-#' \donttest{
-#'
-#' system.time(
-#'   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
-#'                               ncpus = 2)
-#' )
-#' }
-#'
-#' ## Original estimates
-#' lapply(Shipley.SEM.Boot, "[[", 1)
-#'
-#' ## Bootstrapped estimates
-#' lapply(Shipley.SEM.Boot, function(i) head(i$t))
+#' ## Estimates (use saved object, 10000 reps)
+#' lapply(Shipley.SEM.Boot, "[[", 1)  # original
+#' lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
 #' @export
 bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
                     cor.err = NULL, catch.err = TRUE, parallel = "snow",
@@ -492,18 +483,13 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 #' @seealso \code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootEff}}
 #' @examples
 #' ## CI's from bootstrapped SEM
-#' bootCI(Shipley.SEM.Boot)
+#' (Shipley.SEM.CI <- bootCI(Shipley.SEM.Boot))
 #'
 #' ## From original SEM (models)
 #' ## (not typically recommended - better to use saved boot objects)
-#'
-#' \donttest{
-#'
-#' system.time(
-#'   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908,
-#'                            ncpus = 2)
-#' )
-#' }
+#' # system.time(
+#' #   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)
+#' # )
 #' @export
 bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
                    ...) {

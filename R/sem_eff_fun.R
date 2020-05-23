@@ -94,26 +94,19 @@
 #'   \url{https://doi.org/bqd43d}
 #' @seealso \code{\link[semEff]{bootEff}}, \code{\link[semEff]{bootCI}}
 #' @examples
-#' \donttest{
-#'
 #' ## SEM effects
-#' Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
+#' (Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot))
 #'
 #' ## Effects for selected variables
-#' semEff(Shipley.SEM.Boot, predictors = "lat")
-#' semEff(Shipley.SEM.Boot, mediators = "DD")
-#' semEff(Shipley.SEM.Boot, responses = "Live")
+#' # semEff(Shipley.SEM.Boot, predictors = "lat")
+#' # semEff(Shipley.SEM.Boot, mediators = "DD")
+#' # semEff(Shipley.SEM.Boot, responses = "Live")
 #'
 #' ## Effects calculated using original SEM (models)
 #' ## (not typically recommended - better to use saved boot objects)
-#' system.time(
-#'   Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908,
-#'                             ncpus = 2)
-#' )
-#' }
-#'
-#' ## Summary
-#' Shipley.SEM.Eff
+#' # system.time(
+#' #  Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+#' # )
 #' @export
 semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
                    ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL,
@@ -559,8 +552,7 @@ totEff <- function(...) {
 #' ## Predict effects (direct, total)
 #' m <- Shipley.SEM
 #' e <- Shipley.SEM.Eff
-#' dir <- dirEff(e)
-#' tot <- totEff(e)
+#' dir <- dirEff(e); tot <- totEff(e)
 #' f.dir <- predEff(m, effects = dir, type = "response")
 #' f.tot <- predEff(m, effects = tot, type = "response")
 #'
@@ -571,15 +563,10 @@ totEff <- function(...) {
 #' nd <- data.frame(sapply(d[xn], seq100))
 #' f.dir <- predEff(m, nd, dir, type = "response")
 #' f.tot <- predEff(m, nd, tot, type = "response")
-#'
-#' ## Add CI's
-#' \donttest{
-#'
-#' dir.b <- dirEff(e, "boot")
-#' tot.b <- totEff(e, "boot")
-#' f.dir <- predEff(m, nd, dir, dir.b, type = "response")
-#' f.tot <- predEff(m, nd, tot, tot.b, type = "response")
-#' }
+#' ## Add CI's (can take a while...)
+#' # dir.b <- dirEff(e, "boot"); tot.b <- totEff(e, "boot")
+#' # f.dir <- predEff(m, nd, dir, dir.b, type = "response")
+#' # f.tot <- predEff(m, nd, tot, tot.b, type = "response")
 #'
 #' ## Predict an interactive effect (e.g. Live ~ Growth * DD)
 #' xn <- c("Growth", "DD")
@@ -591,14 +578,9 @@ totEff <- function(...) {
 #'   DD = mean(DD) + c(-sd(DD), sd(DD))  # two levels for DD
 #' ))
 #' f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
-#'
-#' ## Add CI's (need to bootstrap model - will take a while)
-#' \donttest{
-#'
-#' system.time(B <- bootEff(m, ran.eff = "site", R = 1000))
-#' est <- B$t0; est.b <- B$t  # estimates
-#' f <- predEff(m, nd, est, est.b, type = "response", interaction = "Growth:DD")
-#' }
+#' ## Add CI's (need to bootstrap model...)
+#' # system.time(B <- bootEff(m, ran.eff = "site", R = 1000))
+#' # f <- predEff(m, nd, B, type = "response", interaction = "Growth:DD")
 #'
 #' ## Model-averaged predictions (several approaches)
 #' m <- Shipley.Growth  # candidate models (list)

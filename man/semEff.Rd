@@ -95,26 +95,19 @@ The eponymous function of this package calculates all direct,
   ordinary linear models with fully standardised effects).
 }
 \examples{
-\donttest{
-
 ## SEM effects
-Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
+(Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot))
 
 ## Effects for selected variables
-semEff(Shipley.SEM.Boot, predictors = "lat")
-semEff(Shipley.SEM.Boot, mediators = "DD")
-semEff(Shipley.SEM.Boot, responses = "Live")
+# semEff(Shipley.SEM.Boot, predictors = "lat")
+# semEff(Shipley.SEM.Boot, mediators = "DD")
+# semEff(Shipley.SEM.Boot, responses = "Live")
 
 ## Effects calculated using original SEM (models)
 ## (not typically recommended - better to use saved boot objects)
-system.time(
-  Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908,
-                            ncpus = 2)
-)
-}
-
-## Summary
-Shipley.SEM.Eff
+# system.time(
+#  Shipley.SEM.Eff <- semEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+# )
 }
 \references{
 Cheung, M. W. L. (2009). Comparison of methods for constructing

@@ -176,14 +176,9 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     if (int) xn <- c("(Intercept)", xn)
 
     ## Expand interaction terms (list)
-    sI <- function(x) {
-      unlist(strsplit(x, "(?<!:):(?!:)", perl = TRUE))
-    }
-    XN <- sapply(xn, sI)
-
-    ## Coefficient names
-    b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
-    bn <- names(b)
+    XN <- sapply(xn, function(i) {
+      unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
+    })
 
     ## Predictor values
     if (is.null(d)) d <- getData(m, ...)
@@ -198,14 +193,15 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
       if (i %in% names(x)) {
         xi <- x[[i]]
         if (f[i]) {
-          l <- levels(xi)
+          ci <- contrasts(d[[i]])
           ct <- getCall(m)$contrasts
           xi <- if (!is.null(ct)) {
-            ci <- ct[names(ct) %in% i][[1]]
-            ci <- eval(if (is.character(ci)) parse(text = ci)
-                       else {l <- length(l); ci})
-            if (is.function(ci)) ci(l) else ci
-          } else contrasts(d[[i]])
+            ci <- ct[names(ct) %in% i][[1]]; chr <- is.character(ci)
+            ci <- eval(if (chr) parse(text = ci) else ci)
+            if (is.function(ci)) {
+              l <- levels(xi); ci(if (!chr) length(l) else l)
+            } else ci
+          } else ci
         }
         j <- colnames(xi); n <- ncol(xi)
         if (is.null(j) && (f[i] || isTRUE(n > 1))) j <- 1:n
@@ -224,14 +220,14 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     ## If no intercept, generate all levels for first factor
     if (!int && any(f)) XN[[f1]] <- paste0(f1, levels(x[[f1]]))
 
+    ## Drop some names? (aliased, subsetted factor levels, etc.)
+    b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
+    bn <- names(b); if (!aliased) bn <- bn[!is.na(b)]
+    XN <- lapply(XN, function(i) i[i %in% bn])
+    XN <- XN[sapply(XN, length) > 0]
+
     ## Drop intercept?
     if (!intercept && int) XN <- XN[-1]
-
-    ## Drop aliased terms?
-    if (!aliased) {
-      XN <- lapply(XN, function(i) i[i %in% bn[!is.na(b)]])
-      XN <- XN[sapply(XN, length) > 0]
-    }
 
     ## Return as list?
     if (!list) unlist(unname(XN)) else XN
@@ -714,12 +710,10 @@ VIF <- function(mod, data = NULL, ...) {
 #' ## Predicted R-squared: compare cross-validated predictions calculated/
 #' ## approximated via the hat matrix to standard method (leave-one-out)
 #'
-#' \donttest{
-#'
 #' ## Fit test models using Shipley data - compare lm vs glm
 #' d <- na.omit(Shipley)
-#' # m <- lm(Live ~ Date + DD + lat, d)
-#' m <- glm(Live ~ Date + DD + lat, binomial, d)
+#' m <- lm(Live ~ Date + DD + lat, d)
+#' # m <- glm(Live ~ Date + DD + lat, binomial, d)
 #'
 #' ## Manual CV predictions (leave-one-out)
 #' cvf1 <- sapply(1:nrow(d), function(i) {
@@ -737,7 +731,6 @@ VIF <- function(mod, data = NULL, ...) {
 #' # lm: TRUE; glm: "Mean relative difference: 1.977725e-06"
 #' cor(cvf1, cvf2)
 #' # lm: 1; glm: 0.9999987
-#' }
 #'
 #' # NOTE: comparison not tested here for mixed models, as hierarchical data can
 #' # complicate the choice of an appropriate leave-one-out procedure. However,

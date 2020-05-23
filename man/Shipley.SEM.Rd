@@ -16,18 +16,14 @@ Hypothesised SEM from Shipley (2009)
 }
 \examples{
 ## Specification
-
-\donttest{
-
-Shipley.SEM <- list(
-  "DD" = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
-  "Date" = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
-  "Growth" = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree),
-                        data = Shipley),
-  "Live" = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), binomial,
-                       data = Shipley)
-)
-}
+# Shipley.SEM <- list(
+#   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
+#   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
+#   Growth = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree),
+#                       data = Shipley),
+#   Live = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), binomial,
+#                      data = Shipley)
+# )
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized

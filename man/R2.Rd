@@ -130,12 +130,10 @@ R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
 ## Predicted R-squared: compare cross-validated predictions calculated/
 ## approximated via the hat matrix to standard method (leave-one-out)
 
-\donttest{
-
 ## Fit test models using Shipley data - compare lm vs glm
 d <- na.omit(Shipley)
-# m <- lm(Live ~ Date + DD + lat, d)
-m <- glm(Live ~ Date + DD + lat, binomial, d)
+m <- lm(Live ~ Date + DD + lat, d)
+# m <- glm(Live ~ Date + DD + lat, binomial, d)
 
 ## Manual CV predictions (leave-one-out)
 cvf1 <- sapply(1:nrow(d), function(i) {
@@ -153,7 +151,6 @@ all.equal(cvf1, cvf2)
 # lm: TRUE; glm: "Mean relative difference: 1.977725e-06"
 cor(cvf1, cvf2)
 # lm: 1; glm: 0.9999987
-}
 
 # NOTE: comparison not tested here for mixed models, as hierarchical data can
 # complicate the choice of an appropriate leave-one-out procedure. However,

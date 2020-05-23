@@ -18,16 +18,12 @@ A set of hypothetical competing models fit to the same response
 }
 \examples{
 ## Specification
-
-\donttest{
-
-Shipley.Growth <- list(
-  lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
-  lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
-  lme4::lmer(Growth ~ Date + DD + lat + (1 | site) + (1 | tree),
-             data = Shipley)
-)
-}
+# Shipley.Growth <- list(
+#   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
+#   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
+#   lme4::lmer(Growth ~ Date + DD + lat + (1 | site) + (1 | tree),
+#              data = Shipley)
+# )
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized

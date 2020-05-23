@@ -139,22 +139,13 @@ Bootstrapping mixed (or indeed any other) models may take a very long
   results).
 }
 \examples{
-## Bootstrap Shipley SEM (while take a while...)
-## Set 'site' as random effect group for resampling - highest-level
+## Bootstrap Shipley SEM (test)
+## (set 'site' as group for resampling - highest-level random effect)
+bootEff(Shipley.SEM, ran.eff = "site", R = 3, parallel = "no")
 
-\donttest{
-
-system.time(
-  Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
-                              ncpus = 2)
-)
-}
-
-## Original estimates
-lapply(Shipley.SEM.Boot, "[[", 1)
-
-## Bootstrapped estimates
-lapply(Shipley.SEM.Boot, function(i) head(i$t))
+## Estimates (use saved object, 10000 reps)
+lapply(Shipley.SEM.Boot, "[[", 1)  # original
+lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
 }
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection

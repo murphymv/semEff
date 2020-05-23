@@ -61,18 +61,13 @@ All bootstrapped confidence intervals will tend to underestimate the
 }
 \examples{
 ## CI's from bootstrapped SEM
-bootCI(Shipley.SEM.Boot)
+(Shipley.SEM.CI <- bootCI(Shipley.SEM.Boot))
 
 ## From original SEM (models)
 ## (not typically recommended - better to use saved boot objects)
-
-\donttest{
-
-system.time(
-  Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908,
-                           ncpus = 2)
-)
-}
+# system.time(
+#   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)
+# )
 }
 \references{
 Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about

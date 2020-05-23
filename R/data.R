@@ -30,18 +30,14 @@
 #'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
-#'
-#' \donttest{
-#'
-#' Shipley.SEM <- list(
-#'   "DD" = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
-#'   "Date" = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
-#'   "Growth" = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree),
-#'                         data = Shipley),
-#'   "Live" = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), binomial,
-#'                        data = Shipley)
-#' )
-#' }
+#' # Shipley.SEM <- list(
+#' #   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
+#' #   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
+#' #   Growth = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree),
+#' #                       data = Shipley),
+#' #   Live = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), binomial,
+#' #                      data = Shipley)
+#' # )
 "Shipley.SEM"
 
 
@@ -56,16 +52,12 @@
 #'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
-#'
-#' \donttest{
-#'
-#' Shipley.Growth <- list(
-#'   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
-#'   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
-#'   lme4::lmer(Growth ~ Date + DD + lat + (1 | site) + (1 | tree),
-#'              data = Shipley)
-#' )
-#' }
+#' # Shipley.Growth <- list(
+#' #   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
+#' #   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
+#' #   lme4::lmer(Growth ~ Date + DD + lat + (1 | site) + (1 | tree),
+#' #              data = Shipley)
+#' # )
 "Shipley.Growth"
 
 
@@ -79,12 +71,7 @@
 #'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
-#'
-#' \donttest{
-#'
-#' Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
-#'                             ncpus = 2)
-#' }
+#' # Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 "Shipley.SEM.Boot"
 
 
@@ -98,10 +85,6 @@
 #'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
-#'
-#' \donttest{
-#'
-#' Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
-#' }
+#' # Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 "Shipley.SEM.Eff"
 
