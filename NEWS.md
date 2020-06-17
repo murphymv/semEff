@@ -1,13 +1,26 @@
 ## semEff 0.3.0.9000
 
-Changes:
+New features:
 
-* Added details about confidence intervals as attributes to bootCI/semEff output
+* Added 'offset' argument to function 'getY', to keep/remove offset in/from
+response variable
+
+Other changes:
+
+* Added confidence interval attributes to 'bootCI'/'semEff' output
+* Updates to 'stdCoeff' and 'predEff' to improve evaluation of variables in
+model data (e.g. polynomials)
+* Updates to 'stdCoeff' to improve model refitting for 'centred' VIFs
 
 Bugs fixed:
 
 * 'bootEff' specified with correlated errors failed for mixed models of class
 "lmerModLmerTest" (issue with 'update' inside the function)
+* 'xNam' generated incorrect term names for categorical predictors under certain
+circumstances (e.g. different contrast types, interactive effects without main
+effects)
+* 'stdCoeff' was incorrectly calculating 'centred' intercept for models
+including an offset
 
 ## semEff 0.3.0
 

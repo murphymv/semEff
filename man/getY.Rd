@@ -4,7 +4,7 @@
 \alias{getY}
 \title{Get Model Response Variable}
 \usage{
-getY(mod, data = NULL, link = FALSE, ...)
+getY(mod, data = NULL, link = FALSE, offset = FALSE, ...)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
@@ -13,6 +13,9 @@ getY(mod, data = NULL, link = FALSE, ...)
 
 \item{link}{Logical. If \code{TRUE}, return the GLM response variable on the
 link scale (see Details).}
+
+\item{offset}{Logical. If \code{TRUE}, include model offset(s) in the
+response.}
 
 \item{...}{Arguments to \code{glt} (not including \code{family}, which is
 determined from \code{mod}).}
@@ -31,6 +34,10 @@ Extract the response variable from a fitted model on the
   and the model is a GLM, the response is returned on the link scale. If this
   results in undefined values, it is replaced by an estimate based on the
   'working' response variable of the GLM (see \code{\link[semEff]{glt}}).
+
+  Any offset variables are removed from the response by default. This means
+  that, for example, rates rather than raw counts will be returned for
+  poisson GLMs (where applicable).
 }
 \examples{
 ## All SEM responses (original scale)

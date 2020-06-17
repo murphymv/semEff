@@ -421,6 +421,8 @@ glt <- function(x, family = NULL, force.est = FALSE, ...) {
 #' @param data An optional dataset used to first re-fit the model(s).
 #' @param link Logical. If \code{TRUE}, return the GLM response variable on the
 #'   link scale (see Details).
+#' @param offset Logical. If \code{TRUE}, include model offset(s) in the
+#'   response.
 #' @param ... Arguments to \code{glt} (not including \code{family}, which is
 #'   determined from \code{mod}).
 #' @details \code{getY} will return the response variable from a model by
@@ -428,6 +430,10 @@ glt <- function(x, family = NULL, force.est = FALSE, ...) {
 #'   and the model is a GLM, the response is returned on the link scale. If this
 #'   results in undefined values, it is replaced by an estimate based on the
 #'   'working' response variable of the GLM (see \code{\link[semEff]{glt}}).
+#'
+#'   Any offset variables are removed from the response by default. This means
+#'   that, for example, rates rather than raw counts will be returned for
+#'   poisson GLMs (where applicable).
 #' @return A numeric vector comprising the response variable on the original or
 #'   link scale, or an array, list of vectors/arrays, or nested list.
 #' @examples
@@ -437,7 +443,7 @@ glt <- function(x, family = NULL, force.est = FALSE, ...) {
 #' ## Estimated response in link scale from binomial model
 #' getY(Shipley.SEM$Live, link = TRUE)
 #' @export
-getY <- function(mod, data = NULL, link = FALSE, ...) {
+getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
 
   m <- mod; d <- data
 
@@ -447,23 +453,23 @@ getY <- function(mod, data = NULL, link = FALSE, ...) {
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
+    ## Error family
+    f <- if (isBet(m)) m$link$mean else family(m)
+
+    ## Model offset
+    if (is.null(d)) d <- getData(m)
+    mf <- suppressWarnings(model.frame(m, data = d))
+    o <- model.offset(mf); ro <- !offset && !is.null(o)
+
     ## Model response
-    y <- fitted(m) + resid(m, "response")
-    w <- weights(m)
-    if (!is.null(w)) y <- y[w > 0]
+    r <- resid(m, "response")
+    y <- r + if (ro) f$linkinv(predict(m) - o) else fitted(m)
+    w <- weights(m); if (!is.null(w)) y <- y[w > 0]
     a <- names(attributes(y))
     attributes(y)[a != "names"] <- NULL
 
     ## Return on original or link scale
-    if (isGlm(m) && link) {
-
-      ## Error family
-      f <- if (isBet(m)) m$link$mean else family(m)
-
-      ## Response on link scale
-      glt(y, family = f, ...)
-
-    } else y
+    if (isGlm(m) && link) glt(y, family = f, ...) else y
 
   }
 
@@ -1117,6 +1123,10 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       ## Centre predictors and adjust coefs/intercept
       if (cen.x) {
 
+        ## Model offset
+        mf <- suppressWarnings(model.frame(m, data = d))
+        o <- model.offset(mf); if (is.null(o)) o <- 0
+
         ## For interactions, adjust coefs and centre predictors
         if (inx) {
 
@@ -1154,7 +1164,10 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         }
 
         ## Adjust intercept (set to mean of predicted y)
-        if (int) b[1] <- weighted.mean(predict(m, re.form = NA)[s], w)
+        if (int) {
+          f <- predict(m, re.form = NA)[s] - o
+          b[1] <- weighted.mean(f, w)
+        }
 
       }
 
@@ -1167,10 +1180,6 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         ## Re-fit model with centred predictors
         ## (to calculate correct VIFs for interacting terms)
         m2 <- if (cen.x && inx && refit.x) {
-
-          ## Model offset
-          mf <- suppressWarnings(model.frame(m, data = d)[s, ])
-          o <- model.offset(mf); if (is.null(o)) o <- 0
 
           ## Update dataset
           ## (add response, weights, offset; set sum contrasts for factors)
@@ -1231,7 +1240,6 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
 
     ## Return standardised coefficients
-    # b <- sapply(xNam(m, d), function(i) unname(b[i]))
     b <- sapply(bn, function(i) unname(b[i]))
     if (r.squared) c(b, R2(m, ...)) else b
 

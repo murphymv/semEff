@@ -832,8 +832,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     }
 
     ## Output
-    if (!is.null(eb)) set.seed(NULL)
-    f
+    if (!is.null(eb)) set.seed(NULL); f
 
   }
 
