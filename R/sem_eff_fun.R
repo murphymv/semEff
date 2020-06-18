@@ -689,7 +689,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     }
     x <- dF(model.matrix(reformulate(names(d)), data = d))
 
-    head(x)
+    eT("scale(east)", x)
 
     # x <- dF(sapply(en, function(i) {
     #   if (!isInt(i)) {
