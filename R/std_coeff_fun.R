@@ -462,8 +462,8 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
     o <- model.offset(mf); ro <- !offset && !is.null(o)
 
     ## Model response
-    r <- resid(m, "response")
-    y <- r + if (ro) f$linkinv(predict(m) - o) else fitted(m)
+    y <- fitted(m) + resid(m, "response")
+    if (ro) y <- f$linkinv(f$linkfun(y) - o)
     w <- weights(m); if (!is.null(w)) y <- y[w > 0]
     a <- names(attributes(y))
     attributes(y)[a != "names"] <- NULL

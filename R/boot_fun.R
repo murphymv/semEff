@@ -117,9 +117,9 @@
 #' @examples
 #' ## Bootstrap Shipley SEM (test)
 #' ## (set 'site' as group for resampling - highest-level random effect)
-#' bootEff(Shipley.SEM, ran.eff = "site", R = 3, parallel = "no")
+#' bootEff(Shipley.SEM, ran.eff = "site", R = 1, parallel = "no")
 #'
-#' ## Estimates (use saved object, 10000 reps)
+#' ## Estimates (use saved boot object, 10000 reps)
 #' lapply(Shipley.SEM.Boot, "[[", 1)  # original
 #' lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
 #' @export
