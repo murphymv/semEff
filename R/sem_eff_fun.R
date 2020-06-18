@@ -836,7 +836,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
   }
 
-  predEff(m)
+  predEff(m, w, e, eb)
 
   # ## Apply recursively
   # rMapply(predEff, m, w, e, eb, SIMPLIFY = FALSE)
