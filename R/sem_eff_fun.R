@@ -697,142 +697,143 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
         } else eT(i, x)
       } else 1
     }))
+    head(x)
 
     ## Predictor means/SDs
-    xm <- sapply(x, function(i) if (cen.x) mean(i) else 0)
-    xmw <- sapply(x, function(i) if (cen.x) weighted.mean(i, w) else 0)
-    xs <- sapply(x, function(i) if (std.x) sdW(i, w) else 1)
-
-    ## Response mean/SD (link scale)
-    lF <- family(m1)$linkfun
-    ym <- if (cen.y) lF(weighted.mean(getY(m1), w)) else 0
-    ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
-
-    ## Data to predict (standardise using original means/SDs)
-    if (!is.null(nd)) {
-      obs <- rownames(nd)
-      x <- dF(model.matrix(reformulate(names(nd)), data = nd))
-    }
-    d <- dF(sapply(en, function(i) {
-      if (!isInt(i)) {
-        xi <- if (isInx(i)) {
-          xi <- sapply(EN[[i]], eT, x)
-          xi <- sweep(xi, 2, xm[colnames(xi)])
-          apply(xi, 1, prod)
-        } else eT(i, x)
-        (xi - xmw[i]) / xs[i]
-      } else 1
-    }), row.names = obs)
-
-    ## Predictions
-    f <- colSums(e * t(d))
-    f <- f * ys + ym + o + re
-    f <- setNames(f, obs)
-    if (type == "response") {
-      lI <- family(m1)$linkinv
-      f <- lI(f)
-    }
-
-    ## Add CI's
-    if (!is.null(eb)) {
-
-      ## Bootstrap details
-      sim <- attr(eb, "sim")
-      seed <- attr(eb, "seed")
-      n <- attr(eb, "n")
-      R <- nrow(eb)
-
-      ## Change default CI type for parametric bootstrapping
-      if (sim == "parametric" && ci.type == "bca") {
-        message("Percentile confidence intervals used for parametric bootstrap samples.")
-        ci.type <- "perc"
-      }
-
-      ## Bootstrapped predictions
-      eb <- eb[, en, drop = FALSE]
-      fb <- t(sapply(1:R, function(i) {
-        ei <- eb[i, ][!is.na(eb[i, ])]
-        di <- d[names(ei)]
-        fi <- colSums(ei * t(di))
-        fi * ys + ym + o + re
-      }))
-      if (nrow(fb) != R) fb <- t(fb)
-      if (type == "response") fb <- lI(fb)
-
-      ## Create dummy boot object (for CI's)
-      set.seed(seed)
-      dd <- dF(rep(1, n))  # dummy data
-      B <- list(
-        t0 = f, t = fb, R = R, data = dd, seed = .Random.seed, sim = sim,
-        stype = "i", strata = dd[, 1]
-      )
-      class(B) <- "boot"
-      attr(B, "boot_type") <- "boot"
-
-      ## Calculate CI's
-      ci <- as.matrix(pSapply(1:nrow(d), function(i) {
-        ci <- do.call(
-          boot::boot.ci, c(list(B, ci.conf, ci.type, i), bci.arg)
-        )
-        tail(as.vector(ci[[4]]), 2)
-      }, p, nc, cl))
-      colnames(ci) <- obs
-      f <- list(fit = f, ci.lower = ci[1, ], ci.upper = ci[2, ])
-
-    }
-
-    ## Add interactive effects
-    if (isTRUE(isInx(ix) && ix %in% en && !is.null(nd))) {
-
-      ## Names of variables involved in interaction
-      ## (ab = all, a = main, b = interacting, a.b = interaction(s))
-      ab <- EN[[ix]]; n <- length(ab)
-      a <- ab[which.max(sapply(x[ab], function(i) length(unique(i))))]
-      b <- ab[!ab %in% a]
-      a.b <- if (n > 2) {
-        a.b <- unlist(lapply(2:n, function(i) {
-          combn(ab, i, paste, collapse = ":")
-        }))
-        a.b[sapply(a.b, function(i) a %in% EN[[i]])]
-      } else ix
-
-      ## Values for interacting variable(s) (b)
-      xb <- unique(dF(sapply(b, eT, x)))
-      xb <- sweep(xb, 2, xm[b])
-      xb <- lapply(EN[a.b], function(i) {
-        apply(xb[i[i %in% b]], 1, prod)
-      })
-
-      ## Effects
-      e <- e * ys / xs
-      e <- e[a] + rowSums(mapply("*", e[a.b], xb))
-      e <- e * xs[a] / ys
-      names(e) <- paste(ix, 1:length(e), sep = "_")
-
-      ## Add CI's
-      f <- if (!is.null(eb)) {
-
-        ## Bootstrapped effects
-        eb <- t(sapply(1:R, function(i) {
-          ei <- eb[i, ] * ys / xs
-          ei <- ei[a] + rowSums(mapply("*", ei[a.b], xb))
-          ei * xs[a] / ys
-        }))
-        if (nrow(eb) != R) eb <- t(eb)
-
-        ## CI's
-        B$t0 <- e; B$t <- eb
-        e <- bootCI(B, ci.conf, ci.type, digits, bci.arg)
-        c(f, list(interactions = e))
-
-      } else {
-        list(fit = f, interactions = round(e, digits))
-      }
-
-    }
-
-    ## Output
-    if (!is.null(eb)) set.seed(NULL); f
+    # xm <- sapply(x, function(i) if (cen.x) mean(i) else 0)
+    # xmw <- sapply(x, function(i) if (cen.x) weighted.mean(i, w) else 0)
+    # xs <- sapply(x, function(i) if (std.x) sdW(i, w) else 1)
+    #
+    # ## Response mean/SD (link scale)
+    # lF <- family(m1)$linkfun
+    # ym <- if (cen.y) lF(weighted.mean(getY(m1), w)) else 0
+    # ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
+    #
+    # ## Data to predict (standardise using original means/SDs)
+    # if (!is.null(nd)) {
+    #   obs <- rownames(nd)
+    #   x <- dF(model.matrix(reformulate(names(nd)), data = nd))
+    # }
+    # d <- dF(sapply(en, function(i) {
+    #   if (!isInt(i)) {
+    #     xi <- if (isInx(i)) {
+    #       xi <- sapply(EN[[i]], eT, x)
+    #       xi <- sweep(xi, 2, xm[colnames(xi)])
+    #       apply(xi, 1, prod)
+    #     } else eT(i, x)
+    #     (xi - xmw[i]) / xs[i]
+    #   } else 1
+    # }), row.names = obs)
+    #
+    # ## Predictions
+    # f <- colSums(e * t(d))
+    # f <- f * ys + ym + o + re
+    # f <- setNames(f, obs)
+    # if (type == "response") {
+    #   lI <- family(m1)$linkinv
+    #   f <- lI(f)
+    # }
+    #
+    # ## Add CI's
+    # if (!is.null(eb)) {
+    #
+    #   ## Bootstrap details
+    #   sim <- attr(eb, "sim")
+    #   seed <- attr(eb, "seed")
+    #   n <- attr(eb, "n")
+    #   R <- nrow(eb)
+    #
+    #   ## Change default CI type for parametric bootstrapping
+    #   if (sim == "parametric" && ci.type == "bca") {
+    #     message("Percentile confidence intervals used for parametric bootstrap samples.")
+    #     ci.type <- "perc"
+    #   }
+    #
+    #   ## Bootstrapped predictions
+    #   eb <- eb[, en, drop = FALSE]
+    #   fb <- t(sapply(1:R, function(i) {
+    #     ei <- eb[i, ][!is.na(eb[i, ])]
+    #     di <- d[names(ei)]
+    #     fi <- colSums(ei * t(di))
+    #     fi * ys + ym + o + re
+    #   }))
+    #   if (nrow(fb) != R) fb <- t(fb)
+    #   if (type == "response") fb <- lI(fb)
+    #
+    #   ## Create dummy boot object (for CI's)
+    #   set.seed(seed)
+    #   dd <- dF(rep(1, n))  # dummy data
+    #   B <- list(
+    #     t0 = f, t = fb, R = R, data = dd, seed = .Random.seed, sim = sim,
+    #     stype = "i", strata = dd[, 1]
+    #   )
+    #   class(B) <- "boot"
+    #   attr(B, "boot_type") <- "boot"
+    #
+    #   ## Calculate CI's
+    #   ci <- as.matrix(pSapply(1:nrow(d), function(i) {
+    #     ci <- do.call(
+    #       boot::boot.ci, c(list(B, ci.conf, ci.type, i), bci.arg)
+    #     )
+    #     tail(as.vector(ci[[4]]), 2)
+    #   }, p, nc, cl))
+    #   colnames(ci) <- obs
+    #   f <- list(fit = f, ci.lower = ci[1, ], ci.upper = ci[2, ])
+    #
+    # }
+    #
+    # ## Add interactive effects
+    # if (isTRUE(isInx(ix) && ix %in% en && !is.null(nd))) {
+    #
+    #   ## Names of variables involved in interaction
+    #   ## (ab = all, a = main, b = interacting, a.b = interaction(s))
+    #   ab <- EN[[ix]]; n <- length(ab)
+    #   a <- ab[which.max(sapply(x[ab], function(i) length(unique(i))))]
+    #   b <- ab[!ab %in% a]
+    #   a.b <- if (n > 2) {
+    #     a.b <- unlist(lapply(2:n, function(i) {
+    #       combn(ab, i, paste, collapse = ":")
+    #     }))
+    #     a.b[sapply(a.b, function(i) a %in% EN[[i]])]
+    #   } else ix
+    #
+    #   ## Values for interacting variable(s) (b)
+    #   xb <- unique(dF(sapply(b, eT, x)))
+    #   xb <- sweep(xb, 2, xm[b])
+    #   xb <- lapply(EN[a.b], function(i) {
+    #     apply(xb[i[i %in% b]], 1, prod)
+    #   })
+    #
+    #   ## Effects
+    #   e <- e * ys / xs
+    #   e <- e[a] + rowSums(mapply("*", e[a.b], xb))
+    #   e <- e * xs[a] / ys
+    #   names(e) <- paste(ix, 1:length(e), sep = "_")
+    #
+    #   ## Add CI's
+    #   f <- if (!is.null(eb)) {
+    #
+    #     ## Bootstrapped effects
+    #     eb <- t(sapply(1:R, function(i) {
+    #       ei <- eb[i, ] * ys / xs
+    #       ei <- ei[a] + rowSums(mapply("*", ei[a.b], xb))
+    #       ei * xs[a] / ys
+    #     }))
+    #     if (nrow(eb) != R) eb <- t(eb)
+    #
+    #     ## CI's
+    #     B$t0 <- e; B$t <- eb
+    #     e <- bootCI(B, ci.conf, ci.type, digits, bci.arg)
+    #     c(f, list(interactions = e))
+    #
+    #   } else {
+    #     list(fit = f, interactions = round(e, digits))
+    #   }
+    #
+    # }
+    #
+    # ## Output
+    # if (!is.null(eb)) set.seed(NULL); f
 
   }
 
