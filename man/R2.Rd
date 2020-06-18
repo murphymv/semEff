@@ -4,7 +4,15 @@
 \alias{R2}
 \title{R-squared/Pseudo R-squared}
 \usage{
-R2(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL, ...)
+R2(
+  mod,
+  data = NULL,
+  adj = TRUE,
+  pred = TRUE,
+  offset = FALSE,
+  re.form = NULL,
+  ...
+)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
@@ -14,6 +22,9 @@ R2(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL, ...)
 \item{adj, pred}{Logical. If \code{TRUE} (default), adjusted and/or predicted
 R-squared are also returned (the latter is not available for all model
 types).}
+
+\item{offset}{Logical. If \code{TRUE}, include model offset(s) in the
+calculations (i.e. in the response and fitted values).}
 
 \item{re.form}{For mixed models of class \code{"merMod"}, the formula for
 random effects to condition on when generating fitted values used in the

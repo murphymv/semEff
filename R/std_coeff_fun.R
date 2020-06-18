@@ -457,13 +457,16 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
     f <- if (isBet(m)) m$link$mean else family(m)
 
     ## Model offset
-    if (is.null(d)) d <- getData(m)
-    mf <- suppressWarnings(model.frame(m, data = d))
-    o <- model.offset(mf); ro <- !offset && !is.null(o)
+    o <- if (!offset) {
+      if (is.null(d)) d <- getData(m)
+      mf <- suppressWarnings(model.frame(m, data = d))
+      model.offset(mf)
+    }
+    if (is.null(o)) o <- 0
 
     ## Model response
     y <- fitted(m) + resid(m, "response")
-    if (ro) y <- f$linkinv(f$linkfun(y) - o)
+    y <- f$linkinv(f$linkfun(y) - o)
     w <- weights(m); if (!is.null(w)) y <- y[w > 0]
     a <- names(attributes(y))
     attributes(y)[a != "names"] <- NULL
@@ -594,6 +597,8 @@ VIF <- function(mod, data = NULL, ...) {
 #' @param adj,pred Logical. If \code{TRUE} (default), adjusted and/or predicted
 #'   R-squared are also returned (the latter is not available for all model
 #'   types).
+#' @param offset Logical. If \code{TRUE}, include model offset(s) in the
+#'   calculations (i.e. in the response and fitted values).
 #' @param re.form For mixed models of class \code{"merMod"}, the formula for
 #'   random effects to condition on when generating fitted values used in the
 #'   calculation of R-squared. Defaults to \code{NULL}, meaning all random
@@ -746,8 +751,8 @@ VIF <- function(mod, data = NULL, ...) {
 #' # caution in interpretation of the predicted R-squared for mixed models,
 #' # particularly GLMMs.
 #' @export
-R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
-               ...) {
+R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
+               re.form = NULL, ...) {
 
   m <- mod; d <- data; rf <- re.form
 
@@ -757,17 +762,28 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, re.form = NULL,
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
+    ## Error family
+    f <- if (isBet(m)) m$link$mean else family(m)
+
+    ## Model offset
+    o <- if (!offset) {
+      if (is.null(d)) d <- getData(m)
+      mf <- suppressWarnings(model.frame(m, data = d))
+      model.offset(mf)
+    }
+    if (is.null(o)) o <- 0
+
     ## R squared
     b <- na.omit(if (isMer(m)) lme4::fixef(m) else coef(m))
     i <- attr(terms(m), "intercept")
     k <- length(b) - 1
     if (isMer(m)) k <- k + length(m@theta)
     R2 <- if (k > 0) {
-      y <- getY(m)
+      y <- getY(m, offset = offset)
       n <- length(y)
       w <- weights(m); if (is.null(w)) w <- rep(1, n)
       s <- w > 0; w <- w[s]
-      f <- predict(m, type = "response", re.form = rf)[s]
+      f <- f$linkinv(predict(m, re.form = rf) - o)[s]
       R <- cov.wt(cbind(y, f), w, cor = TRUE)$cor[1, 2]
       if (is.na(R)) R <- 0
       if (R > 0) R^2 else 0
