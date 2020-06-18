@@ -689,18 +689,20 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     }
     x <- dF(model.matrix(reformulate(names(d)), data = d))
 
-    head(sapply(en[-1], eT, x))
+    # head(sapply(en[-1], eT, x))
 
-    # x <- dF(sapply(en, function(i) {
-    #   if (!isInt(i)) {
-    #     if (isInx(i)) {
-    #       xi <- sapply(EN[[i]], eT, x)
-    #       if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
-    #       apply(xi, 1, prod)
-    #     } else eT(i, x)
-    #   } else 1
-    # }))
-    #
+    x <- dF(sapply(en, function(i) {
+      if (!isInt(i)) {
+        if (isInx(i)) {
+          xi <- sapply(EN[[i]], eT, x)
+          if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
+          apply(xi, 1, prod)
+        } else eT(i, x)
+      } else 1
+    }))
+
+    head(x)
+
     # ## Predictor means/SDs
     # xm <- sapply(x, function(i) if (cen.x) mean(i) else 0)
     # xmw <- sapply(x, function(i) if (cen.x) weighted.mean(i, w) else 0)
