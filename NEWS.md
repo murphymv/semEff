@@ -2,22 +2,23 @@
 
 New features:
 
-* Added 'offset' argument to function 'getY', to keep/remove offset in/from
-response variable
+* Added 'offset' argument to 'getY' and 'R2', to keep/remove offset in response
+variable and fitted values (where applicable)
 
 Other changes:
 
 * Added confidence interval attributes to 'bootCI'/'semEff' output
-* Updates to 'stdCoeff' and 'predEff' to improve evaluation of variables in
-model data (e.g. polynomials)
-* Updates to 'stdCoeff' to improve model refitting for 'centred' VIFs
 
 Bugs fixed:
 
 * 'bootEff' specified with correlated errors failed for mixed models of class
 "lmerModLmerTest" (issue with 'update' inside the function)
+* 'predEff' failed to evaluate some complex model terms (e.g. polynomials)
+* 'stdCoeff' did not re-fit model properly to calculate correct VIFs for a fully
+'centred' model (i.e. did not account sufficiently for complex terms such as
+polynomials or transformations, where centring should occur as the final step)
 * 'xNam' generated incorrect term names for categorical predictors under certain
-circumstances (e.g. different contrast types, interactive effects without main
+circumstances (different contrast types, interactive effects without main
 effects)
 * 'stdCoeff' was incorrectly calculating 'centred' intercept for models
 including an offset
