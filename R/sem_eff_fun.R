@@ -658,24 +658,23 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     w <- if (is.null(w)) rep(1, nrow(d)) else w[w > 0]
 
     ## Offset(s)
-    mf <- model.frame(m1, data = d)
-    o <- model.offset(mf[obs, ])
-    om <- if (cen.x && !is.null(o)) weighted.mean(o, w) else 0
-    if (!is.null(nd)) {
+    o <- if (!is.null(nd)) {
       nd <- data.frame(nd)
       tt <- terms(m1)
       on <- attr(tt, "offset")
-      on <- if (!is.null(on)) {
+      if (!is.null(on)) {
         tn <- attr(tt, "variables")
-        sapply(on, function(i) tn[[i + 1]])
+        on <- sapply(on, function(i) tn[[i + 1]])
       }
       on <- c(on, getCall(m1)$offset)
       if (!is.null(on)) {
-        o <- rowSums(sapply(on, eval, nd))
+        rowSums(sapply(on, eval, nd))
       }
+    } else {
+      mf <- model.frame(m1, data = d)[obs, ]
+      model.offset(mf)
     }
     if (is.null(o)) o <- 0
-    o <- o - om
 
     ## Predictors
     dF <- function(...) data.frame(..., check.names = FALSE)
@@ -726,7 +725,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
     ## Predictions
     f <- colSums(e * t(x))
-    f <- f * ys + ym + o + re
+    f <- f * ys + ym + re + o
     f <- setNames(f, obs)
     if (type == "response") {
       lI <- family(m1)$linkinv
@@ -754,7 +753,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
         ei <- eb[i, ][!is.na(eb[i, ])]
         xi <- x[names(ei)]
         fi <- colSums(ei * t(xi))
-        fi * ys + ym + o + re
+        fi * ys + ym + re + o
       }))
       if (nrow(fb) != R) fb <- t(fb)
       if (type == "response") fb <- lI(fb)
