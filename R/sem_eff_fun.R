@@ -769,13 +769,13 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       attr(B, "boot_type") <- "boot"
 
       ## Calculate CI's
-      ci <- as.matrix(pSapply(1:nrow(d), function(i) {
+      ci <- pSapply(1:length(f), function(i) {
         ci <- do.call(
           boot::boot.ci, c(list(B, ci.conf, ci.type, i), bci.arg)
         )
         tail(as.vector(ci[[4]]), 2)
-      }, p, nc, cl))
-      colnames(ci) <- obs
+      }, p, nc, cl)
+      ci <- as.matrix(ci); colnames(ci) <- obs
       f <- list(fit = f, ci.lower = ci[1, ], ci.upper = ci[2, ])
 
     }
