@@ -644,6 +644,10 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ## Extract a single model (if list)
     m1 <- if (isList(m)) m[[1]] else m
 
+    ## Model link function
+    f <- if (isBet(m1)) m1$link$mean else family(m1)
+    lF <- f$linkfun; lI <- f$linkinv
+
     ## Random effects
     is.re <- isMer(m1) && !identical(rf, NA) && !identical(rf, ~ 0)
     re <- if (is.re) {
@@ -655,9 +659,10 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
     ## Model weights
     w <- weights(m1)
-    w <- if (is.null(w)) rep(1, nrow(d)) else w[w > 0]
+    if (is.null(w)) w <- rep(1, nobs(m1))
+    w <- w[w > 0 & !is.na(w)]
 
-    ## Offset(s)
+    ## Model offset(s)
     o <- if (!is.null(nd)) {
       nd <- data.frame(nd)
       tt <- terms(m1)
@@ -671,7 +676,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
         rowSums(sapply(on, eval, nd))
       }
     } else {
-      mf <- model.frame(m1, data = d)[obs, ]
+      mf <- model.frame(m1, data = d)
       model.offset(mf)
     }
     if (is.null(o)) o <- 0
@@ -703,7 +708,6 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     xs <- sapply(x, function(i) if (std.x) sdW(i, w) else 1)
 
     ## Response mean/SD (link scale)
-    lF <- family(m1)$linkfun
     ym <- if (cen.y) lF(weighted.mean(getY(m1), w)) else 0
     ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
 
@@ -727,10 +731,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     f <- colSums(e * t(x))
     f <- f * ys + ym + re + o
     f <- setNames(f, obs)
-    if (type == "response") {
-      lI <- family(m1)$linkinv
-      f <- lI(f)
-    }
+    if (type == "response") f <- lI(f)
 
     ## Add CI's
     if (!is.null(eb)) {
@@ -768,7 +769,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       class(B) <- "boot"
       attr(B, "boot_type") <- "boot"
 
-      ## Calculate CI's
+      ## Calculate and add CI's
       ci <- pSapply(1:length(f), function(i) {
         ci <- do.call(
           boot::boot.ci, c(list(B, ci.conf, ci.type, i), bci.arg)

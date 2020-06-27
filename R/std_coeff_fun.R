@@ -103,11 +103,10 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
     if (!all(vn %in% names(d)))
       stop("'data' does not contain all model variables.")
 
-    ## Subset for model observations?
+    ## Subset data for model observations?
     if (subset) {
-      w <- weights(m)
-      obs <- names(fitted(m))
-      if (!is.null(w)) obs <- obs[w > 0]
+      obs <- names(fitted(m)); w <- weights(m)
+      if (!is.null(w)) obs <- obs[w > 0 & !is.na(w)]
       d[obs, ]
     } else d
 
@@ -456,18 +455,18 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
     ## Error family
     f <- if (isBet(m)) m$link$mean else family(m)
 
-    ## Model offset
+    ## Model weights and offset
+    w <- weights(m)
     o <- if (!offset) {
-      if (is.null(d)) d <- getData(m)
+      if (is.null(d)) d <- getData(m, subset = TRUE)
       mf <- suppressWarnings(model.frame(m, data = d))
       model.offset(mf)
     }
-    if (is.null(o)) o <- 0
 
     ## Model response
     y <- fitted(m) + resid(m, "response")
-    y <- f$linkinv(f$linkfun(y) - o)
-    w <- weights(m); if (!is.null(w)) y <- y[w > 0]
+    if (!is.null(w)) y <- y[w > 0 & !is.na(w)]
+    if (!is.null(o)) y <- f$linkinv(f$linkfun(y) - o)
     a <- names(attributes(y))
     attributes(y)[a != "names"] <- NULL
 
@@ -762,31 +761,40 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
-    ## Error family
-    f <- if (isBet(m)) m$link$mean else family(m)
-
-    ## Model offset
-    o <- if (!offset) {
-      if (is.null(d)) d <- getData(m)
-      mf <- suppressWarnings(model.frame(m, data = d))
-      model.offset(mf)
-    }
-    if (is.null(o)) o <- 0
-
-    ## R squared
+    ## R-squared
     b <- na.omit(if (isMer(m)) lme4::fixef(m) else coef(m))
     i <- attr(terms(m), "intercept")
-    k <- length(b) - 1
+    k <- length(b) - i
     if (isMer(m)) k <- k + length(m@theta)
+
     R2 <- if (k > 0) {
-      y <- getY(m, offset = offset)
-      n <- length(y)
-      w <- weights(m); if (is.null(w)) w <- rep(1, n)
-      s <- w > 0; w <- w[s]
-      f <- f$linkinv(predict(m, re.form = rf) - o)[s]
+
+      ## Model link function
+      f <- if (isBet(m)) m$link$mean else family(m)
+      lF <- f$linkfun; lI <- f$linkinv
+
+      ## Model weights
+      w <- weights(m); n <- nobs(m)
+      if (is.null(w)) w <- rep(1, n)
+      w <- w[w > 0 & !is.na(w)]
+
+      ## Model offset
+      o <- if (!offset) {
+        if (is.null(d)) d <- getData(m, subset = TRUE)
+        mf <- suppressWarnings(model.frame(m, data = d))
+        model.offset(mf)
+      }
+      if (is.null(o)) o <- 0
+
+      ## Response and fitted values
+      y <- getY(m, offset = offset); obs <- names(y)
+      f <- lI(predict(m, re.form = rf)[obs] - o)
+
+      ## R-squared
       R <- cov.wt(cbind(y, f), w, cor = TRUE)$cor[1, 2]
       if (is.na(R)) R <- 0
       if (R > 0) R^2 else 0
+
     } else 0
 
     ## Adjusted R squared (Pratt formula)
@@ -803,11 +811,18 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     R2p <- if (pred) {
       if (!isGls(m)) {
         if (R2 > 0) {
-          hii <- suppressWarnings(hatvalues(m)[s])
+
+          ## Leverage values (diagonals of the hat matrix, hii)
+          hii <- suppressWarnings(hatvalues(m)[obs])
           s <- hii < 1
+
+          ## CV fitted values (from 'predictive' residuals)
           f <- y - (y - f) / (1 - hii)
+
+          ## Predictive R squared
           Rp <- cov.wt(cbind(y, f)[s, ], w[s], cor = TRUE)$cor[1, 2]
           if (Rp > 0) Rp^2 else 0
+
         } else 0
       } else NA
     }
@@ -1119,11 +1134,12 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     k <- length(xn)
 
     ## Model weights
-    w <- weights(m); if (is.null(w)) w <- rep(1, nobs(m))
-    s <- w > 0; w <- w[s]
+    w <- weights(m)
+    if (is.null(w)) w <- rep(1, nobs(m))
+    w <- w[w > 0 & !is.na(w)]
 
     ## Response
-    y <- getY(m)
+    y <- getY(m); obs <- names(y)
 
     ## Centre/standardise x
     if (k > 0) {
@@ -1181,14 +1197,17 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
         ## Adjust intercept (set to mean of predicted y)
         if (int) {
-          f <- predict(m, re.form = NA)[s] - o
+          f <- predict(m, re.form = NA)[obs] - o
           b[1] <- weighted.mean(f, w)
         }
 
       }
 
       ## Standardise by x
-      if (std.x) b[xn] <- b[xn] * sapply(x, sdW, w)
+      if (std.x) {
+        xs <- sapply(x, sdW, w)
+        b[xn] <- b[xn] * xs
+      }
 
       ## Calculate unique effects of predictors (adjust for multicollinearity)
       if (unique.x && k > 1) {
@@ -1199,7 +1218,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
           ## Update dataset
           ## (add response, weights, offset; set sum contrasts for factors)
-          d2 <- data.frame(y, w, o, d); z <- names(d2)[1:3]
+          d2 <- data.frame(y, w, o, d)
           d2 <- dF(sapply(d2, function(i) {
             if (!is.numeric(i)) {
               i <- factor(i); contrasts(i) <- contr.sum(levels(i)); i
@@ -1220,12 +1239,13 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
             xn2 <- c(xn2, re)
           }
 
-          ## Rename any "y", "w", "o" in terms
-          if (any(z %in% names(d))) {
+          ## Rename any "y", "w", or "o" in terms
+          if (any(c("y", "w", "o") %in% names(d))) {
             xn2 <- sapply(xn2, function(i) {
               i <- gsub("([^\\w.])", "~\\1~", i, perl = TRUE)
               i <- unlist(strsplit(i, "~"))
-              i[i %in% z] <- paste0(i[i %in% z], ".1")
+              s <- i %in% c("y", "w", "o")
+              i[s] <- paste0(i[s], ".1")
               paste(i, collapse = "")
             })
           }
@@ -1248,12 +1268,16 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (cen.y && int) {
       ym <- weighted.mean(y, w)
       if (isGlm(m)) {
-        f <- if (isBet(m)) m$link$mean else family(m)
-        ym <- f$linkfun(ym)
+        lF <- (if (isBet(m)) m$link$mean else family(m))$linkfun
+        ym <- lF(ym)
       }
       b[1] <- b[1] - ym
     }
-    if (std.y) b <- b / sdW(getY(m, link = TRUE), w)
+    if (std.y) {
+      if (isGlm(m)) y <- getY(m, link = TRUE)
+      ys <- sdW(y, w)
+      b <- b / ys
+    }
 
     ## Return standardised coefficients
     b <- sapply(bn, function(i) unname(b[i]))
