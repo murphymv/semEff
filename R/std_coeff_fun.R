@@ -761,12 +761,13 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
-    ## R-squared
-    b <- na.omit(if (isMer(m)) lme4::fixef(m) else coef(m))
-    i <- attr(terms(m), "intercept")
-    k <- length(b) - i
+    ## No. observations/parameters
+    n <- nobs(m)
+    k <- length(na.omit(if (isMer(m)) lme4::fixef(m) else coef(m)))
+    i <- attr(terms(m), "intercept"); k <- k - i
     if (isMer(m)) k <- k + length(m@theta)
 
+    ## R-squared
     R2 <- if (k > 0) {
 
       ## Model link function
@@ -774,7 +775,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       lF <- f$linkfun; lI <- f$linkinv
 
       ## Model weights
-      w <- weights(m); n <- nobs(m)
+      w <- weights(m)
       if (is.null(w)) w <- rep(1, n)
       w <- w[w > 0 & !is.na(w)]
 
@@ -797,34 +798,39 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 
     } else 0
 
-    ## Adjusted R squared (Pratt formula)
+    ## Adjusted R-squared
     R2a <- if (adj) {
       if (R2 > 0) {
+
+        ## Pratt formula
         R2a <- 1 - ((n - 3) * (1 - R2) / (n - k - i)) *
           (1 + (2 * (1 - R2) / (n - k - 2.3)))
-        # R2a <- 1 - (1 - R2) * (n - i) / (n - k - i)  # 'standard' formula
+
+        ## 'Standard' formula
+        # R2a <- 1 - (1 - R2) * (n - i) / (n - k - i)
+
         if (R2a > 0) R2a else 0
+
       } else 0
     }
 
-    ## Predictive R squared
-    R2p <- if (pred) {
-      if (!isGls(m)) {
-        if (R2 > 0) {
+    ## Predictive R-squared
+    R2p <- if (pred && !(isGls(m) || isMer(m) && isGlm(m))) {
+      if (R2 > 0) {
 
-          ## Leverage values (diagonals of the hat matrix, hii)
-          hii <- suppressWarnings(hatvalues(m)[obs])
-          s <- hii < 1
+        ## Leverage values (diagonals of the hat matrix, hii)
+        hii <- hatvalues(m)[obs]
+        s <- hii < 1
 
-          ## CV fitted values (from 'predictive' residuals)
-          f <- y - (y - f) / (1 - hii)
+        ## CV fitted values (response minus 'predictive' residuals)
+        pr <- (y - f) / (1 - hii)
+        f <- y - pr
 
-          ## Predictive R squared
-          Rp <- cov.wt(cbind(y, f)[s, ], w[s], cor = TRUE)$cor[1, 2]
-          if (Rp > 0) Rp^2 else 0
+        ## Predictive R-squared
+        Rp <- cov.wt(cbind(y, f)[s, ], w[s], cor = TRUE)$cor[1, 2]
+        if (Rp > 0) Rp^2 else 0
 
-        } else 0
-      } else NA
+      } else 0
     }
 
     ## Return values
