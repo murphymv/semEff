@@ -745,10 +745,9 @@ VIF <- function(mod, data = NULL, ...) {
 #' # NOTE: comparison not tested here for mixed models, as hierarchical data can
 #' # complicate the choice of an appropriate leave-one-out procedure. However,
 #' # there is no obvious reason why use of the leverage values (diagonals of the
-#' # hat matrix) to estimate CV predictions shouldn't generalise (roughly?) to
-#' # the mixed model case. In any case, users should exercise the appropriate
-#' # caution in interpretation of the predicted R-squared for mixed models,
-#' # particularly GLMMs.
+#' # hat matrix) to estimate CV predictions shouldn't generalise to the mixed
+#' # model case (at least for LMMs). In any case, users should exercise the
+#' # appropriate caution in interpretation.
 #' @export
 R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
                re.form = NULL, ...) {
