@@ -466,7 +466,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
     ## Model response
     y <- fitted(m) + resid(m, "response")
     if (!is.null(w)) y <- y[w > 0 & !is.na(w)]
-    if (!is.null(o)) y <- zapsmall(f$linkinv(f$linkfun(y) - o))
+    if (!is.null(o)) y <- f$linkinv(f$linkfun(y) - o)
     a <- names(attributes(y))
     attributes(y)[a != "names"] <- NULL
 
