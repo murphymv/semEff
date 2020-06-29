@@ -644,7 +644,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ## Extract a single model (if list)
     m1 <- if (isList(m)) m[[1]] else m
 
-    ## Model link function
+    ## Model error family/link functions
     f <- if (isBet(m1)) m1$link$mean else family(m1)
     lF <- f$linkfun; lI <- f$linkinv
 

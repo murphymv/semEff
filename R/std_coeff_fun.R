@@ -452,7 +452,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
     ## Update model with any supplied data
     if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
 
-    ## Error family
+    ## Model error family
     f <- if (isBet(m)) m$link$mean else family(m)
 
     ## Model weights and offset
@@ -466,11 +466,11 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
     ## Model response
     y <- fitted(m) + resid(m, "response")
     if (!is.null(w)) y <- y[w > 0 & !is.na(w)]
-    if (!is.null(o)) y <- f$linkinv(f$linkfun(y) - o)
+    if (!is.null(o)) y <- zapsmall(f$linkinv(f$linkfun(y) - o))
     a <- names(attributes(y))
     attributes(y)[a != "names"] <- NULL
 
-    ## Return on original or link scale
+    ## Return response on original or link scale
     if (isGlm(m) && link) glt(y, family = f, ...) else y
 
   }
@@ -1273,8 +1273,8 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (cen.y && int) {
       ym <- weighted.mean(y, w)
       if (isGlm(m)) {
-        lF <- (if (isBet(m)) m$link$mean else family(m))$linkfun
-        ym <- lF(ym)
+        f <- if (isBet(m)) m$link$mean else family(m)
+        ym <- f$linkfun(ym)
       }
       b[1] <- b[1] - ym
     }
