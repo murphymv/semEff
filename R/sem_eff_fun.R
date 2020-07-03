@@ -702,7 +702,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       } else 1
     }))
 
-    # Predictor means/SDs
+    ## Predictor means/SDs
     xm <- sapply(x, function(i) if (cen.x) mean(i) else 0)
     xmw <- sapply(x, function(i) if (cen.x) weighted.mean(i, w) else 0)
     xs <- sapply(x, function(i) if (std.x) sdW(i, w) else 1)

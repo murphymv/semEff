@@ -395,7 +395,8 @@ glt <- function(x, family = NULL, force.est = FALSE, ...) {
       repeat {
         xl <- predict(m) + resid(m, "working")
         xli <- f$linkinv(xl)
-        eql <- isTRUE(all.equal(x, xli, check.names = FALSE))
+        eql <- isTRUE(all.equal(x, xli, check.names = FALSE,
+                                tolerance = sqrt(.Machine$double.eps)))
         if (eql) return(xl) else {
           i <- i + 1
           suppressWarnings(
@@ -467,6 +468,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
     y <- fitted(m) + resid(m, "response")
     if (!is.null(w)) y <- y[w > 0 & !is.na(w)]
     if (!is.null(o)) y <- f$linkinv(f$linkfun(y) - o)
+    y[zapsmall(y) == 0] <- 0
     a <- names(attributes(y))
     attributes(y)[a != "names"] <- NULL
 
