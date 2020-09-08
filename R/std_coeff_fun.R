@@ -1305,7 +1305,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       names(br) <- paste0("(raw)_", names(br))
       b <- c(b, br)
     }
-    if (r.squared) c(b, R2(m, ...)) else b
+    if (r.squared) c(b, R2(m, envir = env, ...)) else b
 
   }
 
