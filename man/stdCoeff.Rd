@@ -15,6 +15,7 @@ stdCoeff(
   std.y = TRUE,
   unique.x = TRUE,
   refit.x = TRUE,
+  incl.raw = FALSE,
   r.squared = FALSE,
   ...
 )
@@ -28,7 +29,7 @@ when \code{mod} is a list, and the latter when it is a nested list (with
 matching list names). If set to \code{"equal"}, a simple average is
 calculated instead.}
 
-\item{data}{An optional dataset used to first re-fit the model(s).}
+\item{data}{An optional dataset, used to first re-fit the model(s).}
 
 \item{term.names}{An optional vector of term names used to extract and/or
 sort coefficients from the output.}
@@ -44,6 +45,10 @@ multicollinearity among predictors.}
 
 \item{refit.x}{Logical, whether the model should be re-fit with centred
 predictors.}
+
+\item{incl.raw}{Logical, whether to append the raw (unstandardised)
+coefficients to the output, i.e. those with all centring and
+standardisation options set to \code{FALSE}.}
 
 \item{r.squared}{Logical, whether R-squared values should also be returned.}
 

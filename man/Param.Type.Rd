@@ -4,12 +4,18 @@
 \alias{Param.Type}
 \alias{isInt}
 \alias{isInx}
+\alias{isPhi}
+\alias{isRaw}
 \alias{isR2}
 \title{Parameter Types}
 \usage{
 isInt(x)
 
 isInx(x)
+
+isPhi(x)
+
+isRaw(x)
 
 isR2(x)
 }
@@ -30,6 +36,10 @@ Functions to determine the presence/absence of certain model
 \item \code{isInt}: Is parameter an intercept?
 
 \item \code{isInx}: Is parameter a variable interaction (product term)?
+
+\item \code{isPhi}: Is parameter a beta regression precision coefficient?
+
+\item \code{isRaw}: Is parameter a raw (unstandardised) coefficient?
 
 \item \code{isR2}: Is parameter an R-squared value?
 }}

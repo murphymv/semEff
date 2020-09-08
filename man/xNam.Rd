@@ -9,7 +9,7 @@ xNam(mod, data = NULL, intercept = TRUE, aliased = TRUE, list = FALSE, ...)
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
-\item{data}{An optional dataset used to construct the model frame.}
+\item{data}{An optional dataset, used to construct the model frame.}
 
 \item{intercept}{Logical, whether the intercept should be included.}
 

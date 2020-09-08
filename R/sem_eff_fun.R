@@ -109,8 +109,9 @@
 #' # )
 #' @export
 semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
-                   ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL,
-                   ...) {
+                   # use.raw = FALSE,
+                   ci.conf = 0.95, ci.type = "bca", digits = 3,
+                   bci.arg = NULL, ...) {
 
 
   ### Prep
@@ -120,6 +121,22 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   ## Bootstrap SEM (if necessary)
   if (!all(sapply(sem, isBoot))) sem <- bootEff(sem, ...)
   if (!isList(sem)) sem <- list(sem)
+
+  # ## Use unstandardised effects (if present)?
+  # if (use.raw) {
+  #   sem <- lapply(sem, function(i) {
+  #     s <- isRaw(names(i$t0))
+  #     n <- sum(s)
+  #     if (n > 0) {
+  #       i$t0[1:n] <- i$t0[s]
+  #       i$t0 <- i$t0[!s]
+  #       a <- attributes(i$t)
+  #       i$t[, 1:n] <- i$t[, s]
+  #       i$t <- i$t[, !s, drop = FALSE]
+  #       attributes(i$t) <- a; i
+  #     } else i
+  #   })
+  # }
 
   ## Function to (recursively) replace parts of names/colnames in an object/list
   subNam <- function(p, r, x) {
@@ -160,7 +177,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
   ## Mediator names (default to endogenous predictors)
   all.p <- unique(unlist(lapply(sem[r], function(i) names(i$t0))))
-  all.p <- all.p[!isInt(all.p) & !isR2(all.p)]
+  all.p <- all.p[!isInt(all.p) & !isPhi(all.p) & !isR2(all.p)]
   en.p <- r[r %in% all.p]
   m <- if (length(en.p) > 0) {
     if (is.null(m)) en.p else m
@@ -611,10 +628,12 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
   ## Weights (for model averaging)
   w <- eval(a$weights); a$weights <- NULL
-  if (is.null(w) && isList(m)) {
-    w <- rMapply(function(i) NULL, m, SIMPLIFY = FALSE)
-    if (is.null(e)) e <- w
-    if (is.null(eb)) eb <- w
+  if (isList(m) && (isList(w) || is.null(w))) {
+    f <- function(x) NULL
+    N <- rMapply(f, m, SIMPLIFY = FALSE)
+    if (is.null(w)) w <- N else N <- lapply(m, f)
+    if (is.null(e)) e <- N
+    if (is.null(eb)) eb <- N
   }
 
   ## Coef standardisation options (for back-transforming predictions)
@@ -629,7 +648,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ## Effects
     if (is.null(e)) e <- do.call(stdCoeff, c(list(m, w), a))
     if (isBoot(e)) {eb <- e$t; e <- e$t0}
-    e <- e[!is.na(e) & !isR2(names(e))]
+    e <- e[!is.na(e) & !isPhi(names(e)) & !isR2(names(e))]
 
     ## Effect names
     en <- names(e)
@@ -683,6 +702,10 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
     ## Predictors
     dF <- function(...) data.frame(..., check.names = FALSE)
+    dM <- function(x) {
+      f <- reformulate(names(x))
+      dF(model.matrix.lm(f, data = x, na.action = "na.pass"))
+    }
     eT <- function(x, d) {
       eT <- function(x) eval(parse(text = x), d)
       if (grepl("poly\\(.*[0-9]$", x)) {
@@ -691,7 +714,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
         xd[, substr(x, n, n)]
       } else eT(x)
     }
-    d2 <- dF(model.matrix(reformulate(names(d)), data = d))
+    d2 <- dM(d)
     x <- dF(sapply(en, function(i) {
       if (!isInt(i)) {
         if (isInx(i)) {
@@ -712,10 +735,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
 
     ## Data to predict (standardise using original means/SDs)
-    if (!is.null(nd)) {
-      obs <- rownames(nd)
-      d2 <- dF(model.matrix(reformulate(names(nd)), data = nd))
-    }
+    if (!is.null(nd)) {obs <- rownames(nd); d2 <- dM(nd)}
     x <- dF(sapply(en, function(i) {
       if (!isInt(i)) {
         xi <- if (isInx(i)) {

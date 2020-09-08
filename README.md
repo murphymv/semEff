@@ -9,18 +9,18 @@
 status](https://travis-ci.org/murphymv/semEff.svg?branch=master)](https://travis-ci.org/murphymv/semEff)
 <!-- badges: end -->
 
-semEff provides functionality to automatically calculate direct,
+`semEff` provides functionality to automatically calculate direct,
 indirect, and total effects from ‘piecewise’ structural equation models,
 comprising lists of fitted models representing structured equations
 (Shipley 2000, 2009; Lefcheck 2016). Confidence intervals are provided
 via bootstrapping.
 
-Currently supported model classes are “lm”, “glm”, “lmerMod”,
-“glmerMod”, “lmerModLmerTest”, “gls”, and “betareg”.
+Currently supported model classes are `"lm"`, `"glm"`, `"lmerMod"`,
+`"glmerMod"`, `"lmerModLmerTest"`, `"gls"`, and `"betareg"`.
 
 ## Installation
 
-You can install the released version of semEff from
+You can install the released version of `semEff` from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
@@ -66,7 +66,7 @@ lapply(Shipley.SEM, formula)
 #> $Live
 #> Live ~ Growth + (1 | site) + (1 | tree)
 
-# ## Bootstrap model effects (takes a while...)
+# ## Bootstrap model effects (10000 reps... can take a while)
 # system.time(
 #   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 # )
@@ -112,7 +112,8 @@ tot.b <- totEff(eff, type = "boot")[["Growth"]]
 mod <- Shipley.SEM$Growth
 dat <- na.omit(Shipley)
 fit <- sapply(c("Date", "DD"), function(i) {
-  x <- data.frame(seq(min(dat[i]), max(dat[i]), length = 100)); names(x) <- i
+  x <- seq(min(dat[i]), max(dat[i]), length = 100)
+  x <- data.frame(x); names(x) <- i
   c(x, predEff(mod, newdata = x, effects = tot[i], eff.boot = tot.b))
 }, simplify = FALSE)
 
@@ -121,7 +122,8 @@ plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
   x2 <- fit[[1]]; f <- fit[[2]]; ci.l <- fit[[3]]; ci.u <- fit[[4]]
   ggplot () + 
     geom_point(aes(x, y)) +
-    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u, alpha = "0.15"), fill = "blue") +
+    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u, alpha = "0.15"), 
+                fill = "blue") +
     geom_line(aes(x2, f), color = "blue", size = 1) +
     xlab(x.lab) + ylab(y.lab) +
     theme_bw() + theme(legend.position = "none")
@@ -148,20 +150,22 @@ plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD,
 ``` r
 
 ## Huge amount of scatter around each fit as random effects explain most
-## variation in this model! Compare conditional vs. marginal R-squared:
-round(c(R2c = R2(mod)[[1]], R2m = R2(mod, re.form = NA)[[1]]), 3)
-#>   R2c   R2m 
-#> 0.794 0.048
+## variation in stem growth! Compare conditional vs. marginal R-squared:
+r2 <- c(R2_cond = R2(mod)[[1]], R2_marg = R2(mod, re.form = NA)[[1]])
+round(r2, 3)
+#> R2_cond R2_marg 
+#>   0.794   0.048
 ```
 
 ## References
 
   - Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
-    modelling in r for ecology, evolution, and systematics. Methods in
-    Ecology and Evolution, 7(5), 573–579. <https://doi.org/f8s8rb>
+    modelling in r for ecology, evolution, and systematics. *Methods in
+    Ecology and Evolution*, **7**(5), 573–579. <https://doi.org/f8s8rb>
   - Shipley, B. (2000). A New Inferential Test for Path Models Based on
-    Directed Acyclic Graphs. Structural Equation Modeling: A
-    Multidisciplinary Journal, 7(2), 206–218. <https://doi.org/cqm32d>
+    Directed Acyclic Graphs. *Structural Equation Modeling: A
+    Multidisciplinary Journal*, **7**(2), 206–218.
+    <https://doi.org/cqm32d>
   - Shipley, B. (2009). Confirmatory path analysis in a generalized
-    multilevel context. Ecology, 90(2), 363–368.
+    multilevel context. *Ecology*, **90**(2), 363–368.
     <https://doi.org/bqd43d>

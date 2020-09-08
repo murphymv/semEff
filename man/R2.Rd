@@ -17,7 +17,7 @@ R2(
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
-\item{data}{An optional dataset used to first re-fit the model(s).}
+\item{data}{An optional dataset, used to first re-fit the model(s).}
 
 \item{adj, pred}{Logical. If \code{TRUE} (default), adjusted and/or predicted
 R-squared are also returned (the latter is not available for all model
@@ -32,7 +32,7 @@ calculation of R-squared. Defaults to \code{NULL}, meaning all random
 effects are included. See \code{\link[lme4]{predict.merMod}} for further
 specification details.}
 
-\item{...}{Not currently used.}
+\item{...}{Arguments to \code{eval} (for evaluating model data).}
 }
 \value{
 A numeric vector of the R-squared value(s), or an array, list of

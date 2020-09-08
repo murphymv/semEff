@@ -35,7 +35,7 @@ Recursively apply a function to a list or lists.
   either the first or second objects in \code{...} are not of class
   \code{"list"}. Thus, unlike \code{mapply}, it will not iterate over
   non-list elements in these objects, but instead returns the output of
-  \code{f(...)}.
+  \code{FUN(...)}.
 
   This is primarily a convenience function used internally to enable
   recursive application of functions to lists or nested lists. Its particular

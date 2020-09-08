@@ -9,7 +9,7 @@ VIF(mod, data = NULL, ...)
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
-\item{data}{An optional dataset used to first re-fit the model(s).}
+\item{data}{An optional dataset, used to first re-fit the model(s).}
 
 \item{...}{Arguments to \code{eval} (for evaluating model data).}
 }

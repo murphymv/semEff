@@ -27,7 +27,7 @@ bootEff(
 \item{seed}{Seed for the random number generator. If not provided, a random
 five-digit integer is used (see Details).}
 
-\item{data}{An optional dataset used to first re-fit the model(s).}
+\item{data}{An optional dataset, used to first re-fit the model(s).}
 
 \item{ran.eff}{For mixed models with nested random effects, the name of the
 variable comprising the highest-level random effect. For non-nested random

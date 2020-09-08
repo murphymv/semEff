@@ -9,7 +9,7 @@ getY(mod, data = NULL, link = FALSE, offset = FALSE, ...)
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
-\item{data}{An optional dataset used to first re-fit the model(s).}
+\item{data}{An optional dataset, used to first re-fit the model(s).}
 
 \item{link}{Logical. If \code{TRUE}, return the GLM response variable on the
 link scale (see Details).}
@@ -17,8 +17,7 @@ link scale (see Details).}
 \item{offset}{Logical. If \code{TRUE}, include model offset(s) in the
 response.}
 
-\item{...}{Arguments to \code{glt} (not including \code{family}, which is
-determined from \code{mod}).}
+\item{...}{Arguments to \code{eval} (for evaluating model data).}
 }
 \value{
 A numeric vector comprising the response variable on the original or
@@ -35,8 +34,8 @@ Extract the response variable from a fitted model on the
   results in undefined values, it is replaced by an estimate based on the
   'working' response variable of the GLM (see \code{\link[semEff]{glt}}).
 
-  Any offset variables are removed from the response by default. This means
-  that, for example, rates rather than raw counts will be returned for
+  Any offset variables are subtracted from the response by default. This
+  means that, for example, rates rather than raw counts will be returned for
   poisson GLMs (where applicable).
 }
 \examples{

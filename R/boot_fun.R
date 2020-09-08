@@ -7,7 +7,7 @@
 #' @param R Number of bootstrap replicates to generate.
 #' @param seed Seed for the random number generator. If not provided, a random
 #'   five-digit integer is used (see Details).
-#' @param data An optional dataset used to first re-fit the model(s).
+#' @param data An optional dataset, used to first re-fit the model(s).
 #' @param ran.eff For mixed models with nested random effects, the name of the
 #'   variable comprising the highest-level random effect. For non-nested random
 #'   effects, specify \code{"crossed"}. Non-specification of this argument when
@@ -137,9 +137,8 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 
   ## Weights (for model averaging)
   w <- eval(a$weights); a$weights <- NULL
-  nw <- is.null(w)
-  if (isList(m) && (nw || all(w == "equal"))) {
-    if (nw && any(sapply(m, isList)))
+  if (isList(m) && (is.null(w) || all(w == "equal"))) {
+    if (is.null(w) && any(sapply(m, isList)))
       stop("'weights' must be supplied for model averaging (or specify 'equal').")
     w <- lapply(m, function(i) w)
   }
@@ -192,7 +191,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 
   ## Update models with any supplied data
   upd <- function(m, d) {
-    f <- function(i) eval(update(i, data = d, evaluate = FALSE))
+    f <- function(m) eval(update(m, data = d, evaluate = FALSE))
     rMapply(f, m, SIMPLIFY = FALSE)
   }
   if (!is.null(d)) m <- upd(m, d)
