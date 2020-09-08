@@ -790,7 +790,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       if (is.null(o)) o <- 0
 
       ## Response and fitted values
-      y <- getY(m, offset = offset); obs <- names(y)
+      y <- getY(m, offset = offset, ...); obs <- names(y)
       f <- lI(predict(m, re.form = rf)[obs] - o)
 
       ## R-squared
