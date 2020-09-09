@@ -25,6 +25,8 @@
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param bM.arg A named list of any additional arguments to \code{bootMer}.
+#' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to \code{parent.frame()}.
 #' @param ... Arguments to \code{stdCoeff}.
 #' @details \code{bootEff} uses the \code{boot} function (primarily) to
 #'   bootstrap effects from a fitted model or list of models (i.e. standardised
@@ -125,12 +127,10 @@
 #' @export
 bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
                     cor.err = NULL, catch.err = TRUE, parallel = "snow",
-                    ncpus = NULL, cl = NULL, bM.arg = NULL, ...) {
+                    ncpus = NULL, cl = NULL, bM.arg = NULL,
+                    env = parent.frame(), ...) {
 
   m <- mod; d <- data; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
-
-  ## Main function environment
-  env <- environment()
 
   ## Arguments to stdCoeff
   a <- list(...)
@@ -194,7 +194,8 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
     f <- function(m) eval(update(m, data = d, evaluate = FALSE))
     rMapply(f, m, SIMPLIFY = FALSE)
   }
-  if (!is.null(d)) m <- upd(m, d)
+  if (!is.null(d)) {m <- upd(m, d); env <- environment()}
+  else d <- getData(m, merge = TRUE, env = env)
 
   ## Set up parallel processing
   if (p != "no") {
@@ -233,7 +234,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 
     ## Data to resample (x)
     ## (mixed model: x = highest-level random effect)
-    d <- getData(m, subset = TRUE, merge = TRUE, envir = env)
+    d <- getData(m, subset = TRUE, merge = TRUE, env = env)
     if (!mer2) x <- if (mer) unique(d[re]) else d
 
     ## Bootstrap statistic (s)
@@ -252,7 +253,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
     s <- if (catch.err) {
       function(...) tryCatch(stat(...), error = function(e) NA)
     } else stat
-    if (mer2) assign("s", s, env)
+    if (mer2) assign("s", s, parent.frame())
 
     ## Perform bootstrap
     B <- if (!mer2) {
@@ -303,10 +304,6 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
   ## Add bootstrapped correlated errors
   if (any.ce) {
 
-    ## Data used to fit models
-    if (is.null(d)) d <- getData(m, merge = TRUE)
-    obs <- rownames(d)
-
     ## Function to get (weighted) resids/avg. resids from model/boot obj./list
     res <- function(x, w = NULL) {
       f <- function(m) {
@@ -333,16 +330,17 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
     ## Bootstrapped correlated errors
     BCE <- Map(function(i, j) {
 
-      ## Model/list 1
+      ## Model/list, weights, and dataset 1
       m1 <- m[[i[1]]]; w1 <- w[[i[1]]]
-      d1 <- getData(m1, subset = TRUE, merge = TRUE, envir = env)
+      d1 <- getData(m1, subset = TRUE, merge = TRUE, env = env)
 
-      ## Model/list 2
+      ## Model/list, weights, and dataset 2
       m2 <- m[[i[2]]]; w2 <- w[[i[2]]]
-      d2 <- getData(m2, subset = TRUE, merge = TRUE, envir = env)
+      d2 <- getData(m2, subset = TRUE, merge = TRUE, env = env)
 
       ## Data to resample (x)
       ## (mixed model: x = highest-level random effect)
+      obs <- rownames(d)
       o <- obs %in% rownames(d1) & obs %in% rownames(d2)
       if (!all(o)) d <- d[o, ]
       if (!mer2) {
@@ -368,7 +366,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
         e <- function(e) if (mer2) rep(NA, nrow(d)) else NA
         function(...) tryCatch(stat(...), error = e)
       } else stat
-      if (mer2) assign("s", s, env)
+      if (mer2) assign("s", s, parent.frame())
 
       ## Perform bootstrap
       B <- if (!mer2) {
@@ -389,9 +387,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
         ## Correlate (and add to new boot object)
         B <- if (isList(B1)) B1[[1]] else B1
         B$t0 <- cor(r1, r2)
-        B$t <- matrix(sapply(1:R, function(i) {
-          cor(rb1[i, ], rb2[i, ])
-        }))
+        B$t <- matrix(sapply(1:R, function(i) cor(rb1[i, ], rb2[i, ])))
         B$call <- NULL; B$statistic <- NULL; B$mle <- NULL
         B
 

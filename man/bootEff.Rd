@@ -16,6 +16,7 @@ bootEff(
   ncpus = NULL,
   cl = NULL,
   bM.arg = NULL,
+  env = parent.frame(),
   ...
 )
 }
@@ -52,6 +53,9 @@ any such errors will cause the function to exit.}
 (default), a local cluster is created using the specified number of cores.}
 
 \item{bM.arg}{A named list of any additional arguments to \code{bootMer}.}
+
+\item{env}{Environment in which to look for model data (if none supplied).
+Defaults to \code{parent.frame()}.}
 
 \item{...}{Arguments to \code{stdCoeff}.}
 }
