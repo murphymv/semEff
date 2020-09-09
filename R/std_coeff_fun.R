@@ -62,7 +62,9 @@ sdW <- function(...) {
 #' @param merge Logical. If \code{TRUE}, and \code{mod} is a list or nested
 #'   list, a single dataset containing all variables used to fit models is
 #'   returned.
-#' @param ... Arguments to \code{eval}.
+#' @param env Environment in which to look for data. Defaults to
+#'   \code{parent.frame()}.
+#' @param ... Not currently used.
 #' @details This is a simple convenience function to return the data used to fit
 #'   a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
@@ -84,7 +86,8 @@ sdW <- function(...) {
 #' getData(Shipley.SEM)  # from SEM (list)
 #' getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
 #' @export
-getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
+getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame(),
+                    ...) {
 
   m <- mod
 
@@ -93,7 +96,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 
     ## Data from 'data' argument of model call
     mc <- getCall(m)
-    d <- eval(mc$data, ...)
+    d <- eval(mc$data, env)
     if (!is.null(d)) d <- data.frame(d) else
       stop("'data' argument of model call not specified.")
 
@@ -136,7 +139,9 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #'   (see Details).
 #' @param list Logical, whether names should be returned as a list, with all
 #'   multi-coefficient terms grouped under their main term names.
-#' @param ... Arguments to \code{eval} (for evaluating model data).
+#' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to \code{parent.frame()}.
+#' @param ... Not currently used.
 #' @details Extract term names from a fitted model. Names of terms for which
 #'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
 #'   (default). These may be terms which are perfectly correlated with other
@@ -161,7 +166,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, ...) {
 #' xNam(m, aliased = FALSE, list = TRUE)  # names as list
 #' @export
 xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
-                 list = FALSE, ...) {
+                 list = FALSE, env = parent.frame(), ...) {
 
   m <- mod; d <- data
 
@@ -180,13 +185,13 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     })
 
     ## Predictor values
-    if (is.null(d)) d <- getData(m, ...)
+    if (is.null(d)) d <- getData(m, env = env)
     mf <- suppressWarnings(model.frame(m, data = d))
     x <- mf[names(mf) %in% unlist(unname(XN))]
     x <- sapply(x, "[", simplify = FALSE)
 
     ## Expand factor/matrix terms (list)
-    f <- sapply(x, is.factor); f1 <- names(f[f][1])
+    f <- sapply(x, is.factor)
     xn2 <- unique(c(xn, names(x)))
     XN2 <- sapply(xn2, function(i) {
       if (i %in% names(x)) {
@@ -195,10 +200,12 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
           ci <- contrasts(d[[i]])
           ct <- getCall(m)$contrasts
           xi <- if (!is.null(ct)) {
-            ci <- ct[names(ct) %in% i][[1]]; chr <- is.character(ci)
+            ci <- ct[names(ct) %in% i][[1]]
+            chr <- is.character(ci)
             ci <- eval(if (chr) parse(text = ci) else ci)
             if (is.function(ci)) {
-              l <- levels(xi); ci(if (!chr) length(l) else l)
+              l <- levels(xi)
+              ci(if (!chr) length(l) else l)
             } else ci
           } else ci
         }
@@ -217,7 +224,10 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     }, simplify = FALSE)
 
     ## If no intercept, generate all levels for first factor
-    if (!int && any(f)) XN[[f1]] <- paste0(f1, levels(x[[f1]]))
+    if (!int && any(f)) {
+      f1 <- names(f[f][1])
+      XN[[f1]] <- paste0(f1, levels(x[[f1]]))
+    }
 
     ## Drop some names? (aliased, subsetted factor levels, etc.)
     b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
@@ -394,7 +404,7 @@ glt <- function(x, family = NULL, force.est = FALSE, ...) {
       )
       i <- 0
       repeat {
-        xl <- predict(m) + resid(m, type = "working")
+        xl <- predict(m) + resid(m, "working")
         xli <- f$linkinv(xl)
         eql <- isTRUE(all.equal(x, xli, check.names = FALSE,
                                 tolerance = sqrt(.Machine$double.eps)))
@@ -424,7 +434,9 @@ glt <- function(x, family = NULL, force.est = FALSE, ...) {
 #'   link scale (see Details).
 #' @param offset Logical. If \code{TRUE}, include model offset(s) in the
 #'   response.
-#' @param ... Arguments to \code{eval} (for evaluating model data).
+#' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to \code{parent.frame()}.
+#' @param ... Not currently used.
 #' @details \code{getY} will return the response variable from a model by
 #'   summing the fitted values and the response residuals. If \code{link = TRUE}
 #'   and the model is a GLM, the response is returned on the link scale. If this
@@ -443,7 +455,8 @@ glt <- function(x, family = NULL, force.est = FALSE, ...) {
 #' ## Estimated response in link scale from binomial model
 #' getY(Shipley.SEM$Live, link = TRUE)
 #' @export
-getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
+getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
+                 env = parent.frame(), ...) {
 
   m <- mod; d <- data
 
@@ -451,7 +464,10 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
   getY <- function(m) {
 
     ## Re-fit model with any supplied data
-    if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
+    if (!is.null(d)) {
+      m <- eval(update(m, data = d, evaluate = FALSE))
+      env <- environment()
+    }
 
     ## Model error family
     f <- if (isBet(m)) m$link$mean else family(m)
@@ -459,13 +475,13 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
     ## Model weights and offset
     w <- weights(m)
     o <- if (!offset) {
-      if (is.null(d)) d <- getData(m, subset = TRUE, ...)
+      if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
       mf <- suppressWarnings(model.frame(m, data = d))
       model.offset(mf)
     }
 
     ## Model response
-    y <- fitted(m) + resid(m, type = "response")
+    y <- fitted(m) + resid(m, "response")
     if (!is.null(w)) y <- y[w > 0 & !is.na(w)]
     if (!is.null(o)) y <- f$linkinv(f$linkfun(y) - o)
     y[zapsmall(y) == 0] <- 0
@@ -488,7 +504,9 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
 #'   fitted model via the variance-covariance matrix of coefficients.
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset, used to first re-fit the model(s).
-#' @param ... Arguments to \code{eval} (for evaluating model data).
+#' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to \code{parent.frame()}.
+#' @param ... Not currently used.
 #' @details \code{VIF} calculates generalised variance inflation factors (GVIF)
 #'   as described in Fox & Monette (1992), and also implemented in the
 #'   \code{vif} function in the \pkg{car} package. However, whereas \code{vif}
@@ -525,7 +543,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, ...) {
 #' m <- lm(y ~ poly(x1, 2) + x2 + x3, data = d)
 #' VIF(m)
 #' @export
-VIF <- function(mod, data = NULL, ...) {
+VIF <- function(mod, data = NULL, env = parent.frame(), ...) {
 
   m <- mod; d <- data
 
@@ -533,17 +551,20 @@ VIF <- function(mod, data = NULL, ...) {
   VIF <- function(m) {
 
     ## Re-fit model with any supplied data
-    if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
+    if (!is.null(d)) {
+      m <- eval(update(m, data = d, evaluate = FALSE))
+      env <- environment()
+    }
 
     ## Term names
-    XN <- xNam(m, intercept = FALSE, list = TRUE, ...)
-    xn <- xNam(m, intercept = FALSE, aliased = FALSE, ...)
+    XN <- xNam(m, intercept = FALSE, list = TRUE, env = env)
+    xn <- xNam(m, intercept = FALSE, aliased = FALSE, env = env)
 
     ## VIFs
     if (length(xn) > 1) {
 
       ## T/F for terms as matrices
-      if (is.null(d)) d <- getData(m, ...)
+      if (is.null(d)) d <- getData(m, env = env)
       mf <- suppressWarnings(model.frame(m, data = d))
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
@@ -605,7 +626,9 @@ VIF <- function(mod, data = NULL, ...) {
 #'   calculation of R-squared. Defaults to \code{NULL}, meaning all random
 #'   effects are included. See \code{\link[lme4]{predict.merMod}} for further
 #'   specification details.
-#' @param ... Arguments to \code{eval} (for evaluating model data).
+#' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to \code{parent.frame()}.
+#' @param ... Not currently used.
 #' @details Various approaches to the calculation of a goodness-of-fit measure
 #'   for GLMs analogous to R-squared in the ordinary linear model have been
 #'   proposed. Generally termed 'pseudo R-squared' measures, they include
@@ -752,7 +775,7 @@ VIF <- function(mod, data = NULL, ...) {
 #' # appropriate caution in interpretation.
 #' @export
 R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
-               re.form = NULL, ...) {
+               re.form = NULL, env = parent.frame(), ...) {
 
   m <- mod; d <- data; rf <- re.form
 
@@ -760,7 +783,10 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
   R2 <- function(m) {
 
     ## Re-fit model with any supplied data
-    if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
+    if (!is.null(d)) {
+      m <- eval(update(m, data = d, evaluate = FALSE))
+      env <- environment()
+    }
 
     ## No. observations/parameters
     n <- nobs(m)
@@ -783,15 +809,17 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 
       ## Model offset
       o <- if (!offset) {
-        if (is.null(d)) d <- getData(m, subset = TRUE, ...)
+        if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
         mf <- suppressWarnings(model.frame(m, data = d))
         model.offset(mf)
       }
       if (is.null(o)) o <- 0
 
-      ## Response and fitted values
-      y <- getY(m, link = FALSE, offset = offset, ...)
+      ## Response
+      y <- getY(m, offset = offset, env = env)
       obs <- names(y)
+
+      ## Fitted values
       f <- lI(predict(m, re.form = rf)[obs] - o)
 
       ## R-squared
@@ -985,6 +1013,8 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'   coefficients to the output, i.e. those with all centring and
 #'   standardisation options set to \code{FALSE}.
 #' @param r.squared Logical, whether R-squared values should also be returned.
+#' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to \code{parent.frame()}.
 #' @param ... Arguments to \code{R2}.
 #' @details \code{stdCoeff} will calculate fully standardised coefficients in
 #'   standard deviation units for a fitted model or list of models. It achieves
@@ -1127,7 +1157,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
                      cen.x = TRUE, cen.y = TRUE, std.x = TRUE, std.y = TRUE,
                      unique.x = TRUE, refit.x = TRUE, incl.raw = FALSE,
-                     r.squared = FALSE, ...) {
+                     r.squared = FALSE, env = parent.frame(), ...) {
 
   m <- mod; w <- weights; d <- data; bn <- term.names
 
@@ -1135,7 +1165,10 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   stdCoeff <- function(m) {
 
     ## Re-fit model with any supplied data
-    if (!is.null(d)) m <- eval(update(m, data = d, evaluate = FALSE))
+    if (!is.null(d)) {
+      m <- eval(update(m, data = d, evaluate = FALSE))
+      env <- environment()
+    }
 
     ## Coefficients
     b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
@@ -1157,8 +1190,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     w <- w[w > 0 & !is.na(w)]
 
     ## Response
-    env <- if (is.null(d)) parent.frame() else environment()
-    y <- getY(m, envir = env)
+    y <- getY(m, env = env)
     obs <- names(y)
 
     ## Centre/standardise x
@@ -1166,7 +1198,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
       ## Predictors
       dF <- function(...) data.frame(..., check.names = FALSE)
-      if (is.null(d)) d <- getData(m, subset = TRUE)
+      if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
       x <- dF(model.matrix(m, data = d))[xn]
 
       ## Centre predictors and adjust coefs/intercept
@@ -1275,7 +1307,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         } else m
 
         ## Divide coefs by square root of VIFs
-        vif <- na.omit(VIF(m2, envir = environment()))
+        vif <- na.omit(VIF(m2, env = environment()))
         b[xn] <- b[xn] / sqrt(vif)
 
       }
@@ -1292,7 +1324,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       b[1] <- b[1] - ym
     }
     if (std.y) {
-      if (isGlm(m)) y <- getY(m, link = TRUE, envir = env)
+      if (isGlm(m)) y <- getY(m, link = TRUE, env = env)
       ys <- sdW(y, w)
       b <- b / ys
     }
@@ -1306,7 +1338,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       names(br) <- paste0("(raw)_", names(br))
       b <- c(b, br)
     }
-    if (r.squared) c(b, R2(m, envir = env, ...)) else b
+    if (r.squared) c(b, R2(m, env = env, ...)) else b
 
   }
 

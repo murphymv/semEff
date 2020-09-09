@@ -17,6 +17,7 @@ stdCoeff(
   refit.x = TRUE,
   incl.raw = FALSE,
   r.squared = FALSE,
+  env = parent.frame(),
   ...
 )
 }
@@ -51,6 +52,9 @@ coefficients to the output, i.e. those with all centring and
 standardisation options set to \code{FALSE}.}
 
 \item{r.squared}{Logical, whether R-squared values should also be returned.}
+
+\item{env}{Environment in which to look for model data (if none supplied).
+Defaults to \code{parent.frame()}.}
 
 \item{...}{Arguments to \code{R2}.}
 }

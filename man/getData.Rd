@@ -4,7 +4,7 @@
 \alias{getData}
 \title{Get Model Data}
 \usage{
-getData(mod, subset = FALSE, merge = FALSE, ...)
+getData(mod, subset = FALSE, merge = FALSE, env = parent.frame(), ...)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
@@ -16,7 +16,10 @@ model(s) are returned (i.e. missing observations (\code{NA}) are removed).}
 list, a single dataset containing all variables used to fit models is
 returned.}
 
-\item{...}{Arguments to \code{eval}.}
+\item{env}{Environment in which to look for data. Defaults to
+\code{parent.frame()}.}
+
+\item{...}{Not currently used.}
 }
 \value{
 A data frame of the variables used to fit the model(s), or a list or

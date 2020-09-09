@@ -4,7 +4,7 @@
 \alias{getY}
 \title{Get Model Response Variable}
 \usage{
-getY(mod, data = NULL, link = FALSE, offset = FALSE, ...)
+getY(mod, data = NULL, link = FALSE, offset = FALSE, env = parent.frame(), ...)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
@@ -17,7 +17,10 @@ link scale (see Details).}
 \item{offset}{Logical. If \code{TRUE}, include model offset(s) in the
 response.}
 
-\item{...}{Arguments to \code{eval} (for evaluating model data).}
+\item{env}{Environment in which to look for model data (if none supplied).
+Defaults to \code{parent.frame()}.}
+
+\item{...}{Not currently used.}
 }
 \value{
 A numeric vector comprising the response variable on the original or
