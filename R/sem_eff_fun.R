@@ -513,6 +513,8 @@ totEff <- function(...) {
 #'   \code{NULL} (default), all available cores are used.
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
+#' @param env Environment in which to look for model data. Defaults to
+#'   \code{parent.frame()}.
 #' @param ... Arguments to \code{stdCoeff}.
 #' @details Generate predicted values for SEM direct, indirect, or total effects
 #'   on a response variable, which should be supplied to \code{effects}. These
@@ -616,9 +618,10 @@ totEff <- function(...) {
 #' stopifnot(all.equal(f1, f2))
 #' @export
 predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
-                    re.form = NA, type = "link", ci.conf = 0.95, ci.type = "bca",
-                    interaction = NULL, digits = 3, bci.arg = NULL,
-                    parallel = "no", ncpus = NULL, cl = NULL, ...) {
+                    re.form = NA, type = "link", interaction = NULL,
+                    ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL,
+                    parallel = "no", ncpus = NULL, cl = NULL,
+                    env = parent.frame(), ...) {
 
   m <- mod; nd <- newdata; e <- effects; eb <- eff.boot; rf <- re.form;
   ix <- interaction; p <- parallel; nc <- ncpus
@@ -627,13 +630,21 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   a <- list(...)
 
   ## Weights (for model averaging)
-  w <- eval(a$weights); a$weights <- NULL
+  w <- a$weights; a$weights <- NULL
   if (isList(m) && (isList(w) || is.null(w))) {
     f <- function(x) NULL
     N <- rMapply(f, m, SIMPLIFY = FALSE)
     if (is.null(w)) w <- N else N <- lapply(m, f)
     if (is.null(e)) e <- N
     if (is.null(eb)) eb <- N
+  }
+
+  ## Re-fit model(s) with any supplied data
+  d <- a$data; a$data <- NULL
+  if (!is.null(d)) {
+    u <- function(m) eval(update(m, data = d, evaluate = FALSE))
+    m <- rMapply(u, m, SIMPLIFY = FALSE)
+    env <- environment()
   }
 
   ## Coef standardisation options (for back-transforming predictions)
@@ -646,7 +657,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   predEff <- function(m, w, e, eb) {
 
     ## Effects
-    if (is.null(e)) e <- do.call(stdCoeff, c(list(m, w), a))
+    if (is.null(e)) e <- do.call(stdCoeff, c(list(m, w, env = env), a))
     if (isBoot(e)) {eb <- e$t; e <- e$t0}
     e <- e[!is.na(e) & !isPhi(names(e)) & !isR2(names(e))]
 
@@ -656,11 +667,12 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
     })
 
-    ## Model data
-    d <- getData(m, subset = TRUE, merge = TRUE)
+    ## Data used to fit model(s)
+    if (is.null(d)) d <- getData(m, subset = TRUE, merge = TRUE, env = env)
     obs <- rownames(d)
 
-    ## Extract a single model (if list)
+    ## Extract the first model, if list
+    ## (model type and specification should be consistent)
     m1 <- if (isList(m)) m[[1]] else m
 
     ## Model error family/link functions
@@ -702,9 +714,9 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
 
     ## Predictors
     dF <- function(...) data.frame(..., check.names = FALSE)
-    dM <- function(x) {
-      f <- reformulate(names(x))
-      dF(model.matrix.lm(f, data = x, na.action = "na.pass"))
+    dM <- function(d) {
+      f <- reformulate(names(d))
+      dF(model.matrix.lm(f, data = d, na.action = "na.pass"))
     }
     eT <- function(x, d) {
       eT <- function(x) eval(parse(text = x), d)
@@ -731,8 +743,8 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     xs <- sapply(x, function(i) if (std.x) sdW(i, w) else 1)
 
     ## Response mean/SD (link scale)
-    ym <- if (cen.y) lF(weighted.mean(getY(m1), w)) else 0
-    ys <- if (std.y) sdW(getY(m1, link = TRUE), w) else 1
+    ym <- if (cen.y) lF(weighted.mean(getY(m1, env = env), w)) else 0
+    ys <- if (std.y) sdW(getY(m1, link = TRUE, env = env), w) else 1
 
     ## Data to predict (standardise using original means/SDs)
     if (!is.null(nd)) {obs <- rownames(nd); d2 <- dM(nd)}

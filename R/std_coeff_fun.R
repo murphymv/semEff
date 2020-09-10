@@ -98,13 +98,13 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame(),
     mc <- getCall(m)
     d <- eval(mc$data, env)
     if (!is.null(d)) d <- data.frame(d) else
-      stop("'data' argument of model call not specified.")
+      stop("'data' argument of model call not specified, or data is NULL.")
 
     ## All var names from model call
     f <- c(formula(m), mc$subset, mc$weights, mc$offset, mc$correlation)
     vn <- unlist(lapply(f, all.vars))
     if (!all(vn %in% names(d)))
-      stop("'data' does not contain all model variables.")
+      stop("'data' does not contain all variables used to fit model.")
 
     ## Subset data for model observations?
     if (subset) {
@@ -133,14 +133,13 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame(),
 #' @title Get Model Term Names
 #' @description Extract term names from a fitted model object.
 #' @param mod A fitted model object, or a list or nested list of such objects.
-#' @param data An optional dataset, used to construct the model frame.
 #' @param intercept Logical, whether the intercept should be included.
 #' @param aliased Logical, whether names of aliased terms should be included
 #'   (see Details).
 #' @param list Logical, whether names should be returned as a list, with all
 #'   multi-coefficient terms grouped under their main term names.
-#' @param env Environment in which to look for model data (if none supplied).
-#'   Defaults to \code{parent.frame()}.
+#' @param env Environment in which to look for model data (used to construct the
+#'   model frame). Defaults to \code{parent.frame()}.
 #' @param ... Not currently used.
 #' @details Extract term names from a fitted model. Names of terms for which
 #'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
@@ -165,10 +164,10 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame(),
 #' xNam(m, aliased = FALSE)  # drop term that cannot be estimated (x3)
 #' xNam(m, aliased = FALSE, list = TRUE)  # names as list
 #' @export
-xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
-                 list = FALSE, env = parent.frame(), ...) {
+xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
+                 env = parent.frame(), ...) {
 
-  m <- mod; d <- data
+  m <- mod
 
   ## Function
   xNam <- function(m) {
@@ -185,7 +184,7 @@ xNam <- function(mod, data = NULL, intercept = TRUE, aliased = TRUE,
     })
 
     ## Predictor values
-    if (is.null(d)) d <- getData(m, env = env)
+    d <- getData(m, env = env)
     mf <- suppressWarnings(model.frame(m, data = d))
     x <- mf[names(mf) %in% unlist(unname(XN))]
     x <- sapply(x, "[", simplify = FALSE)

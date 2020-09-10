@@ -6,7 +6,6 @@
 \usage{
 xNam(
   mod,
-  data = NULL,
   intercept = TRUE,
   aliased = TRUE,
   list = FALSE,
@@ -17,8 +16,6 @@ xNam(
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
-\item{data}{An optional dataset, used to construct the model frame.}
-
 \item{intercept}{Logical, whether the intercept should be included.}
 
 \item{aliased}{Logical, whether names of aliased terms should be included
@@ -27,8 +24,8 @@ xNam(
 \item{list}{Logical, whether names should be returned as a list, with all
 multi-coefficient terms grouped under their main term names.}
 
-\item{env}{Environment in which to look for model data (if none supplied).
-Defaults to \code{parent.frame()}.}
+\item{env}{Environment in which to look for model data (used to construct the
+model frame). Defaults to \code{parent.frame()}.}
 
 \item{...}{Not currently used.}
 }

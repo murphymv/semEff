@@ -132,11 +132,14 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 
   m <- mod; d <- data; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
 
+  ## Main function environment
+  main.env <- environment()
+
   ## Arguments to stdCoeff
   a <- list(...)
 
   ## Weights (for model averaging)
-  w <- eval(a$weights); a$weights <- NULL
+  w <- a$weights; a$weights <- NULL
   if (isList(m) && (is.null(w) || all(w == "equal"))) {
     if (is.null(w) && any(sapply(m, isList)))
       stop("'weights' must be supplied for model averaging (or specify 'equal').")
@@ -189,13 +192,12 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 
   }
 
-  ## Update models with any supplied data
+  ## Re-fit model(s) with any supplied data
   upd <- function(m, d) {
-    f <- function(m) eval(update(m, data = d, evaluate = FALSE))
-    rMapply(f, m, SIMPLIFY = FALSE)
+    u <- function(m) eval(update(m, data = d, evaluate = FALSE))
+    rMapply(u, m, SIMPLIFY = FALSE)
   }
-  if (!is.null(d)) {m <- upd(m, d); env <- environment()}
-  else d <- getData(m, merge = TRUE, env = env)
+  if (!is.null(d)) {m <- upd(m, d); env <- main.env}
 
   ## Set up parallel processing
   if (p != "no") {
@@ -253,7 +255,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
     s <- if (catch.err) {
       function(...) tryCatch(stat(...), error = function(e) NA)
     } else stat
-    if (mer2) assign("s", s, parent.frame())
+    if (mer2) assign("s", s, main.env)
 
     ## Perform bootstrap
     B <- if (!mer2) {
@@ -304,6 +306,10 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
   ## Add bootstrapped correlated errors
   if (any.ce) {
 
+    ## Data used to fit models
+    if (is.null(d)) d <- getData(m, merge = TRUE, env = env)
+    obs <- rownames(d)
+
     ## Function to get (weighted) resids/avg. resids from model/boot obj./list
     res <- function(x, w = NULL) {
       f <- function(m) {
@@ -330,17 +336,16 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
     ## Bootstrapped correlated errors
     BCE <- Map(function(i, j) {
 
-      ## Model/list, weights, and dataset 1
+      ## Model/list, weights, and data 1
       m1 <- m[[i[1]]]; w1 <- w[[i[1]]]
       d1 <- getData(m1, subset = TRUE, merge = TRUE, env = env)
 
-      ## Model/list, weights, and dataset 2
+      ## Model/list, weights, and data 2
       m2 <- m[[i[2]]]; w2 <- w[[i[2]]]
       d2 <- getData(m2, subset = TRUE, merge = TRUE, env = env)
 
       ## Data to resample (x)
       ## (mixed model: x = highest-level random effect)
-      obs <- rownames(d)
       o <- obs %in% rownames(d1) & obs %in% rownames(d2)
       if (!all(o)) d <- d[o, ]
       if (!mer2) {
@@ -366,7 +371,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
         e <- function(e) if (mer2) rep(NA, nrow(d)) else NA
         function(...) tryCatch(stat(...), error = e)
       } else stat
-      if (mer2) assign("s", s, parent.frame())
+      if (mer2) assign("s", s, main.env)
 
       ## Perform bootstrap
       B <- if (!mer2) {

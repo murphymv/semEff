@@ -11,14 +11,15 @@ predEff(
   eff.boot = NULL,
   re.form = NA,
   type = "link",
+  interaction = NULL,
   ci.conf = 0.95,
   ci.type = "bca",
-  interaction = NULL,
   digits = 3,
   bci.arg = NULL,
   parallel = "no",
   ncpus = NULL,
   cl = NULL,
+  env = parent.frame(),
   ...
 )
 }
@@ -46,16 +47,16 @@ random effects to condition on when predicting effects. Defaults to
 \item{type}{The type of prediction to return (for GLMs). Can be either
 \code{"link"} (default) or \code{"response"}.}
 
+\item{interaction}{An optional name of an interactive effect, for which to
+return standardised effects for a 'main' continuous variable across
+different values or levels of interacting variables (see Details).}
+
 \item{ci.conf}{A numeric value specifying the confidence level for confidence
 intervals on predictions (and any interactive effects).}
 
 \item{ci.type}{The type of confidence interval to return (defaults to
 \code{"bca"} - see Details). See \code{\link[boot]{boot.ci}} for further
 specification details.}
-
-\item{interaction}{An optional name of an interactive effect, for which to
-return standardised effects for a 'main' continuous variable across
-different values or levels of interacting variables (see Details).}
 
 \item{digits}{The number of significant digits to return for interactive
 effects.}
@@ -72,6 +73,9 @@ confidence intervals on predictions. Can be one of \code{"snow"},
 
 \item{cl}{Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 (default), a local cluster is created using the specified number of cores.}
+
+\item{env}{Environment in which to look for model data. Defaults to
+\code{parent.frame()}.}
 
 \item{...}{Arguments to \code{stdCoeff}.}
 }
