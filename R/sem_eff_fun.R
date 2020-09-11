@@ -119,7 +119,8 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   p <- predictors; m <- mediators; r <- responses
 
   ## Bootstrap SEM (if necessary)
-  if (!all(sapply(sem, isBoot))) sem <- bootEff(sem, ...)
+  is.B <- all(sapply(sem, isBoot))
+  if (!is.B) sem <- bootEff(sem, ...)
   if (!isList(sem)) sem <- list(sem)
 
   # ## Use unstandardised effects (if present)?
@@ -513,8 +514,6 @@ totEff <- function(...) {
 #'   \code{NULL} (default), all available cores are used.
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
-#' @param env Environment in which to look for model data. Defaults to
-#'   \code{parent.frame()}.
 #' @param ... Arguments to \code{stdCoeff}.
 #' @details Generate predicted values for SEM direct, indirect, or total effects
 #'   on a response variable, which should be supplied to \code{effects}. These
@@ -620,8 +619,7 @@ totEff <- function(...) {
 predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
                     re.form = NA, type = "link", interaction = NULL,
                     ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL,
-                    parallel = "no", ncpus = NULL, cl = NULL,
-                    env = parent.frame(), ...) {
+                    parallel = "no", ncpus = NULL, cl = NULL, ...) {
 
   m <- mod; nd <- newdata; e <- effects; eb <- eff.boot; rf <- re.form;
   ix <- interaction; p <- parallel; nc <- ncpus
@@ -632,9 +630,9 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   ## Weights (for model averaging)
   w <- a$weights; a$weights <- NULL
   if (isList(m) && (isList(w) || is.null(w))) {
-    f <- function(x) NULL
-    N <- rMapply(f, m, SIMPLIFY = FALSE)
-    if (is.null(w)) w <- N else N <- lapply(m, f)
+    n <- function(x) NULL
+    N <- rMapply(n, m, SIMPLIFY = FALSE)
+    if (is.null(w)) w <- N else N <- lapply(m, n)
     if (is.null(e)) e <- N
     if (is.null(eb)) eb <- N
   }
@@ -644,8 +642,12 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   if (!is.null(d)) {
     u <- function(m) eval(update(m, data = d, evaluate = FALSE))
     m <- rMapply(u, m, SIMPLIFY = FALSE)
-    env <- environment()
   }
+
+  ## Environment to look for model data
+  env <- a$env; a$env <- NULL
+  if (is.null(env)) env <- parent.frame()
+  if (!is.null(d)) env <- environment()
 
   ## Coef standardisation options (for back-transforming predictions)
   cen.x <- if (!is.null(a$cen.x)) a$cen.x else TRUE

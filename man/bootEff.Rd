@@ -8,7 +8,6 @@ bootEff(
   mod,
   R = 10000,
   seed = NULL,
-  data = NULL,
   ran.eff = NULL,
   cor.err = NULL,
   catch.err = TRUE,
@@ -16,7 +15,6 @@ bootEff(
   ncpus = NULL,
   cl = NULL,
   bM.arg = NULL,
-  env = parent.frame(),
   ...
 )
 }
@@ -27,8 +25,6 @@ bootEff(
 
 \item{seed}{Seed for the random number generator. If not provided, a random
 five-digit integer is used (see Details).}
-
-\item{data}{An optional dataset, used to first re-fit the model(s).}
 
 \item{ran.eff}{For mixed models with nested random effects, the name of the
 variable comprising the highest-level random effect. For non-nested random
@@ -53,9 +49,6 @@ any such errors will cause the function to exit.}
 (default), a local cluster is created using the specified number of cores.}
 
 \item{bM.arg}{A named list of any additional arguments to \code{bootMer}.}
-
-\item{env}{Environment in which to look for model data (if none supplied).
-Defaults to \code{parent.frame()}.}
 
 \item{...}{Arguments to \code{stdCoeff}.}
 }

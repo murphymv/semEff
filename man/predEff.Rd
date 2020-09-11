@@ -19,7 +19,6 @@ predEff(
   parallel = "no",
   ncpus = NULL,
   cl = NULL,
-  env = parent.frame(),
   ...
 )
 }
@@ -73,9 +72,6 @@ confidence intervals on predictions. Can be one of \code{"snow"},
 
 \item{cl}{Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 (default), a local cluster is created using the specified number of cores.}
-
-\item{env}{Environment in which to look for model data. Defaults to
-\code{parent.frame()}.}
 
 \item{...}{Arguments to \code{stdCoeff}.}
 }

@@ -5,7 +5,6 @@
 #' @param x A numeric vector.
 #' @param w A numeric vector of weights of the same length as \code{x}.
 #' @param na.rm Logical, whether NAs in \code{x} should be removed.
-#' @param ... Not currently used.
 #' @details Calculate the weighted variance of \code{x} via the weighted
 #'   covariance matrix (\code{cov.wt}). If no weights are supplied, the simple
 #'   variance is returned instead. As in \code{weighted.mean}, \code{NA}s in
@@ -28,7 +27,7 @@
 #' varW(c(x[1:29], NA), w, na.rm = FALSE)  # NA in x (NA returned)
 #' varW(x[1:29], w = c(w[1:29], NA))  # NA in w (NA returned)
 #' @export
-varW <- function(x, w = NULL, na.rm = FALSE, ...) {
+varW <- function(x, w = NULL, na.rm = FALSE) {
   if (!is.null(w)) {
     x.na <- is.na(x)
     w.na <- is.na(w)
@@ -58,13 +57,12 @@ sdW <- function(...) {
 #' @description Extract the data used to fit a model.
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param subset Logical. If \code{TRUE}, only observations used to fit the
-#'   model(s) are returned (i.e. missing observations (\code{NA}) are removed).
+#'   model(s) are returned (i.e. missing observations (\code{NA}) or those with
+#'   zero weight are removed).
 #' @param merge Logical. If \code{TRUE}, and \code{mod} is a list or nested
 #'   list, a single dataset containing all variables used to fit models is
 #'   returned.
-#' @param env Environment in which to look for data. Defaults to
-#'   \code{parent.frame()}.
-#' @param ... Not currently used.
+#' @param env Environment in which to look for data (passed to \code{eval}).
 #' @details This is a simple convenience function to return the data used to fit
 #'   a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
@@ -86,8 +84,7 @@ sdW <- function(...) {
 #' getData(Shipley.SEM)  # from SEM (list)
 #' getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
 #' @export
-getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame(),
-                    ...) {
+getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
 
   m <- mod
 
@@ -108,7 +105,8 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame(),
 
     ## Subset data for model observations?
     if (subset) {
-      obs <- names(fitted(m)); w <- weights(m)
+      obs <- names(fitted(m))
+      w <- weights(m)
       if (!is.null(w)) obs <- obs[w > 0 & !is.na(w)]
       d[obs, ]
     } else d
@@ -139,8 +137,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame(),
 #' @param list Logical, whether names should be returned as a list, with all
 #'   multi-coefficient terms grouped under their main term names.
 #' @param env Environment in which to look for model data (used to construct the
-#'   model frame). Defaults to \code{parent.frame()}.
-#' @param ... Not currently used.
+#'   model frame).
 #' @details Extract term names from a fitted model. Names of terms for which
 #'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
 #'   (default). These may be terms which are perfectly correlated with other
@@ -165,7 +162,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame(),
 #' xNam(m, aliased = FALSE, list = TRUE)  # names as list
 #' @export
 xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
-                 env = parent.frame(), ...) {
+                 env = parent.frame()) {
 
   m <- mod
 
@@ -261,7 +258,6 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #' @param force.est Logical, whether to force the return of the estimated rather
 #'   than direct transformation, where the latter is available (i.e. does not
 #'   contain undefined values).
-#' @param ... Not currently used.
 #' @details \code{glt} can be used to provide a 'generalised' transformation of
 #'   a numeric variable using the link function from a generalised linear model
 #'   (GLM) fit to the variable. The transformation is generalised in the sense
@@ -375,7 +371,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #' all.equal(log(y), yl, check.names = FALSE, tolerance = .Machine$double.eps)
 #' # "Mean relative difference: 1.05954e-12"
 #' @export
-glt <- function(x, family = NULL, force.est = FALSE, ...) {
+glt <- function(x, family = NULL, force.est = FALSE) {
 
   f <- family
 
@@ -434,8 +430,6 @@ glt <- function(x, family = NULL, force.est = FALSE, ...) {
 #' @param offset Logical. If \code{TRUE}, include model offset(s) in the
 #'   response.
 #' @param env Environment in which to look for model data (if none supplied).
-#'   Defaults to \code{parent.frame()}.
-#' @param ... Not currently used.
 #' @details \code{getY} will return the response variable from a model by
 #'   summing the fitted values and the response residuals. If \code{link = TRUE}
 #'   and the model is a GLM, the response is returned on the link scale. If this
@@ -455,7 +449,7 @@ glt <- function(x, family = NULL, force.est = FALSE, ...) {
 #' getY(Shipley.SEM$Live, link = TRUE)
 #' @export
 getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
-                 env = parent.frame(), ...) {
+                 env = parent.frame()) {
 
   m <- mod; d <- data
 
@@ -504,8 +498,6 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset, used to first re-fit the model(s).
 #' @param env Environment in which to look for model data (if none supplied).
-#'   Defaults to \code{parent.frame()}.
-#' @param ... Not currently used.
 #' @details \code{VIF} calculates generalised variance inflation factors (GVIF)
 #'   as described in Fox & Monette (1992), and also implemented in the
 #'   \code{vif} function in the \pkg{car} package. However, whereas \code{vif}
@@ -542,7 +534,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
 #' m <- lm(y ~ poly(x1, 2) + x2 + x3, data = d)
 #' VIF(m)
 #' @export
-VIF <- function(mod, data = NULL, env = parent.frame(), ...) {
+VIF <- function(mod, data = NULL, env = parent.frame()) {
 
   m <- mod; d <- data
 
@@ -626,8 +618,6 @@ VIF <- function(mod, data = NULL, env = parent.frame(), ...) {
 #'   effects are included. See \code{\link[lme4]{predict.merMod}} for further
 #'   specification details.
 #' @param env Environment in which to look for model data (if none supplied).
-#'   Defaults to \code{parent.frame()}.
-#' @param ... Not currently used.
 #' @details Various approaches to the calculation of a goodness-of-fit measure
 #'   for GLMs analogous to R-squared in the ordinary linear model have been
 #'   proposed. Generally termed 'pseudo R-squared' measures, they include
@@ -774,7 +764,7 @@ VIF <- function(mod, data = NULL, env = parent.frame(), ...) {
 #' # appropriate caution in interpretation.
 #' @export
 R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
-               re.form = NULL, env = parent.frame(), ...) {
+               re.form = NULL, env = parent.frame()) {
 
   m <- mod; d <- data; rf <- re.form
 
@@ -887,7 +877,6 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   average is calculated instead.
 #' @param est.names An optional vector of names used to extract and/or sort
 #'   estimates from the output.
-#' @param ... Not currently used.
 #' @details This function can be used to calculate a weighted average of model
 #'   estimates such as coefficients, fitted values, or residuals, where models
 #'   are typically competing candidate models fit to the same response variable.
@@ -944,7 +933,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #' f <- lapply(m, predict)
 #' avgEst(f, w)
 #' @export
-avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
+avgEst <-  function(est, weights = "equal", est.names = NULL) {
 
   e <- est; w <- weights; en <- est.names
 
@@ -1013,7 +1002,6 @@ avgEst <-  function(est, weights = "equal", est.names = NULL, ...) {
 #'   standardisation options set to \code{FALSE}.
 #' @param r.squared Logical, whether R-squared values should also be returned.
 #' @param env Environment in which to look for model data (if none supplied).
-#'   Defaults to \code{parent.frame()}.
 #' @param ... Arguments to \code{R2}.
 #' @details \code{stdCoeff} will calculate fully standardised coefficients in
 #'   standard deviation units for a fitted model or list of models. It achieves
@@ -1170,15 +1158,11 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     }
 
     ## Coefficients
-    b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
-    br <- b
-
-    ## Term names
+    b <- br <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
     bn <- names(b)
-    int <- any(isInt(bn))
-    inx <- any(isInx(bn))
+    int <- any(isInt(bn))  # intercept?
 
-    ## Predictor names
+    ## Drop non-relevant parameters
     b <- na.omit(b[!isPhi(bn)])
     xn <- names(b)[!isInt(names(b))]
     k <- length(xn)
@@ -1199,6 +1183,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       dF <- function(...) data.frame(..., check.names = FALSE)
       if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
       x <- dF(model.matrix(m, data = d))[xn]
+      inx <- any(isInx(xn))  # interactions?
 
       ## Centre predictors and adjust coefs/intercept
       if (cen.x) {

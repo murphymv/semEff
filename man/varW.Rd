@@ -4,7 +4,7 @@
 \alias{varW}
 \title{Weighted Variance}
 \usage{
-varW(x, w = NULL, na.rm = FALSE, ...)
+varW(x, w = NULL, na.rm = FALSE)
 }
 \arguments{
 \item{x}{A numeric vector.}
@@ -12,8 +12,6 @@ varW(x, w = NULL, na.rm = FALSE, ...)
 \item{w}{A numeric vector of weights of the same length as \code{x}.}
 
 \item{na.rm}{Logical, whether NAs in \code{x} should be removed.}
-
-\item{...}{Not currently used.}
 }
 \value{
 A numeric value, the weighted variance of \code{x}.

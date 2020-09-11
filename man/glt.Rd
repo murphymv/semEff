@@ -4,7 +4,7 @@
 \alias{glt}
 \title{Generalised Link Transformation}
 \usage{
-glt(x, family = NULL, force.est = FALSE, ...)
+glt(x, family = NULL, force.est = FALSE)
 }
 \arguments{
 \item{x}{a positive numeric vector, corresponding to a variable to be
@@ -18,8 +18,6 @@ is determined from \code{x} (see Details).}
 \item{force.est}{Logical, whether to force the return of the estimated rather
 than direct transformation, where the latter is available (i.e. does not
 contain undefined values).}
-
-\item{...}{Not currently used.}
 }
 \value{
 A numeric vector of the transformed values, or an array, list of

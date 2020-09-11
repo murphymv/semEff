@@ -4,7 +4,7 @@
 \alias{avgEst}
 \title{Weighted Average of Model Estimates}
 \usage{
-avgEst(est, weights = "equal", est.names = NULL, ...)
+avgEst(est, weights = "equal", est.names = NULL)
 }
 \arguments{
 \item{est}{A list or nested list of numeric vectors, comprising the model
@@ -19,8 +19,6 @@ average is calculated instead.}
 
 \item{est.names}{An optional vector of names used to extract and/or sort
 estimates from the output.}
-
-\item{...}{Not currently used.}
 }
 \value{
 A numeric vector of the model-averaged estimates, or a list of such

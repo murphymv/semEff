@@ -7,7 +7,6 @@
 #' @param R Number of bootstrap replicates to generate.
 #' @param seed Seed for the random number generator. If not provided, a random
 #'   five-digit integer is used (see Details).
-#' @param data An optional dataset, used to first re-fit the model(s).
 #' @param ran.eff For mixed models with nested random effects, the name of the
 #'   variable comprising the highest-level random effect. For non-nested random
 #'   effects, specify \code{"crossed"}. Non-specification of this argument when
@@ -25,8 +24,6 @@
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param bM.arg A named list of any additional arguments to \code{bootMer}.
-#' @param env Environment in which to look for model data (if none supplied).
-#'   Defaults to \code{parent.frame()}.
 #' @param ... Arguments to \code{stdCoeff}.
 #' @details \code{bootEff} uses the \code{boot} function (primarily) to
 #'   bootstrap effects from a fitted model or list of models (i.e. standardised
@@ -125,15 +122,11 @@
 #' lapply(Shipley.SEM.Boot, "[[", 1)  # original
 #' lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
 #' @export
-bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
-                    cor.err = NULL, catch.err = TRUE, parallel = "snow",
-                    ncpus = NULL, cl = NULL, bM.arg = NULL,
-                    env = parent.frame(), ...) {
+bootEff <- function(mod, R = 10000, seed = NULL, ran.eff = NULL, cor.err = NULL,
+                    catch.err = TRUE, parallel = "snow", ncpus = NULL,
+                    cl = NULL, bM.arg = NULL, ...) {
 
-  m <- mod; d <- data; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
-
-  ## Main function environment
-  main.env <- environment()
+  m <- mod; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
 
   ## Arguments to stdCoeff
   a <- list(...)
@@ -146,18 +139,19 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
     w <- lapply(m, function(i) w)
   }
 
-  ## Names of models with correlated errors (list)
-  any.ce <- isList(m) && !is.null(ce)
-  if (any.ce) {
-    cv <- sapply(ce, function(i) {
-      gsub(" ", "", unlist(strsplit(i, "~~")))
-    }, simplify = FALSE)
-    cv <- cv[sapply(cv, function(i) {
-      all(i %in% names(m)) && all(i %in% names(w))
-    })]
-    if (length(cv) < 1)
-      stop("Names of variable(s) with correlated errors missing from list of models and/or weights.")
+  ## Re-fit model(s) with any supplied data
+  upd <- function(m, d) {
+    u <- function(m) eval(update(m, data = d, evaluate = FALSE))
+    rMapply(u, m, SIMPLIFY = FALSE)
   }
+  d <- a$data; a$data <- NULL
+  if (!is.null(d)) m <- upd(m, d)
+
+  ## Environment to look for model data
+  main.env <- environment()
+  env <- a$env; a$env <- NULL
+  if (is.null(env)) env <- parent.frame()
+  if (!is.null(d)) env <- main.env
 
   ## Mixed models?
   mer <- all(unlist(rMapply(isMer, m)))
@@ -192,12 +186,18 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 
   }
 
-  ## Re-fit model(s) with any supplied data
-  upd <- function(m, d) {
-    u <- function(m) eval(update(m, data = d, evaluate = FALSE))
-    rMapply(u, m, SIMPLIFY = FALSE)
+  ## Names of models with correlated errors (list)
+  any.ce <- isList(m) && !is.null(ce)
+  if (any.ce) {
+    cv <- sapply(ce, function(i) {
+      gsub(" ", "", unlist(strsplit(i, "~~")))
+    }, simplify = FALSE)
+    cv <- cv[sapply(cv, function(i) {
+      all(i %in% names(m)) && all(i %in% names(w))
+    })]
+    if (length(cv) < 1)
+      stop("Names of variable(s) with correlated errors missing from list of models and/or weights.")
   }
-  if (!is.null(d)) {m <- upd(m, d); env <- main.env}
 
   ## Set up parallel processing
   if (p != "no") {
@@ -497,7 +497,8 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   m <- mod
 
   ## Create boot object(s) from model(s) if necessary
-  B <- if (!all(unlist(rMapply(isBoot, m)))) bootEff(m, ...) else m
+  is.B <- all(unlist(rMapply(isBoot, m)))
+  B <- if (!is.B) bootEff(m, ...) else m
 
   ## Function
   bootCI <- function(B) {

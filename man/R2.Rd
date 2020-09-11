@@ -11,8 +11,7 @@ R2(
   pred = TRUE,
   offset = FALSE,
   re.form = NULL,
-  env = parent.frame(),
-  ...
+  env = parent.frame()
 )
 }
 \arguments{
@@ -33,10 +32,7 @@ calculation of R-squared. Defaults to \code{NULL}, meaning all random
 effects are included. See \code{\link[lme4]{predict.merMod}} for further
 specification details.}
 
-\item{env}{Environment in which to look for model data (if none supplied).
-Defaults to \code{parent.frame()}.}
-
-\item{...}{Not currently used.}
+\item{env}{Environment in which to look for model data (if none supplied).}
 }
 \value{
 A numeric vector of the R-squared value(s), or an array, list of

@@ -4,22 +4,20 @@
 \alias{getData}
 \title{Get Model Data}
 \usage{
-getData(mod, subset = FALSE, merge = FALSE, env = parent.frame(), ...)
+getData(mod, subset = FALSE, merge = FALSE, env = parent.frame())
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
 \item{subset}{Logical. If \code{TRUE}, only observations used to fit the
-model(s) are returned (i.e. missing observations (\code{NA}) are removed).}
+model(s) are returned (i.e. missing observations (\code{NA}) or those with
+zero weight are removed).}
 
 \item{merge}{Logical. If \code{TRUE}, and \code{mod} is a list or nested
 list, a single dataset containing all variables used to fit models is
 returned.}
 
-\item{env}{Environment in which to look for data. Defaults to
-\code{parent.frame()}.}
-
-\item{...}{Not currently used.}
+\item{env}{Environment in which to look for data (passed to \code{eval}).}
 }
 \value{
 A data frame of the variables used to fit the model(s), or a list or

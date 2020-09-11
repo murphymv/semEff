@@ -53,8 +53,7 @@ standardisation options set to \code{FALSE}.}
 
 \item{r.squared}{Logical, whether R-squared values should also be returned.}
 
-\item{env}{Environment in which to look for model data (if none supplied).
-Defaults to \code{parent.frame()}.}
+\item{env}{Environment in which to look for model data (if none supplied).}
 
 \item{...}{Arguments to \code{R2}.}
 }
