@@ -10,6 +10,8 @@
 #' @param predictors,mediators,responses Names of variables for/through which to
 #'   calculate effects. If \code{NULL} (default), all predictors, endogenous
 #'   predictors (mediators), and endogenous variables (responses) will be used.
+#' @param use.raw Logical, whether to use raw (unstandardised) effects for
+#'   all calculations (if present).
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on effects.
 #' @param ci.type The type of confidence interval to return (defaults to
@@ -109,8 +111,7 @@
 #' # )
 #' @export
 semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
-                   # use.raw = FALSE,
-                   ci.conf = 0.95, ci.type = "bca", digits = 3,
+                   use.raw = FALSE, ci.conf = 0.95, ci.type = "bca", digits = 3,
                    bci.arg = NULL, ...) {
 
 
@@ -123,33 +124,25 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   if (!is.B) sem <- bootEff(sem, ...)
   if (!isList(sem)) sem <- list(sem)
 
-  # ## Use unstandardised effects (if present)?
-  # if (use.raw) {
-  #   sem <- lapply(sem, function(i) {
-  #     s <- isRaw(names(i$t0))
-  #     n <- sum(s)
-  #     if (n > 0) {
-  #       i$t0[1:n] <- i$t0[s]
-  #       i$t0 <- i$t0[!s]
-  #       a <- attributes(i$t)
-  #       i$t[, 1:n] <- i$t[, s]
-  #       i$t <- i$t[, !s, drop = FALSE]
-  #       attributes(i$t) <- a; i
-  #     } else i
-  #   })
-  # }
+  ## Use raw (unstandardised) effects (if present)?
+  if (use.raw) {
+    sem <- lapply(sem, function(i) {
+      r <- isRaw(names(i$t0))
+      if (any(r)) {i$t0[!r] <- i$t0[r]; i$t[, !r] <- i$t[, r]}; i
+    })
+  }
 
-  ## Function to (recursively) replace parts of names/colnames in an object/list
-  subNam <- function(p, r, x) {
+  ## Function to (recursively) replace parts of names/colnames in object/list
+  subNam <- function(p, r, x, ...) {
 
     ## Function
     subNam <- function(x) {
-      if (is.character(x)) gsub(p, r, x) else {
+      if (is.character(x)) gsub(p, r, x, ...) else {
         if (!is.null(names(x))) {
-          names(x) <- gsub(p, r, names(x)); x
+          names(x) <- gsub(p, r, names(x), ...); x
         } else {
           if (is.matrix(x)) {
-            colnames(x) <- gsub(p, r, colnames(x)); x
+            colnames(x) <- gsub(p, r, colnames(x), ...); x
           } else x
         }
       }
@@ -168,8 +161,8 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
   }
 
-  ## Replace any periods in SEM variable names
-  ## (periods are used to separate var. names for indirect effects)
+  ## Replace any periods in variable names
+  ## (periods used to separate var. names for indirect effects)
   sem <- subNam("[.]", "_", sem)
 
   ## Response names (default to endogenous vars.)
@@ -178,7 +171,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
   ## Mediator names (default to endogenous predictors)
   all.p <- unique(unlist(lapply(sem[r], function(i) names(i$t0))))
-  all.p <- all.p[!isInt(all.p) & !isPhi(all.p) & !isR2(all.p)]
+  all.p <- all.p[!isInt(all.p) & !isPhi(all.p) & !isR2(all.p) & !isRaw(all.p)]
   en.p <- r[r %in% all.p]
   m <- if (length(en.p) > 0) {
     if (is.null(m)) en.p else m
@@ -317,7 +310,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
   ### Calculate bootstrapped confidence intervals for all effects
 
-  ## Function to calculate CI's
+  ## Function to calculate CIs
   bootCI2 <- function(e, eb, r) {
 
     ## Boot object for response var
@@ -329,13 +322,11 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
       ci.type <- "perc"
     }
 
-    ## Calculate CI's using boot object
+    ## Calculate CIs using boot object
     if (!is.na(e)) {
       if (e != 0) {
         B$t0 <- e; B$t <- matrix(eb)
-        ci <- do.call(
-          boot::boot.ci, c(list(B, ci.conf, ci.type), bci.arg)
-        )
+        ci <- do.call(boot::boot.ci, c(list(B, ci.conf, ci.type), bci.arg))
         tail(as.vector(ci[[4]]), 2)
       } else c(0, 0)
     } else c(NA, NA)
@@ -348,7 +339,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
   ### Compile and output effects
 
-  ## Extract all effects into lists of vectors/matrices
+  ## Extract all effects into lists of vectors/matrices (add intercepts)
   extE <- function(E) {
     sapply(r, function(i) {
       sapply(names(E[[i]]), function(j) {
@@ -366,8 +357,8 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
             if (is.B) {
               I <- B$t[, isInt(colnames(B$t)), drop = FALSE]
               eb <- cbind(I, e)
-              a <- c("sim", "seed", "n")
-              attributes(eb)[a] <- attributes(B$t)[a]
+              a <- attributes(B$t)[c("sim", "seed", "n")]
+              attributes(eb)[names(a)] <- a
               eb
             } else {
               I <- B$t0[isInt(names(B$t0))]
@@ -380,7 +371,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   }
   e <- extE(E); eb <- extE(EB)
 
-  ## Generate summary tables of effects and CI's
+  ## Generate summary tables of effects and CIs
   E <- rMapply(c, E, CI, SIMPLIFY = FALSE)
   s <- lapply(E, function(i) {
     lapply(i, function(j) {
@@ -495,14 +486,16 @@ totEff <- function(...) {
 #'   \code{\link[lme4]{predict.merMod}} for further specification details.
 #' @param type The type of prediction to return (for GLMs). Can be either
 #'   \code{"link"} (default) or \code{"response"}.
+#' @param interaction An optional name of an interactive effect, for which to
+#'   return standardised effects for a 'main' continuous variable across
+#'   different values or levels of interacting variables (see Details).
+#' @param use.raw Logical, whether to use raw (unstandardised) effects for
+#'   all calculations (if present).
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on predictions (and any interactive effects).
 #' @param ci.type The type of confidence interval to return (defaults to
 #'   \code{"bca"} - see Details). See \code{\link[boot]{boot.ci}} for further
 #'   specification details.
-#' @param interaction An optional name of an interactive effect, for which to
-#'   return standardised effects for a 'main' continuous variable across
-#'   different values or levels of interacting variables (see Details).
 #' @param digits The number of significant digits to return for interactive
 #'   effects.
 #' @param bci.arg A named list of any additional arguments to \code{boot.ci},
@@ -581,7 +574,7 @@ totEff <- function(...) {
 #' nd <- data.frame(sapply(d[xn], seq100))
 #' f.dir <- predEff(m, nd, dir, type = "response")
 #' f.tot <- predEff(m, nd, tot, type = "response")
-#' ## Add CI's (can take a while...)
+#' ## Add CIs (can take a while...)
 #' # dir.b <- dirEff(e, "boot"); tot.b <- totEff(e, "boot")
 #' # f.dir <- predEff(m, nd, dir, dir.b, type = "response")
 #' # f.tot <- predEff(m, nd, tot, tot.b, type = "response")
@@ -596,7 +589,7 @@ totEff <- function(...) {
 #'   DD = mean(DD) + c(-sd(DD), sd(DD))  # two levels for DD
 #' ))
 #' f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
-#' ## Add CI's (need to bootstrap model...)
+#' ## Add CIs (need to bootstrap model...)
 #' # system.time(B <- bootEff(m, ran.eff = "site", R = 1000))
 #' # f <- predEff(m, nd, B, type = "response", interaction = "Growth:DD")
 #'
@@ -618,8 +611,9 @@ totEff <- function(...) {
 #' @export
 predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
                     re.form = NA, type = "link", interaction = NULL,
-                    ci.conf = 0.95, ci.type = "bca", digits = 3, bci.arg = NULL,
-                    parallel = "no", ncpus = NULL, cl = NULL, ...) {
+                    use.raw = FALSE, ci.conf = 0.95, ci.type = "bca",
+                    digits = 3, bci.arg = NULL, parallel = "no", ncpus = NULL,
+                    cl = NULL, ...) {
 
   m <- mod; nd <- newdata; e <- effects; eb <- eff.boot; rf <- re.form;
   ix <- interaction; p <- parallel; nc <- ncpus
@@ -650,10 +644,11 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   if (!is.null(d)) env <- environment()
 
   ## Coef standardisation options (for back-transforming predictions)
-  cen.x <- if (!is.null(a$cen.x)) a$cen.x else TRUE
-  cen.y <- if (!is.null(a$cen.y)) a$cen.y else TRUE
-  std.x <- if (!is.null(a$std.x)) a$std.x else TRUE
-  std.y <- if (!is.null(a$std.y)) a$std.y else TRUE
+  a$cen.x <- !(isFALSE(a$cen.x) | use.raw)
+  a$cen.y <- !(isFALSE(a$cen.y) | use.raw)
+  a$std.x <- !(isFALSE(a$std.x) | use.raw)
+  a$std.y <- !(isFALSE(a$std.y) | use.raw)
+  a$incl.raw <- FALSE
 
   ## Function
   predEff <- function(m, w, e, eb) {
@@ -661,9 +656,17 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ## Effects
     if (is.null(e)) e <- do.call(stdCoeff, c(list(m, w, env = env), a))
     if (isBoot(e)) {eb <- e$t; e <- e$t0}
-    e <- e[!is.na(e) & !isPhi(names(e)) & !isR2(names(e))]
+    en <- names(e)
 
-    ## Effect names
+    ## Use raw (unstandardised) effects (if present)?
+    r <- isRaw(en)
+    if (any(r) & use.raw) {
+      e[!r] <- e[r]
+      if (!is.null(eb)) eb[, !r] <- eb[, r]
+    }
+
+    ## Subset only relevant parameters
+    e <- na.omit(e[!isPhi(en) & !isR2(en) & !r])
     en <- names(e)
     EN <- sapply(en, function(i) {
       unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
@@ -705,9 +708,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
         on <- sapply(on, function(i) tn[[i + 1]])
       }
       on <- c(on, getCall(m1)$offset)
-      if (!is.null(on)) {
-        rowSums(sapply(on, eval, nd))
-      }
+      if (!is.null(on)) rowSums(sapply(on, eval, nd))
     } else {
       mf <- model.frame(m1, data = d)
       model.offset(mf)
@@ -733,20 +734,20 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       if (!isInt(i)) {
         if (isInx(i)) {
           xi <- sapply(EN[[i]], eT, d2)
-          if (cen.x) xi <- sweep(xi, 2, colMeans(xi))
+          if (a$cen.x) xi <- sweep(xi, 2, colMeans(xi))
           apply(xi, 1, prod)
         } else eT(i, d2)
       } else 1
     }))
 
     ## Predictor means/SDs
-    xm <- sapply(x, function(i) if (cen.x) mean(i) else 0)
-    xmw <- sapply(x, function(i) if (cen.x) weighted.mean(i, w) else 0)
-    xs <- sapply(x, function(i) if (std.x) sdW(i, w) else 1)
+    xm <- sapply(x, function(i) if (a$cen.x) mean(i) else 0)
+    xmw <- sapply(x, function(i) if (a$cen.x) weighted.mean(i, w) else 0)
+    xs <- sapply(x, function(i) if (a$std.x) sdW(i, w) else 1)
 
     ## Response mean/SD (link scale)
-    ym <- if (cen.y) lF(weighted.mean(getY(m1, env = env), w)) else 0
-    ys <- if (std.y) sdW(getY(m1, link = TRUE, env = env), w) else 1
+    ym <- if (a$cen.y) lF(weighted.mean(getY(m1, env = env), w)) else 0
+    ys <- if (a$std.y) sdW(getY(m1, link = TRUE, env = env), w) else 1
 
     ## Data to predict (standardise using original means/SDs)
     if (!is.null(nd)) {obs <- rownames(nd); d2 <- dM(nd)}
@@ -764,13 +765,13 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     ## Predictions
     f <- colSums(e * t(x))
     f <- f * ys + ym + re + o
-    f <- setNames(f, obs)
+    names(f) <- obs
     if (type == "response") f <- lI(f)
 
-    ## Add CI's
+    ## Add CIs
     if (!is.null(eb)) {
 
-      ## Bootstrap details
+      ## Bootstrap attributes
       sim <- attr(eb, "sim")
       seed <- attr(eb, "seed")
       n <- attr(eb, "n")
@@ -785,7 +786,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       ## Bootstrapped predictions
       eb <- eb[, en, drop = FALSE]
       fb <- t(sapply(1:R, function(i) {
-        ei <- eb[i, ][!is.na(eb[i, ])]
+        ei <- na.omit(eb[i, ])
         xi <- x[names(ei)]
         fi <- colSums(ei * t(xi))
         fi * ys + ym + re + o
@@ -793,24 +794,21 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       if (nrow(fb) != R) fb <- t(fb)
       if (type == "response") fb <- lI(fb)
 
-      ## Create dummy boot object (for CI's)
+      ## Create dummy boot object (for CIs)
       set.seed(seed)
       dd <- dF(rep(1, n))  # dummy data
-      B <- list(
-        t0 = f, t = fb, R = R, data = dd, seed = .Random.seed, sim = sim,
-        stype = "i", strata = dd[, 1]
-      )
+      B <- list(t0 = f, t = fb, R = R, data = dd, seed = .Random.seed,
+                sim = sim, stype = "i", strata = dd[, 1])
       class(B) <- "boot"
       attr(B, "boot_type") <- "boot"
 
-      ## Calculate and add CI's
+      ## Calculate and add CIs
       ci <- pSapply(1:length(f), function(i) {
-        ci <- do.call(
-          boot::boot.ci, c(list(B, ci.conf, ci.type, i), bci.arg)
-        )
+        ci <- do.call(boot::boot.ci, c(list(B, ci.conf, ci.type, i), bci.arg))
         tail(as.vector(ci[[4]]), 2)
       }, p, nc, cl)
-      ci <- as.matrix(ci); colnames(ci) <- obs
+      ci <- as.matrix(ci)
+      colnames(ci) <- obs
       f <- list(fit = f, ci.lower = ci[1, ], ci.upper = ci[2, ])
 
     }
@@ -830,7 +828,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
         a.b[sapply(a.b, function(i) a %in% EN[[i]])]
       } else ix
 
-      ## Values for interacting variable(s) (b)
+      ## Values for interacting variable(s)
       xb <- unique(dF(sapply(b, eT, d2)))
       xb <- sweep(xb, 2, xm[b])
       xb <- lapply(EN[a.b], function(i) {
@@ -843,7 +841,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       e <- e * xs[a] / ys
       names(e) <- paste(ix, 1:length(e), sep = "_")
 
-      ## Add CI's
+      ## Add CIs
       f <- if (!is.null(eb)) {
 
         ## Bootstrapped effects
@@ -854,7 +852,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
         }))
         if (nrow(eb) != R) eb <- t(eb)
 
-        ## CI's
+        ## CIs
         B$t0 <- e; B$t <- eb
         e <- bootCI(B, ci.conf, ci.type, digits, bci.arg)
         c(f, list(interactions = e))
@@ -866,7 +864,8 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     }
 
     ## Output
-    if (!is.null(eb)) set.seed(NULL); f
+    if (!is.null(eb)) set.seed(NULL)
+    f
 
   }
 

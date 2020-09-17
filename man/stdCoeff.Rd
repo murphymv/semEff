@@ -111,7 +111,7 @@ Calculate fully standardised model coefficients in standard
   standard deviations of predictor variables (or terms), while if \code{std.y
   = TRUE} they are divided by the standard deviation of the response. If the
   model is a GLM, this latter is calculated using the link-transformed
-  response (or an estimate of same) generated using the function \code{getY}.
+  response (or an estimate of same) generated using the function \code{glt}.
   If both arguments are true, the coefficients are regarded as 'fully'
   standardised in the traditional sense, often referred to as 'betas'.
 
@@ -158,9 +158,11 @@ library(lme4)
 ## Standardised coefficients for SEM (i.e. direct effects)
 m <- Shipley.SEM
 stdCoeff(m)
-stdCoeff(m, std.y = FALSE)  # x-only
+stdCoeff(m, cen.y = FALSE, std.y = FALSE)  # x-only
 stdCoeff(m, std.x = FALSE, std.y = FALSE)  # centred only
-stdCoeff(m, cen.x = FALSE, cen.y = FALSE)  # standardised only
+stdCoeff(m, cen.x = FALSE, cen.y = FALSE)  # scaled only
+stdCoeff(m, unique.x = FALSE)  # include multicollinearity
+stdCoeff(m, incl.raw = TRUE)  # add unstandardised
 stdCoeff(m, r.squared = TRUE)  # add R-squared
 
 ## Demonstrate equality with manually-standardised variables (gaussian)
@@ -175,11 +177,11 @@ m <- lm(Growth ~ Date + DD + lat, data = Shipley)
 r2 <- summary(m)$r.squared
 b1 <- stdCoeff(m)[-1]
 bn <- names(b1)
-b2 <- sqrt(sapply(bn, function(i) {
+b2 <- sapply(bn, function(i) {
   f <- reformulate(bn[!bn \%in\% i])
   r2i <- summary(update(m, f))$r.squared
-  r2 - r2i
-}))
+  sqrt(r2 - r2i)
+})
 stopifnot(all.equal(b1, b2))
 
 ## Model-averaged standardised coefficients

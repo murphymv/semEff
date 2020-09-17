@@ -60,7 +60,7 @@ All bootstrapped confidence intervals will tend to underestimate the
    a solution to small sample size}.
 }
 \examples{
-## CI's from bootstrapped SEM
+## CIs from bootstrapped SEM
 (Shipley.SEM.CI <- bootCI(Shipley.SEM.Boot))
 
 ## From original SEM (models)

@@ -48,11 +48,11 @@ isInt <- function(x) x == "(Intercept)"
 isInx <- function(x) grepl("(?<!:):(?!:)", x, perl = TRUE)
 #' @describeIn Param.Type Is parameter a beta regression precision coefficient?
 isPhi <- function(x) grepl("^\\(phi\\)", x)
-#' @describeIn Param.Type Is parameter a raw (unstandardised) coefficient?
-isRaw <- function(x) grepl("^\\(raw\\)", x)
 #' @describeIn Param.Type Is parameter an R-squared value?
-isR2 <- function(x) x %in% c("(r.squared)", "(adj.r.squared)",
-                             "(pred.r.squared)")
+isR2 <- function(x) x %in% c("(r.squared)", "(adj.r.squared)", "(pred.r.squared)",
+                             "(r_squared)", "(adj_r_squared)", "(pred_r_squared)")
+#' @describeIn Param.Type Is parameter a raw (unstandardised) coefficient?
+isRaw <- function(x) grepl("^\\(raw\\)_", x)
 
 
 #' @title Recursive \code{mapply}

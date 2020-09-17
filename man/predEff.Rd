@@ -12,6 +12,7 @@ predEff(
   re.form = NA,
   type = "link",
   interaction = NULL,
+  use.raw = FALSE,
   ci.conf = 0.95,
   ci.type = "bca",
   digits = 3,
@@ -49,6 +50,9 @@ random effects to condition on when predicting effects. Defaults to
 \item{interaction}{An optional name of an interactive effect, for which to
 return standardised effects for a 'main' continuous variable across
 different values or levels of interacting variables (see Details).}
+
+\item{use.raw}{Logical, whether to use raw (unstandardised) effects for
+all calculations (if present).}
 
 \item{ci.conf}{A numeric value specifying the confidence level for confidence
 intervals on predictions (and any interactive effects).}
@@ -146,7 +150,7 @@ seq100 <- function(x) seq(min(x), max(x), length = 100)
 nd <- data.frame(sapply(d[xn], seq100))
 f.dir <- predEff(m, nd, dir, type = "response")
 f.tot <- predEff(m, nd, tot, type = "response")
-## Add CI's (can take a while...)
+## Add CIs (can take a while...)
 # dir.b <- dirEff(e, "boot"); tot.b <- totEff(e, "boot")
 # f.dir <- predEff(m, nd, dir, dir.b, type = "response")
 # f.tot <- predEff(m, nd, tot, tot.b, type = "response")
@@ -161,7 +165,7 @@ nd <- with(d, expand.grid(
   DD = mean(DD) + c(-sd(DD), sd(DD))  # two levels for DD
 ))
 f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
-## Add CI's (need to bootstrap model...)
+## Add CIs (need to bootstrap model...)
 # system.time(B <- bootEff(m, ran.eff = "site", R = 1000))
 # f <- predEff(m, nd, B, type = "response", interaction = "Growth:DD")
 

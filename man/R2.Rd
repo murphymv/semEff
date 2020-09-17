@@ -24,7 +24,7 @@ R-squared are also returned (the latter is not available for all model
 types).}
 
 \item{offset}{Logical. If \code{TRUE}, include model offset(s) in the
-calculations (i.e. in the response and fitted values).}
+calculations (i.e. in the response variable and fitted values).}
 
 \item{re.form}{For mixed models of class \code{"merMod"}, the formula for
 random effects to condition on when generating fitted values used in the

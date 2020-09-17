@@ -9,6 +9,7 @@ semEff(
   predictors = NULL,
   mediators = NULL,
   responses = NULL,
+  use.raw = FALSE,
   ci.conf = 0.95,
   ci.type = "bca",
   digits = 3,
@@ -24,6 +25,9 @@ bootstrapped model effects.}
 \item{predictors, mediators, responses}{Names of variables for/through which to
 calculate effects. If \code{NULL} (default), all predictors, endogenous
 predictors (mediators), and endogenous variables (responses) will be used.}
+
+\item{use.raw}{Logical, whether to use raw (unstandardised) effects for
+all calculations (if present).}
 
 \item{ci.conf}{A numeric value specifying the confidence level for confidence
 intervals on effects.}

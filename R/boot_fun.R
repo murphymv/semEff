@@ -482,7 +482,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, ran.eff = NULL, cor.err = NULL,
 #'   \url{https://doi.org/f8n9rq}
 #' @seealso \code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootEff}}
 #' @examples
-#' ## CI's from bootstrapped SEM
+#' ## CIs from bootstrapped SEM
 #' (Shipley.SEM.CI <- bootCI(Shipley.SEM.Boot))
 #'
 #' ## From original SEM (models)
@@ -514,15 +514,13 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
     ci <- sapply(1:length(e), function(i) {
       if (!is.na(e[i])) {
         if (e[i] != 0) {
-          ci <- do.call(
-            boot::boot.ci, c(list(B, conf, type, i), bci.arg)
-          )
+          ci <- do.call(boot::boot.ci, c(list(B, conf, type, i), bci.arg))
           tail(as.vector(ci[[4]]), 2)
         } else c(0, 0)
       } else c(NA, NA)
     })
 
-    ## Combine effects and CI's into table (add significance stars)
+    ## Combine effects and CIs into table (add significance stars)
     e <- data.frame(
       rbind(e, ci),
       row.names = c("Estimate", "Lower CI", "Upper CI"),

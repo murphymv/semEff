@@ -611,7 +611,7 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   R-squared are also returned (the latter is not available for all model
 #'   types).
 #' @param offset Logical. If \code{TRUE}, include model offset(s) in the
-#'   calculations (i.e. in the response and fitted values).
+#'   calculations (i.e. in the response variable and fitted values).
 #' @param re.form For mixed models of class \code{"merMod"}, the formula for
 #'   random effects to condition on when generating fitted values used in the
 #'   calculation of R-squared. Defaults to \code{NULL}, meaning all random
@@ -999,7 +999,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   predictors.
 #' @param incl.raw Logical, whether to append the raw (unstandardised)
 #'   coefficients to the output, i.e. those with all centring and
-#'   standardisation options set to \code{FALSE}.
+#'   scaling options set to \code{FALSE}.
 #' @param r.squared Logical, whether R-squared values should also be returned.
 #' @param env Environment in which to look for model data (if none supplied).
 #' @param ... Arguments to \code{R2}.
@@ -1048,7 +1048,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   standard deviations of predictor variables (or terms), while if \code{std.y
 #'   = TRUE} they are divided by the standard deviation of the response. If the
 #'   model is a GLM, this latter is calculated using the link-transformed
-#'   response (or an estimate of same) generated using the function \code{getY}.
+#'   response (or an estimate of same) generated using the function \code{glt}.
 #'   If both arguments are true, the coefficients are regarded as 'fully'
 #'   standardised in the traditional sense, often referred to as 'betas'.
 #'
@@ -1112,9 +1112,11 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' ## Standardised coefficients for SEM (i.e. direct effects)
 #' m <- Shipley.SEM
 #' stdCoeff(m)
-#' stdCoeff(m, std.y = FALSE)  # x-only
+#' stdCoeff(m, cen.y = FALSE, std.y = FALSE)  # x-only
 #' stdCoeff(m, std.x = FALSE, std.y = FALSE)  # centred only
-#' stdCoeff(m, cen.x = FALSE, cen.y = FALSE)  # standardised only
+#' stdCoeff(m, cen.x = FALSE, cen.y = FALSE)  # scaled only
+#' stdCoeff(m, unique.x = FALSE)  # include multicollinearity
+#' stdCoeff(m, incl.raw = TRUE)  # add unstandardised
 #' stdCoeff(m, r.squared = TRUE)  # add R-squared
 #'
 #' ## Demonstrate equality with manually-standardised variables (gaussian)
@@ -1129,11 +1131,11 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' r2 <- summary(m)$r.squared
 #' b1 <- stdCoeff(m)[-1]
 #' bn <- names(b1)
-#' b2 <- sqrt(sapply(bn, function(i) {
+#' b2 <- sapply(bn, function(i) {
 #'   f <- reformulate(bn[!bn %in% i])
 #'   r2i <- summary(update(m, f))$r.squared
-#'   r2 - r2i
-#' }))
+#'   sqrt(r2 - r2i)
+#' })
 #' stopifnot(all.equal(b1, b2))
 #'
 #' ## Model-averaged standardised coefficients
@@ -1162,7 +1164,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     bn <- names(b)
     int <- any(isInt(bn))  # intercept?
 
-    ## Drop non-relevant parameters
+    ## Drop non-predictor parameters
     b <- na.omit(b[!isPhi(bn)])
     xn <- names(b)[!isInt(names(b))]
     k <- length(xn)
@@ -1273,7 +1275,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
             xn2 <- c(xn2, re)
           }
 
-          ## Rename any "y", "w", "o" in terms
+          ## Rename any existing terms named "y", "w", or "o"
           if (any(c("y", "w", "o") %in% names(d))) {
             xn2 <- sapply(xn2, function(i) {
               i <- gsub("([^\\w.])", "~\\1~", i, perl = TRUE)
@@ -1293,6 +1295,7 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         ## Divide coefs by square root of VIFs
         vif <- na.omit(VIF(m2, env = environment()))
         b[xn] <- b[xn] / sqrt(vif)
+        if (incl.raw) br[xn] <- br[xn] / sqrt(vif)
 
       }
 
@@ -1314,15 +1317,16 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     }
 
     ## Return standardised coefficients
-    ## (optionally append raw coefs and R-squared)
+    ## (append any R-squared and raw coefs)
     b <- sapply(bn, function(i) {
       if (i %in% names(b)) b[[i]] else br[[i]]
     })
+    if (r.squared) b <- c(b, R2(m, env = env, ...))
     if (incl.raw) {
+      br <- c(br, b[isR2(names(b))])
       names(br) <- paste0("(raw)_", names(br))
-      b <- c(b, br)
-    }
-    if (r.squared) c(b, R2(m, env = env, ...)) else b
+      c(b, br)
+    } else b
 
   }
 

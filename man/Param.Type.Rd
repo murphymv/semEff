@@ -5,8 +5,8 @@
 \alias{isInt}
 \alias{isInx}
 \alias{isPhi}
-\alias{isRaw}
 \alias{isR2}
+\alias{isRaw}
 \title{Parameter Types}
 \usage{
 isInt(x)
@@ -15,9 +15,9 @@ isInx(x)
 
 isPhi(x)
 
-isRaw(x)
-
 isR2(x)
+
+isRaw(x)
 }
 \arguments{
 \item{x}{A character vector of parameter names (e.g. names of coefficients
@@ -39,9 +39,9 @@ Functions to determine the presence/absence of certain model
 
 \item \code{isPhi}: Is parameter a beta regression precision coefficient?
 
-\item \code{isRaw}: Is parameter a raw (unstandardised) coefficient?
-
 \item \code{isR2}: Is parameter an R-squared value?
+
+\item \code{isRaw}: Is parameter a raw (unstandardised) coefficient?
 }}
 
 \keyword{internal}
