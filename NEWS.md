@@ -2,39 +2,46 @@
 
 ### New features:
 
-* Added `offset` argument to functions `getY()` and `R2()`, to retain/remove the
-offset variable in/from the response variable or fitted values (where
-applicable).
-* Added `incl.raw` argument to `stdCoeff()`, to append raw (unstandardised)
-coefficients to the output. This allows simultaneous bootstrapping of
-standardised and raw coefficients, and the latter can then also be used for
-calculating (`semEff(..., use.raw = TRUE)`) or predicting (`predEff(..., use.raw
-= TRUE)`) effects.
+* Added `offset` argument to `getY()` and `R2()`, to retain/remove an offset
+in/from the response variable or fitted values (where applicable). Offsets are
+removed by default.
+* Better control over environments. Added `env` argument to multiple functions,
+for evaluating model data (where applicable). This replaces the `...` argument
+in many instances. `data` and `env` arguments can also now be passed as further
+arguments (`...`) to `bootEff()` and `predEff()`.
+* Added `incl.raw` argument to `stdEff()` (`stdCoeff()`), to append raw
+(unstandardised) coefficients to the output. This allows simultaneous
+bootstrapping of standardised and raw coefficients, allowing the latter to be
+used instead for calculating (`semEff(..., use.raw = TRUE)`) or predicting
+(`predEff(..., use.raw = TRUE)`) effects.
 
 ### Other changes:
 * Added confidence interval attributes to `bootCI()`/`semEff()` output.
 * `R2` no longer calculates predictive R-squared for GLMMs, as the
-interpretation of the hat matrix is not reliable (see
-https://rdrr.io/cran/lme4/man/hatvalues.merMod.html).
-* Removed ability to pass arguments from `getY()` to `glt()`, allowing better
-control over output of `getY(..., link = TRUE)`.
+interpretation of the hat matrix used in calculations is not reliable (see
+<https://rdrr.io/cran/lme4/man/hatvalues.merMod.html>).
+* Removed ability to pass arguments from `getY()` to `glt()`, allowing more
+standardised output of `getY(..., link = TRUE)`.
+* Renamed function `stdCoeff()` to `stdEff()`, to better reflect the concept of
+standardised coefficients as model (direct) 'effects' (calling `stdCoeff()` will
+still work - with a warning - until the next version at least).
 * Minor updates to function code and documentation, improvement and addition of
 some new internal functions.
 
 ### Bugs fixed:
 
 * `bootEff()` specified with correlated errors failed for mixed models of class
-`"lmerModLmerTest"` (issue with `update()` inside the function).
+`"lmerModLmerTest"` (issue with re-fitting models using `update()`).
 * `predEff()` failed to evaluate some complex model terms (e.g. polynomials).
-* `stdCoeff()` did not re-fit model properly to calculate correct VIFs for a
-fully 'centred' model (i.e. did not account sufficiently for complex terms such
-as polynomials or transformations, where centring should occur as the final
-step).
+* `stdEff()` (`stdCoeff()`) did not re-fit model properly to calculate correct
+VIFs for a fully 'centred' model (i.e. did not account sufficiently for complex
+terms such as polynomials or transformations, where mean-centring should occur
+as the final step).
 * `xNam()` generated incorrect term names for categorical predictors under
-certain circumstances (different contrast types, interactive effects without
-main effects).
-* `stdCoeff()` incorrectly calculated 'centred' intercept for models including
-an offset.
+certain circumstances (different contrast types, interactive effects with no
+'main' effects).
+* `stdEff()` (`stdCoeff()`) incorrectly calculated 'centred' intercept for
+models with an offset variable.
 * `predEff()` failed when a nested list of models and list of numeric weights
 were supplied (i.e. a model averaging scenario).
 

@@ -24,18 +24,18 @@
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param bM.arg A named list of any additional arguments to \code{bootMer}.
-#' @param ... Arguments to \code{stdCoeff}.
+#' @param ... Arguments to \code{stdEff}.
 #' @details \code{bootEff} uses the \code{boot} function (primarily) to
-#'   bootstrap effects from a fitted model or list of models (i.e. standardised
-#'   coefficients, calculated using \code{stdCoeff}). Bootstrapping is typically
-#'   nonparametric, i.e. coefficients are calculated from data where the rows
-#'   have been randomly sampled with replacement. The number of replicates is
-#'   set by default to 10,000, which should provide accurate coverage for
-#'   confidence intervals in most situations. To ensure that data is resampled
-#'   in the same way across individual bootstrap operations within the same run
-#'   (e.g. models in a list), the same seed is set per operation, with the value
-#'   saved as an attribute to the bootstrapped values (for reproducibility). The
-#'   seed can either be user-supplied or a randomly-generated five-digit number
+#'   bootstrap standardised effects from a fitted model or list of models
+#'   (calculated using \code{stdEff}). Bootstrapping is typically nonparametric,
+#'   i.e. effects are calculated from data where the rows have been randomly
+#'   sampled with replacement. The number of replicates is set by default to
+#'   10,000, which should provide accurate coverage for confidence intervals in
+#'   most situations. To ensure that data is resampled in the same way across
+#'   individual bootstrap operations within the same run (e.g. models in a
+#'   list), the same seed is set per operation, with the value saved as an
+#'   attribute to the bootstrapped values (for reproducibility). The seed can
+#'   either be user-supplied or a randomly-generated five-digit number
 #'   (default), and is always re-initialised on exit (i.e.
 #'   \code{set.seed(NULL)}).
 #'
@@ -111,7 +111,7 @@
 #'   Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
 #'   Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
 #' @seealso \code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
-#'   \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{residuals}},
+#'   \code{\link[semEff]{stdEff}}, \code{\link[stats]{residuals}},
 #'   \code{\link[semEff]{avgEst}}
 #' @examples
 #' ## Bootstrap Shipley SEM (test)
@@ -128,7 +128,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, ran.eff = NULL, cor.err = NULL,
 
   m <- mod; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
 
-  ## Arguments to stdCoeff
+  ## Arguments to stdEff
   a <- list(...)
 
   ## Weights (for model averaging)
@@ -141,8 +141,8 @@ bootEff <- function(mod, R = 10000, seed = NULL, ran.eff = NULL, cor.err = NULL,
 
   ## Re-fit model(s) with any supplied data
   upd <- function(m, d) {
-    u <- function(m) eval(update(m, data = d, evaluate = FALSE))
-    rMapply(u, m, SIMPLIFY = FALSE)
+    upd <- function(m) eval(update(m, data = d, evaluate = FALSE))
+    rMapply(upd, m, SIMPLIFY = FALSE)
   }
   d <- a$data; a$data <- NULL
   if (!is.null(d)) m <- upd(m, d)
@@ -231,7 +231,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, ran.eff = NULL, cor.err = NULL,
     seed <- sample(10000:99999, 1)
   }
 
-  ## Function to bootstrap effects (standardised coefficients)
+  ## Function to bootstrap effects
   bootEff <- function(m, w) {
 
     ## Data to resample (x)
@@ -247,10 +247,10 @@ bootEff <- function(mod, R = 10000, seed = NULL, ran.eff = NULL, cor.err = NULL,
             d[d[, re] == j, ]
           }))
         } else x[i, ]
-        do.call(stdCoeff, c(list(m, w, xi), a))
+        do.call(stdEff, c(list(m, w, xi), a))
       }
     } else {
-      function(x) do.call(stdCoeff, c(list(x), a))
+      function(x) do.call(stdEff, c(list(x), a))
     }
     s <- if (catch.err) {
       function(...) tryCatch(stat(...), error = function(e) NA)
@@ -267,12 +267,12 @@ bootEff <- function(mod, R = 10000, seed = NULL, ran.eff = NULL, cor.err = NULL,
         ## Bootstrap
         B <- lapply(m, bootMer2)
 
-        ## Weighted average of coefs
+        ## Weighted average of effects
         bn <- a$term.names
         b <- lapply(B, "[[", 1)
         b <- avgEst(b, w, bn)
 
-        ## Weighted average of bootstrapped coefs
+        ## Weighted average of bootstrapped effects
         bb <- t(sapply(1:R, function(i) {
           bb <- lapply(B, function(j) j$t[i, ])
           avgEst(bb, w, bn)
@@ -336,11 +336,11 @@ bootEff <- function(mod, R = 10000, seed = NULL, ran.eff = NULL, cor.err = NULL,
     ## Bootstrapped correlated errors
     BCE <- Map(function(i, j) {
 
-      ## Model/list, weights, and data 1
+      ## Model(s), weights, and data 1
       m1 <- m[[i[1]]]; w1 <- w[[i[1]]]
       d1 <- getData(m1, subset = TRUE, merge = TRUE, env = env)
 
-      ## Model/list, weights, and data 2
+      ## Model(s), weights, and data 2
       m2 <- m[[i[2]]]; w2 <- w[[i[2]]]
       d2 <- getData(m2, subset = TRUE, merge = TRUE, env = env)
 

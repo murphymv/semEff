@@ -259,10 +259,10 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   than direct transformation, where the latter is available (i.e. does not
 #'   contain undefined values).
 #' @details \code{glt} can be used to provide a 'generalised' transformation of
-#'   a numeric variable using the link function from a generalised linear model
+#'   a numeric variable, using the link function from a generalised linear model
 #'   (GLM) fit to the variable. The transformation is generalised in the sense
-#'   that it can always be generated, even where a standard link transformation
-#'   would produce undefined values. It achieves this via an estimate based on
+#'   that it can extend even to cases where a standard link transformation would
+#'   generate undefined values. It achieves this by using an estimate based on
 #'   the 'working' response variable of the GLM (see below). If the error
 #'   distribution \code{family} is not specified (default), then it is
 #'   determined (roughly) from \code{x}, with \code{binomial(link = "logit")}
@@ -270,17 +270,17 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   the function is generally intended for binomial or poisson variables, any
 #'   variable which can be fit using \code{glm} can be supplied. One of the key
 #'   purposes of \code{glt} is to allow the calculation of fully standardised
-#'   model coefficients for GLMs (in which case \code{x} = the response
+#'   effects (coefficients) for GLMs (in which case \code{x} = the response
 #'   variable), while it can also facilitate the proper calculation of SEM
 #'   indirect effects (see below).
 #'
 #'   \strong{Estimating the link transformation}
 #'
-#'   A key challenge in generating fully standardised model coefficients for a
-#'   GLM with a non-gaussian link function is the difficulty in calculating
-#'   appropriate standardised ranges (typically the standard deviation) for the
-#'   response variable in the link scale. This is because directly transforming
-#'   the response will often produce undefined values. Although methods for
+#'   A key challenge in generating fully standardised effects for a GLM with a
+#'   non-gaussian link function is the difficulty in calculating appropriate
+#'   standardised ranges (typically the standard deviation) for the response
+#'   variable in the link scale. This is because a direct transformation of the
+#'   response will often produce undefined values. Although methods for
 #'   circumventing this issue by indirectly estimating the variance of the
 #'   response on the link scale have been proposed - including a
 #'   latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
@@ -294,11 +294,11 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   that a relatively straightforward 'transformation' of any non-gaussian
 #'   response is readily attainable in all cases. The standard deviation (or
 #'   other relevant range) can then be calculated using values of the
-#'   transformed response and used to scale the coefficients. An additional
-#'   benefit for piecewise SEMs is that the transformed rather than original
-#'   response can be specified as a predictor in other models, ensuring that
-#'   standardised indirect and total effects are calculated correctly (i.e.
-#'   using the same units).
+#'   transformed response and used to scale the effects. An additional benefit
+#'   for piecewise SEMs is that the transformed rather than original response
+#'   can be specified as a predictor in other models, ensuring that standardised
+#'   indirect and total effects are calculated correctly (i.e. using the same
+#'   units).
 #'
 #'   To ensure a high level of 'accuracy' in the working response - in the sense
 #'   that the inverse-transformation is practically indistinguishable from the
@@ -319,25 +319,24 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   response variable, which will also be practically indistinguishable from
 #'   the direct transformation where this can be compared (see Examples). It
 #'   also ensures that the transformed values, and hence the standard deviation,
-#'   are the same for any GLM fitting the same response - provided it uses the
-#'   same link function - facilitating model comparisons, selection, and
+#'   are the same for any GLM fitting the same response (provided it uses the
+#'   same link function) - facilitating model comparisons, selection, and
 #'   averaging.
 #'
 #' @note As we often cannot directly observe the GLM response variable on the
 #'   link scale, any method estimating its values or statistics will be 'wrong'
-#'   to a greater or lesser degree. The aim should be to try to minimise this
-#'   error as far as (reasonably) possible, while also generating standardised
-#'   coefficients whose interpretation most closely resembles those of the
-#'   ordinary linear model - something which the current method achieves. The
-#'   solution of using the working response from the GLM to scale coefficients
-#'   is a purely practical, but reasonable one, and one that takes advantage of
-#'   modern computing power to minimise error through iterative model fitting.
-#'   An added bonus is that the estimated variance is constant across models fit
-#'   to the same response variable, which cannot be said of previous methods
-#'   (Menard 2011). The overall approach would be classed as
-#'   'observed-empirical' by Grace \emph{et al.} (2018), as it utilises model
-#'   error variance (the working residuals) rather than theoretical
-#'   distribution-specific variance.
+#'   to some degree. The aim should be to try to minimise this error as far as
+#'   (reasonably) possible, while also generating standardised effects whose
+#'   interpretation most closely resembles those of an ordinary linear model -
+#'   something which the current method achieves. The solution of using the
+#'   working response from the GLM to scale effects is a purely practical, but
+#'   reasonable one, and one that takes advantage of modern computing power to
+#'   minimise error through iterative model fitting. An added bonus is that the
+#'   estimated variance is constant across models fit to the same response
+#'   variable, which cannot be said of previous methods (Menard 2011). The
+#'   overall approach would be classed as 'observed-empirical' by Grace \emph{et
+#'   al.} (2018), as it utilises model error variance (the working residuals)
+#'   rather than theoretical distribution-specific variance.
 #' @return A numeric vector of the transformed values, or an array, list of
 #'   vectors/arrays, or nested list.
 #' @references Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
@@ -361,14 +360,14 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #' ## (test with a poisson variable, log link)
 #' set.seed(1)
 #' y <- rpois(30, lambda = 10)
-#' yl <- glt(y, force.est = TRUE)
+#' yl <- unname(glt(y, force.est = TRUE))
 #'
 #' ## Effectively equal?
-#' all.equal(log(y), yl, check.names = FALSE)
+#' all.equal(log(y), yl)
 #' # TRUE
 #'
 #' ## Actual difference...
-#' all.equal(log(y), yl, check.names = FALSE, tolerance = .Machine$double.eps)
+#' all.equal(log(y), yl, tolerance = .Machine$double.eps)
 #' # "Mean relative difference: 1.05954e-12"
 #' @export
 glt <- function(x, family = NULL, force.est = FALSE) {
@@ -401,8 +400,8 @@ glt <- function(x, family = NULL, force.est = FALSE) {
       repeat {
         xl <- predict(m) + resid(m, "working")
         xli <- f$linkinv(xl)
-        eql <- isTRUE(all.equal(x, xli, check.names = FALSE,
-                                tolerance = sqrt(.Machine$double.eps)))
+        eql <- isTRUE(all.equal(x, xli, tolerance = sqrt(.Machine$double.eps),
+                                check.names = FALSE))
         if (eql) return(xl) else {
           i <- i + 1
           suppressWarnings(
@@ -508,8 +507,8 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
 #'   \code{vif} returns values per model term (i.e. predictor variable),
 #'   \code{VIF} returns values per coefficient, meaning that the same VIF will
 #'   be returned per coefficient for multi-coefficient terms. Finally, \code{NA}
-#'   is returned for any coefficients which could not be estimated in the model
-#'   (e.g. aliased terms).
+#'   is returned for any terms which could not be estimated in the model (e.g.
+#'   aliased).
 #' @return A numeric vector of the VIFs, or an array, list of vectors/arrays,
 #'   or nested list.
 #' @references Fox, J. and Monette, G. (1992) Generalized Collinearity
@@ -781,7 +780,8 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     n <- nobs(m)
     i <- attr(terms(m), "intercept")
     b <- if (isMer(m)) lme4::fixef(m) else coef(m)
-    k <- length(na.omit(b[!isPhi(names(b))])) - i
+    b <- na.omit(b[!isPhi(names(b))])
+    k <- length(b) - i
     if (isMer(m)) k <- k + length(m@theta)
 
     ## R-squared
@@ -865,8 +865,8 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 
 
 #' @title Weighted Average of Model Estimates
-#' @description Calculate a weighted average of model estimates (e.g.
-#'   coefficients, fitted values, residuals) for a set of models.
+#' @description Calculate a weighted average of model estimates (e.g. effects,
+#'   fitted values, residuals) for a set of models.
 #' @param est A list or nested list of numeric vectors, comprising the model
 #'   estimates. In the latter case, these should correspond to estimates for
 #'   candidate models for each of a set of different response variables.
@@ -878,8 +878,8 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #' @param est.names An optional vector of names used to extract and/or sort
 #'   estimates from the output.
 #' @details This function can be used to calculate a weighted average of model
-#'   estimates such as coefficients, fitted values, or residuals, where models
-#'   are typically competing candidate models fit to the same response variable.
+#'   estimates such as effects, fitted values, or residuals, where models are
+#'   typically competing candidate models fit to the same response variable.
 #'   Weights are typically a 'weight of evidence' type metric such as Akaike
 #'   model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which
 #'   can be conveniently calculated in \emph{R} using packages such as
@@ -888,7 +888,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'
 #'   Averaging is performed via the 'full'/'zero' rather than
 #'   'subset'/'conditional'/'natural' method, meaning that zero is substituted
-#'   for estimates for any 'missing' parameters (e.g. coefficients) prior to
+#'   for estimates for any 'missing' parameters (e.g. effects) prior to
 #'   calculations. This provides a form of shrinkage and thus reduces
 #'   \href{https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false}{estimate
 #'   bias} (Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
@@ -920,14 +920,14 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   133785. \url{https://doi.org/c8zt}
 #' @seealso \code{\link[stats]{weighted.mean}}
 #' @examples
-#' ## Model-averaged coefficients
+#' ## Model-averaged effects (coefficients)
 #' m <- Shipley.Growth  # candidate models
-#' b <- lapply(m, function(i) coef(summary(i))[, 1])
-#' avgEst(b)
+#' e <- lapply(m, function(i) coef(summary(i))[, 1])
+#' avgEst(e)
 #'
 #' ## Using weights
-#' w <- runif(length(b), 0, 1)
-#' avgEst(b, w)
+#' w <- runif(length(e), 0, 1)
+#' avgEst(e, w)
 #'
 #' ## Model-averaged predictions
 #' f <- lapply(m, predict)
@@ -946,7 +946,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
   ## Function
   avgEst <- function(e, w) {
 
-    ## Sort names (for coefs)
+    ## Sort names (for effects)
     en2 <- unique(unlist(lapply(e, names)))
     num <- suppressWarnings(as.numeric(en2))
     if (all(is.na(num))) {
@@ -959,7 +959,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
     }
     en <- if (!is.null(en)) en[en %in% en2] else en2
 
-    ## Combine estimates into table (missing -> zero)
+    ## Combine estimates into table (missing = zero)
     e <- do.call(cbind, lapply(e, function(i) {
       sapply(en, function(j) {
         if (j %in% names(i)) i[[j]] else 0
@@ -977,9 +977,9 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 }
 
 
-#' @title Standardised Coefficients
-#' @description Calculate fully standardised model coefficients in standard
-#'   deviation units, adjusted for multicollinearity among predictors.
+#' @title Standardised Effects
+#' @description Calculate fully standardised effects (model coefficients) in
+#'   standard deviation units, adjusted for multicollinearity among predictors.
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param weights An optional numeric vector of weights to use for model
 #'   averaging, or a named list of such vectors. The former should be supplied
@@ -987,50 +987,48 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   matching list names). If set to \code{"equal"}, a simple average is
 #'   calculated instead.
 #' @param data An optional dataset, used to first re-fit the model(s).
-#' @param term.names An optional vector of term names used to extract and/or
-#'   sort coefficients from the output.
-#' @param cen.x,cen.y Logical, whether the intercept and coefficients should be
-#'   calculated using mean-centred variables.
-#' @param std.x,std.y Logical, whether coefficients should be scaled by the
-#'   standard deviations of variables.
-#' @param unique.x Logical, whether coefficients should be adjusted for
+#' @param term.names An optional vector of names used to extract and/or sort
+#'   effects from the output.
+#' @param cen.x,cen.y Logical, whether effects should be calculated using
+#'   mean-centred variables.
+#' @param std.x,std.y Logical, whether effects should be scaled by the standard
+#'   deviations of variables.
+#' @param unique.x Logical, whether effects should be adjusted for
 #'   multicollinearity among predictors.
-#' @param refit.x Logical, whether the model should be re-fit with centred
+#' @param refit.x Logical, whether the model should be re-fit with mean-centred
 #'   predictors.
-#' @param incl.raw Logical, whether to append the raw (unstandardised)
-#'   coefficients to the output, i.e. those with all centring and
-#'   scaling options set to \code{FALSE}.
 #' @param r.squared Logical, whether R-squared values should also be returned.
+#' @param incl.raw Logical, whether to append the raw (unstandardised) effects
+#'   to the output.
 #' @param env Environment in which to look for model data (if none supplied).
 #' @param ... Arguments to \code{R2}.
-#' @details \code{stdCoeff} will calculate fully standardised coefficients in
-#'   standard deviation units for a fitted model or list of models. It achieves
-#'   this via adjusting the 'raw' model coefficients, so no standardisation of
-#'   input variables is required beforehand. Users can simply specify the model
-#'   with all variables in their original units and the function will do the
-#'   rest. However, the user is free to scale and/or centre any input variables
-#'   should they choose, which should not affect the outcome of standardisation
-#'   (provided any scaling is by standard deviations). This may be desirable in
-#'   some cases, such as to increase numerical stability during model fitting
-#'   when variables are on widely different scales.
+#' @details \code{stdEff} will calculate fully standardised effects
+#'   (coefficients) in standard deviation units for a fitted model or list of
+#'   models. It achieves this via adjusting the 'raw' model coefficients, so no
+#'   standardisation of input variables is required beforehand. Users can simply
+#'   specify the model with all variables in their original units and the
+#'   function will do the rest. However, the user is free to scale and/or centre
+#'   any input variables should they choose, which should not affect the outcome
+#'   of standardisation (provided any scaling is by standard deviations). This
+#'   may be desirable in some cases, such as to increase numerical stability
+#'   during model fitting when variables are on widely different scales.
 #'
-#'   If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, model estimates
-#'   will be calculated as if all predictors (x) and/or the response variable
-#'   (y) were mean-centred prior to model-fitting (including any dummy variables
-#'   arising from categorical predictors). Thus, for an ordinary linear model
-#'   where centring of x and y is specified, the intercept will be zero - the
-#'   mean (or weighted mean) of y. In addition, if \code{cen.x = TRUE} and there
-#'   are interacting terms in the model, all coefficients for lower order terms
-#'   of the interaction are adjusted using an expression which ensures that each
-#'   main effect or lower order term is estimated at the mean values of the
-#'   terms they interact with (zero in a 'centred' model) - typically improving
-#'   the interpretation of coefficients. The expression used comprises a
-#'   weighted sum of all the coefficients that contain the lower order term,
-#'   with the weight for the term itself being zero and those for 'containing'
-#'   terms being the product of the means of the other variables involved in
-#'   that term (i.e. those not in the lower order term itself). For example, for
-#'   a three-way interaction (x1 * x2 * x3), the expression for main effect
-#'   \eqn{\beta1} would be:
+#'   If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, effects will be
+#'   calculated as if all predictors (x) and/or the response variable (y) were
+#'   mean-centred prior to model-fitting (including any dummy variables arising
+#'   from categorical predictors). Thus, for an ordinary linear model where
+#'   centring of x and y is specified, the intercept will be zero - the mean (or
+#'   weighted mean) of y. In addition, if \code{cen.x = TRUE} and there are
+#'   interacting terms in the model, all effects for lower order terms of the
+#'   interaction are adjusted using an expression which ensures that each main
+#'   effect or lower order term is estimated at the mean values of the terms
+#'   they interact with (zero in a 'centred' model) - typically improving the
+#'   interpretation of effects. The expression used comprises a weighted sum of
+#'   all the effects that contain the lower order term, with the weight for the
+#'   term itself being zero and those for 'containing' terms being the product
+#'   of the means of the other variables involved in that term (i.e. those not
+#'   in the lower order term itself). For example, for a three-way interaction
+#'   (x1 * x2 * x3), the expression for main effect \eqn{\beta1} would be:
 #'
 #'   \deqn{\beta_{1} + \beta_{12} \bar{x}_{2} + \beta_{13} \bar{x}_{3} +
 #'   \beta_{123} \bar{x}_{2} \bar{x}_{3}}{\beta1 + (\beta12 * Mx2) + (\beta13 *
@@ -1044,15 +1042,15 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   must be re-fit for this latter purpose, to recalculate the
 #'   variance-covariance matrix).
 #'
-#'   If \code{std.x = TRUE}, coefficients are standardised by multiplying by the
+#'   If \code{std.x = TRUE}, effects are standardised by multiplying by the
 #'   standard deviations of predictor variables (or terms), while if \code{std.y
 #'   = TRUE} they are divided by the standard deviation of the response. If the
 #'   model is a GLM, this latter is calculated using the link-transformed
 #'   response (or an estimate of same) generated using the function \code{glt}.
-#'   If both arguments are true, the coefficients are regarded as 'fully'
+#'   If both arguments are true, the effects are regarded as 'fully'
 #'   standardised in the traditional sense, often referred to as 'betas'.
 #'
-#'   If \code{unique.x = TRUE} (default), coefficients are adjusted for
+#'   If \code{unique.x = TRUE} (default), effects are adjusted for
 #'   multicollinearity among predictors by dividing by the square root of the
 #'   VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
 #'   standardised by the standard deviations of x and y, this converts them to
@@ -1076,20 +1074,27 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   If \code{refit.x = TRUE}, the model will be re-fit with any (newly-)centred
 #'   continuous predictors. This will occur (and will normally be desired) when
 #'   \code{cen.x} and \code{unique.x} are \code{TRUE} and there are interaction
-#'   terms in the model, in order to calculate correct VIFs from the var-cov
-#'   matrix. However, re-fitting may not be necessary in some cases - for
-#'   example where predictors have already been centred (and whose values will
-#'   not subsequently be resampled during bootstrapping) - and disabling this
-#'   option may save time with larger models and/or bootstrap runs.
+#'   terms in the model, in order to calculate correct VIFs from the
+#'   variance-covariance matrix. However, re-fitting may not be necessary in
+#'   some circumstances - for example where predictors have already been
+#'   mean-centred (and whose values will not subsequently be resampled) - and
+#'   disabling this option may save time with larger models and/or bootstrap
+#'   runs.
 #'
-#'   If \code{r.squared = TRUE}, R-squared values are also returned via the
-#'   \code{R2} function.
+#'   If \code{r.squared = TRUE}, model R-squared values are also returned via
+#'   the \code{R2} function.
+#'
+#'   If \code{incl.raw = TRUE}, raw (unstandardised) effects can be appended to
+#'   the output, i.e. those with all centring and scaling options set to
+#'   \code{FALSE} (though still adjusted for multicollinearity, where
+#'   applicable). These may be of interest, for example to compare their
+#'   bootstrapped distributions with those of standardised effects.
 #'
 #'   Finally, if \code{weights} are specified, the function calculates a
-#'   weighted average of the standardised coefficients across models (Burnham &
+#'   weighted average of the standardised effects across models (Burnham &
 #'   Anderson 2002).
-#' @return A numeric vector of the standardised coefficients, or a list or
-#'   nested list of such vectors.
+#' @return A numeric vector of the standardised effects, or a list or nested
+#'   list of such vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
 #'   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
 #'   ed.). New York: Springer-Verlag. Retrieved from
@@ -1109,49 +1114,51 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' @examples
 #' library(lme4)
 #'
-#' ## Standardised coefficients for SEM (i.e. direct effects)
+#' ## Standardised (direct) effects for SEM
 #' m <- Shipley.SEM
-#' stdCoeff(m)
-#' stdCoeff(m, cen.y = FALSE, std.y = FALSE)  # x-only
-#' stdCoeff(m, std.x = FALSE, std.y = FALSE)  # centred only
-#' stdCoeff(m, cen.x = FALSE, cen.y = FALSE)  # scaled only
-#' stdCoeff(m, unique.x = FALSE)  # include multicollinearity
-#' stdCoeff(m, incl.raw = TRUE)  # add unstandardised
-#' stdCoeff(m, r.squared = TRUE)  # add R-squared
+#' stdEff(m)
+#' stdEff(m, cen.y = FALSE, std.y = FALSE)  # x-only
+#' stdEff(m, std.x = FALSE, std.y = FALSE)  # centred only
+#' stdEff(m, cen.x = FALSE, cen.y = FALSE)  # scaled only
+#' stdEff(m, unique.x = FALSE)  # include multicollinearity
+#' stdEff(m, r.squared = TRUE)  # add R-squared
+#' stdEff(m, incl.raw = TRUE)  # add unstandardised
 #'
-#' ## Demonstrate equality with manually-standardised variables (gaussian)
+#' ## Demonstrate equality with effects from manually-standardised variables
+#' ## (gaussian models only)
 #' m <- Shipley.Growth[[3]]
 #' d <- data.frame(scale(na.omit(Shipley)))
-#' b1 <- stdCoeff(m, unique.x = FALSE)
-#' b2 <- coef(summary(update(m, data = d)))[, 1]
-#' stopifnot(all.equal(b1, b2))
+#' e1 <- stdEff(m, unique.x = FALSE)
+#' e2 <- coef(summary(update(m, data = d)))[, 1]
+#' stopifnot(all.equal(e1, e2))
 #'
-#' ## Demonstrate equality with increment in R-squared (ordinary linear model)
+#' ## Demonstrate equality with square root of increment in R-squared
+#' ## (ordinary linear models only)
 #' m <- lm(Growth ~ Date + DD + lat, data = Shipley)
 #' r2 <- summary(m)$r.squared
-#' b1 <- stdCoeff(m)[-1]
-#' bn <- names(b1)
-#' b2 <- sapply(bn, function(i) {
-#'   f <- reformulate(bn[!bn %in% i])
+#' e1 <- stdEff(m)[-1]
+#' en <- names(e1)
+#' e2 <- sapply(en, function(i) {
+#'   f <- reformulate(en[!en %in% i])
 #'   r2i <- summary(update(m, f))$r.squared
 #'   sqrt(r2 - r2i)
 #' })
-#' stopifnot(all.equal(b1, b2))
+#' stopifnot(all.equal(e1, e2))
 #'
-#' ## Model-averaged standardised coefficients
+#' ## Model-averaged standardised effects
 #' m <- Shipley.Growth  # candidate models
 #' w <- runif(length(m), 0, 1)  # weights
-#' stdCoeff(m, w)
+#' stdEff(m, w)
 #' @export
-stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
-                     cen.x = TRUE, cen.y = TRUE, std.x = TRUE, std.y = TRUE,
-                     unique.x = TRUE, refit.x = TRUE, incl.raw = FALSE,
-                     r.squared = FALSE, env = parent.frame(), ...) {
+stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
+                   cen.x = TRUE, cen.y = TRUE, std.x = TRUE, std.y = TRUE,
+                   unique.x = TRUE, refit.x = TRUE, r.squared = FALSE,
+                   incl.raw = FALSE, env = parent.frame(), ...) {
 
-  m <- mod; w <- weights; d <- data; bn <- term.names
+  m <- mod; w <- weights; d <- data; en <- term.names
 
   ## Function
-  stdCoeff <- function(m) {
+  stdEff <- function(m) {
 
     ## Re-fit model with any supplied data
     if (!is.null(d)) {
@@ -1159,15 +1166,15 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       env <- environment()
     }
 
-    ## Coefficients
-    b <- br <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
+    ## Original model coefficients
+    b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
     bn <- names(b)
     int <- any(isInt(bn))  # intercept?
 
-    ## Drop non-predictor parameters
-    b <- na.omit(b[!isPhi(bn)])
-    xn <- names(b)[!isInt(names(b))]
-    k <- length(xn)
+    ## Effects (subset only relevant parameters)
+    e <- na.omit(b[!isPhi(bn)])
+    en <- names(e)[!isInt(names(e))]
+    k <- length(en)
 
     ## Model weights
     w <- weights(m)
@@ -1178,16 +1185,16 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     y <- getY(m, env = env)
     obs <- names(y)
 
-    ## Centre/standardise x
+    ## Centre/scale (x)
     if (k > 0) {
 
       ## Predictors
       dF <- function(...) data.frame(..., check.names = FALSE)
       if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
-      x <- dF(model.matrix(m, data = d))[xn]
-      inx <- any(isInx(xn))  # interactions?
+      x <- dF(model.matrix(m, data = d))[en]
+      inx <- any(isInx(en))  # interactions?
 
-      ## Centre predictors and adjust coefs/intercept
+      ## Adjust intercept (and possibly effects/predictors)
       if (cen.x) {
 
         ## Model offset
@@ -1195,34 +1202,40 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         o <- model.offset(mf)
         if (is.null(o)) o <- 0
 
-        ## For interactions, adjust coefs and centre predictors
+        ## Adjust intercept (set to mean of predicted y)
+        if (int) {
+          f <- predict(m, re.form = NA)[obs] - o
+          e[1] <- weighted.mean(f, w)
+        }
+
+        ## For interactions, adjust effects and centre predictors
         if (inx) {
 
           ## Predictor means
           sI <- function(x) {
             unlist(strsplit(x, "(?<!:):(?!:)", perl = TRUE))
           }
-          XN <- lapply(labels(terms(m)), sI)
-          x2 <- dF(model.matrix(reformulate(unlist(XN)), data = d))
+          EN <- lapply(labels(terms(m)), sI)
+          x2 <- dF(model.matrix(reformulate(unlist(EN)), data = d))
           xm <- colMeans(x2)
 
           ## Adjust lower-order terms
           ## (ti = terms containing term i; ni = non-i components of ti)
-          b[xn] <- sapply(xn, function(i) {
-            bi <- b[[i]]; ii <- sI(i)
-            ti <- xn[xn != i & sapply(xn, function(j) all(ii %in% sI(j)))]
+          e[en] <- sapply(en, function(i) {
+            ei <- e[[i]]; ii <- sI(i)
+            ti <- en[en != i & sapply(en, function(j) all(ii %in% sI(j)))]
             if (length(ti) > 0) {
-              bi + sum(sapply(ti, function(j) {
+              ei + sum(sapply(ti, function(j) {
                 jj <- sI(j)
                 ni <- jj[!jj %in% ii]
-                prod(b[j], xm[ni])
+                prod(e[j], xm[ni])
               }))
-            } else bi
+            } else ei
           })
 
-          ## Centre predictors (for correct product term SDs)
+          ## Centre predictors (for correct SDs for product terms)
           if (std.x) {
-            x <- dF(sapply(xn, function(i) {
+            x <- dF(sapply(en, function(i) {
               ii <- sI(i)
               xi <- sweep(x2[ii], 2, xm[ii])
               apply(xi, 1, prod)
@@ -1231,18 +1244,12 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
         }
 
-        ## Adjust intercept (set to mean of predicted y)
-        if (int) {
-          f <- predict(m, re.form = NA)[obs] - o
-          b[1] <- weighted.mean(f, w)
-        }
-
       }
 
-      ## Standardise by x
+      ## Scale effects (x)
       if (std.x) {
         xs <- sapply(x, sdW, w)
-        b[xn] <- b[xn] * xs
+        e[en] <- e[en] * xs
       }
 
       ## Calculate unique effects of predictors (adjust for multicollinearity)
@@ -1257,12 +1264,13 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           d2 <- data.frame(y, w, o, d)
           d2 <- dF(sapply(d2, function(i) {
             if (!is.numeric(i)) {
-              i <- factor(i); contrasts(i) <- contr.sum(levels(i)); i
-            } else i
+              i <- factor(i)
+              contrasts(i) <- contr.sum(levels(i))
+            }; i
           }))
 
           ## Update term names (scale numeric predictors)
-          xn2 <- unlist(lapply(XN, function(i) {
+          en2 <- unlist(lapply(EN, function(i) {
             paste(sapply(i, function(j) {
               if (is.numeric(mf[, j])) paste0("scale(", j, ")") else j
             }), collapse = ":")
@@ -1272,12 +1280,12 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           if (isMer(m)) {
             re <- lme4::findbars(formula(m))
             re <- sapply(re, function(i) paste0("(", deparse(i), ")"))
-            xn2 <- c(xn2, re)
+            en2 <- c(en2, re)
           }
 
           ## Rename any existing terms named "y", "w", or "o"
           if (any(c("y", "w", "o") %in% names(d))) {
-            xn2 <- sapply(xn2, function(i) {
+            en2 <- sapply(en2, function(i) {
               i <- gsub("([^\\w.])", "~\\1~", i, perl = TRUE)
               i <- unlist(strsplit(i, "~"))
               s <- i %in% c("y", "w", "o")
@@ -1287,60 +1295,70 @@ stdCoeff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           }
 
           ## Re-fit model
-          eval(update(m, reformulate(xn2, "y", int), data = d2, weights = w,
+          eval(update(m, reformulate(en2, "y", int), data = d2, weights = w,
                       offset = o, contrasts = NULL, evaluate = FALSE))
 
         } else m
 
-        ## Divide coefs by square root of VIFs
+        ## Divide effects by square root of VIFs
         vif <- na.omit(VIF(m2, env = environment()))
-        b[xn] <- b[xn] / sqrt(vif)
-        if (incl.raw) br[xn] <- br[xn] / sqrt(vif)
+        e[en] <- e[en] / sqrt(vif)
+        if (incl.raw) b[en] <- b[en] / sqrt(vif)
 
       }
 
     }
 
-    ## Centre/standardise y
+    ## Centre intercept (y)
     if (cen.y && int) {
       ym <- weighted.mean(y, w)
       if (isGlm(m)) {
         f <- if (isBet(m)) m$link$mean else family(m)
         ym <- f$linkfun(ym)
       }
-      b[1] <- b[1] - ym
+      e[1] <- e[1] - ym
     }
+
+    ## Scale effects (y)
     if (std.y) {
       if (isGlm(m)) y <- getY(m, link = TRUE, env = env)
       ys <- sdW(y, w)
-      b <- b / ys
+      e <- e / ys
     }
 
-    ## Return standardised coefficients
-    ## (append any R-squared and raw coefs)
-    b <- sapply(bn, function(i) {
-      if (i %in% names(b)) b[[i]] else br[[i]]
+    ## Return standardised effects (optionally append R-squared/raw effects)
+    e <- sapply(bn, function(i) {
+      if (i %in% names(e)) e[[i]] else b[[i]]
     })
-    if (r.squared) b <- c(b, R2(m, env = env, ...))
+    if (r.squared) e <- c(e, R2(m, env = env, ...))
     if (incl.raw) {
-      br <- c(br, b[isR2(names(b))])
-      names(br) <- paste0("(raw)_", names(br))
-      c(b, br)
-    } else b
+      b <- c(b, e[isR2(names(e))])
+      names(b) <- paste0("(raw)_", names(b))
+      c(e, b)
+    } else e
 
   }
 
   ## Apply recursively
-  b <- rMapply(stdCoeff, m, SIMPLIFY = FALSE)
+  e <- rMapply(stdEff, m, SIMPLIFY = FALSE)
 
-  ## Output coefs or weighted average
-  if (isList(b) && !is.null(w)) avgEst(b, w, bn)
-  else {
-    if (!is.null(bn)) {
-      f <- function(i) i[bn[bn %in% names(i)]]
-      rMapply(f, b, SIMPLIFY = FALSE)
-    } else b
-  }
+  ## Output effects or weighted average
+  if (isList(e) && !is.null(w)) avgEst(e, w, en)
+  else if (!is.null(en)) {
+    s <- function(i) i[en[en %in% names(i)]]
+    rMapply(s, e, SIMPLIFY = FALSE)
+  } else e
 
+}
+
+
+#' @title Standardised Effects
+#' @description This is a temporary function which calls the renamed original
+#'   (\code{\link[semEff]{stdEff}}).
+#' @param ... Arguments to \code{stdEff}.
+#' @export
+stdCoeff <- function(...) {
+  warning("stdCoeff() has been renamed, please call stdEff() in future.")
+  stdEff(...)
 }
 

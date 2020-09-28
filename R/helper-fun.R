@@ -38,7 +38,7 @@ isBet <- function(x) "betareg" %in% class(x)
 #'   parameter types using their names. Intended largely for convenience and
 #'   internal use.
 #' @param x A character vector of parameter names (e.g. names of coefficients
-#'   from \code{coef} or \code{stdCoeff}).
+#'   from \code{coef} or \code{stdEff}).
 #' @return A logical vector of the same length as \code{x}.
 #' @name Param.Type
 NULL

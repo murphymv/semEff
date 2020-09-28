@@ -1,9 +1,9 @@
 ## Release
-This is a third minor release (0.3.0).
+This is a fourth minor release (0.4.0).
 
 ## Test environments
-* Windows 10 version 1909, R 3.6.3 (local)
-* Ubuntu Linux 16.04 LTS, R 3.6.2 (travis-ci)
+* Windows 10 version 1909, R 4.0.2 (local)
+* Ubuntu Linux 16.04 LTS, R 4.0.2 (travis-ci)
 * Windows Server 2008 R2 SP1, R-devel, 32/64 bit (R-hub builder)
 * Ubuntu Linux 16.04 LTS, R-release, GCC (R-hub builder)
 * Fedora Linux, R-devel, clang, gfortran (R-hub builder)

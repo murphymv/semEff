@@ -12,8 +12,8 @@ Byrnes
 Calabrese
 Chernick
 Cheung
-cov
 cqm
+cran
 Df
 doi
 ed
@@ -22,16 +22,20 @@ Grueber
 Guillera
 GVIF
 Hartig
+hatvalues
 Hesterberg
 Hou
 Huyvaert
+io
 IRLS
 Kvalseth
 Labudde
 Lai
 Lefcheck
+lme
 Matechou
 McKelvey
+merMod
 Modeling
 Monette
 multimodel
@@ -45,6 +49,7 @@ piecewiseSEM
 poisson
 Puth
 rb
+rdrr
 Ren
 residualised
 Ruxton
@@ -54,7 +59,6 @@ SEM
 semipartial
 SEMs
 Technometrics
-var
 Verlag
 vif
 VIF

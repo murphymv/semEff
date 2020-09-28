@@ -137,25 +137,22 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
     ## Function
     subNam <- function(x) {
-      if (is.character(x)) gsub(p, r, x, ...) else {
+      if (is.character(x)) x <- gsub(p, r, x, ...)
+      else {
         if (!is.null(names(x))) {
-          names(x) <- gsub(p, r, names(x), ...); x
-        } else {
-          if (is.matrix(x)) {
-            colnames(x) <- gsub(p, r, colnames(x), ...); x
-          } else x
+          names(x) <- gsub(p, r, names(x), ...)
+        } else if (is.matrix(x)) {
+          colnames(x) <- gsub(p, r, colnames(x), ...)
         }
-      }
+      }; x
     }
 
     ## Apply recursively
     rsubNam <- function(x, sN) {
       x <- sN(x)
       if (isList(x) || isBoot(x)) {
-        for (i in 1:length(x)) {
-          x[[i]] <- rsubNam(x[[i]], sN)
-        }; x
-      } else x
+        for (i in 1:length(x)) x[[i]] <- rsubNam(x[[i]], sN)
+      }; x
     }
     rsubNam(x, subNam)
 
@@ -203,7 +200,8 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
     ## Function to extract effect names
     effNam <- function(x) {
       effNam <- function(x) if (is.matrix(x)) colnames(x) else names(x)
-      unique(unlist(rMapply(effNam, x)))
+      en <- rMapply(effNam, x)
+      unique(unlist(en))
     }
 
     ## Function to multiply effects to calculate indirect effects
@@ -247,13 +245,15 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
     ## Calculate indirect effects: start with last response and move backwards,
     ## repeat for n = no. of responses
     lapply(D, function(i) {
-      if (any(m %in% effNam(i))) {
+      en <- effNam(i)
+      if (any(m %in% en)) {
         I <- list()
         I[[1]] <- multEff(i)
         for (j in 1:length(i)) {
-          I[[j + 1]] <- if (any(m %in% effNam(I[j]))) multEff(I[j])
+          en <- effNam(I[j])
+          I[[j + 1]] <- if (any(m %in% en)) multEff(I[j])
         }
-        unlist2(I)  # collapse results
+        unlist2(I)
       } else NA
     })
 
@@ -475,7 +475,7 @@ totEff <- function(...) {
 #'   \code{mod}.
 #' @param effects A numeric vector of effects to predict, or a list or nested
 #'   list of such vectors. These will typically have been calculated using
-#'   \code{semEff}, \code{bootEff}, or \code{stdCoeff}. Alternatively, a boot
+#'   \code{semEff}, \code{bootEff}, or \code{stdEff}. Alternatively, a boot
 #'   object produced by \code{bootEff} can be supplied.
 #' @param eff.boot A matrix of bootstrapped effects used to calculate confidence
 #'   intervals for predictions, or a list or nested list of such matrices. These
@@ -507,23 +507,23 @@ totEff <- function(...) {
 #'   \code{NULL} (default), all available cores are used.
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
-#' @param ... Arguments to \code{stdCoeff}.
+#' @param ... Arguments to \code{stdEff}.
 #' @details Generate predicted values for SEM direct, indirect, or total effects
 #'   on a response variable, which should be supplied to \code{effects}. These
 #'   are used in place of model coefficients in the standard prediction formula,
 #'   with values for predictors drawn either from the data used to fit the
 #'   original model(s) (\code{mod}) or from \code{newdata}. It is assumed that
 #'   effects are fully standardised; however, if this is not the case, then the
-#'   same standardisation options originally specified to \code{stdCoeff} should
-#'   be re-specified - which will then be used to standardise the data. If no
-#'   effects are supplied, standardised model coefficients will be calculated
-#'   and used to generate predictions. These will equal the model(s) fitted
-#'   values if \code{newdata = NULL}, \code{unique.x = FALSE}, and \code{re.form
-#'   = NULL} (where applicable).
+#'   same centring and scaling options originally specified to \code{stdEff}
+#'   should be re-specified - which will then be used to standardise the data.
+#'   If no effects are supplied, standardised (direct) effects will be
+#'   calculated from the model and used to generate predictions. These
+#'   predictions will equal the model(s) fitted values if \code{newdata = NULL},
+#'   \code{unique.x = FALSE}, and \code{re.form = NULL} (where applicable).
 #'
 #'   Model-averaged predictions can be generated if averaged \code{effects} are
 #'   supplied to the model in \code{mod}, or, alternatively, if \code{weights}
-#'   are specified (passed to \code{stdCoeff}) and \code{mod} is a list of
+#'   are specified (passed to \code{stdEff}) and \code{mod} is a list of
 #'   candidate models (\code{effects} can also be passed using this latter
 #'   method). For mixed model predictions where random effects are included
 #'   (e.g. \code{re.form = NULL}), the latter approach should be used, otherwise
@@ -557,7 +557,7 @@ totEff <- function(...) {
 #'   Predictions may also be returned in a list or nested list, depending on the
 #'   structure of \code{mod} (and other arguments).
 #' @seealso \code{\link[stats]{predict}}, \code{\link[semEff]{semEff}},
-#'   \code{\link[semEff]{stdCoeff}}, \code{\link[semEff]{bootCI}},
+#'   \code{\link[semEff]{stdEff}}, \code{\link[semEff]{bootCI}},
 #'   \code{\link[semEff]{pSapply}}
 #' @examples
 #' ## Predict effects (direct, total)
@@ -581,7 +581,7 @@ totEff <- function(...) {
 #'
 #' ## Predict an interactive effect (e.g. Live ~ Growth * DD)
 #' xn <- c("Growth", "DD")
-#' d[xn] <- scale(d[xn])  # standardise predictors (improves fit)
+#' d[xn] <- scale(d[xn])  # scale predictors (improves fit)
 #' m <- lme4::glmer(Live ~ Growth * DD + (1 | site) + (1 | tree),
 #'                  family = binomial, data = d)
 #' nd <- with(d, expand.grid(
@@ -596,7 +596,7 @@ totEff <- function(...) {
 #' ## Model-averaged predictions (several approaches)
 #' m <- Shipley.Growth  # candidate models (list)
 #' w <- runif(length(m), 0, 1)  # weights
-#' e <- stdCoeff(m, w)  # averaged effects
+#' e <- stdEff(m, w)  # averaged effects
 #' f1 <- predEff(m[[1]], effects = e)  # pass avg. effects
 #' f2 <- predEff(m, weights = w)  # pass weights argument
 #' f3 <- avgEst(predEff(m), w)  # use avgEst function
@@ -618,7 +618,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   m <- mod; nd <- newdata; e <- effects; eb <- eff.boot; rf <- re.form;
   ix <- interaction; p <- parallel; nc <- ncpus
 
-  ## Arguments to stdCoeff
+  ## Arguments to stdEff
   a <- list(...)
 
   ## Weights (for model averaging)
@@ -634,8 +634,8 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   ## Re-fit model(s) with any supplied data
   d <- a$data; a$data <- NULL
   if (!is.null(d)) {
-    u <- function(m) eval(update(m, data = d, evaluate = FALSE))
-    m <- rMapply(u, m, SIMPLIFY = FALSE)
+    upd <- function(m) eval(update(m, data = d, evaluate = FALSE))
+    m <- rMapply(upd, m, SIMPLIFY = FALSE)
   }
 
   ## Environment to look for model data
@@ -643,7 +643,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   if (is.null(env)) env <- parent.frame()
   if (!is.null(d)) env <- environment()
 
-  ## Coef standardisation options (for back-transforming predictions)
+  ## Effect standardisation options (for back-transforming predictions)
   a$cen.x <- !(isFALSE(a$cen.x) | use.raw)
   a$cen.y <- !(isFALSE(a$cen.y) | use.raw)
   a$std.x <- !(isFALSE(a$std.x) | use.raw)
@@ -654,7 +654,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   predEff <- function(m, w, e, eb) {
 
     ## Effects
-    if (is.null(e)) e <- do.call(stdCoeff, c(list(m, w, env = env), a))
+    if (is.null(e)) e <- do.call(stdEff, c(list(m, w, env = env), a))
     if (isBoot(e)) {eb <- e$t; e <- e$t0}
     en <- names(e)
 
