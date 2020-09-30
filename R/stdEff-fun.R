@@ -647,14 +647,14 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned,
 #'   which is calculated via the same formula as for R-squared but using
 #'   cross-validated rather than standard fitted values. These are obtained by
-#'   dividing model response residuals by the complement of the observation
+#'   dividing the model response residuals by the complement of the observation
 #'   leverages (diagonals of the hat matrix), then subtracting these inflated
 #'   'predicted' residuals from the response variable. This is essentially a
 #'   short cut to obtaining out-of-sample predictions, normally arising via a
 #'   leave-one-out cross-validation procedure (in a GLM they will not be exactly
 #'   equal to such predictions). The resulting R-squared is an estimate of the
-#'   R-squared that would occur were the model to be fitted to new data, and
-#'   will be lower than the original - and likely also the adjusted - R-squared,
+#'   R-squared that would occur were the model to be fit to new data, and will
+#'   be lower than the original - and likely also the adjusted - R-squared,
 #'   highlighting the loss of explanatory power when predicting to new data.
 #'   This measure is a variant of an
 #'   \href{https://www.r-bloggers.com/can-we-do-better-than-r-squared/}{existing
@@ -672,6 +672,13 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   the fixed effects only - equivalent to the 'marginal' R-squared of Nakagawa
 #'   \emph{et al.} (2017).
 #'
+#'   For models fitted with one or more offsets, these will be removed by
+#'   default from the response variable and fitted values prior to calculations.
+#'   Thus R-squared will measure goodness-of-fit only for the predictors with
+#'   estimated, rather than fixed, coefficients. This is likely to be the
+#'   intended behaviour in most circumstances, though if users wish to include
+#'   variation due to the offset(s) they can set \code{offset = TRUE}.
+#'
 #'   R-squared values produced by this function will always be bounded between
 #'   zero (no fit) and one (perfect fit), meaning that any negative values
 #'   arising from calculations will be rounded up to zero. Negative values
@@ -686,21 +693,18 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   R-squared measure calculated for a GLM or mixed model (including those
 #'   produced by this function), as such measures do not hold all the properties
 #'   of R-squared in the ordinary linear model and as such may not always behave
-#'   as expected. They are, at best, approximations. Care must also be taken in
-#'   comparing the measures to their equivalents from ordinary linear models.
-#'   This is particularly the case for the adjusted and predicted versions,
-#'   which have previously only been defined for ordinary linear models, and
-#'   which could be described as 'approximations of approximations' of what they
-#'   intend to measure. For example, for the adjusted R-squared for mixed
+#'   as expected. Care must also be taken in comparing the measures to their
+#'   equivalents from ordinary linear models, particularly the adjusted and
+#'   predicted versions. For example, for the adjusted R-squared for mixed
 #'   models, it's not entirely clear what the sample size (n) in the formula
-#'   should represent - the no. of observations? independent groups? something
-#'   else? (the default interpretation of no. of observations is used). With all
-#'   that being said, the value of standardised R-squared measures for even
-#'   'rough' model fit assessment and comparison may outweigh such reservations,
-#'   and the adjusted and predicted versions in particular may aid the user in
+#'   should represent - no. of observations? independent groups? something else?
+#'   (the default interpretation of no. of observations is used). With all that
+#'   being said, the value of standardised R-squared measures for even 'rough'
+#'   model fit assessment and comparison may outweigh such reservations, and the
+#'   adjusted and predicted versions in particular may aid the user in
 #'   diagnosing and preventing overfitting. They should NOT, however, replace
-#'   other measures such as AIC or BIC for comparing and/or ranking competing
-#'   models fit to the same data.
+#'   other measures such as AIC or BIC for formally comparing and/or ranking
+#'   competing models fit to the same response variable.
 #' @return A numeric vector of the R-squared value(s), or an array, list of
 #'   vectors/arrays, or nested list.
 #' @references Allen, D. M. (1974). The Relationship Between Variable Selection
@@ -758,9 +762,9 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #' # NOTE: comparison not tested here for mixed models, as hierarchical data can
 #' # complicate the choice of an appropriate leave-one-out procedure. However,
 #' # there is no obvious reason why use of the leverage values (diagonals of the
-#' # hat matrix) to estimate CV predictions shouldn't generalise to the mixed
-#' # model case (at least for LMMs). In any case, users should exercise the
-#' # appropriate caution in interpretation.
+#' # hat matrix) to estimate CV predictions shouldn't generalise, roughly, to
+#' # the mixed model case (at least for LMMs). In any case, users should
+#' # exercise the appropriate caution in interpretation.
 #' @export
 R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
                re.form = NULL, env = parent.frame()) {
@@ -809,7 +813,8 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       obs <- names(y)
 
       ## Fitted values
-      f <- lI(predict(m, re.form = rf)[obs] - o)
+      f <- predict(m, re.form = rf)[obs]
+      f <- lI(f - o)
 
       ## R-squared
       R <- cov.wt(cbind(y, f), w, cor = TRUE)$cor[1, 2]
@@ -1042,53 +1047,55 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   must be re-fit for this latter purpose, to recalculate the
 #'   variance-covariance matrix).
 #'
-#'   If \code{std.x = TRUE}, effects are standardised by multiplying by the
-#'   standard deviations of predictor variables (or terms), while if \code{std.y
-#'   = TRUE} they are divided by the standard deviation of the response. If the
-#'   model is a GLM, this latter is calculated using the link-transformed
-#'   response (or an estimate of same) generated using the function \code{glt}.
-#'   If both arguments are true, the effects are regarded as 'fully'
-#'   standardised in the traditional sense, often referred to as 'betas'.
+#'   If \code{std.x = TRUE}, effects are scaled by multiplying by the standard
+#'   deviations of predictor variables (or terms), while if \code{std.y = TRUE}
+#'   they are divided by the standard deviation of the response variable (minus
+#'   any offsets). If the model is a GLM, this latter is calculated using the
+#'   link-transformed response (or an estimate of same) generated using the
+#'   function \code{glt}. If both arguments are true, the effects are regarded
+#'   as 'fully' standardised in the traditional sense, often referred to as
+#'   'betas'.
 #'
 #'   If \code{unique.x = TRUE} (default), effects are adjusted for
 #'   multicollinearity among predictors by dividing by the square root of the
 #'   VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
-#'   standardised by the standard deviations of x and y, this converts them to
+#'   scaled by the standard deviations of x and y, this converts them to
 #'   semipartial correlations, i.e. the correlation between the unique
 #'   components of predictors (residualised on other predictors) and the
 #'   response variable. This measure of effect size is arguably much more
 #'   interpretable and useful than the traditional standardised coefficient, as
 #'   it is always estimated independent of other predictors and so can more
 #'   readily be compared both within and across models. Values range from zero
-#'   to +/-1 rather than +/- infinity (as in the case of betas) - putting them
-#'   on the same scale as the bivariate correlation between predictor and
+#'   to +/- one rather than +/- infinity (as in the case of betas) - putting
+#'   them on the same scale as the bivariate correlation between predictor and
 #'   response. In the case of GLMs however, the measure is analogous but not
 #'   exactly equal to the semipartial correlation, so its values may not always
-#'   be bound between +/-1 (such cases are likely rare). Crucially, for ordinary
-#'   linear models, the square of the semipartial correlation equals the
-#'   increase in R-squared when that variable is added last in the model -
+#'   be bound between +/- one (such cases are likely rare). Importantly, for
+#'   ordinary linear models, the square of the semipartial correlation equals
+#'   the increase in R-squared when that variable is added last in the model -
 #'   directly linking the measure to model fit and 'variance explained'. See
 #'   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
 #'   for additional arguments in favour of the use of semipartial correlations.
 #'
-#'   If \code{refit.x = TRUE}, the model will be re-fit with any (newly-)centred
-#'   continuous predictors. This will occur (and will normally be desired) when
-#'   \code{cen.x} and \code{unique.x} are \code{TRUE} and there are interaction
-#'   terms in the model, in order to calculate correct VIFs from the
-#'   variance-covariance matrix. However, re-fitting may not be necessary in
-#'   some circumstances - for example where predictors have already been
-#'   mean-centred (and whose values will not subsequently be resampled) - and
-#'   disabling this option may save time with larger models and/or bootstrap
+#'   If \code{refit.x}, \code{cen.x}, and \code{unique.x} are \code{TRUE} and
+#'   there are interaction terms in the model, the model will be re-fit with any
+#'   (newly-)centred continuous predictors, in order to calculate correct VIFs
+#'   from the variance-covariance matrix. However, re-fitting may not be
+#'   necessary in some circumstances, for example where predictors have already
+#'   been mean-centred, and whose values will not subsequently be resampled
+#'   (e.g. parametric bootstrap). Setting \code{refit.x = FALSE} in such cases
+#'   will save time, especially with larger/more complex models and/or bootstrap
 #'   runs.
 #'
-#'   If \code{r.squared = TRUE}, model R-squared values are also returned via
-#'   the \code{R2} function.
+#'   If \code{r.squared = TRUE}, model R-squared values are appended to effects
+#'   via the \code{R2} function, with any additional arguments being passed via
+#'   \code{...}.
 #'
-#'   If \code{incl.raw = TRUE}, raw (unstandardised) effects can be appended to
-#'   the output, i.e. those with all centring and scaling options set to
+#'   If \code{incl.raw = TRUE}, raw (unstandardised) effects can also be
+#'   appended, i.e. those with all centring and scaling options set to
 #'   \code{FALSE} (though still adjusted for multicollinearity, where
-#'   applicable). These may be of interest, for example to compare their
-#'   bootstrapped distributions with those of standardised effects.
+#'   applicable). These may be of interest in some cases, for example to compare
+#'   their bootstrapped distributions with those of standardised effects.
 #'
 #'   Finally, if \code{weights} are specified, the function calculates a
 #'   weighted average of the standardised effects across models (Burnham &

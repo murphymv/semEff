@@ -75,14 +75,14 @@ Various approaches to the calculation of a goodness-of-fit measure
   If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned,
   which is calculated via the same formula as for R-squared but using
   cross-validated rather than standard fitted values. These are obtained by
-  dividing model response residuals by the complement of the observation
+  dividing the model response residuals by the complement of the observation
   leverages (diagonals of the hat matrix), then subtracting these inflated
   'predicted' residuals from the response variable. This is essentially a
   short cut to obtaining out-of-sample predictions, normally arising via a
   leave-one-out cross-validation procedure (in a GLM they will not be exactly
   equal to such predictions). The resulting R-squared is an estimate of the
-  R-squared that would occur were the model to be fitted to new data, and
-  will be lower than the original - and likely also the adjusted - R-squared,
+  R-squared that would occur were the model to be fit to new data, and will
+  be lower than the original - and likely also the adjusted - R-squared,
   highlighting the loss of explanatory power when predicting to new data.
   This measure is a variant of an
   \href{https://www.r-bloggers.com/can-we-do-better-than-r-squared/}{existing
@@ -100,6 +100,13 @@ Various approaches to the calculation of a goodness-of-fit measure
   the fixed effects only - equivalent to the 'marginal' R-squared of Nakagawa
   \emph{et al.} (2017).
 
+  For models fitted with one or more offsets, these will be removed by
+  default from the response variable and fitted values prior to calculations.
+  Thus R-squared will measure goodness-of-fit only for the predictors with
+  estimated, rather than fixed, coefficients. This is likely to be the
+  intended behaviour in most circumstances, though if users wish to include
+  variation due to the offset(s) they can set \code{offset = TRUE}.
+
   R-squared values produced by this function will always be bounded between
   zero (no fit) and one (perfect fit), meaning that any negative values
   arising from calculations will be rounded up to zero. Negative values
@@ -115,21 +122,18 @@ Caution must be exercised in interpreting the values of any pseudo
   R-squared measure calculated for a GLM or mixed model (including those
   produced by this function), as such measures do not hold all the properties
   of R-squared in the ordinary linear model and as such may not always behave
-  as expected. They are, at best, approximations. Care must also be taken in
-  comparing the measures to their equivalents from ordinary linear models.
-  This is particularly the case for the adjusted and predicted versions,
-  which have previously only been defined for ordinary linear models, and
-  which could be described as 'approximations of approximations' of what they
-  intend to measure. For example, for the adjusted R-squared for mixed
+  as expected. Care must also be taken in comparing the measures to their
+  equivalents from ordinary linear models, particularly the adjusted and
+  predicted versions. For example, for the adjusted R-squared for mixed
   models, it's not entirely clear what the sample size (n) in the formula
-  should represent - the no. of observations? independent groups? something
-  else? (the default interpretation of no. of observations is used). With all
-  that being said, the value of standardised R-squared measures for even
-  'rough' model fit assessment and comparison may outweigh such reservations,
-  and the adjusted and predicted versions in particular may aid the user in
+  should represent - no. of observations? independent groups? something else?
+  (the default interpretation of no. of observations is used). With all that
+  being said, the value of standardised R-squared measures for even 'rough'
+  model fit assessment and comparison may outweigh such reservations, and the
+  adjusted and predicted versions in particular may aid the user in
   diagnosing and preventing overfitting. They should NOT, however, replace
-  other measures such as AIC or BIC for comparing and/or ranking competing
-  models fit to the same data.
+  other measures such as AIC or BIC for formally comparing and/or ranking
+  competing models fit to the same response variable.
 }
 \examples{
 ## Pseudo R-squared for mixed models
@@ -166,9 +170,9 @@ cor(cvf1, cvf2)
 # NOTE: comparison not tested here for mixed models, as hierarchical data can
 # complicate the choice of an appropriate leave-one-out procedure. However,
 # there is no obvious reason why use of the leverage values (diagonals of the
-# hat matrix) to estimate CV predictions shouldn't generalise to the mixed
-# model case (at least for LMMs). In any case, users should exercise the
-# appropriate caution in interpretation.
+# hat matrix) to estimate CV predictions shouldn't generalise, roughly, to
+# the mixed model case (at least for LMMs). In any case, users should
+# exercise the appropriate caution in interpretation.
 }
 \references{
 Allen, D. M. (1974). The Relationship Between Variable Selection

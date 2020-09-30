@@ -574,7 +574,7 @@ totEff <- function(...) {
 #' nd <- data.frame(sapply(d[xn], seq100))
 #' f.dir <- predEff(m, nd, dir, type = "response")
 #' f.tot <- predEff(m, nd, tot, type = "response")
-#' ## Add CIs (can take a while...)
+#' ## Add CIs
 #' # dir.b <- dirEff(e, "boot"); tot.b <- totEff(e, "boot")
 #' # f.dir <- predEff(m, nd, dir, dir.b, type = "response")
 #' # f.tot <- predEff(m, nd, tot, tot.b, type = "response")
@@ -603,10 +603,15 @@ totEff <- function(...) {
 #' stopifnot(all.equal(f1, f2))
 #' stopifnot(all.equal(f2, f3))
 #'
-#' ## Compare model fitted values: predEff vs. predict
+#' ## Compare model fitted values: predEff() vs. fitted()
 #' m <- Shipley.SEM$Live
-#' f1 <- predEff(m, unique.x = FALSE, re.form = NULL)
-#' f2 <- predict(m)
+#' f1 <- predEff(m, unique.x = FALSE, re.form = NULL, type = "response")
+#' f2 <- fitted(m)
+#' stopifnot(all.equal(f1, f2))
+#'
+#' ## Compare predictions for standardised vs. raw effects
+#' f1 <- predEff(m)
+#' f2 <- predEff(m, use.raw = TRUE)
 #' stopifnot(all.equal(f1, f2))
 #' @export
 predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
@@ -644,10 +649,10 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
   if (!is.null(d)) env <- environment()
 
   ## Effect standardisation options (for back-transforming predictions)
-  a$cen.x <- !(isFALSE(a$cen.x) | use.raw)
-  a$cen.y <- !(isFALSE(a$cen.y) | use.raw)
-  a$std.x <- !(isFALSE(a$std.x) | use.raw)
-  a$std.y <- !(isFALSE(a$std.y) | use.raw)
+  a$cen.x <- !(isFALSE(a$cen.x) || use.raw)
+  a$cen.y <- !(isFALSE(a$cen.y) || use.raw)
+  a$std.x <- !(isFALSE(a$std.x) || use.raw)
+  a$std.y <- !(isFALSE(a$std.y) || use.raw)
   a$incl.raw <- FALSE
 
   ## Function

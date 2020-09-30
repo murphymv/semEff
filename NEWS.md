@@ -1,32 +1,37 @@
-## semEff 0.3.0.9000
+## semEff 0.4.0
 
 ### New features:
 
-* Added `offset` argument to `getY()` and `R2()`, to retain/remove an offset
-in/from the response variable or fitted values (where applicable). Offsets are
-removed by default.
-* Better control over environments. Added `env` argument to multiple functions,
-for evaluating model data (where applicable). This replaces the `...` argument
-in many instances. `data` and `env` arguments can also now be passed as further
-arguments (`...`) to `bootEff()` and `predEff()`.
-* Added `incl.raw` argument to `stdEff()` (`stdCoeff()`), to append raw
-(unstandardised) coefficients to the output. This allows simultaneous
-bootstrapping of standardised and raw coefficients, allowing the latter to be
-used instead for calculating (`semEff(..., use.raw = TRUE)`) or predicting
-(`predEff(..., use.raw = TRUE)`) effects.
+* Standardised vs raw effects: added `incl.raw` argument to `stdEff()`
+(`stdCoeff()`), to append raw effects (unstandardised coefficients) to the
+output. This facilitates simultaneous bootstrapping of both sets of effects,
+allowing raw effects to be used alternatively for calculating (`semEff(...,
+use.raw = TRUE)`) or predicting (`predEff(..., use.raw = TRUE)`) effects/CIs
+(which may be of interest for comparative purposes).
 
 ### Other changes:
-* Added confidence interval attributes to `bootCI()`/`semEff()` output.
-* `R2` no longer calculates predictive R-squared for GLMMs, as the
+
+* Renamed function `stdCoeff()` to `stdEff()`, to better reflect the concept of
+standardised model coefficients as 'effects' (calling `stdCoeff()` will still
+work - with a warning - until the next version at least).
+* Added `offset` argument to `getY()` and `R2()`, to explicitly retain/remove an
+offset (where present) in/from the response variable or fitted values. Offsets
+are removed by default, which ensures, for example, that standardised effects
+are scaled appropriately.
+* Added `env` argument to multiple functions, for explicitly specifying the
+location of data used to fit models (not necessary in most circumstances). This
+replaces the `...` argument in many instances, which was previously used to pass
+an environment to `eval()` (via `getData()`). `env` (and `data`) can also now be
+passed (`...`) to `bootEff()` and `predEff()`.
+* Added confidence interval attributes to `bootCI()`/`semEff()` output (i.e.
+confidence level, type).
+* `R2()` no longer calculates predictive R-squared for GLMMs, as the
 interpretation of the hat matrix used in calculations is not reliable (see
 <https://rdrr.io/cran/lme4/man/hatvalues.merMod.html>).
 * Removed ability to pass arguments from `getY()` to `glt()`, allowing more
-standardised output of `getY(..., link = TRUE)`.
-* Renamed function `stdCoeff()` to `stdEff()`, to better reflect the concept of
-standardised coefficients as model (direct) 'effects' (calling `stdCoeff()` will
-still work - with a warning - until the next version at least).
-* Minor updates to function code and documentation, improvement and addition of
-some new internal functions.
+controlled output of `getY(..., link = TRUE)`.
+* Various minor updates to function code and documentation, improvement and
+addition of some new internal helper functions.
 
 ### Bugs fixed:
 
@@ -41,9 +46,11 @@ as the final step).
 certain circumstances (different contrast types, interactive effects with no
 'main' effects).
 * `stdEff()` (`stdCoeff()`) incorrectly calculated 'centred' intercept for
-models with an offset variable.
+models with an offset specified.
 * `predEff()` failed when a nested list of models and list of numeric weights
 were supplied (i.e. a model averaging scenario).
+* `stdEff()` (`stdCoeff()`) did not return the 'phi' parameter(s) for beta
+regression models.
 
 
 ## semEff 0.3.0

@@ -10,7 +10,7 @@ status](https://travis-ci.org/murphymv/semEff.svg?branch=master)](https://travis
 <!-- badges: end -->
 
 `semEff` provides functionality to automatically calculate direct,
-indirect, and total effects from ‘piecewise’ structural equation models,
+indirect, and total effects for ‘piecewise’ structural equation models,
 comprising lists of fitted models representing structured equations
 (Shipley 2000, 2009; Lefcheck 2016). Confidence intervals are provided
 via bootstrapping.
@@ -71,7 +71,7 @@ lapply(Shipley.SEM, formula)
 #   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 # )
 
-## Calculate SEM effects and CI's (use bootstrapped SEM)
+## Calculate SEM effects and CIs (use saved bootstrapped SEM)
 eff <- suppressWarnings(semEff(Shipley.SEM.Boot))
 
 ## Summary of effects for response "Growth"
@@ -160,7 +160,7 @@ round(r2, 3)
 ## References
 
   - Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
-    modelling in r for ecology, evolution, and systematics. *Methods in
+    modelling in R for ecology, evolution, and systematics. *Methods in
     Ecology and Evolution*, **7**(5), 573–579. <https://doi.org/f8s8rb>
   - Shipley, B. (2000). A New Inferential Test for Path Models Based on
     Directed Acyclic Graphs. *Structural Equation Modeling: A

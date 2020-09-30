@@ -2,7 +2,7 @@
 This is a fourth minor release (0.4.0).
 
 ## Test environments
-* Windows 10 version 1909, R 4.0.2 (local)
+* Windows 10 version 2004, R 4.0.2 (local)
 * Ubuntu Linux 16.04 LTS, R 4.0.2 (travis-ci)
 * Windows Server 2008 R2 SP1, R-devel, 32/64 bit (R-hub builder)
 * Ubuntu Linux 16.04 LTS, R-release, GCC (R-hub builder)
