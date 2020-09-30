@@ -657,7 +657,7 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   be lower than the original - and likely also the adjusted - R-squared,
 #'   highlighting the loss of explanatory power when predicting to new data.
 #'   This measure is a variant of an
-#'   \href{https://www.r-bloggers.com/can-we-do-better-than-r-squared/}{existing
+#'   \href{https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/}{existing
 #'   one}, calculated by substituting the 'PRESS' statistic, i.e. the sum of
 #'   squares of the predicted residuals (Allen 1974), for the residual sum of
 #'   squares in the classic R-squared formula.
