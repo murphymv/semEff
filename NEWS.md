@@ -6,8 +6,7 @@
 (`stdCoeff()`), to append raw effects (unstandardised coefficients) to the
 output. This facilitates simultaneous bootstrapping of both sets of effects,
 allowing raw effects to be used alternatively for calculating (`semEff(...,
-use.raw = TRUE)`) or predicting (`predEff(..., use.raw = TRUE)`) effects/CIs
-(which may be of interest for comparative purposes).
+use.raw = TRUE)`) or predicting (`predEff(..., use.raw = TRUE)`) effects/CIs.
 
 ### Other changes:
 
