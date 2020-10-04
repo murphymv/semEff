@@ -1,8 +1,9 @@
 ^\.Rproj\.user$
-^semEff\.Rproj$
+^.*\.Rproj$
 ^LICENSE\.md$
 ^README\.Rmd$
 ^cran-comments\.md$
 ^\.travis\.yml$
 ^_config\.yml$
 ^CRAN-RELEASE$
+^vignettes/.*\.Rmd$

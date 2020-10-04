@@ -17,12 +17,7 @@ Bootstrapped estimates generated from the hypothesised SEM from
 }
 \examples{
 ## Specification
-
-\donttest{
-
-Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
-                            ncpus = 2)
-}
+# Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized

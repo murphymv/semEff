@@ -7,7 +7,6 @@
 #' @param R Number of bootstrap replicates to generate.
 #' @param seed Seed for the random number generator. If not provided, a random
 #'   five-digit integer is used (see Details).
-#' @param data An optional dataset used to first re-fit the model(s).
 #' @param ran.eff For mixed models with nested random effects, the name of the
 #'   variable comprising the highest-level random effect. For non-nested random
 #'   effects, specify \code{"crossed"}. Non-specification of this argument when
@@ -25,18 +24,18 @@
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param bM.arg A named list of any additional arguments to \code{bootMer}.
-#' @param ... Arguments to \code{stdCoeff}.
+#' @param ... Arguments to \code{stdEff}.
 #' @details \code{bootEff} uses the \code{boot} function (primarily) to
-#'   bootstrap effects from a fitted model or list of models (i.e. standardised
-#'   coefficients, calculated using \code{stdCoeff}). Bootstrapping is typically
-#'   nonparametric, i.e. coefficients are calculated from data where the rows
-#'   have been randomly sampled with replacement. The number of replicates is
-#'   set by default to 10,000, which should provide accurate coverage for
-#'   confidence intervals in most situations. To ensure that data is resampled
-#'   in the same way across individual bootstrap operations within the same run
-#'   (e.g. models in a list), the same seed is set per operation, with the value
-#'   saved as an attribute to the bootstrapped values (for reproducibility). The
-#'   seed can either be user-supplied or a randomly-generated five-digit number
+#'   bootstrap standardised effects from a fitted model or list of models
+#'   (calculated using \code{stdEff}). Bootstrapping is typically nonparametric,
+#'   i.e. effects are calculated from data where the rows have been randomly
+#'   sampled with replacement. The number of replicates is set by default to
+#'   10,000, which should provide accurate coverage for confidence intervals in
+#'   most situations. To ensure that data is resampled in the same way across
+#'   individual bootstrap operations within the same run (e.g. models in a
+#'   list), the same seed is set per operation, with the value saved as an
+#'   attribute to the bootstrapped values (for reproducibility). The seed can
+#'   either be user-supplied or a randomly-generated five-digit number
 #'   (default), and is always re-initialised on exit (i.e.
 #'   \code{set.seed(NULL)}).
 #'
@@ -112,59 +111,47 @@
 #'   Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
 #'   Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
 #' @seealso \code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
-#'   \code{\link[semEff]{stdCoeff}}, \code{\link[stats]{residuals}},
+#'   \code{\link[semEff]{stdEff}}, \code{\link[stats]{residuals}},
 #'   \code{\link[semEff]{avgEst}}
 #' @examples
-#' ## Bootstrap Shipley SEM (while take a while...)
-#' ## Set 'site' as random effect group for resampling - highest-level
+#' ## Bootstrap Shipley SEM (test)
+#' ## (set 'site' as group for resampling - highest-level random effect)
+#' bootEff(Shipley.SEM, ran.eff = "site", R = 1, parallel = "no")
 #'
-#' \donttest{
-#'
-#' system.time(
-#'   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
-#'                               ncpus = 2)
-#' )
-#' }
-#'
-#' ## Original estimates
-#' lapply(Shipley.SEM.Boot, "[[", 1)
-#'
-#' ## Bootstrapped estimates
-#' lapply(Shipley.SEM.Boot, function(i) head(i$t))
+#' ## Estimates (use saved boot object, 10000 reps)
+#' lapply(Shipley.SEM.Boot, "[[", 1)  # original
+#' lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
 #' @export
-bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
-                    cor.err = NULL, catch.err = TRUE, parallel = "snow",
-                    ncpus = NULL, cl = NULL, bM.arg = NULL, ...) {
+bootEff <- function(mod, R = 10000, seed = NULL, ran.eff = NULL, cor.err = NULL,
+                    catch.err = TRUE, parallel = "snow", ncpus = NULL,
+                    cl = NULL, bM.arg = NULL, ...) {
 
-  m <- mod; d <- data; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
+  m <- mod; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
 
-  ## Main function environment
-  env <- environment()
-
-  ## Arguments to stdCoeff
+  ## Arguments to stdEff
   a <- list(...)
 
   ## Weights (for model averaging)
-  w <- eval(a$weights); a$weights <- NULL
-  nw <- is.null(w)
-  if (isList(m) && (nw || all(w == "equal"))) {
-    if (nw && any(sapply(m, isList)))
+  w <- a$weights; a$weights <- NULL
+  if (isList(m) && (is.null(w) || all(w == "equal"))) {
+    if (is.null(w) && any(sapply(m, isList)))
       stop("'weights' must be supplied for model averaging (or specify 'equal').")
     w <- lapply(m, function(i) w)
   }
 
-  ## Names of models with correlated errors (list)
-  any.ce <- isList(m) && !is.null(ce)
-  if (any.ce) {
-    cv <- sapply(ce, function(i) {
-      gsub(" ", "", unlist(strsplit(i, "~~")))
-    }, simplify = FALSE)
-    cv <- cv[sapply(cv, function(i) {
-      all(i %in% names(m)) && all(i %in% names(w))
-    })]
-    if (length(cv) < 1)
-      stop("Names of var(s) with correlated errors missing from list of models and/or weights.")
+  ## Re-fit model(s) with any supplied data
+  upd <- function(m, d) {
+    upd <- function(m) eval(update(m, data = d, evaluate = FALSE))
+    rMapply(upd, m, SIMPLIFY = FALSE)
   }
+  d <- a$data; a$data <- NULL
+  if (!is.null(d)) m <- upd(m, d)
+
+  ## Environment to look for model data
+  main.env <- environment()
+  env <- a$env; a$env <- NULL
+  if (is.null(env)) env <- parent.frame()
+  if (!is.null(d)) env <- main.env
 
   ## Mixed models?
   mer <- all(unlist(rMapply(isMer, m)))
@@ -199,9 +186,17 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 
   }
 
-  ## Update models with any supplied data
-  if (!is.null(d)) {
-    m <- rMapply(function(i) update(i, data = d), m, SIMPLIFY = FALSE)
+  ## Names of models with correlated errors (list)
+  any.ce <- isList(m) && !is.null(ce)
+  if (any.ce) {
+    cv <- sapply(ce, function(i) {
+      gsub(" ", "", unlist(strsplit(i, "~~")))
+    }, simplify = FALSE)
+    cv <- cv[sapply(cv, function(i) {
+      all(i %in% names(m)) && all(i %in% names(w))
+    })]
+    if (length(cv) < 1)
+      stop("Names of variable(s) with correlated errors missing from list of models and/or weights.")
   }
 
   ## Set up parallel processing
@@ -236,12 +231,12 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
     seed <- sample(10000:99999, 1)
   }
 
-  ## Function to bootstrap effects (standardised coefficients)
+  ## Function to bootstrap effects
   bootEff <- function(m, w) {
 
     ## Data to resample (x)
     ## (mixed model: x = highest-level random effect)
-    d <- getData(m, subset = TRUE, merge = TRUE, envir = env)
+    d <- getData(m, subset = TRUE, merge = TRUE, env = env)
     if (!mer2) x <- if (mer) unique(d[re]) else d
 
     ## Bootstrap statistic (s)
@@ -252,15 +247,15 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
             d[d[, re] == j, ]
           }))
         } else x[i, ]
-        do.call(stdCoeff, c(list(m, w, xi), a))
+        do.call(stdEff, c(list(m, w, xi), a))
       }
     } else {
-      function(x) do.call(stdCoeff, c(list(x), a))
+      function(x) do.call(stdEff, c(list(x), a))
     }
     s <- if (catch.err) {
       function(...) tryCatch(stat(...), error = function(e) NA)
     } else stat
-    if (mer2) assign("s", s, env)
+    if (mer2) assign("s", s, main.env)
 
     ## Perform bootstrap
     B <- if (!mer2) {
@@ -272,12 +267,12 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
         ## Bootstrap
         B <- lapply(m, bootMer2)
 
-        ## Weighted average of coefs
+        ## Weighted average of effects
         bn <- a$term.names
         b <- lapply(B, "[[", 1)
         b <- avgEst(b, w, bn)
 
-        ## Weighted average of bootstrapped coefs
+        ## Weighted average of bootstrapped effects
         bb <- t(sapply(1:R, function(i) {
           bb <- lapply(B, function(j) j$t[i, ])
           avgEst(bb, w, bn)
@@ -312,7 +307,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
   if (any.ce) {
 
     ## Data used to fit models
-    if (is.null(d)) d <- getData(m, merge = TRUE)
+    if (is.null(d)) d <- getData(m, merge = TRUE, env = env)
     obs <- rownames(d)
 
     ## Function to get (weighted) resids/avg. resids from model/boot obj./list
@@ -341,13 +336,13 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
     ## Bootstrapped correlated errors
     BCE <- Map(function(i, j) {
 
-      ## Model/list 1
+      ## Model(s), weights, and data 1
       m1 <- m[[i[1]]]; w1 <- w[[i[1]]]
-      d1 <- getData(m1, subset = TRUE, merge = TRUE, envir = env)
+      d1 <- getData(m1, subset = TRUE, merge = TRUE, env = env)
 
-      ## Model/list 2
+      ## Model(s), weights, and data 2
       m2 <- m[[i[2]]]; w2 <- w[[i[2]]]
-      d2 <- getData(m2, subset = TRUE, merge = TRUE, envir = env)
+      d2 <- getData(m2, subset = TRUE, merge = TRUE, env = env)
 
       ## Data to resample (x)
       ## (mixed model: x = highest-level random effect)
@@ -356,10 +351,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
       if (!mer2) {
         x <- if (mer) unique(d[re]) else d
       } else {
-        if (!all(o)) {
-          m1 <- rMapply(function(i) update(i, data = d), m1, SIMPLIFY = FALSE)
-          m2 <- rMapply(function(i) update(i, data = d), m2, SIMPLIFY = FALSE)
-        }
+        if (!all(o)) {m1 <- upd(m1, d); m2 <- upd(m2, d)}
       }
 
       ## Bootstrap statistic (s)
@@ -370,10 +362,8 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
               d[d[, re] == j, ]
             }))
           } else x[i, ]
-          m1 <- rMapply(function(i) update(i, data = xi), m1, SIMPLIFY = FALSE)
-          m2 <- rMapply(function(i) update(i, data = xi), m2, SIMPLIFY = FALSE)
-          r1 <- res(m1, w1)
-          r2 <- res(m2, w2)
+          r1 <- res(upd(m1, xi), w1)
+          r2 <- res(upd(m2, xi), w2)
           cor(r1, r2)
         }
       } else res
@@ -381,7 +371,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
         e <- function(e) if (mer2) rep(NA, nrow(d)) else NA
         function(...) tryCatch(stat(...), error = e)
       } else stat
-      if (mer2) assign("s", s, env)
+      if (mer2) assign("s", s, main.env)
 
       ## Perform bootstrap
       B <- if (!mer2) {
@@ -402,9 +392,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
         ## Correlate (and add to new boot object)
         B <- if (isList(B1)) B1[[1]] else B1
         B$t0 <- cor(r1, r2)
-        B$t <- matrix(sapply(1:R, function(i) {
-          cor(rb1[i, ], rb2[i, ])
-        }))
+        B$t <- matrix(sapply(1:R, function(i) cor(rb1[i, ], rb2[i, ])))
         B$call <- NULL; B$statistic <- NULL; B$mle <- NULL
         B
 
@@ -455,7 +443,7 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 #'   calculated from bootstrapped model effects. If a model or models is
 #'   supplied, bootstrapping will first be performed via \code{bootEff}. Effects
 #'   for which the confidence intervals do not contain zero are highlighted with
-#'   a star.
+#'   an asterix.
 #'
 #'   Nonparametric bias-corrected and accelerated confidence intervals
 #'   (BC\emph{a}, Efron 1987) are calculated by default, which should provide
@@ -494,19 +482,14 @@ bootEff <- function(mod, R = 10000, seed = NULL, data = NULL, ran.eff = NULL,
 #'   \url{https://doi.org/f8n9rq}
 #' @seealso \code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootEff}}
 #' @examples
-#' ## CI's from bootstrapped SEM
-#' bootCI(Shipley.SEM.Boot)
+#' ## CIs from bootstrapped SEM
+#' (Shipley.SEM.CI <- bootCI(Shipley.SEM.Boot))
 #'
 #' ## From original SEM (models)
 #' ## (not typically recommended - better to use saved boot objects)
-#'
-#' \donttest{
-#'
-#' system.time(
-#'   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908,
-#'                            ncpus = 2)
-#' )
-#' }
+#' # system.time(
+#' #   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)
+#' # )
 #' @export
 bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
                    ...) {
@@ -514,7 +497,8 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   m <- mod
 
   ## Create boot object(s) from model(s) if necessary
-  B <- if (!all(unlist(rMapply(isBoot, m)))) bootEff(m, ...) else m
+  is.B <- all(unlist(rMapply(isBoot, m)))
+  B <- if (!is.B) bootEff(m, ...) else m
 
   ## Function
   bootCI <- function(B) {
@@ -530,15 +514,13 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
     ci <- sapply(1:length(e), function(i) {
       if (!is.na(e[i])) {
         if (e[i] != 0) {
-          ci <- do.call(
-            boot::boot.ci, c(list(B, conf, type, i), bci.arg)
-          )
+          ci <- do.call(boot::boot.ci, c(list(B, conf, type, i), bci.arg))
           tail(as.vector(ci[[4]]), 2)
         } else c(0, 0)
       } else c(NA, NA)
     })
 
-    ## Combine effects and CI's into table (add significance stars)
+    ## Combine effects and CIs into table (add significance stars)
     e <- data.frame(
       rbind(e, ci),
       row.names = c("Estimate", "Lower CI", "Upper CI"),
@@ -552,7 +534,8 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
     })))
     e <- format(e, nsmall = digits)
     e <- rbind(e, " " = stars)
-    attr(e, "seed") <- attr(B, "seed")
+    attr(e, "ci.conf") <- conf
+    attr(e, "ci.type") <- type
     e
 
   }
