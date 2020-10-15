@@ -601,9 +601,9 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 
 #' @title R-squared/Pseudo R-squared
 #' @description Calculate R-squared or pseudo R-squared for a fitted model,
-#'   defined as the squared multiple correlation between the observed and fitted
-#'   values for the response variable. 'Adjusted' and 'Predicted' versions are
-#'   also calculated (see Details).
+#'   defined here as the squared multiple correlation between the observed and
+#'   fitted values for the response variable. 'Adjusted' and 'Predicted'
+#'   versions are also calculated (see Details).
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset, used to first re-fit the model(s).
 #' @param adj,pred Logical. If \code{TRUE} (default), adjusted and/or predicted
@@ -616,8 +616,10 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   calculation of R-squared. Defaults to \code{NULL}, meaning all random
 #'   effects are included. See \code{\link[lme4]{predict.merMod}} for further
 #'   specification details.
+#' @param type The type of correlation coefficient to use. Can be either
+#'   \code{"pearson"} (default) or \code{"spearman"}.
 #' @param env Environment in which to look for model data (if none supplied).
-#' @details Various approaches to the calculation of a goodness-of-fit measure
+#' @details Various approaches to the calculation of a goodness of fit measure
 #'   for GLMs analogous to R-squared in the ordinary linear model have been
 #'   proposed. Generally termed 'pseudo R-squared' measures, they include
 #'   variance-based, likelihood-based, and distribution-specific approaches.
@@ -627,7 +629,7 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   between the observed and fitted values of the response (in the original
 #'   units). This is simply the squared version of the correlation measure
 #'   advocated by Zheng & Agresti (2000), itself an intuitive measure of
-#'   goodness-of-fit describing the predictive power of a model. As the measure
+#'   goodness of fit describing the predictive power of a model. As the measure
 #'   does not depend on any specific error distribution or model estimating
 #'   procedure, it is also generally comparable across many different types of
 #'   model (Kvalseth 1985). In the case of the ordinary linear model, the
@@ -662,6 +664,13 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   squares of the predicted residuals (Allen 1974), for the residual sum of
 #'   squares in the classic R-squared formula.
 #'
+#'   For models fitted with one or more offsets, these will be removed by
+#'   default from the response variable and fitted values prior to calculations.
+#'   Thus R-squared will measure goodness of fit only for the predictors with
+#'   estimated, rather than fixed, coefficients. This is likely to be the
+#'   intended behaviour in most circumstances, though if users wish to include
+#'   variation due to the offset(s) they can set \code{offset = TRUE}.
+#'
 #'   For mixed models, the function will, by default, calculate all R-squared
 #'   measures using fitted values incorporating both the fixed and random
 #'   effects, thus encompassing all variation captured by the model. This is
@@ -672,12 +681,17 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   the fixed effects only - equivalent to the 'marginal' R-squared of Nakagawa
 #'   \emph{et al.} (2017).
 #'
-#'   For models fitted with one or more offsets, these will be removed by
-#'   default from the response variable and fitted values prior to calculations.
-#'   Thus R-squared will measure goodness-of-fit only for the predictors with
-#'   estimated, rather than fixed, coefficients. This is likely to be the
-#'   intended behaviour in most circumstances, though if users wish to include
-#'   variation due to the offset(s) they can set \code{offset = TRUE}.
+#'   As R-squared is calculated here as a squared correlation, the \code{type}
+#'   of correlation coefficient can also be specified. Setting this to
+#'   \code{"spearman"} may be desirable in some cases, such as where the
+#'   relationship between response and fitted values is not necessarily
+#'   bivariate normal or linear. Note that R-squared based on Spearman's Rho
+#'   (i.e. ranked variables) is not equivalent to the classic R-squared based on
+#'   sums of squares, but can still be considered a
+#'   \href{https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho}{useful
+#'   goodness of fit measure}. For example, it may be considered more
+#'   appropriate for comparisons of R-squared between GLMs and ordinary linear
+#'   models.
 #'
 #'   R-squared values produced by this function will always be bounded between
 #'   zero (no fit) and one (perfect fit), meaning that any negative values
@@ -727,12 +741,14 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #'   Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
 #'   generalized linear model. \emph{Statistics in Medicine} \strong{19}(13),
 #'   1771-1781. \url{https://doi.org/db7rfv}
+#' @seealso \code{\link[stats]{cov.wt}}
 #' @examples
 #' ## Pseudo R-squared for mixed models
 #' R2(Shipley.SEM)  # fixed + random ('conditional')
 #' R2(Shipley.SEM, re.form = ~ (1 | tree))  # fixed + 'tree'
 #' R2(Shipley.SEM, re.form = ~ (1 | site))  # fixed + 'site'
 #' R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
+#' R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's Rho
 #'
 #' ## Predicted R-squared: compare cross-validated predictions calculated/
 #' ## approximated via the hat matrix to standard method (leave-one-out)
@@ -767,7 +783,7 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #' # exercise the appropriate caution in interpretation.
 #' @export
 R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
-               re.form = NULL, env = parent.frame()) {
+               re.form = NULL, type = "pearson", env = parent.frame()) {
 
   m <- mod; d <- data; rf <- re.form
 
@@ -817,7 +833,9 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       f <- lI(f - o)
 
       ## R-squared
-      R <- cov.wt(cbind(y, f), w, cor = TRUE)$cor[1, 2]
+      yf <- cbind(y, f)
+      if (type == "spearman") yf <- apply(yf, 2, rank)
+      R <- cov.wt(yf, w, cor = TRUE)$cor[1, 2]
       if (is.na(R)) R <- 0
       if (R > 0) R^2 else 0
 
@@ -852,7 +870,8 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
         f <- y - pr
 
         ## Predictive R-squared
-        Rp <- cov.wt(cbind(y, f)[s, ], w[s], cor = TRUE)$cor[1, 2]
+        yf[, 2] <- if (type == "spearman") rank(f) else f
+        Rp <- cov.wt(yf[s, ], w[s], cor = TRUE)$cor[1, 2]
         if (Rp > 0) Rp^2 else 0
 
       } else 0
