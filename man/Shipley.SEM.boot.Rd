@@ -3,9 +3,11 @@
 \docType{data}
 \name{Shipley.SEM.Boot}
 \alias{Shipley.SEM.Boot}
-\title{Bootstrapped SEM Estimates}
-\format{A list of objects of class \code{"boot"}, representing bootstrapped
-  estimates from fitted mixed models.}
+\title{Bootstrapped Estimates for Shipley SEM}
+\format{
+A list of objects of class \code{"boot"}, representing bootstrapped
+  estimates from fitted mixed models.
+}
 \usage{
 Shipley.SEM.Boot
 }
@@ -15,12 +17,7 @@ Bootstrapped estimates generated from the hypothesised SEM from
 }
 \examples{
 ## Specification
-
-\donttest{
-
-Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
-                            ncpus = 2)
-}
+# Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized

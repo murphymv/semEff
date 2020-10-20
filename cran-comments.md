@@ -1,62 +1,56 @@
-## Resubmission
-This is a resubmission. The following issues were fixed:
+## Comments for CRAN submission
 
-* Removed quotation marks from the word 'piecewise' in the DESCRIPTION file.
+### Release
+This is a fourth minor release (0.4.0).
 
-* Added a reference for 'piecewise' structural equation models in the
-description field of the DESCRIPTION file.
-
-* Replaced \dontrun{} with \donttest{} in all Rd-files.
-
-* Set no. of cores to two for all examples using parallel processing ("ncpus =
-2").
-
-I also updated the README file by adding some references.
-
-## Release
-This is a first submission to CRAN.
-
-## Test environments
-* Windows 10 version 1903, R 3.6.1 (local)
-* Ubuntu Linux 16.04 LTS, R 3.6.1 (travis-ci)
+### Test environments
+* Windows 10 version 2004, R 4.0.2 (local)
+* Ubuntu Linux 16.04 LTS, R 4.0.2 (Travis CI)
 * Windows Server 2008 R2 SP1, R-devel, 32/64 bit (R-hub builder)
 * Ubuntu Linux 16.04 LTS, R-release, GCC (R-hub builder)
 * Fedora Linux, R-devel, clang, gfortran (R-hub builder)
 
-## R CMD check results
-There were two NOTES:
+### R CMD check results
 
-* checking CRAN incoming feasibility ... NOTE
+#### NOTES:
+
+1. checking CRAN incoming feasibility ... NOTE
 Maintainer: 'Mark Murphy <murphymv@gmail.com>'
-
-New submission
-
 Found the following (possibly) invalid URLs:
   URL: https://doi.org/b8b782
     From: man/R2.Rd
     Status: 403
     Message: Forbidden
   URL: https://doi.org/bvxb6s
-    From: man/getY.Rd
+    From: man/glt.Rd
     Status: Error
     Message: libcurl error code 56:
-      	OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 10054
-  URL: https://doi.org/fnx7xk
-    From: man/semEff.Rd
-    Status: 404
-    Message: Not Found
+      	Send failure: Connection was reset
 
-The first two links opened fine when tested locally (on multiple browsers). The
-third seems to be a temporary connection problem with Springer Nature.
+   \- These URLs open fine when tested locally (multiple browsers).
 
-* checking installed package size ... NOTE
-  installed size is  7.8Mb
+2. checking installed package size ... NOTE
+  installed size is  7.0Mb
   sub-directories of 1Mb or more:
-    data   7.5Mb
+    data   6.7Mb
 
-Example data provided with this package is used to facilitate the running of
-quick examples, and every effort has been made to minimise file size without
-loss of demonstrative value to the end user.
+   \- Example data provided with this package is used to facilitate the running 
+   of quick examples, and every effort has been made to minimise file size 
+   without loss of demonstrative value to the user.
 
-## Downstream dependencies
-There are currently no downstream dependencies for this package.
+3. checking for future file timestamps ... NOTE
+unable to verify current time
+   
+   \- Apparently an issue with worldclockapi.com: 
+   https://stackoverflow.com/questions/63613301/r-cmd-check-note-unable-to-verify-current-time.
+
+4. checking examples ... NOTE
+Examples with CPU or elapsed time > 5s
+       user system elapsed
+semEff 6.36  0.077   6.438
+
+   \- Testing of examples apparently only exceeds recommended time limits on 
+   Linux systems (R-hub builder).
+
+### Downstream dependencies
+There are currently no downstream dependencies.

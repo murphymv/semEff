@@ -30,22 +30,18 @@
 #'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
-#'
-#' \donttest{
-#'
-#' Shipley.SEM <- list(
-#'   "DD" = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
-#'   "Date" = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
-#'   "Growth" = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree),
-#'                         data = Shipley),
-#'   "Live" = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), binomial,
-#'                        data = Shipley)
-#' )
-#' }
+#' # Shipley.SEM <- list(
+#' #   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
+#' #   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
+#' #   Growth = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree),
+#' #                       data = Shipley),
+#' #   Live = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), binomial,
+#' #                      data = Shipley)
+#' # )
 "Shipley.SEM"
 
 
-#' @title Candidate Model Set
+#' @title Candidate Model Set from Shipley 'Growth' Model
 #' @description A set of hypothetical competing models fit to the same response
 #'   variable ('Growth') using the simulated data in Shipley (2009), for which
 #'   model estimates can be compared and/or averaged.
@@ -56,20 +52,16 @@
 #'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
-#'
-#' \donttest{
-#'
-#' Shipley.Growth <- list(
-#'   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
-#'   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
-#'   lme4::lmer(Growth ~ Date + DD + lat + (1 | site) + (1 | tree),
-#'              data = Shipley)
-#' )
-#' }
+#' # Shipley.Growth <- list(
+#' #   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
+#' #   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
+#' #   lme4::lmer(Growth ~ Date + DD + lat + (1 | site) + (1 | tree),
+#' #              data = Shipley)
+#' # )
 "Shipley.Growth"
 
 
-#' @title Bootstrapped SEM Estimates
+#' @title Bootstrapped Estimates for Shipley SEM
 #' @description Bootstrapped estimates generated from the hypothesised SEM from
 #'   Shipley (2009), using \code{bootEff}.
 #' @format A list of objects of class \code{"boot"}, representing bootstrapped
@@ -79,16 +71,11 @@
 #'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
-#'
-#' \donttest{
-#'
-#' Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908,
-#'                             ncpus = 2)
-#' }
+#' # Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
 "Shipley.SEM.Boot"
 
 
-#' @title SEM Effects
+#' @title Effects for Shipley SEM
 #' @description SEM effects calculated from bootstrapped estimates of the
 #'   hypothesised SEM from Shipley (2009), using \code{semEff}.
 #' @format A list object of class \code{"semEff"}, containing SEM effects and
@@ -98,10 +85,6 @@
 #'   \url{https://doi.org/bqd43d}
 #' @examples
 #' ## Specification
-#'
-#' \donttest{
-#'
-#' Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
-#' }
+#' # Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 "Shipley.SEM.Eff"
 

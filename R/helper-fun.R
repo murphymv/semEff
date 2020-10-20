@@ -3,30 +3,42 @@
 #' @title Object Types
 #' @keywords internal
 #' @description Functions to determine the 'type' of an R object using classes.
-#'   Intended largely for convenience and for internal use.
+#'   Intended largely for convenience and internal use.
 #' @param x An R object.
 #' @return A logical value.
 #' @name Object.Type
 NULL
-#' @describeIn Object.Type Is object of class \code{"list"}?
+#' @describeIn Object.Type Is object a list (class \code{"list"} only)?
 isList <- function(x) class(x)[1] == "list"
-#' @describeIn Object.Type Is object of class \code{"boot"}?
-isBoot <- function(x) class(x)[1] %in% c("boot", "bootMer")
-#' @describeIn Object.Type Is object a linear or generalised linear (mixed) model?
-isMod <- function(x) class(x)[1] %in% c("lm", "glm", "lmerMod", "glmerMod")
-#' @describeIn Object.Type Is object a generalised linear (mixed) model?
-isGlm <- function(x) class(x)[1] %in% c("glm", "glmerMod")
+#' @describeIn Object.Type Is object a boot object (class \code{"boot"})?
+isBoot <- function(x) "boot" %in% class(x)
+#' @describeIn Object.Type Is object a fitted model?
+isMod <- function(x) {
+  any(c("lm", "glm", "lmerMod", "glmerMod", "lmerModLmerTest", "gls", "betareg")
+      %in% class(x))
+}
+#' @describeIn Object.Type Is object a generalised linear model (i.e. uses a
+#'   link function)?
+isGlm <- function(x) any(c("glm", "glmerMod", "betareg") %in% class(x))
 #' @describeIn Object.Type Is object a mixed model (class \code{"merMod"})?
-isMerMod <- function(x) class(x)[1] %in% c("lmerMod", "glmerMod")
+isMer <- function(x) {
+  any(c("lmerMod", "glmerMod", "lmerModLmerTest") %in% class(x))
+}
+#' @describeIn Object.Type Is object a generalised least squares model (class
+#'   \code{"gls"})?
+isGls <- function(x) "gls" %in% class(x)
+#' @describeIn Object.Type Is object a beta regression model (class
+#'   \code{"betareg"})?
+isBet <- function(x) "betareg" %in% class(x)
 
 
 #' @title Parameter Types
 #' @keywords internal
 #' @description Functions to determine the presence/absence of certain model
-#'   parameter types using their names. Intended largely for convenience and for
+#'   parameter types using their names. Intended largely for convenience and
 #'   internal use.
 #' @param x A character vector of parameter names (e.g. names of coefficients
-#'   from \code{coef} or \code{stdCoeff}).
+#'   from \code{coef} or \code{stdEff}).
 #' @return A logical vector of the same length as \code{x}.
 #' @name Param.Type
 NULL
@@ -34,8 +46,13 @@ NULL
 isInt <- function(x) x == "(Intercept)"
 #' @describeIn Param.Type Is parameter a variable interaction (product term)?
 isInx <- function(x) grepl("(?<!:):(?!:)", x, perl = TRUE)
+#' @describeIn Param.Type Is parameter a beta regression precision coefficient?
+isPhi <- function(x) grepl("^\\(phi\\)", x)
 #' @describeIn Param.Type Is parameter an R-squared value?
-isR2 <- function(x) grepl("r.squared", x)
+isR2 <- function(x) x %in% c("(r.squared)", "(adj.r.squared)", "(pred.r.squared)",
+                             "(r_squared)", "(adj_r_squared)", "(pred_r_squared)")
+#' @describeIn Param.Type Is parameter a raw (unstandardised) coefficient?
+isRaw <- function(x) grepl("^\\(raw\\)_", x)
 
 
 #' @title Recursive \code{mapply}
@@ -55,7 +72,7 @@ isR2 <- function(x) grepl("r.squared", x)
 #'   either the first or second objects in \code{...} are not of class
 #'   \code{"list"}. Thus, unlike \code{mapply}, it will not iterate over
 #'   non-list elements in these objects, but instead returns the output of
-#'   \code{f(...)}.
+#'   \code{FUN(...)}.
 #'
 #'   This is primarily a convenience function used internally to enable
 #'   recursive application of functions to lists or nested lists. Its particular

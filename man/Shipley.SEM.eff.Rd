@@ -3,9 +3,11 @@
 \docType{data}
 \name{Shipley.SEM.Eff}
 \alias{Shipley.SEM.Eff}
-\title{SEM Effects}
-\format{A list object of class \code{"semEff"}, containing SEM effects and
-  summary tables.}
+\title{Effects for Shipley SEM}
+\format{
+A list object of class \code{"semEff"}, containing SEM effects and
+  summary tables.
+}
 \usage{
 Shipley.SEM.Eff
 }
@@ -15,11 +17,7 @@ SEM effects calculated from bootstrapped estimates of the
 }
 \examples{
 ## Specification
-
-\donttest{
-
-Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
-}
+# Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
