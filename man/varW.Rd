@@ -21,9 +21,10 @@ Calculate the weighted variance of \code{x}.
 }
 \details{
 Calculate the weighted variance of \code{x} via the weighted
-  covariance matrix (\code{cov.wt}). If no weights are supplied, the simple
-  variance is returned instead. As in \code{weighted.mean}, \code{NA}s in
-  \code{w} are not handled specially and will return \code{NA} as result.
+  covariance matrix (\code{\link[stats]{cov.wt}}). If no weights are
+  supplied, the simple variance is returned instead. As in
+  \code{\link[stats]{weighted.mean}}, \code{NA}s in \code{w} are not handled
+  specially and will return \code{NA} as result.
 }
 \examples{
 ## Weighted variance
@@ -41,6 +42,5 @@ varW(c(x[1:29], NA), w, na.rm = FALSE)  # NA in x (NA returned)
 varW(x[1:29], w = c(w[1:29], NA))  # NA in w (NA returned)
 }
 \seealso{
-\code{\link[stats]{var}}, \code{\link[stats]{cov.wt}},
-  \code{\link[stats]{weighted.mean}}
+\code{\link[stats]{var}}
 }

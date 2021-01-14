@@ -2,7 +2,7 @@
 % Please edit documentation in R/stdEff-fun.R
 \name{R2}
 \alias{R2}
-\title{R-squared/Pseudo R-squared}
+\title{(Pseudo) R-squared}
 \usage{
 R2(
   mod,
@@ -43,10 +43,10 @@ A numeric vector of the R-squared value(s), or an array, list of
   vectors/arrays, or nested list.
 }
 \description{
-Calculate R-squared or pseudo R-squared for a fitted model,
-  defined here as the squared multiple correlation between the observed and
-  fitted values for the response variable. 'Adjusted' and 'Predicted'
-  versions are also calculated (see Details).
+Calculate (Pseudo) R-squared for a fitted model, defined here as
+  the squared multiple correlation between the observed and fitted values for
+  the response variable. 'Adjusted' and 'Predicted' versions are also
+  calculated (see Details).
 }
 \details{
 Various approaches to the calculation of a goodness of fit measure
@@ -115,13 +115,13 @@ Various approaches to the calculation of a goodness of fit measure
   of correlation coefficient can also be specified. Setting this to
   \code{"spearman"} may be desirable in some cases, such as where the
   relationship between response and fitted values is not necessarily
-  bivariate normal or linear. Note that R-squared based on Spearman's Rho
+  bivariate normal or linear. Note that R-squared based on Spearman's rho
   (i.e. ranked variables) is not equivalent to the classic R-squared based on
   sums of squares, but can still be considered a
   \href{https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho}{useful
-  goodness of fit measure}. For example, it may be considered more
-  appropriate for comparisons of R-squared between GLMs and ordinary linear
-  models.
+  goodness of fit measure}. It may also be considered more appropriate for
+  comparisons of R-squared between GLMs and ordinary linear models in some
+  situations.
 
   R-squared values produced by this function will always be bounded between
   zero (no fit) and one (perfect fit), meaning that any negative values
@@ -157,7 +157,7 @@ R2(Shipley.SEM)  # fixed + random ('conditional')
 R2(Shipley.SEM, re.form = ~ (1 | tree))  # fixed + 'tree'
 R2(Shipley.SEM, re.form = ~ (1 | site))  # fixed + 'site'
 R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
-R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's Rho
+R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's rho
 
 ## Predicted R-squared: compare cross-validated predictions calculated/
 ## approximated via the hat matrix to standard method (leave-one-out)
@@ -212,7 +212,4 @@ Allen, D. M. (1974). The Relationship Between Variable Selection
   Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
   generalized linear model. \emph{Statistics in Medicine} \strong{19}(13),
   1771-1781. \url{https://doi.org/db7rfv}
-}
-\seealso{
-\code{\link[stats]{cov.wt}}
 }

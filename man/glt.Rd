@@ -38,11 +38,11 @@ Transform a numeric variable using a GLM link function, or
   determined (roughly) from \code{x}, with \code{binomial(link = "logit")}
   used when all x <= 1 and \code{poisson(link = "log")} otherwise. Although
   the function is generally intended for binomial or poisson variables, any
-  variable which can be fit using \code{glm} can be supplied. One of the key
-  purposes of \code{glt} is to allow the calculation of fully standardised
-  effects (coefficients) for GLMs (in which case \code{x} = the response
-  variable), while it can also facilitate the proper calculation of SEM
-  indirect effects (see below).
+  variable which can be fit using \code{\link[stats]{glm}} can be supplied.
+  One of the key purposes of \code{glt} is to allow the calculation of fully
+  standardised effects (coefficients) for GLMs (in which case \code{x} = the
+  response variable), while it can also facilitate the proper calculation of
+  SEM indirect effects (see below).
 
   \strong{Estimating the link transformation}
 
@@ -80,10 +80,10 @@ Transform a numeric variable using a GLM link function, or
   single IWLS iteration. \item The working response is extracted from this
   model. \item The inverse transformation of the working response is then
   calculated. \item If the inverse transformation is 'effectively equal' to
-  the original response (tested using \code{all.equal}), the working response
-  is returned; otherwise, the GLM is re-fit with the working response now as
-  the predictor, and steps 2-4 are repeated - each time with an additional
-  IWLS iteration.}
+  the original response (tested using \code{\link[base]{all.equal}}), the
+  working response is returned; otherwise, the GLM is re-fit with the working
+  response now as the predictor, and steps 2-4 are repeated - each time with
+  an additional IWLS iteration.}
 
   This approach will generate a very reasonable transformation of the
   response variable, which will also be practically indistinguishable from
@@ -95,9 +95,9 @@ Transform a numeric variable using a GLM link function, or
 }
 \note{
 As we often cannot directly observe the GLM response variable on the
-  link scale, any method estimating its values or statistics will be 'wrong'
-  to some degree. The aim should be to try to minimise this error as far as
-  (reasonably) possible, while also generating standardised effects whose
+  link scale, any method estimating its values or statistics will incorporate
+  a degree of error. The aim should be to try to minimise this error as far
+  as (reasonably) possible, while also generating standardised effects whose
   interpretation most closely resembles those of an ordinary linear model -
   something which the current method achieves. The solution of using the
   working response from the GLM to scale effects is a purely practical, but
@@ -106,8 +106,8 @@ As we often cannot directly observe the GLM response variable on the
   estimated variance is constant across models fit to the same response
   variable, which cannot be said of previous methods (Menard 2011). The
   overall approach would be classed as 'observed-empirical' by Grace \emph{et
-  al.} (2018), as it utilises model error variance (the working residuals)
-  rather than theoretical distribution-specific variance.
+  al.} (2018), as it utilises model error variance (the estimated working
+  residuals) rather than theoretical distribution-specific variance.
 }
 \examples{
 ## Compare estimate with a direct link transformation
@@ -140,7 +140,4 @@ Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
   Menard, S. (2011) Standards for Standardized Logistic Regression
   Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
   \url{https://doi.org/bvxb6s}
-}
-\seealso{
-\code{\link[stats]{glm}}, \code{\link[base]{all.equal}}
 }

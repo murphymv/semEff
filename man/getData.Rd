@@ -17,7 +17,8 @@ zero weight are removed).}
 list, a single dataset containing all variables used to fit models is
 returned.}
 
-\item{env}{Environment in which to look for data (passed to \code{eval}).}
+\item{env}{Environment in which to look for data (passed to
+\code{\link[base]{eval}}).}
 }
 \value{
 A data frame of the variables used to fit the model(s), or a list or
@@ -47,5 +48,5 @@ getData(Shipley.SEM)  # from SEM (list)
 getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
 }
 \seealso{
-\code{\link[stats]{getCall}}, \code{\link[base]{eval}}
+\code{\link[stats]{getCall}}
 }

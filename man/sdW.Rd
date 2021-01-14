@@ -7,7 +7,7 @@
 sdW(...)
 }
 \arguments{
-\item{...}{Arguments to \code{varW}.}
+\item{...}{Arguments to \code{\link[semEff]{varW}}.}
 }
 \value{
 A numeric value, the weighted standard deviation of \code{x}.
@@ -20,5 +20,5 @@ This is simply a wrapper for \code{varW}, applying the square root
   to the output.
 }
 \seealso{
-\code{\link[stats]{sd}}, \code{\link[semEff]{varW}}
+\code{\link[stats]{sd}}
 }

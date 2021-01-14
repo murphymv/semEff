@@ -36,7 +36,7 @@ This function can be used to calculate a weighted average of model
   model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which
   can be conveniently calculated in \emph{R} using packages such as
   \pkg{MuMIn} or \pkg{AICcmodavg}. However, numeric weights of any sort can
-  be used. If none are supplied, the simple average is calculated instead.
+  be used. If none are supplied, a simple average is calculated instead.
 
   Averaging is performed via the 'full'/'zero' rather than
   'subset'/'conditional'/'natural' method, meaning that zero is substituted
@@ -84,7 +84,4 @@ Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
   Walker, J. A. (2019). Model-averaged regression coefficients have a
   straightforward interpretation using causal conditioning. \emph{BioRxiv},
   133785. \url{https://doi.org/c8zt}
-}
-\seealso{
-\code{\link[stats]{weighted.mean}}
 }

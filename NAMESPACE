@@ -2,6 +2,7 @@
 
 S3method(print,semEff)
 export(R2)
+export(RVIF)
 export(VIF)
 export(avgEst)
 export(bootCI)

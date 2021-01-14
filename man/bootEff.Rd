@@ -50,7 +50,7 @@ any such errors will cause the function to exit.}
 
 \item{bM.arg}{A named list of any additional arguments to \code{bootMer}.}
 
-\item{...}{Arguments to \code{stdEff}.}
+\item{...}{Arguments to \code{\link[semEff]{stdEff}}.}
 }
 \value{
 An object of class \code{"boot"} containing the bootstrapped effects,
@@ -61,15 +61,15 @@ Bootstrap model effects (standardised coefficients) and optional
   SEM correlated errors.
 }
 \details{
-\code{bootEff} uses the \code{boot} function (primarily) to
-  bootstrap standardised effects from a fitted model or list of models
-  (calculated using \code{stdEff}). Bootstrapping is typically nonparametric,
-  i.e. effects are calculated from data where the rows have been randomly
-  sampled with replacement. The number of replicates is set by default to
-  10,000, which should provide accurate coverage for confidence intervals in
-  most situations. To ensure that data is resampled in the same way across
-  individual bootstrap operations within the same run (e.g. models in a
-  list), the same seed is set per operation, with the value saved as an
+\code{bootEff} uses the \code{\link[boot]{boot}} function
+  (primarily) to bootstrap standardised effects from a fitted model or list
+  of models (calculated using \code{stdEff}). Bootstrapping is typically
+  nonparametric, i.e. effects are calculated from data where the rows have
+  been randomly sampled with replacement. The number of replicates is set by
+  default to 10,000, which should provide accurate coverage for confidence
+  intervals in most situations. To ensure that data is resampled in the same
+  way across individual bootstrap operations within the same run (e.g. models
+  in a list), the same seed is set per operation, with the value saved as an
   attribute to the bootstrapped values (for reproducibility). The seed can
   either be user-supplied or a randomly-generated five-digit number
   (default), and is always re-initialised on exit (i.e.
@@ -78,12 +78,13 @@ Bootstrap model effects (standardised coefficients) and optional
   Where \code{weights} are specified, bootstrapped effects will be a weighted
   average across the set of candidate models for each response variable,
   calculated after each model is first refit to the resampled dataset
-  (specifying \code{weights = "equal"} will use a simple average instead). If
-  no weights are specified and \code{mod} is a nested list of models, the
-  function will throw an error, as it will be expecting weights for a
-  presumed model averaging scenario. If instead the user wishes to bootstrap
-  each individual model, they should recursively apply the function using
-  \code{rMapply} (remember to set a seed).
+  (specifying \code{weights = "equal"} will use a simple average instead -
+  see \code{\link[semEff]{avgEst}}). If no weights are specified and
+  \code{mod} is a nested list of models, the function will throw an error, as
+  it will be expecting weights for a presumed model averaging scenario. If
+  instead the user wishes to bootstrap each individual model, they should
+  recursively apply the function using \code{rMapply} (remember to set a
+  seed).
 
   Where names of models with correlated errors are specified to
   \code{cor.err}, the function will also return bootstrapped Pearson
@@ -107,8 +108,9 @@ Bootstrap model effects (standardised coefficients) and optional
   \href{https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap}{unchanged}.
   For non-nested random effects however (i.e. \code{"crossed"}), group
   resampling will not be appropriate, and (semi-)parametric bootstrapping is
-  performed instead via \code{bootMer} in the \pkg{lme4} package. Users
-  should think carefully about whether their random effects are
+  performed instead via \code{\link[lme4]{bootMer}} in the \pkg{lme4}
+  package. Users should think carefully about whether their random effects
+  are
   \href{https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified}{nested
   or not}. NOTE: As \code{bootMer} takes only a fitted model as its first
   argument, any model averaging is calculated 'post-hoc' using the estimates
@@ -156,9 +158,4 @@ Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
   Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
   Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
   Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
-}
-\seealso{
-\code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
-  \code{\link[semEff]{stdEff}}, \code{\link[stats]{residuals}},
-  \code{\link[semEff]{avgEst}}
 }

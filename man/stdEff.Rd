@@ -110,28 +110,29 @@ Calculate fully standardised effects (model coefficients) in
   they are divided by the standard deviation of the response variable (minus
   any offsets). If the model is a GLM, this latter is calculated using the
   link-transformed response (or an estimate of same) generated using the
-  function \code{glt}. If both arguments are true, the effects are regarded
-  as 'fully' standardised in the traditional sense, often referred to as
-  'betas'.
+  function \code{\link[semEff]{glt}}. If both arguments are true, the effects
+  are regarded as 'fully' standardised in the traditional sense, often
+  referred to as 'betas'.
 
   If \code{unique.x = TRUE} (default), effects are adjusted for
   multicollinearity among predictors by dividing by the square root of the
-  VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017). If they have also been
-  scaled by the standard deviations of x and y, this converts them to
-  semipartial correlations, i.e. the correlation between the unique
-  components of predictors (residualised on other predictors) and the
-  response variable. This measure of effect size is arguably much more
-  interpretable and useful than the traditional standardised coefficient, as
-  it is always estimated independent of other predictors and so can more
-  readily be compared both within and across models. Values range from zero
-  to +/- one rather than +/- infinity (as in the case of betas) - putting
-  them on the same scale as the bivariate correlation between predictor and
-  response. In the case of GLMs however, the measure is analogous but not
-  exactly equal to the semipartial correlation, so its values may not always
-  be bound between +/- one (such cases are likely rare). Importantly, for
-  ordinary linear models, the square of the semipartial correlation equals
-  the increase in R-squared when that variable is added last in the model -
-  directly linking the measure to model fit and 'variance explained'. See
+  VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017;
+  \code{\link[semEff]{RVIF}}). If they have also been scaled by the standard
+  deviations of x and y, this converts them to semipartial correlations, i.e.
+  the correlation between the unique components of predictors (residualised
+  on other predictors) and the response variable. This measure of effect size
+  is arguably much more interpretable and useful than the traditional
+  standardised coefficient, as it always represents the unique effects of
+  predictors and so can more readily be compared both within and across
+  models. Values range from zero to +/- one rather than +/- infinity (as in
+  the case of betas) - putting them on the same scale as the bivariate
+  correlation between predictor and response. In the case of GLMs however,
+  the measure is analogous but not exactly equal to the semipartial
+  correlation, so its values may not always be bound between +/- one (such
+  cases are likely rare). Importantly, for ordinary linear models, the square
+  of the semipartial correlation equals the increase in R-squared when that
+  variable is added last in the model - directly linking the measure to
+  unique variance explained. See
   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
   for additional arguments in favour of the use of semipartial correlations.
 
@@ -146,8 +147,8 @@ Calculate fully standardised effects (model coefficients) in
   runs.
 
   If \code{r.squared = TRUE}, model R-squared values are appended to effects
-  via the \code{R2} function, with any additional arguments being passed via
-  \code{...}.
+  via the \code{\link[semEff]{R2}} function, with any additional arguments
+  being passed via \code{...}.
 
   If \code{incl.raw = TRUE}, raw (unstandardised) effects can also be
   appended, i.e. those with all centring and scaling options set to
@@ -157,7 +158,7 @@ Calculate fully standardised effects (model coefficients) in
 
   Finally, if \code{weights} are specified, the function calculates a
   weighted average of the standardised effects across models (Burnham &
-  Anderson 2002).
+  Anderson 2002) via \code{\link[semEff]{avgEst}}.
 }
 \examples{
 library(lme4)
@@ -212,9 +213,4 @@ Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
   Extracting the Variance Inflation Factor and Other Multicollinearity
   Diagnostics from Typical Regression Results. \emph{Basic and Applied Social
   Psychology}, \strong{39}(2), 81-90. \url{https://doi.org/gfww2w}
-}
-\seealso{
-\code{\link[stats]{coef}}, \code{\link[semEff]{VIF}},
-  \code{\link[semEff]{getY}}, \code{\link[semEff]{R2}},
-  \code{\link[semEff]{avgEst}}
 }

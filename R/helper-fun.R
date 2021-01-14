@@ -66,23 +66,22 @@ isRaw <- function(x) grepl("^\\(raw\\)_", x)
 #' @param USE.NAMES Logical, whether to use the names of the first list object
 #'   in \code{...} for the output.
 #' @details \code{rMapply} recursively applies \code{FUN} to the elements of the
-#'   lists in \code{...} via \code{mapply}. If only a single list is supplied,
-#'   the function acts like a recursive version of \code{sapply}. The particular
-#'   condition that determines if the function should stop recursing is if
-#'   either the first or second objects in \code{...} are not of class
-#'   \code{"list"}. Thus, unlike \code{mapply}, it will not iterate over
-#'   non-list elements in these objects, but instead returns the output of
-#'   \code{FUN(...)}.
+#'   lists in \code{...} via \code{\link[base]{mapply}}. If only a single list
+#'   is supplied, the function acts like a recursive version of
+#'   \code{\link[base]{sapply}}. The particular condition that determines if the
+#'   function should stop recursing is if either the first or second objects in
+#'   \code{...} are not of class \code{"list"}. Thus, unlike \code{mapply}, it
+#'   will not iterate over non-list elements in these objects, but instead
+#'   returns the output of \code{FUN(...)}.
 #'
 #'   This is primarily a convenience function used internally to enable
 #'   recursive application of functions to lists or nested lists. Its particular
 #'   stop condition for recursing is also designed to either a) act as a wrapper
 #'   for \code{FUN} if the first object in \code{...} is not a list, or b) apply
-#'   a model averaging operation if the first object is a list and the second
-#'   object is a numeric vector (of weights).
+#'   a weighted averaging operation if the first object is a list and the second
+#'   object is a numeric vector of weights.
 #' @return The output of \code{FUN} in a list or nested list, or simplified to a
 #'   vector or array (or list of arrays).
-#' @seealso \code{\link[base]{mapply}}
 #' @export
 rMapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
                     USE.NAMES = TRUE) {
@@ -93,12 +92,10 @@ rMapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
   if (!isList(i) || !isList(j)) {
     do.call(FUN, c(l, MoreArgs))
   } else {
-    mapply(
-      rMapply, ...,
-      MoreArgs = list(FUN = FUN, MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY,
-                      USE.NAMES = USE.NAMES),
-      SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES
-    )
+    a <- list(FUN = FUN, MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY,
+              USE.NAMES = USE.NAMES)
+    mapply(rMapply, ..., MoreArgs = a, SIMPLIFY = SIMPLIFY,
+           USE.NAMES = USE.NAMES)
   }
 }
 
@@ -117,7 +114,8 @@ rMapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 #' @param add.obj A character vector of any additional object names to be
 #'   exported to the cluster for parallel processing. Use if a required object
 #'   or function cannot be found.
-#' @param ... Arguments to \code{parSapply} or \code{sapply}.
+#' @param ... Arguments to \code{\link[parallel]{parSapply}} or
+#'   \code{\link[base]{sapply}}.
 #' @details This is a wrapper for \code{parSapply} from the \pkg{parallel}
 #'   package, enabling (potentially) faster processing of a function over a
 #'   vector of objects. Parallel processing via option \code{"snow"} (default)
@@ -131,7 +129,6 @@ rMapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 #'   \code{add.obj}.
 #' @return The output of \code{FUN} in a list, or simplified to a vector or
 #'   array.
-#' @seealso \code{\link[parallel]{parSapply}}, \code{\link[base]{sapply}}
 #' @export
 pSapply <- function(X, FUN, parallel = "snow", ncpus = NULL, cl = NULL,
                     add.obj = NULL, ...) {

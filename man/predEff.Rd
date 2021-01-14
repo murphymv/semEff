@@ -32,8 +32,9 @@ contain all the variables named in \code{effects} or all those used to fit
 
 \item{effects}{A numeric vector of effects to predict, or a list or nested
 list of such vectors. These will typically have been calculated using
-\code{semEff}, \code{bootEff}, or \code{stdEff}. Alternatively, a boot
-object produced by \code{bootEff} can be supplied.}
+\code{\link[semEff]{semEff}}, \code{\link[semEff]{bootEff}}, or
+\code{\link[semEff]{stdEff}}. Alternatively, a boot object produced by
+\code{bootEff} can be supplied.}
 
 \item{eff.boot}{A matrix of bootstrapped effects used to calculate confidence
 intervals for predictions, or a list or nested list of such matrices. These
@@ -77,7 +78,7 @@ confidence intervals on predictions. Can be one of \code{"snow"},
 \item{cl}{Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 (default), a local cluster is created using the specified number of cores.}
 
-\item{...}{Arguments to \code{stdEff}.}
+\item{...}{Arguments to \code{\link[semEff]{stdEff}}.}
 }
 \value{
 A numeric vector of the predictions, or, if bootstrapped effects are
@@ -116,9 +117,10 @@ Generate predicted values for SEM direct, indirect, or total effects
   If bootstrapped effects are supplied to \code{eff.boot} (or to
   \code{effects}, as part of a boot object), bootstrapped predictions are
   calculated by predicting from each effect. Confidence intervals can then be
-  returned, for which the \code{type} should be appropriate for the original
-  form of bootstrap sampling (defaults to \code{"bca"}). If the number of
-  observations to predict is very large, parallel processing may speed up the
+  returned via \code{\link[semEff]{bootCI}}, for which the \code{type} should
+  be appropriate for the original form of bootstrap sampling (defaults to
+  \code{"bca"}). If the number of observations to predict is very large,
+  parallel processing (via \code{\link[semEff]{pSapply}}) may speed up the
   calculation of intervals.
 
   Predictions are always returned in the original (typically unstandardised)
@@ -191,7 +193,5 @@ f2 <- predEff(m, use.raw = TRUE)
 stopifnot(all.equal(f1, f2))
 }
 \seealso{
-\code{\link[stats]{predict}}, \code{\link[semEff]{semEff}},
-  \code{\link[semEff]{stdEff}}, \code{\link[semEff]{bootCI}},
-  \code{\link[semEff]{pSapply}}
+\code{\link[stats]{predict}}
 }

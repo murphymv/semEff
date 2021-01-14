@@ -1,5 +1,23 @@
 ## semEff 0.4.0.9000
 
+### New features:
+
+* `R2()` can now calculate R-squared based on Spearman's rho
+* New function `RVIF()`, to calculate 'root variance inflation factors' (i.e.
+the square root of the VIFs)
+
+
+### Other changes:
+
+* Bootstrapping sets of models including mixed and non-mixed..........
+
+
+### Bugs fixed:
+
+* `R2()` did not calculate adjusted R-squared correctly for beta regression
+models (i.e. did not incorporate the 'phi' parameter in degrees of freedom
+calculations)
+
 
 ## semEff 0.4.0
 

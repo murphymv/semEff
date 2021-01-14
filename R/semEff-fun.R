@@ -20,7 +20,7 @@
 #' @param digits The number of significant digits to return for numeric values.
 #' @param bci.arg A named list of any additional arguments to \code{boot.ci},
 #'   excepting argument \code{index}.
-#' @param ... Arguments to \code{bootEff}.
+#' @param ... Arguments to \code{\link[semEff]{bootEff}}.
 #' @details The eponymous function of this package calculates all direct,
 #'   indirect, total, and mediator effects for endogenous variables in a
 #'   'piecewise' structural equation model (SEM), that is, one where parameter
@@ -94,7 +94,6 @@
 #'   Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
 #'   context. \emph{Ecology}, \strong{90}(2), 363-368.
 #'   \url{https://doi.org/bqd43d}
-#' @seealso \code{\link[semEff]{bootEff}}, \code{\link[semEff]{bootCI}}
 #' @examples
 #' ## SEM effects
 #' (Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot))
@@ -475,8 +474,9 @@ totEff <- function(...) {
 #'   \code{mod}.
 #' @param effects A numeric vector of effects to predict, or a list or nested
 #'   list of such vectors. These will typically have been calculated using
-#'   \code{semEff}, \code{bootEff}, or \code{stdEff}. Alternatively, a boot
-#'   object produced by \code{bootEff} can be supplied.
+#'   \code{\link[semEff]{semEff}}, \code{\link[semEff]{bootEff}}, or
+#'   \code{\link[semEff]{stdEff}}. Alternatively, a boot object produced by
+#'   \code{bootEff} can be supplied.
 #' @param eff.boot A matrix of bootstrapped effects used to calculate confidence
 #'   intervals for predictions, or a list or nested list of such matrices. These
 #'   will have been calculated using \code{semEff} or \code{bootEff}.
@@ -507,7 +507,7 @@ totEff <- function(...) {
 #'   \code{NULL} (default), all available cores are used.
 #' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 #'   (default), a local cluster is created using the specified number of cores.
-#' @param ... Arguments to \code{stdEff}.
+#' @param ... Arguments to \code{\link[semEff]{stdEff}}.
 #' @details Generate predicted values for SEM direct, indirect, or total effects
 #'   on a response variable, which should be supplied to \code{effects}. These
 #'   are used in place of model coefficients in the standard prediction formula,
@@ -533,9 +533,10 @@ totEff <- function(...) {
 #'   If bootstrapped effects are supplied to \code{eff.boot} (or to
 #'   \code{effects}, as part of a boot object), bootstrapped predictions are
 #'   calculated by predicting from each effect. Confidence intervals can then be
-#'   returned, for which the \code{type} should be appropriate for the original
-#'   form of bootstrap sampling (defaults to \code{"bca"}). If the number of
-#'   observations to predict is very large, parallel processing may speed up the
+#'   returned via \code{\link[semEff]{bootCI}}, for which the \code{type} should
+#'   be appropriate for the original form of bootstrap sampling (defaults to
+#'   \code{"bca"}). If the number of observations to predict is very large,
+#'   parallel processing (via \code{\link[semEff]{pSapply}}) may speed up the
 #'   calculation of intervals.
 #'
 #'   Predictions are always returned in the original (typically unstandardised)
@@ -556,9 +557,7 @@ totEff <- function(...) {
 #'   confidence intervals. Optional interactive effects may also be appended.
 #'   Predictions may also be returned in a list or nested list, depending on the
 #'   structure of \code{mod} (and other arguments).
-#' @seealso \code{\link[stats]{predict}}, \code{\link[semEff]{semEff}},
-#'   \code{\link[semEff]{stdEff}}, \code{\link[semEff]{bootCI}},
-#'   \code{\link[semEff]{pSapply}}
+#' @seealso \code{\link[stats]{predict}}
 #' @examples
 #' ## Predict effects (direct, total)
 #' m <- Shipley.SEM

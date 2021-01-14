@@ -19,18 +19,19 @@ A numeric vector of the VIFs, or an array, list of vectors/arrays,
 }
 \description{
 Calculate generalised variance inflation factors for terms in a
-  fitted model via the variance-covariance matrix of coefficients.
+  fitted model(s) via the variance-covariance matrix of coefficients.
 }
 \details{
 \code{VIF} calculates generalised variance inflation factors (GVIF)
   as described in Fox & Monette (1992), and also implemented in the
-  \code{vif} function in the \pkg{car} package. However, whereas \code{vif}
+  \code{\href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
+   vif}} function in the \pkg{car} package. However, whereas \code{vif}
   returns both GVIF and GVIF^(1/(2*Df)) values, \code{VIF} simply returns the
   squared result of the latter measure, which equals the standard VIF for
   single-coefficient terms and is the equivalent measure for
   multi-coefficient terms (e.g. categorical or polynomial). Also, while
   \code{vif} returns values per model term (i.e. predictor variable),
-  \code{VIF} returns values per coefficient, meaning that the same VIF will
+  \code{VIF} returns values per coefficient, meaning that the same value will
   be returned per coefficient for multi-coefficient terms. Finally, \code{NA}
   is returned for any terms which could not be estimated in the model (e.g.
   aliased).
@@ -55,8 +56,4 @@ VIF(m)
 Fox, J. and Monette, G. (1992) Generalized Collinearity
   Diagnostics. \emph{Journal of the American Statistical Association}
   \strong{87}, 178-183. \url{https://doi.org/dm9wbw}
-}
-\seealso{
-\href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
-vif (web)}
 }

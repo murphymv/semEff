@@ -30,9 +30,10 @@ Extract the response variable from a fitted model on the
 \details{
 \code{getY} will return the response variable from a model by
   summing the fitted values and the response residuals. If \code{link = TRUE}
-  and the model is a GLM, the response is returned on the link scale. If this
-  results in undefined values, it is replaced by an estimate based on the
-  'working' response variable of the GLM (see \code{\link[semEff]{glt}}).
+  and the model is a GLM, the response is transformed to the link scale. If
+  this results in undefined values, an estimate based on the 'working'
+  response variable of the GLM is returned instead (see
+  \code{\link[semEff]{glt}}).
 
   Any offset variables are subtracted from the response by default. This
   means that, for example, rates rather than raw counts will be returned for

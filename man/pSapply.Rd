@@ -33,7 +33,8 @@ pSapply(
 exported to the cluster for parallel processing. Use if a required object
 or function cannot be found.}
 
-\item{...}{Arguments to \code{parSapply} or \code{sapply}.}
+\item{...}{Arguments to \code{\link[parallel]{parSapply}} or
+\code{\link[base]{sapply}}.}
 }
 \value{
 The output of \code{FUN} in a list, or simplified to a vector or
@@ -54,7 +55,4 @@ This is a wrapper for \code{parSapply} from the \pkg{parallel}
   environment to those referenced in the call to \code{FUN} (and also any
   calls in \code{X}). Any additional required objects can be supplied using
   \code{add.obj}.
-}
-\seealso{
-\code{\link[parallel]{parSapply}}, \code{\link[base]{sapply}}
 }

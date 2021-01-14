@@ -41,7 +41,7 @@ specification details.}
 \item{bci.arg}{A named list of any additional arguments to \code{boot.ci},
 excepting argument \code{index}.}
 
-\item{...}{Arguments to \code{bootEff}.}
+\item{...}{Arguments to \code{\link[semEff]{bootEff}}.}
 }
 \value{
 A list object of class \code{"semEff"}, comprising: \enumerate{\item
@@ -141,7 +141,4 @@ Cheung, M. W. L. (2009). Comparison of methods for constructing
   Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
   context. \emph{Ecology}, \strong{90}(2), 363-368.
   \url{https://doi.org/bqd43d}
-}
-\seealso{
-\code{\link[semEff]{bootEff}}, \code{\link[semEff]{bootCI}}
 }

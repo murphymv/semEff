@@ -23,7 +23,7 @@ specification details.}
 \item{bci.arg}{A named list of any additional arguments to \code{boot.ci},
 excepting argument \code{index}.}
 
-\item{...}{Arguments to \code{bootEff}.}
+\item{...}{Arguments to \code{\link[semEff]{bootEff}}.}
 }
 \value{
 A data frame of the effects and bootstrapped confidence intervals, or
@@ -86,7 +86,4 @@ Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
   methods for calculating confidence intervals by bootstrapping.
   \emph{Journal of Animal Ecology}, \strong{84}(4), 892–897.
   \url{https://doi.org/f8n9rq}
-}
-\seealso{
-\code{\link[boot]{boot.ci}}, \code{\link[semEff]{bootEff}}
 }
