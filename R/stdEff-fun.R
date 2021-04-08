@@ -1190,7 +1190,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' @export
 stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
                    unique.eff = TRUE, unique.x = TRUE, cen.x = TRUE,
-                   cen.y = TRUE, std.x = TRUE, std.y = TRUE, Refit.x = TRUE,
+                   cen.y = TRUE, std.x = TRUE, std.y = TRUE, refit.x = TRUE,
                    r.squared = FALSE, incl.raw = FALSE, env = parent.frame(),
                    ...) {
 
