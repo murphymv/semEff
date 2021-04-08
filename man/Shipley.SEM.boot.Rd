@@ -6,22 +6,23 @@
 \title{Bootstrapped Estimates for Shipley SEM}
 \format{
 A list of objects of class \code{"boot"}, representing bootstrapped
-  estimates from fitted mixed models.
+estimates from fitted mixed models.
 }
 \usage{
 Shipley.SEM.Boot
 }
 \description{
 Bootstrapped estimates generated from the hypothesised SEM from
-  Shipley (2009), using \code{bootEff}.
+Shipley (2009), using \code{bootEff}.
 }
 \examples{
-## Specification
-# Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+# Specification
+# Shipley.SEM.Boot <- bootEff(Shipley.SEM, R = 10000, seed = 53908,
+#                             ran.eff = "site")
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-  multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-  \url{https://doi.org/bqd43d}
+multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
+\url{https://doi.org/bqd43d}
 }
 \keyword{datasets}

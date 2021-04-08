@@ -4,10 +4,10 @@
 # semEff
 
 <!-- badges: start -->
-
-<!-- [![Travis build status](https://travis-ci.org/murphymv/semEff.svg?branch=master)](https://travis-ci.org/murphymv/semEff) -->
+<!-- [![Travis build status](https://travis-ci.com/murphymv/semEff.svg?branch=main)](https://travis-ci.com/murphymv/semEff) -->
 
 [![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions)
+
 <!-- badges: end -->
 
 `semEff` provides functionality to automatically calculate direct,
@@ -31,8 +31,7 @@ install.packages("semEff")
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("murphymv/semEff@develop")
+devtools::install_github("murphymv/semEff@dev")
 ```
 
 ## Example
@@ -42,7 +41,7 @@ devtools::install_github("murphymv/semEff@develop")
 library(semEff)
 library(ggplot2)
 
-## Simulated data from Shipley (2009) on tree growth and survival (see ?Shipley)
+# Simulated data from Shipley (2009) on tree growth and survival (see ?Shipley)
 head(Shipley)
 #>   site tree      lat year     Date       DD   Growth  Survival Live
 #> 1    1    1 40.38063 1970 115.4956 160.5703 61.36852 0.9996238    1
@@ -52,8 +51,7 @@ head(Shipley)
 #> 5    1    5 40.38063 1970 120.9946 157.3778 50.02237 0.9759584    1
 #> 6    1    1 40.38063 1972 114.2315 160.6120 56.29615 0.9983398    1
 
-## Hypothesised SEM:
-## latitude -> degree days to bud burst -> date of burst -> growth -> survival
+# Hypothesised SEM: latitude -> degree days to bud burst -> date of burst -> growth -> survival
 lapply(Shipley.SEM, formula)
 #> $DD
 #> DD ~ lat + (1 | site) + (1 | tree)
@@ -67,15 +65,15 @@ lapply(Shipley.SEM, formula)
 #> $Live
 #> Live ~ Growth + (1 | site) + (1 | tree)
 
-# ## Bootstrap model effects (10000 reps... can take a while)
+# Bootstrap model effects (10000 reps... can take a while)
 # system.time(
-#   Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+#   Shipley.SEM.Boot <- bootEff(Shipley.SEM, R = 10000, seed = 53908, ran.eff = "site")
 # )
 
-## Calculate SEM effects and CIs (use saved bootstrapped SEM)
+# Calculate SEM effects and CIs (use saved bootstrapped SEM)
 eff <- suppressWarnings(semEff(Shipley.SEM.Boot))
 
-## Summary of effects for response "Growth"
+# Summary of effects for response "Growth"
 eff$Summary$Growth
 #> $Direct
 #>           Date
@@ -105,11 +103,11 @@ eff$Summary$Growth
 #> Upper CI 0.290 -0.048
 #>              *      *
 
-## Extract total effects for Growth
+# Extract total effects for Growth
 tot <- totEff(eff)[["Growth"]]
 tot.b <- totEff(eff, type = "boot")[["Growth"]]
 
-## Predict effects for "Date" (direct) and "DD" (indirect) on Growth
+# Predict effects for "Date" (direct) and "DD" (indirect) on Growth
 mod <- Shipley.SEM$Growth
 dat <- na.omit(Shipley)
 fit <- sapply(c("Date", "DD"), function(i) {
@@ -118,40 +116,35 @@ fit <- sapply(c("Date", "DD"), function(i) {
   c(x, predEff(mod, newdata = x, effects = tot[i], eff.boot = tot.b))
 }, simplify = FALSE)
 
-## Function to plot predictions
+# Function to plot predictions
 plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
   x2 <- fit[[1]]; f <- fit[[2]]; ci.l <- fit[[3]]; ci.u <- fit[[4]]
   ggplot () + 
     geom_point(aes(x, y)) +
-    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u, alpha = "0.15"), 
-                fill = "blue") +
+    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u, alpha = "0.15"), fill = "blue") +
     geom_line(aes(x2, f), color = "blue", size = 1) +
     xlab(x.lab) + ylab(y.lab) +
     theme_bw() + theme(legend.position = "none")
 }
 
-## Direct effects of Date
-plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date, 
-        x.lab = "Date of Bud Burst", y.lab = "Stem Growth")
+# Direct effects of Date
+plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date, x.lab = "Date of Bud Burst", y.lab = "Stem Growth")
 #> Warning: Using alpha for a discrete variable is not advised.
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />
 
 ``` r
-
-## Indirect effects of DD (operating via Date)
-plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD, 
-        x.lab = "Degree Days to Bud Burst", y.lab = "Stem Growth")
+# Indirect effects of DD (operating via Date)
+plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD, x.lab = "Degree Days to Bud Burst", y.lab = "Stem Growth")
 #> Warning: Using alpha for a discrete variable is not advised.
 ```
 
 <img src="man/figures/README-example-2.png" width="100%" />
 
 ``` r
-
-## Huge amount of scatter around each fit as random effects explain most
-## variation in stem growth! Compare conditional vs. marginal R-squared:
+# Huge amount of scatter around each fit as random effects explain most variation in stem growth! 
+# Compare conditional vs. marginal R-squared:
 r2 <- c(R2_cond = R2(mod)[[1]], R2_marg = R2(mod, re.form = NA)[[1]])
 round(r2, 3)
 #> R2_cond R2_marg 
@@ -160,13 +153,14 @@ round(r2, 3)
 
 ## References
 
-  - Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
-    modelling in R for ecology, evolution, and systematics. *Methods in
-    Ecology and Evolution*, **7**(5), 573–579. <https://doi.org/f8s8rb>
-  - Shipley, B. (2000). A New Inferential Test for Path Models Based on
-    Directed Acyclic Graphs. *Structural Equation Modeling: A
-    Multidisciplinary Journal*, **7**(2), 206–218.
-    <https://doi.org/cqm32d>
-  - Shipley, B. (2009). Confirmatory path analysis in a generalized
-    multilevel context. *Ecology*, **90**(2), 363–368.
-    <https://doi.org/bqd43d>
+Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
+modelling in R for ecology, evolution, and systematics. *Methods in
+Ecology and Evolution*, **7**(5), 573–579. <https://doi.org/f8s8rb>
+
+Shipley, B. (2000). A New Inferential Test for Path Models Based on
+Directed Acyclic Graphs. *Structural Equation Modeling: A
+Multidisciplinary Journal*, **7**(2), 206–218. <https://doi.org/cqm32d>
+
+Shipley, B. (2009). Confirmatory path analysis in a generalized
+multilevel context. *Ecology*, **90**(2), 363–368.
+<https://doi.org/bqd43d>

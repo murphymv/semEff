@@ -38,21 +38,21 @@ or function cannot be found.}
 }
 \value{
 The output of \code{FUN} in a list, or simplified to a vector or
-  array.
+array.
 }
 \description{
 Apply a function to a vector using parallel processing.
 }
 \details{
 This is a wrapper for \code{parSapply} from the \pkg{parallel}
-  package, enabling (potentially) faster processing of a function over a
-  vector of objects. Parallel processing via option \code{"snow"} (default)
-  is carried out using a cluster of workers, which is automatically set up
-  via \code{makeCluster} using all available system cores or a user supplied
-  number of cores. The function then exports the required objects and
-  functions to this cluster using \code{clusterExport}, after performing a
-  (rough) match of all objects and functions in the current global
-  environment to those referenced in the call to \code{FUN} (and also any
-  calls in \code{X}). Any additional required objects can be supplied using
-  \code{add.obj}.
+package, enabling (potentially) faster processing of a function over a
+vector of objects. Parallel processing via option \code{"snow"} (default)
+is carried out using a cluster of workers, which is automatically set up
+via \code{makeCluster} using all available system cores or a user supplied
+number of cores. The function then exports the required objects and
+functions to this cluster using \code{clusterExport}, after performing a
+(rough) match of all objects and functions in the current global
+environment to those referenced in the call to \code{FUN} (and also any
+calls in \code{X}). Any additional required objects can be supplied using
+\code{add.obj}.
 }

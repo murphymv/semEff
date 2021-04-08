@@ -26,15 +26,15 @@ extractor functions.}
 }
 \value{
 A list containing the original or bootstrapped effects for each
-  response variable, as numeric vectors or matrices (respectively).
+response variable, as numeric vectors or matrices (respectively).
 }
 \description{
 Extract SEM direct, indirect, and/or total effects from an
-  object of class \code{"semEff"}.
+object of class \code{"semEff"}.
 }
 \details{
 These are simple extractor functions for effects calculated using
-  \code{semEff}, intended for convenience (e.g. for use with \code{predEff}).
+\code{semEff}, intended for convenience (e.g. for use with \code{predEff}).
 }
 \section{Functions}{
 \itemize{

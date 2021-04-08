@@ -137,19 +137,19 @@ pSapply <- function(X, FUN, parallel = "snow", ncpus = NULL, cl = NULL,
 
   if (p != "no") {
 
-    ## No. cores to use
-    if (is.null(nc)) nc <- detectCores()
+    # No. cores to use
+    if (is.null(nc)) nc <- parallel::detectCores()
 
-    ## Cluster
+    # Cluster
     if (p == "snow") {
 
-      ## Create local cluster using system cores
+      # Create local cluster using system cores
       if (is.null(cl)) {
         cl <- parallel::makeCluster(getOption("cl.cores", nc))
       }
 
-      ## Export required objects/functions to cluster
-      ## (search global env. for objects in calls to X/FUN)
+      # Export required objects/functions to cluster
+      # (search global env. for objects in calls to X/FUN)
       P <- function(...) paste(..., collapse = " ")
       xc <- P(unlist(rMapply(function(i) {
         if (isMod(i) || isBoot(i)) P(getCall(i))
@@ -163,7 +163,7 @@ pSapply <- function(X, FUN, parallel = "snow", ncpus = NULL, cl = NULL,
 
     }
 
-    ## Run parSapply using cluster and output results
+    # Run parSapply using cluster and output results
     out <- parallel::parSapply(cl, X, FUN, ...)
     parallel::stopCluster(cl)
     out

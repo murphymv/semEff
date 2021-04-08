@@ -22,66 +22,66 @@ estimates from the output.}
 }
 \value{
 A numeric vector of the model-averaged estimates, or a list of such
-  vectors.
+vectors.
 }
 \description{
 Calculate a weighted average of model estimates (e.g. effects,
-  fitted values, residuals) for a set of models.
+fitted values, residuals) for a set of models.
 }
 \details{
 This function can be used to calculate a weighted average of model
-  estimates such as effects, fitted values, or residuals, where models are
-  typically competing candidate models fit to the same response variable.
-  Weights are typically a 'weight of evidence' type metric such as Akaike
-  model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which
-  can be conveniently calculated in \emph{R} using packages such as
-  \pkg{MuMIn} or \pkg{AICcmodavg}. However, numeric weights of any sort can
-  be used. If none are supplied, a simple average is calculated instead.
+estimates such as effects, fitted values, or residuals, where models are
+typically competing candidate models fit to the same response variable.
+Weights are typically a 'weight of evidence' type metric such as Akaike
+model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which
+can be conveniently calculated in \emph{R} using packages such as
+\pkg{MuMIn} or \pkg{AICcmodavg}. However, numeric weights of any sort can
+be used. If none are supplied, a simple average is calculated instead.
 
-  Averaging is performed via the 'full'/'zero' rather than
-  'subset'/'conditional'/'natural' method, meaning that zero is substituted
-  for estimates for any 'missing' parameters (e.g. effects) prior to
-  calculations. This provides a form of shrinkage and thus reduces
-  \href{https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false}{estimate
-  bias} (Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
+Averaging is performed via the 'full'/'zero' rather than
+'subset'/'conditional'/'natural' method, meaning that zero is substituted
+for estimates for any 'missing' parameters (e.g. effects) prior to
+calculations. This provides a form of shrinkage and thus reduces
+\href{https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false}{estimate
+bias} (Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
 }
 \examples{
-## Model-averaged effects (coefficients)
+# Model-averaged effects (coefficients)
 m <- Shipley.Growth  # candidate models
 e <- lapply(m, function(i) coef(summary(i))[, 1])
 avgEst(e)
 
-## Using weights
+# Using weights
 w <- runif(length(e), 0, 1)
 avgEst(e, w)
 
-## Model-averaged predictions
+# Model-averaged predictions
 f <- lapply(m, predict)
 avgEst(f, w)
 }
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
-  and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-  ed.). New York: Springer-Verlag. Retrieved from
-  \url{https://www.springer.com/gb/book/9780387953649}
+and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
+ed.). New York: Springer-Verlag. Retrieved from
+\url{https://www.springer.com/gb/book/9780387953649}
 
-  Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
-  selection and multimodel inference in behavioral ecology: some background,
-  observations, and comparisons. \emph{Behavioral Ecology and Sociobiology},
-  \strong{65}(1), 23-35. \url{https://doi.org/c4mrns}
+Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
+selection and multimodel inference in behavioral ecology: some background,
+observations, and comparisons. \emph{Behavioral Ecology and Sociobiology},
+\strong{65}(1), 23-35. \url{https://doi.org/c4mrns}
 
-  Dormann, C. F., Calabrese, J. M., Guillera-Arroita, G., Matechou, E., Bahn,
-  V., Barton, K., ... Hartig, F. (2018). Model averaging in ecology: a review
-  of Bayesian, information-theoretic, and tactical approaches for predictive
-  inference. \emph{Ecological Monographs}, \strong{88}(4), 485-504.
-  \url{https://doi.org/gfgwrv}
+Dormann, C. F., Calabrese, J. M., Guillera-Arroita, G., Matechou, E., Bahn,
+V., Barton, K., ... Hartig, F. (2018). Model averaging in ecology: a review
+of Bayesian, information-theoretic, and tactical approaches for predictive
+inference. \emph{Ecological Monographs}, \strong{88}(4), 485-504.
+\url{https://doi.org/gfgwrv}
 
-  Grueber, C. E., Nakagawa, S., Laws, R. J., & Jamieson, I. G. (2011).
-  Multimodel inference in ecology and evolution: challenges and solutions.
-  \emph{Journal of Evolutionary Biology}, \strong{24}(4), 699-711.
-  \url{https://doi.org/b7b5d4}
+Grueber, C. E., Nakagawa, S., Laws, R. J., & Jamieson, I. G. (2011).
+Multimodel inference in ecology and evolution: challenges and solutions.
+\emph{Journal of Evolutionary Biology}, \strong{24}(4), 699-711.
+\url{https://doi.org/b7b5d4}
 
-  Walker, J. A. (2019). Model-averaged regression coefficients have a
-  straightforward interpretation using causal conditioning. \emph{BioRxiv},
-  133785. \url{https://doi.org/c8zt}
+Walker, J. A. (2019). Model-averaged regression coefficients have a
+straightforward interpretation using causal conditioning. \emph{BioRxiv},
+133785. \url{https://doi.org/c8zt}
 }

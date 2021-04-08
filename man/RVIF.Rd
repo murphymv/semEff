@@ -11,16 +11,16 @@ RVIF(...)
 }
 \value{
 A numeric vector of the RVIFs, or an array, list of vectors/arrays,
-  or nested list.
+or nested list.
 }
 \description{
 Calculate root variance inflation factors (RVIF) for terms in a
-  fitted model(s), i.e. the square root of the (generalised) VIFs.
+fitted model(s), i.e. the square root of the (generalised) VIFs.
 }
 \details{
 RVIFs quantify the inflation of estimate standard errors due to
-  multicollinearity among predictors, and also of estimates themselves
-  compared to the 'unique' (residualised) effects. RVIFs may often be more
-  practical than VIFs for assessing multicollinearity, relating more directly
-  to the parameters of interest.
+multicollinearity among predictors, and also of estimates themselves
+compared to the 'unique' (residualised) effects. RVIFs may often be more
+practical than VIFs for assessing multicollinearity, relating more directly
+to the parameters of interest.
 }

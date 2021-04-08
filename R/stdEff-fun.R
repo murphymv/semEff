@@ -13,16 +13,16 @@
 #' @return A numeric value, the weighted variance of \code{x}.
 #' @seealso \code{\link[stats]{var}}
 #' @examples
-#' ## Weighted variance
+#' # Weighted variance
 #' x <- rnorm(30)
 #' w <- runif(30, 0, 1)
 #' varW(x, w)
 #'
-#' ## Simple variance
+#' # Simple variance
 #' varW(x)
 #' stopifnot(varW(x) == var(x))
 #'
-#' ## NA handling
+#' # NA handling
 #' varW(c(x[1:29], NA), w, na.rm = TRUE)  # NA in x (removed)
 #' varW(c(x[1:29], NA), w, na.rm = FALSE)  # NA in x (NA returned)
 #' varW(x[1:29], w = c(w[1:29], NA))  # NA in w (NA returned)
@@ -80,7 +80,7 @@ sdW <- function(...) {
 #'   nested list of same.
 #' @seealso \code{\link[stats]{getCall}}
 #' @examples
-#' ## Get data used to fit SEM from Shipley (2009)
+#' # Get data used to fit SEM from Shipley (2009)
 #' getData(Shipley.SEM[[1]])  # from single model
 #' getData(Shipley.SEM)  # from SEM (list)
 #' getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
@@ -89,22 +89,22 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
 
   m <- mod
 
-  ## Function
+  # Function
   getData <- function(m) {
 
-    ## Data from 'data' argument of model call
+    # Data from 'data' argument of model call
     mc <- getCall(m)
     d <- eval(mc$data, env)
     if (!is.null(d)) d <- data.frame(d) else
       stop("'data' argument of model call not specified, or data is NULL.")
 
-    ## All var names from model call
+    # All var names from model call
     f <- c(formula(m), mc$subset, mc$weights, mc$offset, mc$correlation)
     vn <- unlist(lapply(f, all.vars))
     if (!all(vn %in% names(d)))
       stop("'data' does not contain all variables used to fit model.")
 
-    ## Subset data for model observations?
+    # Subset data for model observations?
     if (subset) {
       obs <- names(fitted(m))
       w <- weights(m)
@@ -114,7 +114,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
 
   }
 
-  ## Apply recursively
+  # Apply recursively
   rgetData <- function(m) {
     if (isList(m)) {
       d <- lapply(m, rgetData)
@@ -145,12 +145,12 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
 #'   terms in the model, so that the model design matrix is rank deficient.
 #' @return A character vector or list/nested list of term names.
 #' @examples
-#' ## Term names from Shipley SEM
+#' # Term names from Shipley SEM
 #' m <- Shipley.SEM
 #' xNam(m)
 #' xNam(m, intercept = FALSE)
 #'
-#' ## Model with different types of predictor (some multi-coefficient terms)
+#' # Model with different types of predictor (some multi-coefficient terms)
 #' d <- data.frame(
 #'   y = rnorm(100),
 #'   x1 = rnorm(100),
@@ -167,34 +167,34 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 
   m <- mod
 
-  ## Function
+  # Function
   xNam <- function(m) {
 
-    ## Term names
+    # Term names
     tt <- terms(m)
     xn <- labels(tt)
     int <- attr(tt, "intercept")
     if (int) xn <- c("(Intercept)", xn)
 
-    ## Expand interaction terms (list)
+    # Expand interaction terms (list)
     XN <- sapply(xn, function(i) {
       unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
     })
 
-    ## Predictor values
+    # Predictor values
     d <- getData(m, env = env)
     mf <- suppressWarnings(model.frame(m, data = d))
     x <- mf[names(mf) %in% unlist(unname(XN))]
     x <- sapply(x, "[", simplify = FALSE)
 
-    ## Expand factor/matrix terms (list)
+    # Expand factor/matrix terms (list)
     f <- sapply(x, is.factor)
     xn2 <- unique(c(xn, names(x)))
     XN2 <- sapply(xn2, function(i) {
       if (i %in% names(x)) {
         xi <- x[[i]]
         if (f[i]) {
-          ci <- contrasts(d[[i]])
+          ci <- contrasts(factor(d[[i]]))
           ct <- getCall(m)$contrasts
           xi <- if (!is.null(ct)) {
             ci <- ct[names(ct) %in% i][[1]]
@@ -212,7 +212,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
       } else i
     }, simplify = FALSE)
 
-    ## Expand interaction terms involving factors/matrices (list)
+    # Expand interaction terms involving factors/matrices (list)
     XN <- sapply(xn, function(i) {
       if (isInx(i)) {
         j <- expand.grid(XN2[XN[[i]]])
@@ -220,28 +220,28 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
       } else XN2[[i]]
     }, simplify = FALSE)
 
-    ## If no intercept, generate all levels for first factor
+    # If no intercept, generate all levels for first factor
     if (!int && any(f)) {
       f1 <- names(f[f][1])
       XN[[f1]] <- paste0(f1, levels(x[[f1]]))
     }
 
-    ## Drop some names? (aliased, subsetted factor levels, etc.)
+    # Drop some names? (aliased, subsetted factor levels, etc.)
     b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
     bn <- names(b)
     if (!aliased) bn <- bn[!is.na(b)]
     XN <- lapply(XN, function(i) i[i %in% bn])
     XN <- XN[sapply(XN, length) > 0]
 
-    ## Drop intercept?
+    # Drop intercept?
     if (!intercept && int) XN <- XN[-1]
 
-    ## Return as list?
+    # Return as list?
     if (!list) unlist(unname(XN)) else XN
 
   }
 
-  ## Apply recursively
+  # Apply recursively
   rMapply(xNam, m, SIMPLIFY = FALSE)
 
 }
@@ -312,7 +312,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   model. \item The inverse transformation of the working response is then
 #'   calculated. \item If the inverse transformation is 'effectively equal' to
 #'   the original response (tested using \code{\link[base]{all.equal}}), the
-#'   working response is returned; otherwise, the GLM is re-fit with the working
+#'   working response is returned; otherwise, the GLM is refit with the working
 #'   response now as the predictor, and steps 2-4 are repeated - each time with
 #'   an additional IWLS iteration.}
 #'
@@ -356,17 +356,17 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
 #'   \url{https://doi.org/bvxb6s}
 #' @examples
-#' ## Compare estimate with a direct link transformation
-#' ## (test with a poisson variable, log link)
+#' # Compare estimate with a direct link transformation
+#' # (test with a poisson variable, log link)
 #' set.seed(1)
 #' y <- rpois(30, lambda = 10)
 #' yl <- unname(glt(y, force.est = TRUE))
 #'
-#' ## Effectively equal?
+#' # Effectively equal?
 #' all.equal(log(y), yl)
 #' # TRUE
 #'
-#' ## Actual difference...
+#' # Actual difference...
 #' all.equal(log(y), yl, tolerance = .Machine$double.eps)
 #' # "Mean relative difference: 1.05954e-12"
 #' @export
@@ -374,10 +374,10 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 
   f <- family
 
-  ## Function
+  # Function
   glt <- function(x) {
 
-    ## Error family
+    # Error family
     if (is.character(f)) {
       f <- get(f, mode = "function", envir = parent.frame())
     }
@@ -386,10 +386,10 @@ glt <- function(x, family = NULL, force.est = FALSE) {
       f <- if (all(x <= 1)) binomial() else poisson()
     }
 
-    ## Transform variable to link scale
+    # Transform variable to link scale
     xl <- f$linkfun(x)
 
-    ## Return transformation or estimation (GLM working response)
+    # Return transformation or estimation (GLM working response)
     if (any(is.infinite(xl)) || force.est) {
       x2 <- x
       suppressWarnings(
@@ -402,18 +402,19 @@ glt <- function(x, family = NULL, force.est = FALSE) {
         xli <- f$linkinv(xl)
         eql <- isTRUE(all.equal(x, xli, tolerance = sqrt(.Machine$double.eps),
                                 check.names = FALSE))
-        if (eql) return(xl) else {
-          i <- i + 1
-          suppressWarnings(
-            m <- update(m, . ~ xl, control = list(maxit = i))
-          )
+        if (eql) {
+          return(xl)
         }
+        i <- i + 1
+        suppressWarnings(
+          m <- update(m, . ~ xl, control = list(maxit = i))
+        )
       }
     } else xl
 
   }
 
-  ## Apply recursively
+  # Apply recursively
   rMapply(glt, x)
 
 }
@@ -423,7 +424,7 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 #' @description Extract the response variable from a fitted model on the
 #'   original or link scale.
 #' @param mod A fitted model object, or a list or nested list of such objects.
-#' @param data An optional dataset, used to first re-fit the model(s).
+#' @param data An optional dataset, used to first refit the model(s).
 #' @param link Logical. If \code{TRUE}, return the GLM response variable on the
 #'   link scale (see Details).
 #' @param offset Logical. If \code{TRUE}, include model offset(s) in the
@@ -442,10 +443,10 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 #' @return A numeric vector comprising the response variable on the original or
 #'   link scale, or an array, list of vectors/arrays, or nested list.
 #' @examples
-#' ## All SEM responses (original scale)
+#' # All SEM responses (original scale)
 #' getY(Shipley.SEM)
 #'
-#' ## Estimated response in link scale from binomial model
+#' # Estimated response in link scale from binomial model
 #' getY(Shipley.SEM$Live, link = TRUE)
 #' @export
 getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
@@ -453,19 +454,19 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
 
   m <- mod; d <- data
 
-  ## Function
+  # Function
   getY <- function(m) {
 
-    ## Re-fit model with any supplied data
+    # Refit model with any supplied data
     if (!is.null(d)) {
       m <- eval(update(m, data = d, evaluate = FALSE))
       env <- environment()
     }
 
-    ## Model error family
+    # Model error family
     f <- if (isBet(m)) m$link$mean else family(m)
 
-    ## Model weights and offset
+    # Model weights and offset
     w <- weights(m)
     o <- if (!offset) {
       if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
@@ -473,7 +474,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
       model.offset(mf)
     }
 
-    ## Model response
+    # Model response
     y <- fitted(m) + resid(m, "response")
     if (!is.null(w)) y <- y[w > 0 & !is.na(w)]
     if (!is.null(o)) y <- f$linkinv(f$linkfun(y) - o)
@@ -481,12 +482,12 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
     a <- names(attributes(y))
     attributes(y)[a != "names"] <- NULL
 
-    ## Return response on original or link scale
+    # Return response on original or link scale
     if (isGlm(m) && link) glt(y, family = f) else y
 
   }
 
-  ## Apply recursively
+  # Apply recursively
   rMapply(getY, m)
 
 }
@@ -496,12 +497,12 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
 #' @description Calculate generalised variance inflation factors for terms in a
 #'   fitted model(s) via the variance-covariance matrix of coefficients.
 #' @param mod A fitted model object, or a list or nested list of such objects.
-#' @param data An optional dataset, used to first re-fit the model(s).
+#' @param data An optional dataset, used to first refit the model(s).
 #' @param env Environment in which to look for model data (if none supplied).
 #' @details \code{VIF} calculates generalised variance inflation factors (GVIF)
 #'   as described in Fox & Monette (1992), and also implemented in the
-#'   \code{\href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
-#'    vif}} function in the \pkg{car} package. However, whereas \code{vif}
+#'   \href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
+#'    vif} function in the \pkg{car} package. However, whereas \code{vif}
 #'   returns both GVIF and GVIF^(1/(2*Df)) values, \code{VIF} simply returns the
 #'   squared result of the latter measure, which equals the standard VIF for
 #'   single-coefficient terms and is the equivalent measure for
@@ -517,12 +518,12 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
 #'   Diagnostics. \emph{Journal of the American Statistical Association}
 #'   \strong{87}, 178-183. \url{https://doi.org/dm9wbw}
 #' @examples
-#' ## Model with two correlated terms
+#' # Model with two correlated terms
 #' m <- Shipley.Growth[[3]]
 #' VIF(m)  # Date & DD somewhat correlated
 #' VIF(update(m, . ~ . - DD))  # drop DD
 #'
-#' ## Model with different types of predictor (some multi-coefficient terms)
+#' # Model with different types of predictor (some multi-coefficient terms)
 #' d <- data.frame(
 #'   y = rnorm(100),
 #'   x1 = rnorm(100),
@@ -536,35 +537,35 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 
   m <- mod; d <- data
 
-  ## Function
+  # Function
   VIF <- function(m) {
 
-    ## Re-fit model with any supplied data
+    # Refit model with any supplied data
     if (!is.null(d)) {
       m <- eval(update(m, data = d, evaluate = FALSE))
       env <- environment()
     }
 
-    ## Term names
+    # Term names
     XN <- xNam(m, intercept = FALSE, list = TRUE, env = env)
     xn <- xNam(m, intercept = FALSE, aliased = FALSE, env = env)
 
-    ## VIFs
+    # VIFs
     if (length(xn) > 1) {
 
-      ## T/F for terms as matrices
+      # T/F for terms as matrices
       if (is.null(d)) d <- getData(m, env = env)
       mf <- suppressWarnings(model.frame(m, data = d))
       mat <- sapply(names(XN), function(i) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
       })
 
-      ## Var-cov/cor matrix
+      # Var-cov/cor matrix
       V <- as.matrix(vcov(m))[xn, xn]
       R <- cov2cor(V)
       det.R <- det(R)
 
-      ## Function
+      # Function
       VIF <- function(i) {
         if (all(i %in% xn)) {
           ni <- !xn %in% i
@@ -576,7 +577,7 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
         } else NA
       }
 
-      ## Calculate
+      # Calculate
       vif <- Map(function(i, j) {
         if (j) sapply(i, VIF) else {
           vif <- VIF(i)
@@ -593,7 +594,7 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 
   }
 
-  ## Apply recursively
+  # Apply recursively
   rMapply(VIF, m, SIMPLIFY = FALSE)
 
 }
@@ -622,7 +623,7 @@ RVIF <- function(...) {
 #'   the response variable. 'Adjusted' and 'Predicted' versions are also
 #'   calculated (see Details).
 #' @param mod A fitted model object, or a list or nested list of such objects.
-#' @param data An optional dataset, used to first re-fit the model(s).
+#' @param data An optional dataset, used to first refit the model(s).
 #' @param adj,pred Logical. If \code{TRUE} (default), adjusted and/or predicted
 #'   R-squared are also returned (the latter is not available for all model
 #'   types).
@@ -759,33 +760,33 @@ RVIF <- function(...) {
 #'   generalized linear model. \emph{Statistics in Medicine} \strong{19}(13),
 #'   1771-1781. \url{https://doi.org/db7rfv}
 #' @examples
-#' ## Pseudo R-squared for mixed models
+#' # Pseudo R-squared for mixed models
 #' R2(Shipley.SEM)  # fixed + random ('conditional')
 #' R2(Shipley.SEM, re.form = ~ (1 | tree))  # fixed + 'tree'
 #' R2(Shipley.SEM, re.form = ~ (1 | site))  # fixed + 'site'
 #' R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
 #' R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's rho
 #'
-#' ## Predicted R-squared: compare cross-validated predictions calculated/
-#' ## approximated via the hat matrix to standard method (leave-one-out)
+#' # Predicted R-squared: compare cross-validated predictions calculated/
+#' # approximated via the hat matrix to standard method (leave-one-out)
 #'
-#' ## Fit test models using Shipley data - compare lm vs glm
+#' # Fit test models using Shipley data - compare lm vs glm
 #' d <- na.omit(Shipley)
 #' m <- lm(Live ~ Date + DD + lat, d)
 #' # m <- glm(Live ~ Date + DD + lat, binomial, d)
 #'
-#' ## Manual CV predictions (leave-one-out)
+#' # Manual CV predictions (leave-one-out)
 #' cvf1 <- sapply(1:nrow(d), function(i) {
 #'   m.ni <- update(m, data = d[-i, ])
 #'   predict(m.ni, d[i, ], type = "response")
 #' })
 #'
-#' ## Short-cut via the hat matrix
+#' # Short-cut via the hat matrix
 #' y <- getY(m)
 #' f <- fitted(m)
 #' cvf2 <- y - (y - f) / (1 - hatvalues(m))
 #'
-#' ## Compare predictions (not exactly equal for GLMs)
+#' # Compare predictions (not exactly equal for GLMs)
 #' all.equal(cvf1, cvf2)
 #' # lm: TRUE; glm: "Mean relative difference: 1.977725e-06"
 #' cor(cvf1, cvf2)
@@ -803,33 +804,33 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 
   m <- mod; d <- data; rf <- re.form
 
-  ## Function
+  # Function
   R2 <- function(m) {
 
-    ## Re-fit model with any supplied data
+    # Refit model with any supplied data
     if (!is.null(d)) {
       m <- eval(update(m, data = d, evaluate = FALSE))
       env <- environment()
     }
 
-    ## No. observations/parameters
+    # No. observations/parameters
     n <- nobs(m)
     i <- attr(terms(m), "intercept")
     k <- n - i - df.residual(m)
 
-    ## R-squared
+    # R-squared
     R2 <- if (k > 0) {
 
-      ## Model link function
+      # Model link function
       f <- if (isBet(m)) m$link$mean else family(m)
       lF <- f$linkfun; lI <- f$linkinv
 
-      ## Model weights
+      # Model weights
       w <- weights(m)
       if (is.null(w)) w <- rep(1, n)
       w <- w[w > 0 & !is.na(w)]
 
-      ## Model offset
+      # Model offset
       o <- if (!offset) {
         if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
         mf <- suppressWarnings(model.frame(m, data = d))
@@ -837,15 +838,15 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       }
       if (is.null(o)) o <- 0
 
-      ## Response
+      # Response
       y <- getY(m, offset = offset, env = env)
       obs <- names(y)
 
-      ## Fitted values
+      # Fitted values
       f <- predict(m, re.form = rf)[obs]
       f <- lI(f - o)
 
-      ## R-squared
+      # R-squared
       yf <- cbind(y, f)
       if (type == "spearman") yf <- apply(yf, 2, rank)
       R <- cov.wt(yf, w, cor = TRUE)$cor[1, 2]
@@ -853,15 +854,15 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 
     } else 0
 
-    ## Adjusted R-squared
+    # Adjusted R-squared
     R2a <- if (adj) {
       if (R2 > 0) {
 
-        ## Pratt formula
+        # Pratt formula
         R2a <- 1 - ((n - 3) * (1 - R2) / (n - k - i)) *
           (1 + (2 * (1 - R2) / (n - k - 2.3)))
 
-        ## Standard formula
+        # Standard formula
         # R2a <- 1 - (1 - R2) * (n - i) / (n - k - i)
 
         max(R2a, 0)
@@ -869,19 +870,19 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       } else 0
     }
 
-    ## Predicted R-squared
+    # Predicted R-squared
     R2p <- if (pred && !isGls(m) && !(isMer(m) && isGlm(m))) {
       if (R2 > 0) {
 
-        ## Leverage values (diagonals of the hat matrix, hii)
+        # Leverage values (diagonals of the hat matrix, hii)
         hii <- hatvalues(m)[obs]
         s <- hii < 1
 
-        ## CV fitted values (response minus 'predicted' residuals)
+        # CV fitted values (response minus 'predicted' residuals)
         pr <- (y - f) / (1 - hii)
         f <- y - pr
 
-        ## Predicted R-squared
+        # Predicted R-squared
         yf[, 2] <- if (type == "spearman") rank(f) else f
         Rp <- cov.wt(yf[s, ], w[s], cor = TRUE)$cor[1, 2]
         max(Rp, 0)^2
@@ -889,12 +890,12 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       } else 0
     }
 
-    ## Return values
+    # Return values
     c("(r.squared)" = R2, "(adj.r.squared)" = R2a, "(pred.r.squared)" = R2p)
 
   }
 
-  ## Apply recursively
+  # Apply recursively
   rMapply(R2, m)
 
 }
@@ -955,16 +956,16 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   straightforward interpretation using causal conditioning. \emph{BioRxiv},
 #'   133785. \url{https://doi.org/c8zt}
 #' @examples
-#' ## Model-averaged effects (coefficients)
+#' # Model-averaged effects (coefficients)
 #' m <- Shipley.Growth  # candidate models
 #' e <- lapply(m, function(i) coef(summary(i))[, 1])
 #' avgEst(e)
 #'
-#' ## Using weights
+#' # Using weights
 #' w <- runif(length(e), 0, 1)
 #' avgEst(e, w)
 #'
-#' ## Model-averaged predictions
+#' # Model-averaged predictions
 #' f <- lapply(m, predict)
 #' avgEst(f, w)
 #' @export
@@ -972,16 +973,16 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 
   e <- est; w <- weights; en <- est.names
 
-  ## Weights
+  # Weights
   if (all(w == "equal")) {
     eqW <- function(i) rep(1, length(i))
     w <- if (any(sapply(e, isList))) lapply(e, eqW) else eqW(e)
   }
 
-  ## Function
+  # Function
   avgEst <- function(e, w) {
 
-    ## Sort names (for effects)
+    # Sort names (for effects)
     en2 <- unique(unlist(lapply(e, names)))
     num <- suppressWarnings(as.numeric(en2))
     if (all(is.na(num))) {
@@ -994,19 +995,19 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
     }
     en <- if (!is.null(en)) en[en %in% en2] else en2
 
-    ## Combine estimates into table (missing = zero)
+    # Combine estimates into table (missing = zero)
     e <- do.call(cbind, lapply(e, function(i) {
       sapply(en, function(j) {
         if (j %in% names(i)) i[[j]] else 0
       })
     }))
 
-    ## Weighted average
+    # Weighted average
     apply(e, 1, weighted.mean, w)
 
   }
 
-  ## Apply recursively
+  # Apply recursively
   rMapply(avgEst, e, w, SIMPLIFY = FALSE)
 
 }
@@ -1014,25 +1015,27 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 
 #' @title Standardised Effects
 #' @description Calculate fully standardised effects (model coefficients) in
-#'   standard deviation units, adjusted for multicollinearity among predictors.
+#'   standard deviation units, adjusted for multicollinearity by default.
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param weights An optional numeric vector of weights to use for model
 #'   averaging, or a named list of such vectors. The former should be supplied
 #'   when \code{mod} is a list, and the latter when it is a nested list (with
 #'   matching list names). If set to \code{"equal"}, a simple average is
 #'   calculated instead.
-#' @param data An optional dataset, used to first re-fit the model(s).
+#' @param data An optional dataset, used to first refit the model(s).
 #' @param term.names An optional vector of names used to extract and/or sort
 #'   effects from the output.
-#' @param cen.x,cen.y Logical, whether effects should be calculated using
+#' @param unique.eff Logical, whether unique effects should be
+#'   calculated (adjusted for multicollinearity among predictors).
+#' @param unique.x Deprecated but allowed temporarily. Use \code{unique.eff}
+#'   instead.
+#' @param cen.x,cen.y Logical, whether effects should be calculated as if from
 #'   mean-centred variables.
 #' @param std.x,std.y Logical, whether effects should be scaled by the standard
 #'   deviations of variables.
-#' @param unique.x Logical, whether effects should be adjusted for
-#'   multicollinearity among predictors.
-#' @param refit.x Logical, whether the model should be re-fit with mean-centred
-#'   predictors.
-#' @param r.squared Logical, whether R-squared values should also be returned.
+#' @param refit.x Logical, whether the model should be refit with mean-centred
+#'   predictor variables (see Details).
+#' @param r.squared Logical, whether R-squared values should also be calculated.
 #' @param incl.raw Logical, whether to append the raw (unstandardised) effects
 #'   to the output.
 #' @param env Environment in which to look for model data (if none supplied).
@@ -1070,11 +1073,11 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   Mx3) + (\beta123 * Mx2 * Mx3)} (adapted from
 #'   \href{https://stats.stackexchange.com/questions/65898/why-could-centering-independent-variables-change-the-main-effects-with-moderatio}{here})
 #'
-#'   In addition, if \code{std.x = TRUE} or \code{unique.x = TRUE} (see below),
-#'   product terms for interactive effects will be recalculated using
+#'   In addition, if \code{std.x = TRUE} or \code{unique.eff = TRUE} (see
+#'   below), product terms for interactive effects will be recalculated using
 #'   mean-centred variables, to ensure that standard deviations and variance
 #'   inflation factors (VIF) for predictors are calculated correctly (the model
-#'   must be re-fit for this latter purpose, to recalculate the
+#'   must be refit for this latter purpose, to recalculate the
 #'   variance-covariance matrix).
 #'
 #'   If \code{std.x = TRUE}, effects are scaled by multiplying by the standard
@@ -1086,7 +1089,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   are regarded as 'fully' standardised in the traditional sense, often
 #'   referred to as 'betas'.
 #'
-#'   If \code{unique.x = TRUE} (default), effects are adjusted for
+#'   If \code{unique.eff = TRUE} (default), effects are adjusted for
 #'   multicollinearity among predictors by dividing by the square root of the
 #'   VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017;
 #'   \code{\link[semEff]{RVIF}}). If they have also been scaled by the standard
@@ -1103,15 +1106,15 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   correlation, so its values may not always be bound between +/- one (such
 #'   cases are likely rare). Importantly, for ordinary linear models, the square
 #'   of the semipartial correlation equals the increase in R-squared when that
-#'   variable is added last in the model - directly linking the measure to
+#'   variable is included last in the model - directly linking the measure to
 #'   unique variance explained. See
 #'   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
 #'   for additional arguments in favour of the use of semipartial correlations.
 #'
-#'   If \code{refit.x}, \code{cen.x}, and \code{unique.x} are \code{TRUE} and
-#'   there are interaction terms in the model, the model will be re-fit with any
+#'   If \code{refit.x}, \code{cen.x}, and \code{unique.eff} are \code{TRUE} and
+#'   there are interaction terms in the model, the model will be refit with any
 #'   (newly-)centred continuous predictors, in order to calculate correct VIFs
-#'   from the variance-covariance matrix. However, re-fitting may not be
+#'   from the variance-covariance matrix. However, refitting may not be
 #'   necessary in some circumstances, for example where predictors have already
 #'   been mean-centred, and whose values will not subsequently be resampled
 #'   (e.g. parametric bootstrap). Setting \code{refit.x = FALSE} in such cases
@@ -1149,26 +1152,26 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' @examples
 #' library(lme4)
 #'
-#' ## Standardised (direct) effects for SEM
+#' # Standardised (direct) effects for SEM
 #' m <- Shipley.SEM
 #' stdEff(m)
 #' stdEff(m, cen.y = FALSE, std.y = FALSE)  # x-only
 #' stdEff(m, std.x = FALSE, std.y = FALSE)  # centred only
 #' stdEff(m, cen.x = FALSE, cen.y = FALSE)  # scaled only
-#' stdEff(m, unique.x = FALSE)  # include multicollinearity
+#' stdEff(m, unique.eff = FALSE)  # include multicollinearity
 #' stdEff(m, r.squared = TRUE)  # add R-squared
 #' stdEff(m, incl.raw = TRUE)  # add unstandardised
 #'
-#' ## Demonstrate equality with effects from manually-standardised variables
-#' ## (gaussian models only)
+#' # Demonstrate equality with effects from manually-standardised variables
+#' # (gaussian models only)
 #' m <- Shipley.Growth[[3]]
 #' d <- data.frame(scale(na.omit(Shipley)))
-#' e1 <- stdEff(m, unique.x = FALSE)
+#' e1 <- stdEff(m, unique.eff = FALSE)
 #' e2 <- coef(summary(update(m, data = d)))[, 1]
 #' stopifnot(all.equal(e1, e2))
 #'
-#' ## Demonstrate equality with square root of increment in R-squared
-#' ## (ordinary linear models only)
+#' # Demonstrate equality with square root of increment in R-squared
+#' # (ordinary linear models only)
 #' m <- lm(Growth ~ Date + DD + lat, data = Shipley)
 #' r2 <- summary(m)$r.squared
 #' e1 <- stdEff(m)[-1]
@@ -1180,73 +1183,75 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' })
 #' stopifnot(all.equal(e1, e2))
 #'
-#' ## Model-averaged standardised effects
+#' # Model-averaged standardised effects
 #' m <- Shipley.Growth  # candidate models
 #' w <- runif(length(m), 0, 1)  # weights
 #' stdEff(m, w)
 #' @export
 stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
-                   cen.x = TRUE, cen.y = TRUE, std.x = TRUE, std.y = TRUE,
-                   unique.x = TRUE, refit.x = TRUE, r.squared = FALSE,
-                   incl.raw = FALSE, env = parent.frame(), ...) {
+                   unique.eff = TRUE, unique.x = TRUE, cen.x = TRUE,
+                   cen.y = TRUE, std.x = TRUE, std.y = TRUE, Refit.x = TRUE,
+                   r.squared = FALSE, incl.raw = FALSE, env = parent.frame(),
+                   ...) {
 
   m <- mod; w <- weights; d <- data; en <- term.names
+  if (!(unique.eff && unique.x)) unique.eff <- FALSE
 
-  ## Function
+  # Function
   stdEff <- function(m) {
 
-    ## Re-fit model with any supplied data
+    # Refit model with any supplied data
     if (!is.null(d)) {
       m <- eval(update(m, data = d, evaluate = FALSE))
       env <- environment()
     }
 
-    ## Original model coefficients
+    # Model coefficients
     b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
     bn <- names(b)
     int <- any(isInt(bn))  # intercept?
 
-    ## Effects (subset only relevant parameters)
+    # Effects (subset only relevant parameters)
     e <- na.omit(b[!isPhi(bn)])
     en <- names(e)[!isInt(names(e))]
     k <- length(en)
 
-    ## Model weights
+    # Model weights
     w <- weights(m)
     if (is.null(w)) w <- rep(1, nobs(m))
     w <- w[w > 0 & !is.na(w)]
 
-    ## Response
+    # Response
     y <- getY(m, env = env)
     obs <- names(y)
 
-    ## Centre/scale (x)
+    # Centre/scale (x)
     if (k > 0) {
 
-      ## Predictors
+      # Predictors
       dF <- function(...) data.frame(..., check.names = FALSE)
       if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
       x <- dF(model.matrix(m, data = d))[en]
       inx <- any(isInx(en))  # interactions?
 
-      ## Adjust intercept (and possibly effects/predictors)
+      # Adjust intercept (and possibly effects/predictors)
       if (cen.x) {
 
-        ## Model offset
+        # Model offset
         mf <- suppressWarnings(model.frame(m, data = d))
         o <- model.offset(mf)
         if (is.null(o)) o <- 0
 
-        ## Adjust intercept (set to mean of predicted y)
+        # Adjust intercept (set to mean of predicted y)
         if (int) {
           f <- predict(m, re.form = NA)[obs] - o
           e[1] <- weighted.mean(f, w)
         }
 
-        ## For interactions, adjust effects and centre predictors
+        # For interactions, adjust effects and centre predictors
         if (inx) {
 
-          ## Predictor means
+          # Predictor means
           sI <- function(x) {
             unlist(strsplit(x, "(?<!:):(?!:)", perl = TRUE))
           }
@@ -1254,8 +1259,8 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           x2 <- dF(model.matrix(reformulate(unlist(EN)), data = d))
           xm <- colMeans(x2)
 
-          ## Adjust lower-order terms
-          ## (ti = terms containing term i; ni = non-i components of ti)
+          # Adjust lower-order terms
+          # (ti = terms containing term i; ni = non-i components of ti)
           e[en] <- sapply(en, function(i) {
             ei <- e[[i]]; ii <- sI(i)
             ti <- en[en != i & sapply(en, function(j) all(ii %in% sI(j)))]
@@ -1268,7 +1273,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
             } else ei
           })
 
-          ## Centre predictors (for correct SDs for product terms)
+          # Centre predictors (for correct SDs for product terms)
           if (std.x) {
             x <- dF(sapply(en, function(i) {
               ii <- sI(i)
@@ -1281,21 +1286,21 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
       }
 
-      ## Scale effects (x)
+      # Scale effects (x)
       if (std.x) {
         xs <- sapply(x, sdW, w)
         e[en] <- e[en] * xs
       }
 
-      ## Calculate unique effects of predictors (adjust for multicollinearity)
-      if (unique.x && k > 1) {
+      # Calculate unique effects of predictors (adjust for multicollinearity)
+      if (unique.eff && k > 1) {
 
-        ## Re-fit model with centred predictors
-        ## (to calculate correct VIFs for interacting terms)
+        # Refit model with centred predictors
+        # (to calculate correct VIFs for interacting terms)
         m2 <- if (cen.x && inx && refit.x) {
 
-          ## Update dataset
-          ## (add response, weights, offset; set sum contrasts for factors)
+          # Update dataset
+          # (add response, weights, offset; set sum contrasts for factors)
           d2 <- data.frame(y, w, o, d)
           d2 <- dF(sapply(d2, function(i) {
             if (!is.numeric(i)) {
@@ -1304,21 +1309,21 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
             }; i
           }))
 
-          ## Update term names (scale numeric predictors)
+          # Update term names (scale numeric predictors)
           en2 <- unlist(lapply(EN, function(i) {
             paste(sapply(i, function(j) {
               if (is.numeric(mf[, j])) paste0("scale(", j, ")") else j
             }), collapse = ":")
           }))
 
-          ## Add random effects
+          # Add random effects
           if (isMer(m)) {
             re <- lme4::findbars(formula(m))
             re <- sapply(re, function(i) paste0("(", deparse(i), ")"))
             en2 <- c(en2, re)
           }
 
-          ## Rename any existing terms named "y", "w", or "o"
+          # Rename any existing terms named "y", "w", or "o"
           if (any(c("y", "w", "o") %in% names(d))) {
             en2 <- sapply(en2, function(i) {
               i <- gsub("([^\\w.])", "~\\1~", i, perl = TRUE)
@@ -1329,13 +1334,13 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
             })
           }
 
-          ## Re-fit model
+          # Refit model
           eval(update(m, reformulate(en2, "y", int), data = d2, weights = w,
                       offset = o, contrasts = NULL, evaluate = FALSE))
 
         } else m
 
-        ## Divide effects by RVIFs
+        # Divide effects by RVIFs
         rvif <- na.omit(RVIF(m2, env = environment()))
         e[en] <- e[en] / rvif
         if (incl.raw) b[en] <- b[en] / rvif
@@ -1344,7 +1349,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
     }
 
-    ## Centre intercept (y)
+    # Centre intercept (y)
     if (cen.y && int) {
       ym <- weighted.mean(y, w)
       if (isGlm(m)) {
@@ -1354,14 +1359,14 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
       e[1] <- e[1] - ym
     }
 
-    ## Scale effects (y)
+    # Scale effects (y)
     if (std.y) {
       if (isGlm(m)) y <- getY(m, link = TRUE, env = env)
       ys <- sdW(y, w)
       e <- e / ys
     }
 
-    ## Return standardised effects (optionally append R-squared/raw effects)
+    # Return standardised effects (optionally append R-squared/raw effects)
     e <- sapply(bn, function(i) {
       if (i %in% names(e)) e[[i]] else b[[i]]
     })
@@ -1374,10 +1379,10 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
   }
 
-  ## Apply recursively
+  # Apply recursively
   e <- rMapply(stdEff, m, SIMPLIFY = FALSE)
 
-  ## Output effects or weighted average
+  # Output effects or weighted average
   if (isList(e) && !is.null(w)) avgEst(e, w, en)
   else if (!is.null(en)) {
     s <- function(i) i[en[en %in% names(i)]]
@@ -1385,15 +1390,3 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   } else e
 
 }
-
-
-#' @title Standardised Effects
-#' @description This is a temporary function which calls the renamed original
-#'   (\code{\link[semEff]{stdEff}}).
-#' @param ... Arguments to \code{stdEff}.
-#' @export
-stdCoeff <- function(...) {
-  warning("stdCoeff() has been renamed, please call stdEff() in future.")
-  stdEff(...)
-}
-

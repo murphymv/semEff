@@ -6,18 +6,18 @@
 \title{Candidate Model Set from Shipley 'Growth' Model}
 \format{
 A list of mixed models of class \code{"lmer"} and \code{"glmer"}, fit
-  to the same response variable.
+to the same response variable.
 }
 \usage{
 Shipley.Growth
 }
 \description{
 A set of hypothetical competing models fit to the same response
-  variable ('Growth') using the simulated data in Shipley (2009), for which
-  model estimates can be compared and/or averaged.
+variable ('Growth') using the simulated data in Shipley (2009), for which
+model estimates can be compared and/or averaged.
 }
 \examples{
-## Specification
+# Specification
 # Shipley.Growth <- list(
 #   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
 #   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
@@ -27,7 +27,7 @@ A set of hypothetical competing models fit to the same response
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-  multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-  \url{https://doi.org/bqd43d}
+multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
+\url{https://doi.org/bqd43d}
 }
 \keyword{datasets}

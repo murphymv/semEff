@@ -17,7 +17,7 @@ Calculate the weighted standard deviation of \code{x}.
 }
 \details{
 This is simply a wrapper for \code{varW}, applying the square root
-  to the output.
+to the output.
 }
 \seealso{
 \code{\link[stats]{sd}}

@@ -22,27 +22,27 @@ returned.}
 }
 \value{
 A data frame of the variables used to fit the model(s), or a list or
-  nested list of same.
+nested list of same.
 }
 \description{
 Extract the data used to fit a model.
 }
 \details{
 This is a simple convenience function to return the data used to fit
-  a model, by evaluating the 'data' slot of the model call object. If the
-  'data' argument of the model call was not specified, or is not a data frame
-  (or coercible to such) containing all variables referenced in the model
-  formula, an error will be thrown - this restriction is largely to ensure
-  that a single coherent dataset of all model variables can be made available
-  for resampling purposes.
+a model, by evaluating the 'data' slot of the model call object. If the
+'data' argument of the model call was not specified, or is not a data frame
+(or coercible to such) containing all variables referenced in the model
+formula, an error will be thrown - this restriction is largely to ensure
+that a single coherent dataset of all model variables can be made available
+for resampling purposes.
 
-  If \code{mod} is a list of models and \code{merge = TRUE}, all (unique)
-  variables used to fit models are merged into a single data frame. This will
-  return an error if \code{subset = TRUE} results in datasets with different
-  numbers of observations (rows).
+If \code{mod} is a list of models and \code{merge = TRUE}, all (unique)
+variables used to fit models are merged into a single data frame. This will
+return an error if \code{subset = TRUE} results in datasets with different
+numbers of observations (rows).
 }
 \examples{
-## Get data used to fit SEM from Shipley (2009)
+# Get data used to fit SEM from Shipley (2009)
 getData(Shipley.SEM[[1]])  # from single model
 getData(Shipley.SEM)  # from SEM (list)
 getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
