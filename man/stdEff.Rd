@@ -15,7 +15,7 @@ stdEff(
   cen.y = TRUE,
   std.x = TRUE,
   std.y = TRUE,
-  Refit.x = TRUE,
+  refit.x = TRUE,
   r.squared = FALSE,
   incl.raw = FALSE,
   env = parent.frame(),
@@ -48,6 +48,9 @@ mean-centred variables.}
 \item{std.x, std.y}{Logical, whether effects should be scaled by the standard
 deviations of variables.}
 
+\item{refit.x}{Logical, whether the model should be refit with mean-centred
+predictor variables (see Details).}
+
 \item{r.squared}{Logical, whether R-squared values should also be calculated.}
 
 \item{incl.raw}{Logical, whether to append the raw (unstandardised) effects
@@ -56,9 +59,6 @@ to the output.}
 \item{env}{Environment in which to look for model data (if none supplied).}
 
 \item{...}{Arguments to \code{R2}.}
-
-\item{refit.x}{Logical, whether the model should be refit with mean-centred
-predictor variables (see Details).}
 }
 \value{
 A numeric vector of the standardised effects, or a list or nested

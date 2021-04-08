@@ -16,41 +16,17 @@ This is a fifth minor release (0.5.0).
 
 #### NOTES:
 
-1.  Found the following (possibly) invalid URLs:
+    Found the following (possibly) invalid URLs:
+      URL: https://doi.org/b8b782
+        From: man/R2.Rd
+        Status: 403
+        Message: Forbidden
+      URL: https://doi.org/bvxb6s
+        From: man/glt.Rd
+        Status: 403
+        Message: Forbidden
 
-    URL: <https://doi.org/b8b782>
-
-    From: man/R2.Rd
-
-    Status: 403
-
-    Message: Forbidden
-
-    URL: <https://doi.org/bvxb6s>
-
-    From: man/glt.Rd
-
-    Status: 403
-
-    Message: Forbidden
-
-    URL: <https://doi.org/fnx7xk>
-
-    From: man/semEff.Rd
-
-    Status: 404
-
-    Message: Not Found
-
-    \- URLs all open fine when tested locally.
-
-2.  Examples with CPU (user + system) or elapsed time \> 5s
-
-    user system elapsed
-
-    semEff 5.02 0.06 5.07
-
-    \- Testing only marginally exceeds recommended time limits, and not when tested locally.
+URLs open fine when tested locally.
 
 ### Downstream dependencies
 
