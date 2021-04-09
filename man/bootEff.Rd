@@ -22,7 +22,7 @@ bootEff(
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
-\item{R}{Number of bootstrap samples to generate.}
+\item{R}{Number of bootstrap resamples to generate.}
 
 \item{seed}{Seed for the random number generator. If not provided, a random
 five-digit integer is used (see Details).}
@@ -69,14 +69,14 @@ SEM correlated errors.
 (primarily) to bootstrap standardised effects from a fitted model or list
 of models (calculated using \code{stdEff}). Bootstrapping is typically
 nonparametric, i.e. model effects are calculated from data where the rows
-have been randomly sampled with replacement. For confidence intervals,
-10,000 such resamples should provide accurate coverage in most situations,
-with fewer sufficing in some cases. To ensure that data is resampled in the
-same way across individual bootstrap operations within the same run (e.g.
-models in a list), the same seed is set per operation, with the value saved
-as an attribute to the matrix of bootstrapped values (for reproducibility).
-The seed can either be user-supplied or a randomly-generated five-digit
-number (default), and is always re-initialised on exit (i.e.
+have been randomly sampled with replacement. 10,000 such resamples should
+provide accurate coverage for confidence intervals in most situations, with
+fewer sufficing in some cases. To ensure that data is resampled in the same
+way across individual bootstrap operations within the same run (e.g. models
+in a list), the same seed is set per operation, with the value saved as an
+attribute to the matrix of bootstrapped values (for reproducibility). The
+seed can either be user-supplied or a randomly-generated five-digit number
+(default), and is always re-initialised on exit (i.e.
 \code{set.seed(NULL)}).
 
 Where \code{weights} are specified, bootstrapped effects will be a weighted

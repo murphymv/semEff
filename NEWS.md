@@ -8,7 +8,7 @@
 ### Other changes:
 
 -   Renamed `unique.x` argument of `stdEff()` to `unique.eff` (old name temporarily allowed).
--   Removed default value of `R` argument of `bootEff()`. The number of bootstrap resamples must now be explicitly specified, which is probably better practice (10,000 is often recommended).
+-   Removed default value of `R` argument of `bootEff()`. The number of bootstrap resamples must now be explicitly specified, which is probably better practice (10,000 is often recommended for confidence intervals).
 -   Added `type` argument to `bootEff()`, to specify the type of bootstrapping to perform (for mixed models). This replaces `ran.eff = "crossed"`, previously used to indicate parametric bootstrapping (although it's temporarily allowed).
 -   `bootEff()` will now treat a list containing both mixed and non-mixed models as all mixed (with a warning). Previously all such models were treated as non-mixed (unintentionally). This is presumably a relatively rare scenario.
 
