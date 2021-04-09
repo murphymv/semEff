@@ -28,6 +28,12 @@ This is a fifth minor release (0.5.0).
 
 URLs open fine when tested locally.
 
+    Examples with CPU (user + system) or elapsed time > 5s
+             user system elapsed
+      semEff 5.12   0.08    5.33
+
+Running of examples sometimes exceeds time limits (barely) on remote tests, never locally.
+
 ### Downstream dependencies
 
 There are currently no downstream dependencies.
