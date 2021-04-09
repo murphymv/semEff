@@ -136,8 +136,8 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
                     ncpus = NULL, cl = NULL, bM.arg = NULL, ...) {
 
   m <- mod; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
-  if (re == "crossed")
-    warning("Use of 'crossed' for 'ran.eff' is deprecated; specify the bootstrap 'type' argument in future.")
+  if (missing(R))
+    stop("Number of bootstrap resamples (R) must be specified.")
 
   # Arguments to stdEff
   a <- list(...)
@@ -170,7 +170,10 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
     warning("Mixed and non-mixed models together in list. Resampling will treat all models as mixed.")
   mer <- any(mer)
   mer2 <- isTRUE(if (mer) {
-    if (re == "crossed" && type == "nonparametric") type <- "parametric"
+    if (isTRUE(if (!is.null(re)) re == "crossed")) {
+      warning("Use of 'ran.eff = 'crossed'' to indicated parametric bootstrapping is deprecated; specify the 'type' argument in future.")
+      if (type == "nonparametric") type <- "parametric"
+    }
     pb <- type %in% c("parametric", "semiparametric")
     if (!pb && is.null(re))
       stop("Name of random effect to resample must be specified to 'ran.eff' (or use parametric bootstrapping).")
