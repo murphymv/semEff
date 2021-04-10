@@ -9,39 +9,40 @@ VIF(mod, data = NULL, env = parent.frame())
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
-\item{data}{An optional dataset, used to first re-fit the model(s).}
+\item{data}{An optional dataset, used to first refit the model(s).}
 
 \item{env}{Environment in which to look for model data (if none supplied).}
 }
 \value{
 A numeric vector of the VIFs, or an array, list of vectors/arrays,
-  or nested list.
+or nested list.
 }
 \description{
 Calculate generalised variance inflation factors for terms in a
-  fitted model via the variance-covariance matrix of coefficients.
+fitted model(s) via the variance-covariance matrix of coefficients.
 }
 \details{
 \code{VIF} calculates generalised variance inflation factors (GVIF)
-  as described in Fox & Monette (1992), and also implemented in the
-  \code{vif} function in the \pkg{car} package. However, whereas \code{vif}
-  returns both GVIF and GVIF^(1/(2*Df)) values, \code{VIF} simply returns the
-  squared result of the latter measure, which equals the standard VIF for
-  single-coefficient terms and is the equivalent measure for
-  multi-coefficient terms (e.g. categorical or polynomial). Also, while
-  \code{vif} returns values per model term (i.e. predictor variable),
-  \code{VIF} returns values per coefficient, meaning that the same VIF will
-  be returned per coefficient for multi-coefficient terms. Finally, \code{NA}
-  is returned for any terms which could not be estimated in the model (e.g.
-  aliased).
+as described in Fox & Monette (1992), and also implemented in the
+\href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
+vif} function in the \pkg{car} package. However, whereas \code{vif}
+returns both GVIF and GVIF^(1/(2*Df)) values, \code{VIF} simply returns the
+squared result of the latter measure, which equals the standard VIF for
+single-coefficient terms and is the equivalent measure for
+multi-coefficient terms (e.g. categorical or polynomial). Also, while
+\code{vif} returns values per model term (i.e. predictor variable),
+\code{VIF} returns values per coefficient, meaning that the same value will
+be returned per coefficient for multi-coefficient terms. Finally, \code{NA}
+is returned for any terms which could not be estimated in the model (e.g.
+aliased).
 }
 \examples{
-## Model with two correlated terms
+# Model with two correlated terms
 m <- Shipley.Growth[[3]]
 VIF(m)  # Date & DD somewhat correlated
 VIF(update(m, . ~ . - DD))  # drop DD
 
-## Model with different types of predictor (some multi-coefficient terms)
+# Model with different types of predictor (some multi-coefficient terms)
 d <- data.frame(
   y = rnorm(100),
   x1 = rnorm(100),
@@ -53,10 +54,6 @@ VIF(m)
 }
 \references{
 Fox, J. and Monette, G. (1992) Generalized Collinearity
-  Diagnostics. \emph{Journal of the American Statistical Association}
-  \strong{87}, 178-183. \url{https://doi.org/dm9wbw}
-}
-\seealso{
-\href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
-vif (web)}
+Diagnostics. \emph{Journal of the American Statistical Association}
+\strong{87}, 178-183. \url{https://doi.org/dm9wbw}
 }

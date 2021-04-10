@@ -29,7 +29,7 @@
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
 #'   \url{https://doi.org/bqd43d}
 #' @examples
-#' ## Specification
+#' # Specification
 #' # Shipley.SEM <- list(
 #' #   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
 #' #   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
@@ -51,7 +51,7 @@
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
 #'   \url{https://doi.org/bqd43d}
 #' @examples
-#' ## Specification
+#' # Specification
 #' # Shipley.Growth <- list(
 #' #   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
 #' #   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
@@ -70,8 +70,9 @@
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
 #'   \url{https://doi.org/bqd43d}
 #' @examples
-#' ## Specification
-#' # Shipley.SEM.Boot <- bootEff(Shipley.SEM, ran.eff = "site", seed = 53908)
+#' # Specification
+#' # Shipley.SEM.Boot <- bootEff(Shipley.SEM, R = 10000, seed = 53908,
+#' #                             ran.eff = "site")
 "Shipley.SEM.Boot"
 
 
@@ -84,7 +85,7 @@
 #'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
 #'   \url{https://doi.org/bqd43d}
 #' @examples
-#' ## Specification
+#' # Specification
 #' # Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
 "Shipley.SEM.Eff"
 

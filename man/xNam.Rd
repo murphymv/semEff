@@ -28,17 +28,17 @@ Extract term names from a fitted model object.
 }
 \details{
 Extract term names from a fitted model. Names of terms for which
-  coefficients cannot be estimated are also included if \code{aliased = TRUE}
-  (default). These may be terms which are perfectly correlated with other
-  terms in the model, so that the model design matrix is rank deficient.
+coefficients cannot be estimated are also included if \code{aliased = TRUE}
+(default). These may be terms which are perfectly correlated with other
+terms in the model, so that the model design matrix is rank deficient.
 }
 \examples{
-## Term names from Shipley SEM
+# Term names from Shipley SEM
 m <- Shipley.SEM
 xNam(m)
 xNam(m, intercept = FALSE)
 
-## Model with different types of predictor (some multi-coefficient terms)
+# Model with different types of predictor (some multi-coefficient terms)
 d <- data.frame(
   y = rnorm(100),
   x1 = rnorm(100),

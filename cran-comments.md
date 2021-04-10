@@ -1,56 +1,39 @@
 ## Comments for CRAN submission
 
 ### Release
-This is a fourth minor release (0.4.0).
+
+This is a fifth minor release (0.5.0).
 
 ### Test environments
-* Windows 10 version 2004, R 4.0.2 (local)
-* Ubuntu Linux 16.04 LTS, R 4.0.2 (Travis CI)
-* Windows Server 2008 R2 SP1, R-devel, 32/64 bit (R-hub builder)
-* Ubuntu Linux 16.04 LTS, R-release, GCC (R-hub builder)
-* Fedora Linux, R-devel, clang, gfortran (R-hub builder)
+
+-   Windows 10 Home 20H2, R 4.0.5 (local)
+-   Mac OS X 10.15.7, R 4.0.5 (GitHub Actions)
+-   Windows Server 2008 R2 SP1, R-devel, 32/64 bit (R-hub builder)
+-   Ubuntu Linux 20.04.1 LTS, R-release, GCC (R-hub builder)
+-   Fedora Linux, R-devel, clang, gfortran (R-hub builder)
 
 ### R CMD check results
 
 #### NOTES:
 
-1. checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Mark Murphy <murphymv@gmail.com>'
-Found the following (possibly) invalid URLs:
-  URL: https://doi.org/b8b782
-    From: man/R2.Rd
-    Status: 403
-    Message: Forbidden
-  URL: https://doi.org/bvxb6s
-    From: man/glt.Rd
-    Status: Error
-    Message: libcurl error code 56:
-      	Send failure: Connection was reset
+    Found the following (possibly) invalid URLs:
+      URL: https://doi.org/b8b782
+        From: man/R2.Rd
+        Status: 403
+        Message: Forbidden
+      URL: https://doi.org/bvxb6s
+        From: man/glt.Rd
+        Status: 403
+        Message: Forbidden
 
-   \- These URLs open fine when tested locally (multiple browsers).
+URLs open fine when tested locally.
 
-2. checking installed package size ... NOTE
-  installed size is  7.0Mb
-  sub-directories of 1Mb or more:
-    data   6.7Mb
+    Examples with CPU (user + system) or elapsed time > 5s
+             user system elapsed
+      semEff 5.12   0.08    5.33
 
-   \- Example data provided with this package is used to facilitate the running 
-   of quick examples, and every effort has been made to minimise file size 
-   without loss of demonstrative value to the user.
-
-3. checking for future file timestamps ... NOTE
-unable to verify current time
-   
-   \- Apparently an issue with worldclockapi.com: 
-   https://stackoverflow.com/questions/63613301/r-cmd-check-note-unable-to-verify-current-time.
-
-4. checking examples ... NOTE
-Examples with CPU or elapsed time > 5s
-       user system elapsed
-semEff 6.36  0.077   6.438
-
-   \- Testing of examples apparently only exceeds recommended time limits on 
-   Linux systems (R-hub builder).
+Running of examples sometimes exceeds time limits (barely) on remote tests, never locally.
 
 ### Downstream dependencies
+
 There are currently no downstream dependencies.

@@ -13,5 +13,5 @@
 }
 \description{
 A print method for an object of class \code{"semEff"}, returning
-  summary tables of effects and confidence intervals for all responses.
+summary tables of effects and confidence intervals for all responses.
 }

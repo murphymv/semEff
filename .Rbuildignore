@@ -7,3 +7,6 @@
 ^_config\.yml$
 ^CRAN-RELEASE$
 ^vignettes/.*\.Rmd$
+^\.github$
+^tests/
+^notes\.R$

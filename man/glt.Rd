@@ -21,126 +21,125 @@ contain undefined values).}
 }
 \value{
 A numeric vector of the transformed values, or an array, list of
-  vectors/arrays, or nested list.
+vectors/arrays, or nested list.
 }
 \description{
 Transform a numeric variable using a GLM link function, or
-  return an estimate of same.
+return an estimate of same.
 }
 \details{
 \code{glt} can be used to provide a 'generalised' transformation of
-  a numeric variable, using the link function from a generalised linear model
-  (GLM) fit to the variable. The transformation is generalised in the sense
-  that it can extend even to cases where a standard link transformation would
-  generate undefined values. It achieves this by using an estimate based on
-  the 'working' response variable of the GLM (see below). If the error
-  distribution \code{family} is not specified (default), then it is
-  determined (roughly) from \code{x}, with \code{binomial(link = "logit")}
-  used when all x <= 1 and \code{poisson(link = "log")} otherwise. Although
-  the function is generally intended for binomial or poisson variables, any
-  variable which can be fit using \code{glm} can be supplied. One of the key
-  purposes of \code{glt} is to allow the calculation of fully standardised
-  effects (coefficients) for GLMs (in which case \code{x} = the response
-  variable), while it can also facilitate the proper calculation of SEM
-  indirect effects (see below).
+a numeric variable, using the link function from a generalised linear model
+(GLM) fit to the variable. The transformation is generalised in the sense
+that it can extend even to cases where a standard link transformation would
+generate undefined values. It achieves this by using an estimate based on
+the 'working' response variable of the GLM (see below). If the error
+distribution \code{family} is not specified (default), then it is
+determined (roughly) from \code{x}, with \code{binomial(link = "logit")}
+used when all x <= 1 and \code{poisson(link = "log")} otherwise. Although
+the function is generally intended for binomial or poisson variables, any
+variable which can be fit using \code{\link[stats]{glm}} can be supplied.
+One of the key purposes of \code{glt} is to allow the calculation of fully
+standardised effects (coefficients) for GLMs (in which case \code{x} = the
+response variable), while it can also facilitate the proper calculation of
+SEM indirect effects (see below).
 
-  \strong{Estimating the link transformation}
+\strong{Estimating the link transformation}
 
-  A key challenge in generating fully standardised effects for a GLM with a
-  non-gaussian link function is the difficulty in calculating appropriate
-  standardised ranges (typically the standard deviation) for the response
-  variable in the link scale. This is because a direct transformation of the
-  response will often produce undefined values. Although methods for
-  circumventing this issue by indirectly estimating the variance of the
-  response on the link scale have been proposed - including a
-  latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
-  a more general variance-based method using a pseudo R-squared (Menard 2011)
-  - here an alternative approach is used. Where transformed values are
-  undefined, the function will instead return the synthetic 'working'
-  response from the iteratively reweighted least squares algorithm (IRLS) of
-  the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
-  linear predictor and the working residuals - with the latter comprising the
-  error of the model on the link scale. The advantage of this approach is
-  that a relatively straightforward 'transformation' of any non-gaussian
-  response is readily attainable in all cases. The standard deviation (or
-  other relevant range) can then be calculated using values of the
-  transformed response and used to scale the effects. An additional benefit
-  for piecewise SEMs is that the transformed rather than original response
-  can be specified as a predictor in other models, ensuring that standardised
-  indirect and total effects are calculated correctly (i.e. using the same
-  units).
+A key challenge in generating fully standardised effects for a GLM with a
+non-gaussian link function is the difficulty in calculating appropriate
+standardised ranges (typically the standard deviation) for the response
+variable in the link scale. This is because a direct transformation of the
+response will often produce undefined values. Although methods for
+circumventing this issue by indirectly estimating the variance of the
+response on the link scale have been proposed - including a
+latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
+a more general variance-based method using a pseudo R-squared (Menard 2011)
+\itemize{
+\item here an alternative approach is used. Where transformed values are
+undefined, the function will instead return the synthetic 'working'
+response from the iteratively reweighted least squares algorithm (IRLS) of
+the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
+linear predictor and the working residuals - with the latter comprising the
+error of the model on the link scale. The advantage of this approach is
+that a relatively straightforward 'transformation' of any non-gaussian
+response is readily attainable in all cases. The standard deviation (or
+other relevant range) can then be calculated using values of the
+transformed response and used to scale the effects. An additional benefit
+for piecewise SEMs is that the transformed rather than original response
+can be specified as a predictor in other models, ensuring that standardised
+indirect and total effects are calculated correctly (i.e. using the same
+units).
+}
 
-  To ensure a high level of 'accuracy' in the working response - in the sense
-  that the inverse-transformation is practically indistinguishable from the
-  original response variable - the function uses the following iterative
-  fitting procedure to calculate a 'final' working response:
+To ensure a high level of 'accuracy' in the working response - in the sense
+that the inverse-transformation is practically indistinguishable from the
+original response variable - the function uses the following iterative
+fitting procedure to calculate a 'final' working response:
 
-  \enumerate{\item A new GLM of the same error family is fit with the
-  original response variable as both predictor and response, and using a
-  single IWLS iteration. \item The working response is extracted from this
-  model. \item The inverse transformation of the working response is then
-  calculated. \item If the inverse transformation is 'effectively equal' to
-  the original response (tested using \code{all.equal}), the working response
-  is returned; otherwise, the GLM is re-fit with the working response now as
-  the predictor, and steps 2-4 are repeated - each time with an additional
-  IWLS iteration.}
+\enumerate{\item A new GLM of the same error family is fit with the
+original response variable as both predictor and response, and using a
+single IWLS iteration. \item The working response is extracted from this
+model. \item The inverse transformation of the working response is then
+calculated. \item If the inverse transformation is 'effectively equal' to
+the original response (tested using \code{\link[base]{all.equal}}), the
+working response is returned; otherwise, the GLM is refit with the working
+response now as the predictor, and steps 2-4 are repeated - each time with
+an additional IWLS iteration.}
 
-  This approach will generate a very reasonable transformation of the
-  response variable, which will also be practically indistinguishable from
-  the direct transformation where this can be compared (see Examples). It
-  also ensures that the transformed values, and hence the standard deviation,
-  are the same for any GLM fitting the same response (provided it uses the
-  same link function) - facilitating model comparisons, selection, and
-  averaging.
+This approach will generate a very reasonable transformation of the
+response variable, which will also be practically indistinguishable from
+the direct transformation where this can be compared (see Examples). It
+also ensures that the transformed values, and hence the standard deviation,
+are the same for any GLM fitting the same response (provided it uses the
+same link function) - facilitating model comparisons, selection, and
+averaging.
 }
 \note{
 As we often cannot directly observe the GLM response variable on the
-  link scale, any method estimating its values or statistics will be 'wrong'
-  to some degree. The aim should be to try to minimise this error as far as
-  (reasonably) possible, while also generating standardised effects whose
-  interpretation most closely resembles those of an ordinary linear model -
-  something which the current method achieves. The solution of using the
-  working response from the GLM to scale effects is a purely practical, but
-  reasonable one, and one that takes advantage of modern computing power to
-  minimise error through iterative model fitting. An added bonus is that the
-  estimated variance is constant across models fit to the same response
-  variable, which cannot be said of previous methods (Menard 2011). The
-  overall approach would be classed as 'observed-empirical' by Grace \emph{et
-  al.} (2018), as it utilises model error variance (the working residuals)
-  rather than theoretical distribution-specific variance.
+link scale, any method estimating its values or statistics will incorporate
+a degree of error. The aim should be to try to minimise this error as far
+as (reasonably) possible, while also generating standardised effects whose
+interpretation most closely resembles those of an ordinary linear model -
+something which the current method achieves. The solution of using the
+working response from the GLM to scale effects is a purely practical, but
+reasonable one, and one that takes advantage of modern computing power to
+minimise error through iterative model fitting. An added bonus is that the
+estimated variance is constant across models fit to the same response
+variable, which cannot be said of previous methods (Menard 2011). The
+overall approach would be classed as 'observed-empirical' by Grace \emph{et
+al.} (2018), as it utilises model error variance (the estimated working
+residuals) rather than theoretical distribution-specific variance.
 }
 \examples{
-## Compare estimate with a direct link transformation
-## (test with a poisson variable, log link)
+# Compare estimate with a direct link transformation
+# (test with a poisson variable, log link)
 set.seed(1)
 y <- rpois(30, lambda = 10)
 yl <- unname(glt(y, force.est = TRUE))
 
-## Effectively equal?
+# Effectively equal?
 all.equal(log(y), yl)
 # TRUE
 
-## Actual difference...
+# Actual difference...
 all.equal(log(y), yl, tolerance = .Machine$double.eps)
 # "Mean relative difference: 1.05954e-12"
 }
 \references{
 Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
-  (2018) Quantifying relative importance: computing standardized effects in
-  models with binary outcomes. \emph{Ecosphere} \strong{9}, e02283.
-  \url{https://doi.org/gdm5bj}
+(2018) Quantifying relative importance: computing standardized effects in
+models with binary outcomes. \emph{Ecosphere} \strong{9}, e02283.
+\url{https://doi.org/gdm5bj}
 
-  McCullagh P. and Nelder, J. A. (1989) \emph{Generalized Linear Models} (2nd
-  Edition). London: Chapman and Hall.
+McCullagh P. and Nelder, J. A. (1989) \emph{Generalized Linear Models} (2nd
+Edition). London: Chapman and Hall.
 
-  McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
-  of ordinal level dependent variables. \emph{The Journal of Mathematical
-  Sociology}, \strong{4}(1), 103-120. \url{https://doi.org/dqfhpp}
+McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
+of ordinal level dependent variables. \emph{The Journal of Mathematical
+Sociology}, \strong{4}(1), 103-120. \url{https://doi.org/dqfhpp}
 
-  Menard, S. (2011) Standards for Standardized Logistic Regression
-  Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
-  \url{https://doi.org/bvxb6s}
-}
-\seealso{
-\code{\link[stats]{glm}}, \code{\link[base]{all.equal}}
+Menard, S. (2011) Standards for Standardized Logistic Regression
+Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
+\url{https://doi.org/bvxb6s}
 }

@@ -6,7 +6,7 @@
 \title{Hypothesised SEM from Shipley (2009)}
 \format{
 A list of fitted mixed models of class \code{"lmer"} and
-  \code{"glmer"}, representing structured equations.
+\code{"glmer"}, representing structured equations.
 }
 \usage{
 Shipley.SEM
@@ -15,7 +15,7 @@ Shipley.SEM
 Hypothesised SEM from Shipley (2009)
 }
 \examples{
-## Specification
+# Specification
 # Shipley.SEM <- list(
 #   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
 #   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
@@ -27,7 +27,7 @@ Hypothesised SEM from Shipley (2009)
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-  multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-  \url{https://doi.org/bqd43d}
+multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
+\url{https://doi.org/bqd43d}
 }
 \keyword{datasets}

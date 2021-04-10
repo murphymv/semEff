@@ -33,7 +33,7 @@ A logical value.
 }
 \description{
 Functions to determine the 'type' of an R object using classes.
-  Intended largely for convenience and internal use.
+Intended largely for convenience and internal use.
 }
 \section{Functions}{
 \itemize{

@@ -6,8 +6,9 @@
 \usage{
 bootEff(
   mod,
-  R = 10000,
+  R,
   seed = NULL,
+  type = "nonparametric",
   ran.eff = NULL,
   cor.err = NULL,
   catch.err = TRUE,
@@ -21,15 +22,18 @@ bootEff(
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 
-\item{R}{Number of bootstrap replicates to generate.}
+\item{R}{Number of bootstrap resamples to generate.}
 
 \item{seed}{Seed for the random number generator. If not provided, a random
 five-digit integer is used (see Details).}
 
-\item{ran.eff}{For mixed models with nested random effects, the name of the
-variable comprising the highest-level random effect. For non-nested random
-effects, specify \code{"crossed"}. Non-specification of this argument when
-\code{mod} is a mixed model(s) will result in an error.}
+\item{type}{The type of bootstrapping to perform. Can be
+\code{"nonparametric"} (default), \code{"parametric"}, or
+\code{"semiparametric"} (the last two currently only for mixed models, via
+\code{bootMer}).}
+
+\item{ran.eff}{For nonparametric bootstrapping of mixed models, the name of
+the (highest-level) random effect to resample (see Details).}
 
 \item{cor.err}{Optional, names of SEM correlated errors to be bootstrapped.
 Should be of the form: \code{c("mod1 ~~ mod2", "mod3 ~~ mod4", ...)}
@@ -50,115 +54,120 @@ any such errors will cause the function to exit.}
 
 \item{bM.arg}{A named list of any additional arguments to \code{bootMer}.}
 
-\item{...}{Arguments to \code{stdEff}.}
+\item{...}{Arguments to \code{\link[semEff]{stdEff}}.}
 }
 \value{
 An object of class \code{"boot"} containing the bootstrapped effects,
-  or a list/nested list of such objects.
+or a list/nested list of such objects.
 }
 \description{
 Bootstrap model effects (standardised coefficients) and optional
-  SEM correlated errors.
+SEM correlated errors.
 }
 \details{
-\code{bootEff} uses the \code{boot} function (primarily) to
-  bootstrap standardised effects from a fitted model or list of models
-  (calculated using \code{stdEff}). Bootstrapping is typically nonparametric,
-  i.e. effects are calculated from data where the rows have been randomly
-  sampled with replacement. The number of replicates is set by default to
-  10,000, which should provide accurate coverage for confidence intervals in
-  most situations. To ensure that data is resampled in the same way across
-  individual bootstrap operations within the same run (e.g. models in a
-  list), the same seed is set per operation, with the value saved as an
-  attribute to the bootstrapped values (for reproducibility). The seed can
-  either be user-supplied or a randomly-generated five-digit number
-  (default), and is always re-initialised on exit (i.e.
-  \code{set.seed(NULL)}).
+\code{bootEff} uses the \code{\link[boot]{boot}} function
+(primarily) to bootstrap standardised effects from a fitted model or list
+of models (calculated using \code{stdEff}). Bootstrapping is typically
+nonparametric, i.e. model effects are calculated from data where the rows
+have been randomly sampled with replacement. 10,000 such resamples should
+provide accurate coverage for confidence intervals in most situations, with
+fewer sufficing in some cases. To ensure that data is resampled in the same
+way across individual bootstrap operations within the same run (e.g. models
+in a list), the same seed is set per operation, with the value saved as an
+attribute to the matrix of bootstrapped values (for reproducibility). The
+seed can either be user-supplied or a randomly-generated five-digit number
+(default), and is always re-initialised on exit (i.e.
+\code{set.seed(NULL)}).
 
-  Where \code{weights} are specified, bootstrapped effects will be a weighted
-  average across the set of candidate models for each response variable,
-  calculated after each model is first refit to the resampled dataset
-  (specifying \code{weights = "equal"} will use a simple average instead). If
-  no weights are specified and \code{mod} is a nested list of models, the
-  function will throw an error, as it will be expecting weights for a
-  presumed model averaging scenario. If instead the user wishes to bootstrap
-  each individual model, they should recursively apply the function using
-  \code{rMapply} (remember to set a seed).
+Where \code{weights} are specified, bootstrapped effects will be a weighted
+average across the set of candidate models for each response variable,
+calculated after each model is first refit to the resampled dataset
+(specifying \code{weights = "equal"} will use a simple average instead -
+see \code{\link[semEff]{avgEst}}). If no weights are specified and
+\code{mod} is a nested list of models, the function will throw an error, as
+it will be expecting weights for a presumed model averaging scenario. If
+instead the user wishes to bootstrap each individual model, they should
+recursively apply the function using \code{rMapply} (remember to set a
+seed).
 
-  Where names of models with correlated errors are specified to
-  \code{cor.err}, the function will also return bootstrapped Pearson
-  correlated errors (weighted residuals) for those models. If \code{weights}
-  are supplied and \code{mod} is a nested list, residuals will first be
-  averaged across candidate models. If any two models (or candidate sets)
-  with correlated errors were fit to different subsets of data observations,
-  both models/sets are first refit to data containing only the observations
-  in common.
+Where names of models with correlated errors are specified to
+\code{cor.err}, the function will also return bootstrapped Pearson
+correlated errors (weighted residuals) for those models. If \code{weights}
+are supplied and \code{mod} is a nested list, residuals will first be
+averaged across candidate models. If any two models (or candidate sets)
+with correlated errors were fit to different subsets of data observations,
+both models/sets are first refit to data containing only the observations
+in common.
 
-  For mixed models with nested random effects, the highest-level random
-  effect (only) in the dataset is resampled, a procedure which should best
-  retain the hierarchical structure of the data (Davison & Hinkley 1997, Ren
-  \emph{et al.} 2010). Lower-level groups or individual observations are not
-  themselves resampled, as these are not independent. The name of this random
-  effect must be supplied to \code{ran.eff}, matching the name in the data.
-  Incidentally, this form of resampling will result in different sized
-  datasets if observations are unbalanced across groups; however this should
-  not generally be an issue, as the number of independent units (groups), and
-  hence the 'degrees of freedom', remains
-  \href{https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap}{unchanged}.
-  For non-nested random effects however (i.e. \code{"crossed"}), group
-  resampling will not be appropriate, and (semi-)parametric bootstrapping is
-  performed instead via \code{bootMer} in the \pkg{lme4} package. Users
-  should think carefully about whether their random effects are
-  \href{https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified}{nested
-  or not}. NOTE: As \code{bootMer} takes only a fitted model as its first
-  argument, any model averaging is calculated 'post-hoc' using the estimates
-  in boot objects for each candidate model, rather than during the
-  bootstrapping process itself (i.e. the default procedure via \code{boot}).
-  Results are then returned in a new boot object for each response variable
-  or correlated error estimate.
+For nonparametric bootstrapping of mixed models, resampling should occur at
+the group-level, as individual observations are not independent. The name
+of the random effect to resample must be supplied to \code{ran.eff}. For
+nested random effects, this should be the highest-level group (Davison &
+Hinkley 1997, Ren \emph{et al.} 2010). This form of resampling will result
+in differently-sized datasets if observations are unbalanced across groups;
+however this should not generally be an issue, as the number of independent
+units (groups), and hence the 'degrees of freedom', remains
+\href{https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap}{unchanged}.
 
-  Parallel processing is used by default via the \pkg{parallel} package and
-  option \code{parallel = "snow"} (and is generally recommended), but users
-  can specify the type of parallel processing to use, or none. If
-  \code{"snow"}, a cluster of workers is created using \code{makeCluster},
-  and the user can specify the number of system cores to incorporate in the
-  cluster (defaults to all available). \code{bootEff} then exports all
-  required objects and functions to this cluster using \code{clusterExport},
-  after performing a (rough) match of all objects and functions in the
-  current global environment to those referenced in the model call(s). Users
-  should load any required external packages prior to calling the function.
+For mixed models with
+\href{https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified}{non-nested
+random effects}, nonparametric resampling will not be appropriate. In these
+cases, (semi-)parametric bootstrapping can be performed instead via
+\code{\link[lme4]{bootMer}} in the \pkg{lme4} package (with additional
+arguments passed to that function as necessary). NOTE: As \code{bootMer}
+takes only a fitted model as its first argument, any model averaging is
+calculated 'post-hoc' using the estimates in boot objects for each
+candidate model, rather than during the bootstrapping process itself (i.e.
+the default procedure via \code{boot}). Results are then returned in a new
+boot object for each response variable or correlated error estimate.
+
+If supplied a list containing both mixed and non-mixed models,
+\code{bootEff} with nonparametric bootstrapping will still work and will
+treat all models as mixed for resampling (with a warning). This is probably
+a relatively rare scenario, but may occur where the user decides that
+non-mixed models perform similarly and/or cause less issues than their
+mixed counterparts for at least some response variables (e.g. where random
+effect variance estimates are at or near zero). If nonparametric
+bootstrapping is not used however, an error will occur, as \code{bootMer}
+will only accept mixed models.
+
+Parallel processing is used by default via the \pkg{parallel} package and
+option \code{parallel = "snow"} (and is generally recommended), but users
+can specify the type of parallel processing to use, or none. If
+\code{"snow"}, a cluster of workers is created using \code{makeCluster},
+and the user can specify the number of system cores to incorporate in the
+cluster (defaults to all available). \code{bootEff} then exports all
+required objects and functions to this cluster using \code{clusterExport},
+after performing a (rough) match of all objects and functions in the
+current global environment to those referenced in the model call(s). Users
+should load any required external packages prior to calling the function.
 }
 \note{
 Bootstrapping mixed (or indeed any other) models may take a very long
-  time when the number of replicates, observations, parameters, and/or models
-  is high. To decrease processing time, it may be worth trying different
-  optimizers and/or other options to generate faster estimates (always check
-  results).
+time when the number of replicates, observations, parameters, and/or models
+is high. To decrease processing time, it may be worth trying different
+optimizers and/or other options to generate faster estimates (always check
+results).
 }
 \examples{
-## Bootstrap Shipley SEM (test)
-## (set 'site' as group for resampling - highest-level random effect)
+# Bootstrap Shipley SEM (test)
+# (set 'site' as group for resampling - highest-level random effect)
 bootEff(Shipley.SEM, ran.eff = "site", R = 1, parallel = "no")
 
-## Estimates (use saved boot object, 10000 reps)
+# Estimates (use saved boot object, 10000 resamples)
 lapply(Shipley.SEM.Boot, "[[", 1)  # original
 lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
 }
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
-  and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-  ed.). New York: Springer-Verlag. Retrieved from
-  \url{https://www.springer.com/gb/book/9780387953649}
+and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
+ed.). New York: Springer-Verlag. Retrieved from
+\url{https://www.springer.com/gb/book/9780387953649}
 
-  Davison, A. C., & Hinkley, D. V. (1997). \emph{Bootstrap Methods and their
-  Application}. Cambridge University Press.
+Davison, A. C., & Hinkley, D. V. (1997). \emph{Bootstrap Methods and their
+Application}. Cambridge University Press.
 
-  Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
-  Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
-  Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
-}
-\seealso{
-\code{\link[boot]{boot}}, \code{\link[lme4]{bootMer}},
-  \code{\link[semEff]{stdEff}}, \code{\link[stats]{residuals}},
-  \code{\link[semEff]{avgEst}}
+Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
+Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
+Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
 }
