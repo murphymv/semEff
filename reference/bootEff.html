@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/darkly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -313,7 +313,7 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
     <pre class="examples"><div class='input'><span class='co'># Bootstrap Shipley SEM (test)</span>
 <span class='co'># (set 'site' as group for resampling - highest-level random effect)</span>
 <span class='fu'>bootEff</span><span class='op'>(</span><span class='va'>Shipley.SEM</span>, ran.eff <span class='op'>=</span> <span class='st'>"site"</span>, R <span class='op'>=</span> <span class='fl'>1</span>, parallel <span class='op'>=</span> <span class='st'>"no"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $DD
+</div><div class='output co'>#&gt; <span class='message'>boundary (singular) fit: see ?isSingular</span></div><div class='output co'>#&gt; $DD
 #&gt; 
 #&gt; ORDINARY NONPARAMETRIC BOOTSTRAP
 #&gt; 
@@ -324,9 +324,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original      bias    std. error
-#&gt; t1* -0.05600661 -0.06303031          NA
-#&gt; t2* -0.68772025 -0.05841087          NA
+#&gt;        original    bias    std. error
+#&gt; t1* -0.05600661 0.1074821          NA
+#&gt; t2* -0.68772025 0.0432711          NA
 #&gt; 
 #&gt; $Date
 #&gt; 
@@ -339,9 +339,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original       bias    std. error
-#&gt; t1* -0.01493651  0.001458279          NA
-#&gt; t2* -0.62813666 -0.030758449          NA
+#&gt;        original      bias    std. error
+#&gt; t1* -0.01493651 -0.11503913          NA
+#&gt; t2* -0.62813666  0.06475926          NA
 #&gt; 
 #&gt; $Growth
 #&gt; 
@@ -354,9 +354,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;       original     bias    std. error
-#&gt; t1* -0.2917507 0.04095885          NA
-#&gt; t2*  0.3824224 0.05566366          NA
+#&gt;       original      bias    std. error
+#&gt; t1* -0.2917507 0.184478547          NA
+#&gt; t2*  0.3824224 0.005120328          NA
 #&gt; 
 #&gt; $Live
 #&gt; 
@@ -370,8 +370,8 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;      original    bias    std. error
-#&gt; t1* 0.3105220 0.3434647          NA
-#&gt; t2* 0.3681961 0.2145378          NA
+#&gt; t1* 0.3105220 0.2087574          NA
+#&gt; t2* 0.3681961 0.1211691          NA
 #&gt; </div><div class='input'>
 <span class='co'># Estimates (use saved boot object, 10000 resamples)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>Shipley.SEM.Boot</span>, <span class='st'>"[["</span>, <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># original</span>
