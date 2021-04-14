@@ -14,6 +14,7 @@ Provides functionality to automatically calculate direct, indirect,
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://murphymv.github.io/semEff/}
   \item \url{https://github.com/murphymv/semEff}
   \item Report bugs at \url{https://github.com/murphymv/semEff/issues}
 }
