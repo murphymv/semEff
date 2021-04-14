@@ -2,3 +2,6 @@ development:
   mode: auto
 repo:
   branch: main
+template:
+  params:
+    bootswatch: darkly
