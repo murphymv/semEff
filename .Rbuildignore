@@ -10,3 +10,6 @@
 ^\.github$
 ^tests/
 ^notes\.R$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
