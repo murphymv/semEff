@@ -1,7 +1,7 @@
 .Rhistory
 .Rproj.user
-semEff.Rproj
+*.Rproj
 CRAN-RELEASE
 inst/doc
-tests
 docs
+tests
