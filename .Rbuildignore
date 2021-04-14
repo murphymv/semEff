@@ -3,13 +3,9 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 ^cran-comments\.md$
-^\.travis\.yml$
-^_config\.yml$
 ^CRAN-RELEASE$
-^vignettes/.*\.Rmd$
 ^\.github$
-^tests/
-^notes\.R$
-^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^tests$
+^vignettes$
