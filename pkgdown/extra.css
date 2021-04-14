@@ -1,0 +1,106 @@
+/* rscodeio Theme for pkgdown Sites */
+
+/* Main Body, Headings, Code Chunks */
+
+body {
+  /* background-color: rgb(34, 34, 34); */
+  background-color: rgb(48, 48, 48);
+  color: rgb(204, 204, 204);
+}
+
+code a,
+pre a {
+  color: rgb(12, 227, 172);
+}
+
+code,
+pre {
+  background-color: rgb(34, 34, 34);
+  border-color: rgb(62, 64, 66);
+  color: rgb(156, 220, 254);
+}
+
+h1,
+.navbar-default .navbar-link,
+.navbar-default .navbar-nav > li > a {
+  color: rgb(204, 204, 204) !important;
+}
+
+.dropdown-menu > li > a,
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  /* background-color: rgb(34, 34, 34); */
+  background-color: rgb(48, 48, 48);
+  color: rgb(204, 204, 204);
+}
+
+.label-default {
+  background-color: rgb(48, 48, 48);
+  color: rgb(204, 204, 204);
+}
+
+.navbar-default {
+  background-color: rgb(34, 34, 34);
+  /* background-color: rgb(48, 48, 48); */
+}
+
+/* Syntax Highlighting */
+
+/* rscodeio highlighting (can't map yet: type-declaration, regex)
+:root {
+    --type-declaration: rgb(78, 201, 176);
+    --language-constant: rgb(86, 156, 214);
+    --numeric-constant: rgb(181, 206, 168);
+    --string: rgb(206, 145, 120);
+    --regex: rgb(209, 105, 105);
+    --keyword: rgb(197, 134, 192);
+    --function-declaration: rgb(220, 220, 170);
+    --variable: rgb(156, 220, 254);
+    --comment: rgb(106, 153, 85);
+    --heading: var(--language-constant);
+    --inline-code: var(--string);
+} */
+
+code span.bu {
+  color: rgb(220, 220, 170);
+} /* BuiltIn */
+code span.cf {
+  color: rgb(197, 134, 192);
+} /* ControlFlow */
+code span.cn {
+  color: rgb(86, 156, 214);
+} /* Constant */
+code span.co {
+  color: rgb(106, 153, 85);
+} /* Comment */
+code span.dv {
+  color: rgb(181, 206, 168);
+} /* DecVal */
+code span.fl {
+  color: rgb(181, 206, 168);
+} /* Float */
+code span.fu {
+  color: rgb(220, 220, 170);
+} /* Function */
+code span.im {
+  color: rgb(197, 134, 192);
+} /* Import */
+code span.kw {
+  color: rgb(197, 134, 192);
+} /* Keyword */
+code span.op {
+  color: rgb(204, 204, 204);
+} /* Operator */
+code span.ot {
+  color: rgb(204, 204, 204);
+} /* Other */
+code span.sc {
+  color: rgb(204, 204, 204);
+} /* SpecialChar */
+code span.st {
+  color: rgb(206, 145, 120);
+} /* String */
