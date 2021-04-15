@@ -1,16 +1,31 @@
 /* rscodeio Theme for pkgdown Sites */
 
-/* Main Body, Headings, Code Chunks */
+/* Menus, Links, Body, Code Chunks */
 
-body {
-  /* background-color: rgb(34, 34, 34); */
-  background-color: rgb(48, 48, 48);
-  color: rgb(204, 204, 204);
+a:focus,
+a:hover,
+code a,
+pre a,
+.dropdown-menu > li > a:focus,
+.dropdown-menu > li > a:hover,
+.dropdown-menu > .active > a:focus,
+.dropdown-menu > .active > a:hover {
+  background-color: transparent;
+  color: rgb(12, 227, 172) !important;
 }
 
-code a,
-pre a {
-  color: rgb(12, 227, 172);
+body,
+.dropdown-menu > li > a,
+.dropdown-menu > .active > a,
+.label-default,
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:focus,
+.navbar-default .navbar-nav > .open > a:hover {
+  background-color: rgb(48, 48, 48);
+  color: rgb(204, 204, 204) !important;
 }
 
 code,
@@ -20,35 +35,14 @@ pre {
   color: rgb(156, 220, 254);
 }
 
-h1,
+.navbar-default,
 .navbar-default .navbar-link,
 .navbar-default .navbar-nav > li > a {
-  color: rgb(204, 204, 204) !important;
-}
-
-.dropdown-menu > li > a,
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus,
-.navbar-default .navbar-nav > .open > a,
-.navbar-default .navbar-nav > .open > a:hover,
-.navbar-default .navbar-nav > .open > a:focus {
-  /* background-color: rgb(34, 34, 34); */
-  background-color: rgb(48, 48, 48);
-  color: rgb(204, 204, 204);
-}
-
-.label-default {
-  background-color: rgb(48, 48, 48);
-  color: rgb(204, 204, 204);
-}
-
-.navbar-default {
   background-color: rgb(34, 34, 34);
-  /* background-color: rgb(48, 48, 48); */
+  color: rgb(204, 204, 204);
 }
 
-/* Syntax Highlighting */
+/* Code Syntax Highlighting */
 
 /* rscodeio highlighting (can't map yet: type-declaration, regex)
 :root {
@@ -65,42 +59,37 @@ h1,
     --inline-code: var(--string);
 } */
 
-.bu {
-  color: rgb(220, 220, 170);
-} /* BuiltIn */
-.cf {
-  color: rgb(197, 134, 192);
-} /* ControlFlow */
-.cn {
-  color: rgb(86, 156, 214);
-} /* Constant */
-.co {
-  color: rgb(106, 153, 85);
-} /* Comment */
-.dv {
-  color: rgb(181, 206, 168);
-} /* DecVal */
-.fl {
-  color: rgb(181, 206, 168);
-} /* Float */
+/* BuiltIn, Function */
+.bu,
 .fu {
   color: rgb(220, 220, 170);
-} /* Function */
-.im {
-  color: rgb(197, 134, 192);
-} /* Import */
+}
+/* ControlFlow, Import, Keyword */
+.cf,
+.im,
 .kw {
   color: rgb(197, 134, 192);
-} /* Keyword */
-.op {
-  color: rgb(204, 204, 204);
-} /* Operator */
-.ot {
-  color: rgb(204, 204, 204);
-} /* Other */
+}
+/* Constant */
+.cn {
+  color: rgb(86, 156, 214);
+}
+/* Comment */
+.co {
+  color: rgb(106, 153, 85);
+}
+/* DecVal, Float */
+.dv,
+.fl {
+  color: rgb(181, 206, 168);
+}
+/* Operator, Other, SpecialChar */
+.op,
+.ot,
 .sc {
   color: rgb(204, 204, 204);
-} /* SpecialChar */
+}
+/* String */
 .st {
   color: rgb(206, 145, 120);
-} /* String */
+}

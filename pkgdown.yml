@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   semEff: semEff.html
-last_built: 2021-04-15T14:05Z
+last_built: 2021-04-15T16:27Z
 urls:
   reference: https://murphymv.github.io/semEff//reference
   article: https://murphymv.github.io/semEff//articles
