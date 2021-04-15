@@ -65,42 +65,42 @@ h1,
     --inline-code: var(--string);
 } */
 
-code span.bu {
+.bu {
   color: rgb(220, 220, 170);
 } /* BuiltIn */
-code span.cf {
+.cf {
   color: rgb(197, 134, 192);
 } /* ControlFlow */
-code span.cn {
+.cn {
   color: rgb(86, 156, 214);
 } /* Constant */
-code span.co {
+.co {
   color: rgb(106, 153, 85);
 } /* Comment */
-code span.dv {
+.dv {
   color: rgb(181, 206, 168);
 } /* DecVal */
-code span.fl {
+.fl {
   color: rgb(181, 206, 168);
 } /* Float */
-code span.fu {
+.fu {
   color: rgb(220, 220, 170);
 } /* Function */
-code span.im {
+.im {
   color: rgb(197, 134, 192);
 } /* Import */
-code span.kw {
+.kw {
   color: rgb(197, 134, 192);
 } /* Keyword */
-code span.op {
+.op {
   color: rgb(204, 204, 204);
 } /* Operator */
-code span.ot {
+.ot {
   color: rgb(204, 204, 204);
 } /* Other */
-code span.sc {
+.sc {
   color: rgb(204, 204, 204);
 } /* SpecialChar */
-code span.st {
+.st {
   color: rgb(206, 145, 120);
 } /* String */
