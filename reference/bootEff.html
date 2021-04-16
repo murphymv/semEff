@@ -306,7 +306,7 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
     <pre class="examples"><div class='input'><span class='co'># Bootstrap Shipley SEM (test)</span>
 <span class='co'># (set 'site' as group for resampling - highest-level random effect)</span>
 <span class='fu'>bootEff</span><span class='op'>(</span><span class='va'>Shipley.SEM</span>, ran.eff <span class='op'>=</span> <span class='st'>"site"</span>, R <span class='op'>=</span> <span class='fl'>1</span>, parallel <span class='op'>=</span> <span class='st'>"no"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $DD
+</div><div class='output co'>#&gt; <span class='message'>boundary (singular) fit: see ?isSingular</span></div><div class='output co'>#&gt; $DD
 #&gt; 
 #&gt; ORDINARY NONPARAMETRIC BOOTSTRAP
 #&gt; 
@@ -317,9 +317,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original     bias    std. error
-#&gt; t1* -0.05600661 0.01132796          NA
-#&gt; t2* -0.68772025 0.05055100          NA
+#&gt;        original      bias    std. error
+#&gt; t1* -0.05600661 -0.03965640          NA
+#&gt; t2* -0.68772025 -0.08086404          NA
 #&gt; 
 #&gt; $Date
 #&gt; 
@@ -332,9 +332,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original       bias    std. error
-#&gt; t1* -0.01493651 -0.119496651          NA
-#&gt; t2* -0.62813666  0.007695932          NA
+#&gt;        original      bias    std. error
+#&gt; t1* -0.01493651 -0.06575834          NA
+#&gt; t2* -0.62813666 -0.04905215          NA
 #&gt; 
 #&gt; $Growth
 #&gt; 
@@ -347,9 +347,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;       original        bias    std. error
-#&gt; t1* -0.2917507  0.0319356775          NA
-#&gt; t2*  0.3824224 -0.0009608456          NA
+#&gt;       original      bias    std. error
+#&gt; t1* -0.2917507 -0.28399201          NA
+#&gt; t2*  0.3824224 -0.05842604          NA
 #&gt; 
 #&gt; $Live
 #&gt; 
@@ -362,9 +362,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;      original   bias    std. error
-#&gt; t1* 0.3105220 1.178527          NA
-#&gt; t2* 0.3681961 0.672915          NA
+#&gt;      original    bias    std. error
+#&gt; t1* 0.3105220 0.2454892          NA
+#&gt; t2* 0.3681961 0.1289405          NA
 #&gt; </div><div class='input'>
 <span class='co'># Estimates (use saved boot object, 10000 resamples)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>Shipley.SEM.Boot</span>, <span class='st'>"[["</span>, <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># original</span>
