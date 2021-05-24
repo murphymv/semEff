@@ -1,17 +1,16 @@
 
 
 #' @title Weighted Variance
-#' @description Calculate the weighted variance of \code{x}.
+#' @description Calculate the weighted variance of `x`.
 #' @param x A numeric vector.
-#' @param w A numeric vector of weights of the same length as \code{x}.
-#' @param na.rm Logical, whether NAs in \code{x} should be removed.
-#' @details Calculate the weighted variance of \code{x} via the weighted
-#'   covariance matrix (\code{\link[stats]{cov.wt}}). If no weights are
-#'   supplied, the simple variance is returned instead. As in
-#'   \code{\link[stats]{weighted.mean}}, \code{NA}s in \code{w} are not handled
-#'   specially and will return \code{NA} as result.
-#' @return A numeric value, the weighted variance of \code{x}.
-#' @seealso \code{\link[stats]{var}}
+#' @param w A numeric vector of weights of the same length as `x`.
+#' @param na.rm Logical, whether NAs in `x` should be removed.
+#' @details Calculate the weighted variance of `x` via the weighted covariance
+#'   matrix ([cov.wt()]). If no weights are supplied, the simple variance is
+#'   returned instead. As in [weighted.mean()], `NA`s in `w` are not handled
+#'   specially and will return `NA` as result.
+#' @return A numeric value, the weighted variance of `x`.
+#' @seealso [var()]
 #' @examples
 #' # Weighted variance
 #' x <- rnorm(30)
@@ -41,12 +40,12 @@ varW <- function(x, w = NULL, na.rm = FALSE) {
 
 
 #' @title Weighted Standard Deviation
-#' @description Calculate the weighted standard deviation of \code{x}.
-#' @param ... Arguments to \code{\link[semEff]{varW}}.
-#' @details This is simply a wrapper for \code{varW}, applying the square root
-#'   to the output.
-#' @return A numeric value, the weighted standard deviation of \code{x}.
-#' @seealso \code{\link[stats]{sd}}
+#' @description Calculate the weighted standard deviation of `x`.
+#' @param ... Arguments to [varW()].
+#' @details This is simply a wrapper for [varW()], applying the square root to
+#'   the output.
+#' @return A numeric value, the weighted standard deviation of `x`.
+#' @seealso [sd()]
 #' @export
 sdW <- function(...) {
   sqrt(varW(...))
@@ -56,29 +55,27 @@ sdW <- function(...) {
 #' @title Get Model Data
 #' @description Extract the data used to fit a model.
 #' @param mod A fitted model object, or a list or nested list of such objects.
-#' @param subset Logical. If \code{TRUE}, only observations used to fit the
-#'   model(s) are returned (i.e. missing observations (\code{NA}) or those with
-#'   zero weight are removed).
-#' @param merge Logical. If \code{TRUE}, and \code{mod} is a list or nested
-#'   list, a single dataset containing all variables used to fit models is
-#'   returned.
-#' @param env Environment in which to look for data (passed to
-#'   \code{\link[base]{eval}}).
+#' @param subset Logical. If `TRUE`, only observations used to fit the model(s)
+#'   are returned (i.e. missing observations (`NA`) or those with zero weight
+#'   are removed).
+#' @param merge Logical. If `TRUE`, and `mod` is a list or nested list, a single
+#'   dataset containing all variables used to fit models is returned.
+#' @param env Environment in which to look for data (passed to [eval()]).
 #' @details This is a simple convenience function to return the data used to fit
 #'   a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
 #'   (or coercible to such) containing all variables referenced in the model
-#'   formula, an error will be thrown - this restriction is largely to ensure
+#'   formula, an error will be thrown — this restriction is largely to ensure
 #'   that a single coherent dataset of all model variables can be made available
 #'   for resampling purposes.
 #'
-#'   If \code{mod} is a list of models and \code{merge = TRUE}, all (unique)
-#'   variables used to fit models are merged into a single data frame. This will
-#'   return an error if \code{subset = TRUE} results in datasets with different
-#'   numbers of observations (rows).
+#'   If `mod` is a list of models and `merge = TRUE`, all (unique) variables
+#'   used to fit models are merged into a single data frame. This will return an
+#'   error if `subset = TRUE` results in datasets with different numbers of
+#'   observations (rows).
 #' @return A data frame of the variables used to fit the model(s), or a list or
 #'   nested list of same.
-#' @seealso \code{\link[stats]{getCall}}
+#' @seealso [getCall()]
 #' @examples
 #' # Get data used to fit SEM from Shipley (2009)
 #' getData(Shipley.SEM[[1]])  # from single model
@@ -140,7 +137,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
 #' @param env Environment in which to look for model data (used to construct the
 #'   model frame).
 #' @details Extract term names from a fitted model. Names of terms for which
-#'   coefficients cannot be estimated are also included if \code{aliased = TRUE}
+#'   coefficients cannot be estimated are also included if `aliased = TRUE`
 #'   (default). These may be terms which are perfectly correlated with other
 #'   terms in the model, so that the model design matrix is rank deficient.
 #' @return A character vector or list/nested list of term names.
@@ -194,7 +191,8 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
       if (i %in% names(x)) {
         xi <- x[[i]]
         if (f[i]) {
-          ci <- contrasts(factor(d[[i]]))
+          # ci <- contrasts(factor(d[[i]]))
+          ci <- contrasts(d[[i]])
           ct <- getCall(m)$contrasts
           xi <- if (!is.null(ct)) {
             ci <- ct[names(ct) %in% i][[1]]
@@ -253,29 +251,28 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #' @param x a positive numeric vector, corresponding to a variable to be
 #'   transformed. Can also be a list or nested list of such vectors.
 #' @param family Optional, the error distribution family containing the link
-#'   function which will be used to transform \code{x} (see
-#'   \code{\link[stats]{family}} for specification details). If not supplied, it
-#'   is determined from \code{x} (see Details).
+#'   function which will be used to transform `x` (see [family()] for
+#'   specification details). If not supplied, it is determined from `x` (see
+#'   Details).
 #' @param force.est Logical, whether to force the return of the estimated rather
 #'   than direct transformation, where the latter is available (i.e. does not
 #'   contain undefined values).
-#' @details \code{glt} can be used to provide a 'generalised' transformation of
-#'   a numeric variable, using the link function from a generalised linear model
+#' @details `glt()` can be used to provide a 'generalised' transformation of a
+#'   numeric variable, using the link function from a generalised linear model
 #'   (GLM) fit to the variable. The transformation is generalised in the sense
 #'   that it can extend even to cases where a standard link transformation would
 #'   generate undefined values. It achieves this by using an estimate based on
 #'   the 'working' response variable of the GLM (see below). If the error
-#'   distribution \code{family} is not specified (default), then it is
-#'   determined (roughly) from \code{x}, with \code{binomial(link = "logit")}
-#'   used when all x <= 1 and \code{poisson(link = "log")} otherwise. Although
-#'   the function is generally intended for binomial or poisson variables, any
-#'   variable which can be fit using \code{\link[stats]{glm}} can be supplied.
-#'   One of the key purposes of \code{glt} is to allow the calculation of fully
-#'   standardised effects (coefficients) for GLMs (in which case \code{x} = the
-#'   response variable), while it can also facilitate the proper calculation of
-#'   SEM indirect effects (see below).
+#'   distribution `family` is not specified (default), then it is determined
+#'   (roughly) from `x`, with `binomial(link = "logit")` used when all x <= 1
+#'   and `poisson(link = "log")` otherwise. Although the function is generally
+#'   intended for binomial or poisson variables, any variable which can be fit
+#'   using [glm()] can be supplied. One of the key purposes of `glt()` is to
+#'   allow the calculation of fully standardised effects (coefficients) for GLMs
+#'   (in which case `x` = the response variable), while it can also facilitate
+#'   the proper calculation of SEM indirect effects (see below).
 #'
-#'   \strong{Estimating the link transformation}
+#'   **Estimating the link transformation**
 #'
 #'   A key challenge in generating fully standardised effects for a GLM with a
 #'   non-gaussian link function is the difficulty in calculating appropriate
@@ -283,14 +280,14 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   variable in the link scale. This is because a direct transformation of the
 #'   response will often produce undefined values. Although methods for
 #'   circumventing this issue by indirectly estimating the variance of the
-#'   response on the link scale have been proposed - including a
+#'   response on the link scale have been proposed – including a
 #'   latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
 #'   a more general variance-based method using a pseudo R-squared (Menard 2011)
-#'   - here an alternative approach is used. Where transformed values are
+#'   – here an alternative approach is used. Where transformed values are
 #'   undefined, the function will instead return the synthetic 'working'
 #'   response from the iteratively reweighted least squares algorithm (IRLS) of
 #'   the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
-#'   linear predictor and the working residuals - with the latter comprising the
+#'   linear predictor and the working residuals — with the latter comprising the
 #'   error of the model on the link scale. The advantage of this approach is
 #'   that a relatively straightforward 'transformation' of any non-gaussian
 #'   response is readily attainable in all cases. The standard deviation (or
@@ -301,27 +298,29 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   indirect and total effects are calculated correctly (i.e. using the same
 #'   units).
 #'
-#'   To ensure a high level of 'accuracy' in the working response - in the sense
+#'   To ensure a high level of 'accuracy' in the working response – in the sense
 #'   that the inverse-transformation is practically indistinguishable from the
-#'   original response variable - the function uses the following iterative
+#'   original response variable – the function uses the following iterative
 #'   fitting procedure to calculate a 'final' working response:
 #'
-#'   \enumerate{\item A new GLM of the same error family is fit with the
-#'   original response variable as both predictor and response, and using a
-#'   single IWLS iteration. \item The working response is extracted from this
-#'   model. \item The inverse transformation of the working response is then
-#'   calculated. \item If the inverse transformation is 'effectively equal' to
-#'   the original response (tested using \code{\link[base]{all.equal}}), the
-#'   working response is returned; otherwise, the GLM is refit with the working
-#'   response now as the predictor, and steps 2-4 are repeated - each time with
-#'   an additional IWLS iteration.}
+#'   1. A new GLM of the same error family is fit with the original response
+#'   variable as both predictor and response, and using a single IWLS iteration.
+#'
+#'   2. The working response is extracted from this model.
+#'
+#'   3. The inverse transformation of the working response is then calculated.
+#'
+#'   4. If the inverse transformation is 'effectively equal' to the original
+#'   response (tested using [all.equal()]), the working response is returned;
+#'   otherwise, the GLM is refit with the working response now as the predictor,
+#'   and steps 2-4 are repeated — each time with an additional IWLS iteration.
 #'
 #'   This approach will generate a very reasonable transformation of the
 #'   response variable, which will also be practically indistinguishable from
 #'   the direct transformation where this can be compared (see Examples). It
 #'   also ensures that the transformed values, and hence the standard deviation,
 #'   are the same for any GLM fitting the same response (provided it uses the
-#'   same link function) - facilitating model comparisons, selection, and
+#'   same link function) — facilitating model comparisons, selection, and
 #'   averaging.
 #'
 #' @note As we often cannot directly observe the GLM response variable on the
@@ -335,26 +334,25 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   minimise error through iterative model fitting. An added bonus is that the
 #'   estimated variance is constant across models fit to the same response
 #'   variable, which cannot be said of previous methods (Menard 2011). The
-#'   overall approach would be classed as 'observed-empirical' by Grace \emph{et
-#'   al.} (2018), as it utilises model error variance (the estimated working
+#'   overall approach would be classed as 'observed-empirical' by Grace *et al.*
+#'   (2018), as it utilises model error variance (the estimated working
 #'   residuals) rather than theoretical distribution-specific variance.
 #' @return A numeric vector of the transformed values, or an array, list of
 #'   vectors/arrays, or nested list.
 #' @references Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
 #'   (2018) Quantifying relative importance: computing standardized effects in
-#'   models with binary outcomes. \emph{Ecosphere} \strong{9}, e02283.
-#'   \url{https://doi.org/gdm5bj}
+#'   models with binary outcomes. *Ecosphere*, **9**, e02283.
+#'   <https://doi.org/gdm5bj>
 #'
-#'   McCullagh P. and Nelder, J. A. (1989) \emph{Generalized Linear Models} (2nd
+#'   McCullagh P. and Nelder, J. A. (1989) *Generalized Linear Models* (2nd
 #'   Edition). London: Chapman and Hall.
 #'
 #'   McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
-#'   of ordinal level dependent variables. \emph{The Journal of Mathematical
-#'   Sociology}, \strong{4}(1), 103-120. \url{https://doi.org/dqfhpp}
+#'   of ordinal level dependent variables. *The Journal of Mathematical
+#'   Sociology*, **4**(1), 103-120. <https://doi.org/dqfhpp>
 #'
 #'   Menard, S. (2011) Standards for Standardized Logistic Regression
-#'   Coefficients. \emph{Social Forces} \strong{89}, 1409-1428.
-#'   \url{https://doi.org/bvxb6s}
+#'   Coefficients. *Social Forces*, **89**, 1409-1428. <https://doi.org/bvxb6s>
 #' @examples
 #' # Compare estimate with a direct link transformation
 #' # (test with a poisson variable, log link)
@@ -389,7 +387,7 @@ glt <- function(x, family = NULL, force.est = FALSE) {
     # Transform variable to link scale
     xl <- f$linkfun(x)
 
-    # Return transformation or estimation (GLM working response)
+    # Return transformation or estimate (GLM working response)
     if (any(is.infinite(xl)) || force.est) {
       x2 <- x
       suppressWarnings(
@@ -425,17 +423,15 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 #'   original or link scale.
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset, used to first refit the model(s).
-#' @param link Logical. If \code{TRUE}, return the GLM response variable on the
-#'   link scale (see Details).
-#' @param offset Logical. If \code{TRUE}, include model offset(s) in the
-#'   response.
+#' @param link Logical. If `TRUE`, return the GLM response variable on the link
+#'   scale (see Details).
+#' @param offset Logical. If `TRUE`, include model offset(s) in the response.
 #' @param env Environment in which to look for model data (if none supplied).
-#' @details \code{getY} will return the response variable from a model by
-#'   summing the fitted values and the response residuals. If \code{link = TRUE}
-#'   and the model is a GLM, the response is transformed to the link scale. If
-#'   this results in undefined values, an estimate based on the 'working'
-#'   response variable of the GLM is returned instead (see
-#'   \code{\link[semEff]{glt}}).
+#' @details `getY()` will return the response variable from a model by summing
+#'   the fitted values and the response residuals. If `link = TRUE` and the
+#'   model is a GLM, the response is transformed to the link scale. If this
+#'   results in undefined values, an estimate based on the 'working' response
+#'   variable of the GLM is returned instead (see [glt()]).
 #'
 #'   Any offset variables are subtracted from the response by default. This
 #'   means that, for example, rates rather than raw counts will be returned for
@@ -499,24 +495,23 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset, used to first refit the model(s).
 #' @param env Environment in which to look for model data (if none supplied).
-#' @details \code{VIF} calculates generalised variance inflation factors (GVIF)
-#'   as described in Fox & Monette (1992), and also implemented in the
-#'   \href{https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif}{
-#'    vif} function in the \pkg{car} package. However, whereas \code{vif}
-#'   returns both GVIF and GVIF^(1/(2*Df)) values, \code{VIF} simply returns the
-#'   squared result of the latter measure, which equals the standard VIF for
-#'   single-coefficient terms and is the equivalent measure for
-#'   multi-coefficient terms (e.g. categorical or polynomial). Also, while
-#'   \code{vif} returns values per model term (i.e. predictor variable),
-#'   \code{VIF} returns values per coefficient, meaning that the same value will
-#'   be returned per coefficient for multi-coefficient terms. Finally, \code{NA}
-#'   is returned for any terms which could not be estimated in the model (e.g.
+#' @details `VIF()` calculates generalised variance inflation factors (GVIF) as
+#'   described in Fox & Monette (1992), and also implemented in
+#'   [`car::vif()`](https://www.rdocumentation.org/packages/car/versions/3.0-10/topics/vif).
+#'    However, whereas `vif()` returns both GVIF and GVIF^(1/(2*Df)) values,
+#'   `VIF()` simply returns the squared result of the latter measure, which
+#'   equals the standard VIF for single-coefficient terms and is the equivalent
+#'   measure for multi-coefficient terms (e.g. categorical or polynomial). Also,
+#'   while `vif()` returns values per model term (i.e. predictor variable),
+#'   `VIF()` returns values per coefficient, meaning that the same value will be
+#'   returned per coefficient for multi-coefficient terms. Finally, `NA` is
+#'   returned for any terms which could not be estimated in the model (e.g.
 #'   aliased).
-#' @return A numeric vector of the VIFs, or an array, list of vectors/arrays,
-#'   or nested list.
+#' @return A numeric vector of the VIFs, or an array, list of vectors/arrays, or
+#'   nested list.
 #' @references Fox, J. and Monette, G. (1992) Generalized Collinearity
-#'   Diagnostics. \emph{Journal of the American Statistical Association}
-#'   \strong{87}, 178-183. \url{https://doi.org/dm9wbw}
+#'   Diagnostics. *Journal of the American Statistical Association*, **87**,
+#'   178-183. <https://doi.org/dm9wbw>
 #' @examples
 #' # Model with two correlated terms
 #' m <- Shipley.Growth[[3]]
@@ -603,7 +598,7 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
 #' @title Root Variance Inflation Factors
 #' @description Calculate root variance inflation factors (RVIF) for terms in a
 #'   fitted model(s), i.e. the square root of the (generalised) VIFs.
-#' @param ... Arguments to \code{\link[semEff]{VIF}}.
+#' @param ... Arguments to [VIF()].
 #' @details RVIFs quantify the inflation of estimate standard errors due to
 #'   multicollinearity among predictors, and also of estimates themselves
 #'   compared to the 'unique' (residualised) effects. RVIFs may often be more
@@ -624,18 +619,17 @@ RVIF <- function(...) {
 #'   calculated (see Details).
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset, used to first refit the model(s).
-#' @param adj,pred Logical. If \code{TRUE} (default), adjusted and/or predicted
+#' @param adj,pred Logical. If `TRUE` (default), adjusted and/or predicted
 #'   R-squared are also returned (the latter is not available for all model
 #'   types).
-#' @param offset Logical. If \code{TRUE}, include model offset(s) in the
-#'   calculations (i.e. in the response variable and fitted values).
-#' @param re.form For mixed models of class \code{"merMod"}, the formula for
-#'   random effects to condition on when generating fitted values used in the
-#'   calculation of R-squared. Defaults to \code{NULL}, meaning all random
-#'   effects are included. See \code{\link[lme4]{predict.merMod}} for further
-#'   specification details.
+#' @param offset Logical. If `TRUE`, include model offset(s) in the calculations
+#'   (i.e. in the response variable and fitted values).
+#' @param re.form For mixed models of class `"merMod"`, the formula for random
+#'   effects to condition on when generating fitted values used in the
+#'   calculation of R-squared. Defaults to `NULL`, meaning all random effects
+#'   are included. See [predict.merMod()] for further specification details.
 #' @param type The type of correlation coefficient to use. Can be either
-#'   \code{"pearson"} (default) or \code{"spearman"}.
+#'   `"pearson"` (default) or `"spearman"`.
 #' @param env Environment in which to look for model data (if none supplied).
 #' @details Various approaches to the calculation of a goodness of fit measure
 #'   for GLMs analogous to R-squared in the ordinary linear model have been
@@ -653,19 +647,19 @@ RVIF <- function(...) {
 #'   model (Kvalseth 1985). In the case of the ordinary linear model, the
 #'   measure equals the more traditional R-squared based on sums of squares.
 #'
-#'   If \code{adj = TRUE} (default), the 'adjusted' R-squared value is also
-#'   returned, which provides an estimate of the population - as opposed to
-#'   sample - R-squared. This is achieved via an analytical formula which
-#'   adjusts R-squared for the 'degrees of freedom' of the model (i.e. the ratio
-#'   of observations to parameters). Here, this is calculated via the 'Pratt'
+#'   If `adj = TRUE` (default), the 'adjusted' R-squared value is also returned,
+#'   which provides an estimate of the population — as opposed to sample -
+#'   R-squared. This is achieved via an analytical formula which adjusts
+#'   R-squared for the 'degrees of freedom' of the model (i.e. the ratio of
+#'   observations to parameters). Here, this is calculated via the 'Pratt'
 #'   rather than standard 'Ezekiel/Wherry' formula, shown in a previous
 #'   simulation to be the most effective of a range of existing formulas at
 #'   estimating the population R-squared across a range of model specification
 #'   scenarios (Yin & Fan 2001). Adjusted R-squared can be used to safeguard
 #'   against overfitting of the model to the original sample.
 #'
-#'   If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned,
-#'   which is calculated via the same formula as for R-squared but using
+#'   If `pred = TRUE` (default), a 'predicted' R-squared is also returned, which
+#'   is calculated via the same formula as for R-squared but using
 #'   cross-validated rather than standard fitted values. These are obtained by
 #'   dividing the model response residuals by the complement of the observation
 #'   leverages (diagonals of the hat matrix), then subtracting these inflated
@@ -674,42 +668,41 @@ RVIF <- function(...) {
 #'   leave-one-out cross-validation procedure (in a GLM they will not be exactly
 #'   equal to such predictions). The resulting R-squared is an estimate of the
 #'   R-squared that would occur were the model to be fit to new data, and will
-#'   be lower than the original - and likely also the adjusted - R-squared,
+#'   be lower than the original — and likely also the adjusted — R-squared,
 #'   highlighting the loss of explanatory power when predicting to new data.
-#'   This measure is a variant of an
-#'   \href{https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/}{existing
-#'   one}, calculated by substituting the 'PRESS' statistic, i.e. the sum of
-#'   squares of the predicted residuals (Allen 1974), for the residual sum of
-#'   squares in the classic R-squared formula.
+#'   This measure is a variant of an [existing
+#'   one](https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/),
+#'   calculated by substituting the 'PRESS' statistic, i.e. the sum of squares
+#'   of the predicted residuals (Allen 1974), for the residual sum of squares in
+#'   the classic R-squared formula.
 #'
 #'   For models fitted with one or more offsets, these will be removed by
 #'   default from the response variable and fitted values prior to calculations.
 #'   Thus R-squared will measure goodness of fit only for the predictors with
 #'   estimated, rather than fixed, coefficients. This is likely to be the
 #'   intended behaviour in most circumstances, though if users wish to include
-#'   variation due to the offset(s) they can set \code{offset = TRUE}.
+#'   variation due to the offset(s) they can set `offset = TRUE`.
 #'
 #'   For mixed models, the function will, by default, calculate all R-squared
 #'   measures using fitted values incorporating both the fixed and random
 #'   effects, thus encompassing all variation captured by the model. This is
-#'   equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017).
-#'   To include only some or no random effects, simply set the appropriate
-#'   formula using the argument \code{re.form}, which is passed directly to
-#'   \code{predict.merMod}. If \code{re.form = NA}, R-squared is calculated for
-#'   the fixed effects only - equivalent to the 'marginal' R-squared of Nakagawa
-#'   \emph{et al.} (2017).
+#'   equivalent to the 'conditional' R-squared of Nakagawa *et al.* (2017). To
+#'   include only some or no random effects, simply set the appropriate formula
+#'   using the argument `re.form`, which is passed directly to
+#'   [predict.merMod()]. If `re.form = NA`, R-squared is calculated for the
+#'   fixed effects only — equivalent to the 'marginal' R-squared of Nakagawa *et
+#'   al.* (2017).
 #'
-#'   As R-squared is calculated here as a squared correlation, the \code{type}
-#'   of correlation coefficient can also be specified. Setting this to
-#'   \code{"spearman"} may be desirable in some cases, such as where the
-#'   relationship between response and fitted values is not necessarily
-#'   bivariate normal or linear. Note that R-squared based on Spearman's rho
-#'   (i.e. ranked variables) is not equivalent to the classic R-squared based on
-#'   sums of squares, but can still be considered a
-#'   \href{https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho}{useful
-#'   goodness of fit measure}. It may also be considered more appropriate for
-#'   comparisons of R-squared between GLMs and ordinary linear models in some
-#'   situations.
+#'   As R-squared is calculated here as a squared correlation, the `type` of
+#'   correlation coefficient can also be specified. Setting this to `"spearman"`
+#'   may be desirable in some cases, such as where the relationship between
+#'   response and fitted values is not necessarily bivariate normal or linear.
+#'   Note that R-squared based on Spearman's rho (i.e. ranked variables) is not
+#'   equivalent to the classic R-squared based on sums of squares, but can still
+#'   be considered a [useful goodness of fit
+#'   measure](https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho).
+#'    It may also be considered more appropriate for comparisons of R-squared
+#'   between GLMs and ordinary linear models in some situations.
 #'
 #'   R-squared values produced by this function will always be bounded between
 #'   zero (no fit) and one (perfect fit), meaning that any negative values
@@ -728,8 +721,8 @@ RVIF <- function(...) {
 #'   as expected. Care must also be taken in comparing the measures to their
 #'   equivalents from ordinary linear models, particularly the adjusted and
 #'   predicted versions. For example, for the adjusted R-squared for mixed
-#'   models, it's not entirely clear what the sample size (n) in the formula
-#'   should represent - no. of observations? independent groups? something else?
+#'   models, it's not entirely clear what the sample size (*n*) in the formula
+#'   should represent — no. of observations? independent groups? something else?
 #'   (the default interpretation of no. of observations is used). With all that
 #'   being said, the value of standardised R-squared measures for even 'rough'
 #'   model fit assessment and comparison may outweigh such reservations, and the
@@ -740,25 +733,24 @@ RVIF <- function(...) {
 #' @return A numeric vector of the R-squared value(s), or an array, list of
 #'   vectors/arrays, or nested list.
 #' @references Allen, D. M. (1974). The Relationship Between Variable Selection
-#'   and Data Augmentation and a Method for Prediction. \emph{Technometrics},
-#'   \strong{16}(1), 125-127. \url{https://doi.org/gfgv57}
+#'   and Data Augmentation and a Method for Prediction. *Technometrics*,
+#'   **16**(1), 125-127. <https://doi.org/gfgv57>
 #'
-#'   Kvalseth, T. O. (1985) Cautionary Note about R2. \emph{The American
-#'   Statistician}, \strong{39}(4), 279-285. \url{https://doi.org/b8b782}
+#'   Kvalseth, T. O. (1985) Cautionary Note about R2. *The American
+#'   Statistician*, **39**(4), 279-285. <https://doi.org/b8b782>
 #'
 #'   Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
 #'   determination R2 and intra-class correlation coefficient from generalized
-#'   linear mixed-effects models revisited and expanded. \emph{Journal of the
-#'   Royal Society Interface} \strong{14}(134). \url{https://doi.org/gddpnq}
+#'   linear mixed-effects models revisited and expanded. *Journal of the Royal
+#'   Society Interface*, **14**(134). <https://doi.org/gddpnq>
 #'
 #'   Yin, P. and Fan, X. (2001) Estimating R2 Shrinkage in Multiple Regression:
-#'   A Comparison of Different Analytical Methods. \emph{The Journal of
-#'   Experimental Education} \strong{69}(2), 203-224.
-#'   \url{https://doi.org/fbdq5g}
+#'   A Comparison of Different Analytical Methods. *The Journal of Experimental
+#'   Education*, **69**(2), 203-224. <https://doi.org/fbdq5g>
 #'
 #'   Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
-#'   generalized linear model. \emph{Statistics in Medicine} \strong{19}(13),
-#'   1771-1781. \url{https://doi.org/db7rfv}
+#'   generalized linear model. *Statistics in Medicine*, **19**(13), 1771-1781.
+#'   <https://doi.org/db7rfv>
 #' @examples
 #' # Pseudo R-squared for mixed models
 #' R2(Shipley.SEM)  # fixed + random ('conditional')
@@ -770,7 +762,7 @@ RVIF <- function(...) {
 #' # Predicted R-squared: compare cross-validated predictions calculated/
 #' # approximated via the hat matrix to standard method (leave-one-out)
 #'
-#' # Fit test models using Shipley data - compare lm vs glm
+#' # Fit test models using Shipley data — compare lm vs glm
 #' d <- na.omit(Shipley)
 #' m <- lm(Live ~ Date + DD + lat, d)
 #' # m <- glm(Live ~ Date + DD + lat, binomial, d)
@@ -909,52 +901,54 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   candidate models for each of a set of different response variables.
 #' @param weights An optional numeric vector of weights to use for model
 #'   averaging, or a named list of such vectors. The former should be supplied
-#'   when \code{est} is a list, and the latter when it is a nested list (with
-#'   matching list names). If \code{weights = "equal"} (default), a simple
-#'   average is calculated instead.
+#'   when `est` is a list, and the latter when it is a nested list (with
+#'   matching list names). If `weights = "equal"` (default), a simple average is
+#'   calculated instead.
 #' @param est.names An optional vector of names used to extract and/or sort
 #'   estimates from the output.
 #' @details This function can be used to calculate a weighted average of model
 #'   estimates such as effects, fitted values, or residuals, where models are
 #'   typically competing candidate models fit to the same response variable.
 #'   Weights are typically a 'weight of evidence' type metric such as Akaike
-#'   model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which
-#'   can be conveniently calculated in \emph{R} using packages such as
-#'   \pkg{MuMIn} or \pkg{AICcmodavg}. However, numeric weights of any sort can
-#'   be used. If none are supplied, a simple average is calculated instead.
+#'   model weights (Burnham & Anderson 2002, Burnham *et al.* 2011), which can
+#'   be conveniently calculated in *R* using packages such as
+#'   [MuMIn](https://cran.r-project.org/package=MuMIn) or
+#'   [AICcmodavg](https://cran.r-project.org/package=AICcmodavg). However,
+#'   numeric weights of any sort can be used. If none are supplied, a simple
+#'   average is calculated instead.
 #'
 #'   Averaging is performed via the 'full'/'zero' rather than
 #'   'subset'/'conditional'/'natural' method, meaning that zero is substituted
 #'   for estimates for any 'missing' parameters (e.g. effects) prior to
-#'   calculations. This provides a form of shrinkage and thus reduces
-#'   \href{https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false}{estimate
-#'   bias} (Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
+#'   calculations. This provides a form of shrinkage and thus reduces [estimate
+#'   bias](https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false)
+#'    (Burnham & Anderson 2002, Grueber *et al.* 2011).
 #' @return A numeric vector of the model-averaged estimates, or a list of such
 #'   vectors.
-#' @references Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
-#'   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
+#' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
+#'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
 #'   ed.). New York: Springer-Verlag. Retrieved from
-#'   \url{https://www.springer.com/gb/book/9780387953649}
+#'   <https://www.springer.com/gb/book/9780387953649>
 #'
 #'   Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
 #'   selection and multimodel inference in behavioral ecology: some background,
-#'   observations, and comparisons. \emph{Behavioral Ecology and Sociobiology},
-#'   \strong{65}(1), 23-35. \url{https://doi.org/c4mrns}
+#'   observations, and comparisons. *Behavioral Ecology and Sociobiology*,
+#'   **65**(1), 23-35. <https://doi.org/c4mrns>
 #'
 #'   Dormann, C. F., Calabrese, J. M., Guillera-Arroita, G., Matechou, E., Bahn,
 #'   V., Barton, K., ... Hartig, F. (2018). Model averaging in ecology: a review
 #'   of Bayesian, information-theoretic, and tactical approaches for predictive
-#'   inference. \emph{Ecological Monographs}, \strong{88}(4), 485-504.
-#'   \url{https://doi.org/gfgwrv}
+#'   inference. *Ecological Monographs*, **88**(4), 485-504.
+#'   <https://doi.org/gfgwrv>
 #'
 #'   Grueber, C. E., Nakagawa, S., Laws, R. J., & Jamieson, I. G. (2011).
 #'   Multimodel inference in ecology and evolution: challenges and solutions.
-#'   \emph{Journal of Evolutionary Biology}, \strong{24}(4), 699-711.
-#'   \url{https://doi.org/b7b5d4}
+#'   *Journal of Evolutionary Biology*, **24**(4), 699-711.
+#'   <https://doi.org/b7b5d4>
 #'
 #'   Walker, J. A. (2019). Model-averaged regression coefficients have a
-#'   straightforward interpretation using causal conditioning. \emph{BioRxiv},
-#'   133785. \url{https://doi.org/c8zt}
+#'   straightforward interpretation using causal conditioning. *BioRxiv*,
+#'   133785. <https://doi.org/c8zt>
 #' @examples
 #' # Model-averaged effects (coefficients)
 #' m <- Shipley.Growth  # candidate models
@@ -975,7 +969,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 
   # Weights
   if (all(w == "equal")) {
-    eqW <- function(i) rep(1, length(i))
+    eqW <- function(i) {rep(1, length(i))}
     w <- if (any(sapply(e, isList))) lapply(e, eqW) else eqW(e)
   }
 
@@ -1019,16 +1013,15 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param weights An optional numeric vector of weights to use for model
 #'   averaging, or a named list of such vectors. The former should be supplied
-#'   when \code{mod} is a list, and the latter when it is a nested list (with
-#'   matching list names). If set to \code{"equal"}, a simple average is
-#'   calculated instead.
+#'   when `mod` is a list, and the latter when it is a nested list (with
+#'   matching list names). If set to `"equal"`, a simple average is calculated
+#'   instead.
 #' @param data An optional dataset, used to first refit the model(s).
 #' @param term.names An optional vector of names used to extract and/or sort
 #'   effects from the output.
-#' @param unique.eff Logical, whether unique effects should be
-#'   calculated (adjusted for multicollinearity among predictors).
-#' @param unique.x Deprecated but allowed temporarily. Use \code{unique.eff}
-#'   instead.
+#' @param unique.eff Logical, whether unique effects should be calculated
+#'   (adjusted for multicollinearity among predictors).
+#' @param unique.x Deprecated but allowed temporarily. Use `unique.eff` instead.
 #' @param cen.x,cen.y Logical, whether effects should be calculated as if from
 #'   mean-centred variables.
 #' @param std.x,std.y Logical, whether effects should be scaled by the standard
@@ -1039,116 +1032,114 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' @param incl.raw Logical, whether to append the raw (unstandardised) effects
 #'   to the output.
 #' @param env Environment in which to look for model data (if none supplied).
-#' @param ... Arguments to \code{R2}.
-#' @details \code{stdEff} will calculate fully standardised effects
-#'   (coefficients) in standard deviation units for a fitted model or list of
-#'   models. It achieves this via adjusting the 'raw' model coefficients, so no
-#'   standardisation of input variables is required beforehand. Users can simply
-#'   specify the model with all variables in their original units and the
-#'   function will do the rest. However, the user is free to scale and/or centre
-#'   any input variables should they choose, which should not affect the outcome
-#'   of standardisation (provided any scaling is by standard deviations). This
-#'   may be desirable in some cases, such as to increase numerical stability
-#'   during model fitting when variables are on widely different scales.
+#' @param ... Arguments to `R2`.
+#' @details `stdEff` will calculate fully standardised effects (coefficients) in
+#'   standard deviation units for a fitted model or list of models. It achieves
+#'   this via adjusting the 'raw' model coefficients, so no standardisation of
+#'   input variables is required beforehand. Users can simply specify the model
+#'   with all variables in their original units and the function will do the
+#'   rest. However, the user is free to scale and/or centre any input variables
+#'   should they choose, which should not affect the outcome of standardisation
+#'   (provided any scaling is by standard deviations). This may be desirable in
+#'   some cases, such as to increase numerical stability during model fitting
+#'   when variables are on widely different scales.
 #'
-#'   If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, effects will be
-#'   calculated as if all predictors (x) and/or the response variable (y) were
-#'   mean-centred prior to model-fitting (including any dummy variables arising
-#'   from categorical predictors). Thus, for an ordinary linear model where
-#'   centring of x and y is specified, the intercept will be zero - the mean (or
-#'   weighted mean) of y. In addition, if \code{cen.x = TRUE} and there are
-#'   interacting terms in the model, all effects for lower order terms of the
-#'   interaction are adjusted using an expression which ensures that each main
-#'   effect or lower order term is estimated at the mean values of the terms
-#'   they interact with (zero in a 'centred' model) - typically improving the
-#'   interpretation of effects. The expression used comprises a weighted sum of
-#'   all the effects that contain the lower order term, with the weight for the
-#'   term itself being zero and those for 'containing' terms being the product
-#'   of the means of the other variables involved in that term (i.e. those not
-#'   in the lower order term itself). For example, for a three-way interaction
-#'   (x1 * x2 * x3), the expression for main effect \eqn{\beta1} would be:
+#'   If arguments `cen.x` or `cen.y` are `TRUE`, effects will be calculated as
+#'   if all predictors (x) and/or the response variable (y) were mean-centred
+#'   prior to model-fitting (including any dummy variables arising from
+#'   categorical predictors). Thus, for an ordinary linear model where centring
+#'   of x and y is specified, the intercept will be zero — the mean (or weighted
+#'   mean) of y. In addition, if `cen.x = TRUE` and there are interacting terms
+#'   in the model, all effects for lower order terms of the interaction are
+#'   adjusted using an expression which ensures that each main effect or lower
+#'   order term is estimated at the mean values of the terms they interact with
+#'   (zero in a 'centred' model) — typically improving the interpretation of
+#'   effects. The expression used comprises a weighted sum of all the effects
+#'   that contain the lower order term, with the weight for the term itself
+#'   being zero and those for 'containing' terms being the product of the means
+#'   of the other variables involved in that term (i.e. those not in the lower
+#'   order term itself). For example, for a three-way interaction (x1 * x2 *
+#'   x3), the expression for main effect \eqn{\beta1} would be:
 #'
-#'   \deqn{\beta_{1} + \beta_{12} \bar{x}_{2} + \beta_{13} \bar{x}_{3} +
-#'   \beta_{123} \bar{x}_{2} \bar{x}_{3}}{\beta1 + (\beta12 * Mx2) + (\beta13 *
-#'   Mx3) + (\beta123 * Mx2 * Mx3)} (adapted from
-#'   \href{https://stats.stackexchange.com/questions/65898/why-could-centering-independent-variables-change-the-main-effects-with-moderatio}{here})
+#'   \deqn{\beta_{1} + \beta_{12}\bar{x}_{2} + \beta_{13}\bar{x}_{3} +
+#'   \beta_{123}\bar{x}_{2}\bar{x}_{3}}{\beta1 + (\beta12 * x̄2) + (\beta13 *
+#'   x̄3) + (\beta123 * x̄2 * x̄3)} (adapted from
+#'   [here](https://stats.stackexchange.com/questions/65898/why-could-centering-independent-variables-change-the-main-effects-with-moderatio))
 #'
-#'   In addition, if \code{std.x = TRUE} or \code{unique.eff = TRUE} (see
-#'   below), product terms for interactive effects will be recalculated using
-#'   mean-centred variables, to ensure that standard deviations and variance
-#'   inflation factors (VIF) for predictors are calculated correctly (the model
-#'   must be refit for this latter purpose, to recalculate the
-#'   variance-covariance matrix).
+#'   In addition, if `std.x = TRUE` or `unique.eff = TRUE` (see below), product
+#'   terms for interactive effects will be recalculated using mean-centred
+#'   variables, to ensure that standard deviations and variance inflation
+#'   factors (VIF) for predictors are calculated correctly (the model must be
+#'   refit for this latter purpose, to recalculate the variance-covariance
+#'   matrix).
 #'
-#'   If \code{std.x = TRUE}, effects are scaled by multiplying by the standard
-#'   deviations of predictor variables (or terms), while if \code{std.y = TRUE}
-#'   they are divided by the standard deviation of the response variable (minus
-#'   any offsets). If the model is a GLM, this latter is calculated using the
+#'   If `std.x = TRUE`, effects are scaled by multiplying by the standard
+#'   deviations of predictor variables (or terms), while if `std.y = TRUE` they
+#'   are divided by the standard deviation of the response variable (minus any
+#'   offsets). If the model is a GLM, this latter is calculated using the
 #'   link-transformed response (or an estimate of same) generated using the
-#'   function \code{\link[semEff]{glt}}. If both arguments are true, the effects
-#'   are regarded as 'fully' standardised in the traditional sense, often
-#'   referred to as 'betas'.
+#'   function [glt()]. If both arguments are true, the effects are regarded as
+#'   'fully' standardised in the traditional sense, often referred to as
+#'   'betas'.
 #'
-#'   If \code{unique.eff = TRUE} (default), effects are adjusted for
+#'   If `unique.eff = TRUE` (default), effects are adjusted for
 #'   multicollinearity among predictors by dividing by the square root of the
-#'   VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017;
-#'   \code{\link[semEff]{RVIF}}). If they have also been scaled by the standard
-#'   deviations of x and y, this converts them to semipartial correlations, i.e.
-#'   the correlation between the unique components of predictors (residualised
-#'   on other predictors) and the response variable. This measure of effect size
-#'   is arguably much more interpretable and useful than the traditional
-#'   standardised coefficient, as it always represents the unique effects of
-#'   predictors and so can more readily be compared both within and across
-#'   models. Values range from zero to +/- one rather than +/- infinity (as in
-#'   the case of betas) - putting them on the same scale as the bivariate
-#'   correlation between predictor and response. In the case of GLMs however,
-#'   the measure is analogous but not exactly equal to the semipartial
-#'   correlation, so its values may not always be bound between +/- one (such
-#'   cases are likely rare). Importantly, for ordinary linear models, the square
-#'   of the semipartial correlation equals the increase in R-squared when that
-#'   variable is included last in the model - directly linking the measure to
-#'   unique variance explained. See
-#'   \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
-#'   for additional arguments in favour of the use of semipartial correlations.
+#'   VIFs (Dudgeon 2016, Thompson *et al.* 2017; [RVIF()]). If they have also
+#'   been scaled by the standard deviations of x and y, this converts them to
+#'   semipartial correlations, i.e. the correlation between the unique
+#'   components of predictors (residualised on other predictors) and the
+#'   response variable. This measure of effect size is arguably much more
+#'   interpretable and useful than the traditional standardised coefficient, as
+#'   it always represents the unique effects of predictors and so can more
+#'   readily be compared both within and across models. Values range from zero
+#'   to +/- one rather than +/- infinity (as in the case of betas) — putting
+#'   them on the same scale as the bivariate correlation between predictor and
+#'   response. In the case of GLMs however, the measure is analogous but not
+#'   exactly equal to the semipartial correlation, so its values may not always
+#'   be bound between +/- one (such cases are likely rare). Importantly, for
+#'   ordinary linear models, the square of the semipartial correlation equals
+#'   the increase in R-squared when that variable is included last in the model
+#'   — directly linking the measure to unique variance explained. See
+#'   [here](https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression)
+#'    for additional arguments in favour of the use of semipartial correlations.
 #'
-#'   If \code{refit.x}, \code{cen.x}, and \code{unique.eff} are \code{TRUE} and
-#'   there are interaction terms in the model, the model will be refit with any
+#'   If `refit.x`, `cen.x`, and `unique.eff` are `TRUE` and there are
+#'   interaction terms in the model, the model will be refit with any
 #'   (newly-)centred continuous predictors, in order to calculate correct VIFs
 #'   from the variance-covariance matrix. However, refitting may not be
 #'   necessary in some circumstances, for example where predictors have already
 #'   been mean-centred, and whose values will not subsequently be resampled
-#'   (e.g. parametric bootstrap). Setting \code{refit.x = FALSE} in such cases
-#'   will save time, especially with larger/more complex models and/or bootstrap
+#'   (e.g. parametric bootstrap). Setting `refit.x = FALSE` in such cases will
+#'   save time, especially with larger/more complex models and/or bootstrap
 #'   runs.
 #'
-#'   If \code{r.squared = TRUE}, model R-squared values are appended to effects
-#'   via the \code{\link[semEff]{R2}} function, with any additional arguments
-#'   being passed via \code{...}.
+#'   If `r.squared = TRUE`, model R-squared values are appended to effects via
+#'   the [R2()] function, with any additional arguments being passed via `...`.
 #'
-#'   If \code{incl.raw = TRUE}, raw (unstandardised) effects can also be
-#'   appended, i.e. those with all centring and scaling options set to
-#'   \code{FALSE} (though still adjusted for multicollinearity, where
-#'   applicable). These may be of interest in some cases, for example to compare
-#'   their bootstrapped distributions with those of standardised effects.
+#'   If `incl.raw = TRUE`, raw (unstandardised) effects can also be appended,
+#'   i.e. those with all centring and scaling options set to `FALSE` (though
+#'   still adjusted for multicollinearity, where applicable). These may be of
+#'   interest in some cases, for example to compare their bootstrapped
+#'   distributions with those of standardised effects.
 #'
-#'   Finally, if \code{weights} are specified, the function calculates a
-#'   weighted average of the standardised effects across models (Burnham &
-#'   Anderson 2002) via \code{\link[semEff]{avgEst}}.
+#'   Finally, if `weights` are specified, the function calculates a weighted
+#'   average of the standardised effects across models (Burnham & Anderson 2002)
+#'   via [avgEst()].
 #' @return A numeric vector of the standardised effects, or a list or nested
 #'   list of such vectors.
-#' @references Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
-#'   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
+#' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
+#'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
 #'   ed.). New York: Springer-Verlag. Retrieved from
-#'   \url{https://www.springer.com/gb/book/9780387953649}
+#'   <https://www.springer.com/gb/book/9780387953649>
 #'
 #'   Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
-#'   Independent Variables in Linear Regression. \emph{Multivariate Behavioral
-#'   Research}, \strong{51}(2-3), 139-153. \url{https://doi.org/gfww3f}
+#'   Independent Variables in Linear Regression. *Multivariate Behavioral
+#'   Research*, **51**(2-3), 139-153. <https://doi.org/gfww3f>
 #'
 #'   Thompson, C. G., Kim, R. S., Aloe, A. M., & Becker, B. J. (2017).
 #'   Extracting the Variance Inflation Factor and Other Multicollinearity
-#'   Diagnostics from Typical Regression Results. \emph{Basic and Applied Social
-#'   Psychology}, \strong{39}(2), 81-90. \url{https://doi.org/gfww2w}
+#'   Diagnostics from Typical Regression Results. *Basic and Applied Social
+#'   Psychology*, **39**(2), 81-90. <https://doi.org/gfww2w>
 #' @examples
 #' library(lme4)
 #'
@@ -1229,7 +1220,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (k > 0) {
 
       # Predictors
-      dF <- function(...) data.frame(..., check.names = FALSE)
+      dF <- function(...) {data.frame(..., check.names = FALSE)}
       if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
       x <- dF(model.matrix(m, data = d))[en]
       inx <- any(isInx(en))  # interactions?
@@ -1323,7 +1314,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
             en2 <- c(en2, re)
           }
 
-          # Rename any existing terms named "y", "w", or "o"
+          # Rename any existing terms named "y", "w", "o"
           if (any(c("y", "w", "o") %in% names(d))) {
             en2 <- sapply(en2, function(i) {
               i <- gsub("([^\\w.])", "~\\1~", i, perl = TRUE)
@@ -1385,7 +1376,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   # Output effects or weighted average
   if (isList(e) && !is.null(w)) avgEst(e, w, en)
   else if (!is.null(en)) {
-    s <- function(i) i[en[en %in% names(i)]]
+    s <- function(i) {i[en[en %in% names(i)]]}
     rMapply(s, e, SIMPLIFY = FALSE)
   } else e
 

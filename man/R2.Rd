@@ -24,14 +24,13 @@ R2(
 R-squared are also returned (the latter is not available for all model
 types).}
 
-\item{offset}{Logical. If \code{TRUE}, include model offset(s) in the
-calculations (i.e. in the response variable and fitted values).}
+\item{offset}{Logical. If \code{TRUE}, include model offset(s) in the calculations
+(i.e. in the response variable and fitted values).}
 
-\item{re.form}{For mixed models of class \code{"merMod"}, the formula for
-random effects to condition on when generating fitted values used in the
-calculation of R-squared. Defaults to \code{NULL}, meaning all random
-effects are included. See \code{\link[lme4]{predict.merMod}} for further
-specification details.}
+\item{re.form}{For mixed models of class \code{"merMod"}, the formula for random
+effects to condition on when generating fitted values used in the
+calculation of R-squared. Defaults to \code{NULL}, meaning all random effects
+are included. See \code{\link[=predict.merMod]{predict.merMod()}} for further specification details.}
 
 \item{type}{The type of correlation coefficient to use. Can be either
 \code{"pearson"} (default) or \code{"spearman"}.}
@@ -65,19 +64,19 @@ procedure, it is also generally comparable across many different types of
 model (Kvalseth 1985). In the case of the ordinary linear model, the
 measure equals the more traditional R-squared based on sums of squares.
 
-If \code{adj = TRUE} (default), the 'adjusted' R-squared value is also
-returned, which provides an estimate of the population - as opposed to
-sample - R-squared. This is achieved via an analytical formula which
-adjusts R-squared for the 'degrees of freedom' of the model (i.e. the ratio
-of observations to parameters). Here, this is calculated via the 'Pratt'
+If \code{adj = TRUE} (default), the 'adjusted' R-squared value is also returned,
+which provides an estimate of the population — as opposed to sample -
+R-squared. This is achieved via an analytical formula which adjusts
+R-squared for the 'degrees of freedom' of the model (i.e. the ratio of
+observations to parameters). Here, this is calculated via the 'Pratt'
 rather than standard 'Ezekiel/Wherry' formula, shown in a previous
 simulation to be the most effective of a range of existing formulas at
 estimating the population R-squared across a range of model specification
 scenarios (Yin & Fan 2001). Adjusted R-squared can be used to safeguard
 against overfitting of the model to the original sample.
 
-If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned,
-which is calculated via the same formula as for R-squared but using
+If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned, which
+is calculated via the same formula as for R-squared but using
 cross-validated rather than standard fitted values. These are obtained by
 dividing the model response residuals by the complement of the observation
 leverages (diagonals of the hat matrix), then subtracting these inflated
@@ -86,13 +85,12 @@ short cut to obtaining out-of-sample predictions, normally arising via a
 leave-one-out cross-validation procedure (in a GLM they will not be exactly
 equal to such predictions). The resulting R-squared is an estimate of the
 R-squared that would occur were the model to be fit to new data, and will
-be lower than the original - and likely also the adjusted - R-squared,
+be lower than the original — and likely also the adjusted — R-squared,
 highlighting the loss of explanatory power when predicting to new data.
-This measure is a variant of an
-\href{https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/}{existing
-one}, calculated by substituting the 'PRESS' statistic, i.e. the sum of
-squares of the predicted residuals (Allen 1974), for the residual sum of
-squares in the classic R-squared formula.
+This measure is a variant of an \href{https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/}{existing one},
+calculated by substituting the 'PRESS' statistic, i.e. the sum of squares
+of the predicted residuals (Allen 1974), for the residual sum of squares in
+the classic R-squared formula.
 
 For models fitted with one or more offsets, these will be removed by
 default from the response variable and fitted values prior to calculations.
@@ -104,24 +102,22 @@ variation due to the offset(s) they can set \code{offset = TRUE}.
 For mixed models, the function will, by default, calculate all R-squared
 measures using fitted values incorporating both the fixed and random
 effects, thus encompassing all variation captured by the model. This is
-equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017).
-To include only some or no random effects, simply set the appropriate
-formula using the argument \code{re.form}, which is passed directly to
-\code{predict.merMod}. If \code{re.form = NA}, R-squared is calculated for
-the fixed effects only - equivalent to the 'marginal' R-squared of Nakagawa
-\emph{et al.} (2017).
+equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017). To
+include only some or no random effects, simply set the appropriate formula
+using the argument \code{re.form}, which is passed directly to
+\code{\link[=predict.merMod]{predict.merMod()}}. If \code{re.form = NA}, R-squared is calculated for the
+fixed effects only — equivalent to the 'marginal' R-squared of Nakagawa \emph{et
+al.} (2017).
 
-As R-squared is calculated here as a squared correlation, the \code{type}
-of correlation coefficient can also be specified. Setting this to
-\code{"spearman"} may be desirable in some cases, such as where the
-relationship between response and fitted values is not necessarily
-bivariate normal or linear. Note that R-squared based on Spearman's rho
-(i.e. ranked variables) is not equivalent to the classic R-squared based on
-sums of squares, but can still be considered a
-\href{https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho}{useful
-goodness of fit measure}. It may also be considered more appropriate for
-comparisons of R-squared between GLMs and ordinary linear models in some
-situations.
+As R-squared is calculated here as a squared correlation, the \code{type} of
+correlation coefficient can also be specified. Setting this to \code{"spearman"}
+may be desirable in some cases, such as where the relationship between
+response and fitted values is not necessarily bivariate normal or linear.
+Note that R-squared based on Spearman's rho (i.e. ranked variables) is not
+equivalent to the classic R-squared based on sums of squares, but can still
+be considered a \href{https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho}{useful goodness of fit measure}.
+It may also be considered more appropriate for comparisons of R-squared
+between GLMs and ordinary linear models in some situations.
 
 R-squared values produced by this function will always be bounded between
 zero (no fit) and one (perfect fit), meaning that any negative values
@@ -141,8 +137,8 @@ of R-squared in the ordinary linear model and as such may not always behave
 as expected. Care must also be taken in comparing the measures to their
 equivalents from ordinary linear models, particularly the adjusted and
 predicted versions. For example, for the adjusted R-squared for mixed
-models, it's not entirely clear what the sample size (n) in the formula
-should represent - no. of observations? independent groups? something else?
+models, it's not entirely clear what the sample size (\emph{n}) in the formula
+should represent — no. of observations? independent groups? something else?
 (the default interpretation of no. of observations is used). With all that
 being said, the value of standardised R-squared measures for even 'rough'
 model fit assessment and comparison may outweigh such reservations, and the
@@ -162,7 +158,7 @@ R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's rho
 # Predicted R-squared: compare cross-validated predictions calculated/
 # approximated via the hat matrix to standard method (leave-one-out)
 
-# Fit test models using Shipley data - compare lm vs glm
+# Fit test models using Shipley data â€” compare lm vs glm
 d <- na.omit(Shipley)
 m <- lm(Live ~ Date + DD + lat, d)
 # m <- glm(Live ~ Date + DD + lat, binomial, d)
@@ -201,15 +197,14 @@ Statistician}, \strong{39}(4), 279-285. \url{https://doi.org/b8b782}
 
 Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
 determination R2 and intra-class correlation coefficient from generalized
-linear mixed-effects models revisited and expanded. \emph{Journal of the
-Royal Society Interface} \strong{14}(134). \url{https://doi.org/gddpnq}
+linear mixed-effects models revisited and expanded. \emph{Journal of the Royal
+Society Interface}, \strong{14}(134). \url{https://doi.org/gddpnq}
 
 Yin, P. and Fan, X. (2001) Estimating R2 Shrinkage in Multiple Regression:
-A Comparison of Different Analytical Methods. \emph{The Journal of
-Experimental Education} \strong{69}(2), 203-224.
-\url{https://doi.org/fbdq5g}
+A Comparison of Different Analytical Methods. \emph{The Journal of Experimental
+Education}, \strong{69}(2), 203-224. \url{https://doi.org/fbdq5g}
 
 Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
-generalized linear model. \emph{Statistics in Medicine} \strong{19}(13),
-1771-1781. \url{https://doi.org/db7rfv}
+generalized linear model. \emph{Statistics in Medicine}, \strong{19}(13), 1771-1781.
+\url{https://doi.org/db7rfv}
 }

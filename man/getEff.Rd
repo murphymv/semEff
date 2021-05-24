@@ -18,11 +18,11 @@ totEff(...)
 \arguments{
 \item{eff}{An object of class \code{"semEff"}.}
 
-\item{type}{The type of effects to return. Must be either \code{"orig"}
-(default) or \code{"boot"}.}
+\item{type}{The type of effects to return. Must be either \code{"orig"} (default)
+or \code{"boot"}.}
 
-\item{...}{Arguments (above) to be passed to \code{getEff} from other
-extractor functions.}
+\item{...}{Arguments (above) to be passed to \code{\link[=getEff]{getEff()}} from other extractor
+functions.}
 }
 \value{
 A list containing the original or bootstrapped effects for each
@@ -34,7 +34,7 @@ object of class \code{"semEff"}.
 }
 \details{
 These are simple extractor functions for effects calculated using
-\code{semEff}, intended for convenience (e.g. for use with \code{predEff}).
+\code{\link[=semEff]{semEff()}}, intended for convenience (e.g. for use with \code{\link[=predEff]{predEff()}}).
 }
 \section{Functions}{
 \itemize{

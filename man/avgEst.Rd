@@ -14,8 +14,8 @@ candidate models for each of a set of different response variables.}
 \item{weights}{An optional numeric vector of weights to use for model
 averaging, or a named list of such vectors. The former should be supplied
 when \code{est} is a list, and the latter when it is a nested list (with
-matching list names). If \code{weights = "equal"} (default), a simple
-average is calculated instead.}
+matching list names). If \code{weights = "equal"} (default), a simple average is
+calculated instead.}
 
 \item{est.names}{An optional vector of names used to extract and/or sort
 estimates from the output.}
@@ -33,17 +33,18 @@ This function can be used to calculate a weighted average of model
 estimates such as effects, fitted values, or residuals, where models are
 typically competing candidate models fit to the same response variable.
 Weights are typically a 'weight of evidence' type metric such as Akaike
-model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which
-can be conveniently calculated in \emph{R} using packages such as
-\pkg{MuMIn} or \pkg{AICcmodavg}. However, numeric weights of any sort can
-be used. If none are supplied, a simple average is calculated instead.
+model weights (Burnham & Anderson 2002, Burnham \emph{et al.} 2011), which can
+be conveniently calculated in \emph{R} using packages such as
+\href{https://cran.r-project.org/package=MuMIn}{MuMIn} or
+\href{https://cran.r-project.org/package=AICcmodavg}{AICcmodavg}. However,
+numeric weights of any sort can be used. If none are supplied, a simple
+average is calculated instead.
 
 Averaging is performed via the 'full'/'zero' rather than
 'subset'/'conditional'/'natural' method, meaning that zero is substituted
 for estimates for any 'missing' parameters (e.g. effects) prior to
-calculations. This provides a form of shrinkage and thus reduces
-\href{https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false}{estimate
-bias} (Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
+calculations. This provides a form of shrinkage and thus reduces \href{https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false}{estimate bias}
+(Burnham & Anderson 2002, Grueber \emph{et al.} 2011).
 }
 \examples{
 # Model-averaged effects (coefficients)
@@ -60,8 +61,8 @@ f <- lapply(m, predict)
 avgEst(f, w)
 }
 \references{
-Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
-and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
+Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection and
+Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
 ed.). New York: Springer-Verlag. Retrieved from
 \url{https://www.springer.com/gb/book/9780387953649}
 

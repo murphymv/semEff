@@ -32,18 +32,17 @@ contain all the variables named in \code{effects} or all those used to fit
 
 \item{effects}{A numeric vector of effects to predict, or a list or nested
 list of such vectors. These will typically have been calculated using
-\code{\link[semEff]{semEff}}, \code{\link[semEff]{bootEff}}, or
-\code{\link[semEff]{stdEff}}. Alternatively, a boot object produced by
-\code{bootEff} can be supplied.}
+\code{\link[=semEff]{semEff()}}, \code{\link[=bootEff]{bootEff()}}, or \code{\link[=stdEff]{stdEff()}}. Alternatively, a boot object
+produced by \code{\link[=bootEff]{bootEff()}} can be supplied.}
 
 \item{eff.boot}{A matrix of bootstrapped effects used to calculate confidence
 intervals for predictions, or a list or nested list of such matrices. These
-will have been calculated using \code{semEff} or \code{bootEff}.}
+will have been calculated using \code{\link[=semEff]{semEff()}} or \code{\link[=bootEff]{bootEff()}}.}
 
-\item{re.form}{For mixed models of class \code{"merMod"}, the formula for
-random effects to condition on when predicting effects. Defaults to
-\code{NA}, meaning random effects are averaged over. See
-\code{\link[lme4]{predict.merMod}} for further specification details.}
+\item{re.form}{For mixed models of class \code{"merMod"}, the formula for random
+effects to condition on when predicting effects. Defaults to \code{NA}, meaning
+random effects are averaged over. See \code{\link[=predict.merMod]{predict.merMod()}} for further
+specification details.}
 
 \item{type}{The type of prediction to return (for GLMs). Can be either
 \code{"link"} (default) or \code{"response"}.}
@@ -52,33 +51,32 @@ random effects to condition on when predicting effects. Defaults to
 return standardised effects for a 'main' continuous variable across
 different values or levels of interacting variables (see Details).}
 
-\item{use.raw}{Logical, whether to use raw (unstandardised) effects for
-all calculations (if present).}
+\item{use.raw}{Logical, whether to use raw (unstandardised) effects for all
+calculations (if present).}
 
 \item{ci.conf}{A numeric value specifying the confidence level for confidence
 intervals on predictions (and any interactive effects).}
 
-\item{ci.type}{The type of confidence interval to return (defaults to
-\code{"bca"} - see Details). See \code{\link[boot]{boot.ci}} for further
-specification details.}
+\item{ci.type}{The type of confidence interval to return (defaults to \code{"bca"}
+— see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
 
 \item{digits}{The number of significant digits to return for interactive
 effects.}
 
-\item{bci.arg}{A named list of any additional arguments to \code{boot.ci},
+\item{bci.arg}{A named list of any additional arguments to \code{\link[=boot.ci]{boot.ci()}},
 excepting argument \code{index}.}
 
 \item{parallel}{The type of parallel processing to use for calculating
-confidence intervals on predictions. Can be one of \code{"snow"},
-\code{"multicore"}, or \code{"no"} (for none - the default).}
+confidence intervals on predictions. Can be one of \code{"snow"}, \code{"multicore"},
+or \code{"no"} (for none — the default).}
 
-\item{ncpus}{Number of system cores to use for parallel processing. If
-\code{NULL} (default), all available cores are used.}
+\item{ncpus}{Number of system cores to use for parallel processing. If \code{NULL}
+(default), all available cores are used.}
 
 \item{cl}{Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 (default), a local cluster is created using the specified number of cores.}
 
-\item{...}{Arguments to \code{\link[semEff]{stdEff}}.}
+\item{...}{Arguments to \code{\link[=stdEff]{stdEff()}}.}
 }
 \value{
 A numeric vector of the predictions, or, if bootstrapped effects are
@@ -93,35 +91,34 @@ effects.
 }
 \details{
 Generate predicted values for SEM direct, indirect, or total effects
-on a response variable, which should be supplied to \code{effects}. These
-are used in place of model coefficients in the standard prediction formula,
+on a response variable, which should be supplied to \code{effects}. These are
+used in place of model coefficients in the standard prediction formula,
 with values for predictors drawn either from the data used to fit the
-original model(s) (\code{mod}) or from \code{newdata}. It is assumed that
-effects are fully standardised; however, if this is not the case, then the
-same centring and scaling options originally specified to \code{stdEff}
-should be re-specified - which will then be used to standardise the data.
-If no effects are supplied, standardised (direct) effects will be
-calculated from the model and used to generate predictions. These
-predictions will equal the model(s) fitted values if \code{newdata = NULL},
-\code{unique.eff = FALSE}, and \code{re.form = NULL} (where applicable).
+original model(s) (\code{mod}) or from \code{newdata}. It is assumed that effects are
+fully standardised; however, if this is not the case, then the same
+centring and scaling options originally specified to \code{\link[=stdEff]{stdEff()}} should be
+re-specified — which will then be used to standardise the data. If no
+effects are supplied, standardised (direct) effects will be calculated from
+the model and used to generate predictions. These predictions will equal
+the model(s) fitted values if \code{newdata = NULL}, \code{unique.eff = FALSE}, and
+\code{re.form = NULL} (where applicable).
 
 Model-averaged predictions can be generated if averaged \code{effects} are
-supplied to the model in \code{mod}, or, alternatively, if \code{weights}
-are specified (passed to \code{stdEff}) and \code{mod} is a list of
-candidate models (\code{effects} can also be passed using this latter
-method). For mixed model predictions where random effects are included
-(e.g. \code{re.form = NULL}), the latter approach should be used, otherwise
-the contribution of random effects will be taken from the single model
-instead of (correctly) being averaged over a candidate set.
+supplied to the model in \code{mod}, or, alternatively, if \code{weights} are
+specified (passed to \code{\link[=stdEff]{stdEff()}}) and \code{mod} is a list of candidate models
+(\code{effects} can also be passed using this latter method). For mixed model
+predictions where random effects are included (e.g. \code{re.form = NULL}), the
+latter approach should be used, otherwise the contribution of random
+effects will be taken from the single model instead of (correctly) being
+averaged over a candidate set.
 
-If bootstrapped effects are supplied to \code{eff.boot} (or to
-\code{effects}, as part of a boot object), bootstrapped predictions are
-calculated by predicting from each effect. Confidence intervals can then be
-returned via \code{\link[semEff]{bootCI}}, for which the \code{type} should
-be appropriate for the original form of bootstrap sampling (defaults to
-\code{"bca"}). If the number of observations to predict is very large,
-parallel processing (via \code{\link[semEff]{pSapply}}) may speed up the
-calculation of intervals.
+If bootstrapped effects are supplied to \code{eff.boot} (or to \code{effects}, as
+part of a boot object), bootstrapped predictions are calculated by
+predicting from each effect. Confidence intervals can then be returned via
+\code{\link[=bootCI]{bootCI()}}, for which the \code{type} should be appropriate for the original
+form of bootstrap sampling (defaults to \code{"bca"}). If the number of
+observations to predict is very large, parallel processing (via
+\code{\link[=pSapply]{pSapply()}}) may speed up the calculation of intervals.
 
 Predictions are always returned in the original (typically unstandardised)
 units of the (link-)response variable. For GLMs, they can be returned in
@@ -131,11 +128,10 @@ Additionally, if the name of an interactive effect is supplied to
 \code{interaction}, standardised effects (and confidence intervals) can be
 returned for effects of a continuous 'main' variable across different
 values or levels of interacting variable(s). The name should be of the form
-\code{"x1:x2..."}, containing all the variables involved and matching the
-name of an interactive effect in the model(s) terms or in \code{effects}.
-The values for all variables should be supplied in \code{newdata}, with the
-continuous variable being automatically identified as having the most
-unique values.
+\code{"x1:x2..."}, containing all the variables involved and matching the name
+of an interactive effect in the model(s) terms or in \code{effects}. The values
+for all variables should be supplied in \code{newdata}, with the continuous
+variable being automatically identified as having the most unique values.
 }
 \examples{
 # Predict effects (direct, total)
@@ -193,5 +189,5 @@ f2 <- predEff(m, use.raw = TRUE)
 stopifnot(all.equal(f1, f2))
 }
 \seealso{
-\code{\link[stats]{predict}}
+\code{\link[=predict]{predict()}}
 }

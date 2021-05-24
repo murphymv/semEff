@@ -7,7 +7,7 @@
 RVIF(...)
 }
 \arguments{
-\item{...}{Arguments to \code{\link[semEff]{VIF}}.}
+\item{...}{Arguments to \code{\link[=VIF]{VIF()}}.}
 }
 \value{
 A numeric vector of the RVIFs, or an array, list of vectors/arrays,

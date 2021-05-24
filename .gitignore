@@ -1,4 +1,6 @@
 .Rhistory
+.RData
+.Ruserdata
 .Rproj.user
 *.Rproj
 CRAN-RELEASE

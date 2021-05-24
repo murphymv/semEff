@@ -1,6 +1,12 @@
 ## semEff 0.5.0.9000
 
+### Bugs fixed:
+
+-   `xNam()` .....
+
 ## semEff 0.5.0
+
+09/04/2021 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.5.0)
 
 ### New features:
 
@@ -20,6 +26,8 @@
 -   `xNam()` produced an error when attempting to evaluate factor contrasts in data, expecting that character vectors were factors (related to the change to `stringsAsFactors = FALSE` as default in `R 4.0.0`, but would have occurred in some cases regardless).
 
 ## semEff 0.4.0
+
+01/10/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.4.0)
 
 ### New features:
 
@@ -47,6 +55,8 @@
 
 ## semEff 0.3.0
 
+25/03/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.3.0)
+
 ### New features:
 
 -   Support for mixed models of class `"lmerModLmerTest"`.
@@ -70,11 +80,15 @@
 
 ## semEff 0.2.1
 
+15/01/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.2.1)
+
 ### Bugs fixed:
 
 -   Function `semEff()` did not output effects properly.
 
 ## semEff 0.2.0
+
+08/01/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.2.0)
 
 ### New features:
 
@@ -88,5 +102,7 @@
 -   Function `R2()` with argument `pred = TRUE` threw an error for models where any weights = 0.
 
 ## semEff 0.1.0
+
+04/11/2019 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.1.0)
 
 New package `semEff`, allowing the automatic calculation of effects for 'piecewise' structural equation models.

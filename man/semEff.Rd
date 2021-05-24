@@ -19,34 +19,32 @@ semEff(
 }
 \arguments{
 \item{sem}{A piecewise SEM, comprising a list of fitted model objects, or,
-alternatively, of boot objects (class \code{"boot"}), containing
-bootstrapped model effects.}
+alternatively, of boot objects (class \code{"boot"}), containing bootstrapped
+model effects.}
 
 \item{predictors, mediators, responses}{Names of variables for/through which to
 calculate effects. If \code{NULL} (default), all predictors, endogenous
 predictors (mediators), and endogenous variables (responses) will be used.}
 
-\item{use.raw}{Logical, whether to use 'raw' (unstandardised) effects for
-all calculations (if present in \code{sem} object).}
+\item{use.raw}{Logical, whether to use 'raw' (unstandardised) effects for all
+calculations (if present in \code{sem} object).}
 
 \item{ci.conf}{A numeric value specifying the confidence level for confidence
 intervals on effects.}
 
-\item{ci.type}{The type of confidence interval to return (defaults to
-\code{"bca"} - see Details). See \code{\link[boot]{boot.ci}} for further
-specification details.}
+\item{ci.type}{The type of confidence interval to return (defaults to \code{"bca"}
+— see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
 
 \item{digits}{The number of significant digits to return for numeric values.}
 
-\item{bci.arg}{A named list of any additional arguments to \code{boot.ci},
+\item{bci.arg}{A named list of any additional arguments to \code{\link[=boot.ci]{boot.ci()}},
 excepting argument \code{index}.}
 
-\item{...}{Arguments to \code{\link[semEff]{bootEff}}.}
+\item{...}{Arguments to \code{\link[=bootEff]{bootEff()}}.}
 }
 \value{
-A list object of class \code{"semEff"}, comprising: \enumerate{\item
-all effects \item all bootstrapped effects \item summary tables of effects
-and confidence intervals}
+A list object of class \code{"semEff"}, comprising: 1. all effects 2. all
+bootstrapped effects 3. summary tables of effects and confidence intervals
 }
 \description{
 Automatically calculate direct, indirect, total, and mediator
@@ -66,7 +64,7 @@ should represent a directed ('acyclic') causal model, which should be named
 (exactly) for each response variable and ordered from 'upstream' or
 'causal' variables through to 'downstream' (i.e. those at the end of the
 pathway). If \code{sem} is a list of fitted models, effects will first be
-bootstrapped using \code{bootEff} (this may take a while!).
+bootstrapped using \code{\link[=bootEff]{bootEff()}} (this may take a while!).
 
 Direct effects are calculated as fully standardised model coefficients for
 each response variable, while indirect effects are the product of these
@@ -74,28 +72,28 @@ direct effects operating along causal pathways in the SEM. The total
 effects of any given predictor on a response are then the sum of its direct
 and (all) its indirect effects. 'Mediator' effects are also calculated, as
 the sum of all indirect paths which operate through each individual
-mediator - useful to assess the relative importance of different mediators
+mediator — useful to assess the relative importance of different mediators
 in affecting the response. All of these effect types are calculated
 automatically for all (default) or a subset of predictors, mediators, or
 response variables in the SEM.
 
-Confidence intervals for effects are returned for each response, with
-BC\emph{a} intervals calculated by default using bootstrapped estimates for
-each effect type (MacKinnon \emph{et al.} 2004, Cheung 2009, Hayes &
-Scharkow 2013). As indirect, total, and mediator effects are not directly
-bootstrapped using the fitted models for response variables (i.e. via
-\code{bootEff}), their equivalent 'bootstrapped' estimates are calculated
-instead using each bootstrapped direct effect.
+Confidence intervals for effects are returned for each response, with BC\emph{a}
+intervals calculated by default using bootstrapped estimates for each
+effect type (MacKinnon \emph{et al.} 2004, Cheung 2009, Hayes & Scharkow 2013).
+As indirect, total, and mediator effects are not directly bootstrapped
+using the fitted models for response variables (i.e. via \code{\link[=bootEff]{bootEff()}}),
+their equivalent 'bootstrapped' estimates are calculated instead using each
+bootstrapped direct effect.
 
 Correlated errors (and confidence intervals) are also returned if their
-bootstrapped values are present in \code{sem}, or, if \code{sem} is a list
-of fitted models, if specified to argument \code{cor.err} (see
-\code{\link[semEff]{bootEff}}). These represent residual relationships
-among response variables, unaccounted for by the SEM.
+bootstrapped values are present in \code{sem}, or, if \code{sem} is a list of fitted
+models, if specified to argument \code{cor.err} (see \code{\link[=bootEff]{bootEff()}}). These
+represent residual relationships among response variables, unaccounted for
+by the SEM.
 
 All effects and bootstrapped effects are returned in lists for each
 response variable, with all except mediator effects also including the
-model intercept(s) - required for prediction (this will be zero for
+model intercept(s) — required for prediction (this will be zero for
 ordinary linear models with fully standardised effects).
 }
 \examples{
@@ -108,7 +106,7 @@ ordinary linear models with fully standardised effects).
 # semEff(Shipley.SEM.Boot, responses = "Live")
 
 # Effects calculated using original SEM (models)
-# (not typically recommended - better to use saved boot objects)
+# (not typically recommended â€” better to use saved boot objects)
 # system.time(
 #  Shipley.SEM.Eff <- semEff(Shipley.SEM, R = 10000, seed = 53908,
 #                            ran.eff = "site")
@@ -116,18 +114,17 @@ ordinary linear models with fully standardised effects).
 }
 \references{
 Cheung, M. W. L. (2009). Comparison of methods for constructing
-confidence intervals of standardized indirect effects. \emph{Behavior
-Research Methods}, \strong{41}(2), 425-438. \url{https://doi.org/fnx7xk}
+confidence intervals of standardized indirect effects. \emph{Behavior Research
+Methods}, \strong{41}(2), 425-438. \url{https://doi.org/fnx7xk}
 
 Hayes, A. F., & Scharkow, M. (2013). The Relative Trustworthiness of
 Inferential Tests of the Indirect Effect in Statistical Mediation Analysis:
-Does Method Really Matter? \emph{Psychological Science}, \strong{24}(10),
-1918-1927. \url{https://doi.org/bbhr}
+Does Method Really Matter? \emph{Psychological Science}, \strong{24}(10), 1918-1927.
+\url{https://doi.org/bbhr}
 
 Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
-modelling in \code{R} for ecology, evolution, and systematics.
-\emph{Methods in Ecology and Evolution}, \strong{7}(5), 573-579.
-\url{https://doi.org/f8s8rb}
+modelling in \code{R} for ecology, evolution, and systematics. \emph{Methods in
+Ecology and Evolution}, \strong{7}(5), 573-579. \url{https://doi.org/f8s8rb}
 
 MacKinnon, D. P., Lockwood, C. M., & Williams, J. (2004). Confidence Limits
 for the Indirect Effect: Distribution of the Product and Resampling
@@ -135,11 +132,9 @@ Methods. \emph{Multivariate Behavioral Research}, \strong{39}(1), 99.
 \url{https://doi.org/chqcnx}
 
 Shipley, B. (2000). A New Inferential Test for Path Models Based on
-Directed Acyclic Graphs. \emph{Structural Equation Modeling: A
-Multidisciplinary Journal}, \strong{7}(2), 206-218.
-\url{https://doi.org/cqm32d}
+Directed Acyclic Graphs. \emph{Structural Equation Modeling: A Multidisciplinary
+Journal}, \strong{7}(2), 206-218. \url{https://doi.org/cqm32d}
 
 Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
-context. \emph{Ecology}, \strong{90}(2), 363-368.
-\url{https://doi.org/bqd43d}
+context. \emph{Ecology}, \strong{90}(2), 363-368. \url{https://doi.org/bqd43d}
 }

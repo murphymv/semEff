@@ -5,15 +5,15 @@
 \alias{Shipley.SEM.Eff}
 \title{Effects for Shipley SEM}
 \format{
-A list object of class \code{"semEff"}, containing SEM effects and
-summary tables.
+A list object of class \code{"semEff"}, containing SEM effects and summary
+tables.
 }
 \usage{
 Shipley.SEM.Eff
 }
 \description{
 SEM effects calculated from bootstrapped estimates of the
-hypothesised SEM from Shipley (2009), using \code{semEff}.
+hypothesised SEM from Shipley (2009), using \code{\link[=semEff]{semEff()}}.
 }
 \examples{
 # Specification
@@ -21,7 +21,6 @@ hypothesised SEM from Shipley (2009), using \code{semEff}.
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-\url{https://doi.org/bqd43d}
+multilevel context. \emph{Ecology}, \strong{90}(2), 363-368. \url{https://doi.org/bqd43d}
 }
 \keyword{datasets}

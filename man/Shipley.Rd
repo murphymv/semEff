@@ -31,7 +31,6 @@ Simulated Data from Shipley (2009)
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-\url{https://doi.org/bqd43d}
+multilevel context. \emph{Ecology}, \strong{90}(2), 363-368. \url{https://doi.org/bqd43d}
 }
 \keyword{datasets}

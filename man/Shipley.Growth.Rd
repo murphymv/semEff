@@ -5,8 +5,8 @@
 \alias{Shipley.Growth}
 \title{Candidate Model Set from Shipley 'Growth' Model}
 \format{
-A list of mixed models of class \code{"lmer"} and \code{"glmer"}, fit
-to the same response variable.
+A list of mixed models of class \code{"lmer"} and \code{"glmer"}, fit to the
+same response variable.
 }
 \usage{
 Shipley.Growth
@@ -27,7 +27,6 @@ model estimates can be compared and/or averaged.
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-\url{https://doi.org/bqd43d}
+multilevel context. \emph{Ecology}, \strong{90}(2), 363-368. \url{https://doi.org/bqd43d}
 }
 \keyword{datasets}
