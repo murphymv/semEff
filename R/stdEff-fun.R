@@ -181,18 +181,16 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
     # Predictor values
     d <- getData(m, env = env)
     mf <- suppressWarnings(model.frame(m, data = d))
-    x <- mf[names(mf) %in% unlist(unname(XN))]
-    x <- sapply(x, "[", simplify = FALSE)
+    x <- as.list(mf[names(mf) %in% unlist(unname(XN))])
 
     # Expand factor/matrix terms (list)
-    f <- sapply(x, is.factor)
+    f <- !sapply(x, is.numeric)
     xn2 <- unique(c(xn, names(x)))
     XN2 <- sapply(xn2, function(i) {
       if (i %in% names(x)) {
         xi <- x[[i]]
         if (f[i]) {
-          # ci <- contrasts(factor(d[[i]]))
-          ci <- contrasts(d[[i]])
+          ci <- contrasts(as.factor(d[[i]]))
           ct <- getCall(m)$contrasts
           xi <- if (!is.null(ct)) {
             ci <- ct[names(ct) %in% i][[1]]
@@ -204,7 +202,8 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
             } else ci
           } else ci
         }
-        j <- colnames(xi); n <- ncol(xi)
+        j <- colnames(xi)
+        n <- ncol(xi)
         if (is.null(j) && (f[i] || isTRUE(n > 1))) j <- 1:n
         paste0(i, j)
       } else i
