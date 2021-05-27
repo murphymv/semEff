@@ -2,7 +2,7 @@
 
 ### Bugs fixed:
 
--   `xNam()` .....
+-   Amendment to previous fix for issue where `xNam()` was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary.
 
 ## semEff 0.5.0
 
