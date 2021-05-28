@@ -181,10 +181,15 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
     # Predictor values
     d <- getData(m, env = env)
     mf <- suppressWarnings(model.frame(m, data = d))
-    x <- as.list(mf[names(mf) %in% unlist(unname(XN))])
+    x <- mf[names(mf) %in% unlist(unname(XN))]
+
+    # Factors?
+    x <- lapply(x, function(i) {
+      if (is.character(i)) as.factor(i) else i
+    })
+    f <- sapply(x, is.factor)
 
     # Expand factor/matrix terms (list)
-    f <- !sapply(x, is.numeric)
     xn2 <- unique(c(xn, names(x)))
     XN2 <- sapply(xn2, function(i) {
       if (i %in% names(x)) {
