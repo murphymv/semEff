@@ -1,8 +1,17 @@
 ## semEff 0.5.0.9000
 
+xx/xx/2021 (binaries)
+
+### New features:
+
+### Other changes:
+
+-   Improved output for effect summaries from `semEff()` and `bootCI()` (formatted tables).
+-   Various code and documentation updates.
+
 ### Bugs fixed:
 
--   Amendment to previous fix for issue where `xNam()` was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary.
+-   Amendment to previous (incomplete) fix for issue where `xNam()` was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary.
 
 ## semEff 0.5.0
 

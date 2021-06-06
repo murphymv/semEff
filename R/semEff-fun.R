@@ -123,7 +123,11 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   if (use.raw) {
     sem <- lapply(sem, function(i) {
       r <- isRaw(names(i$t0))
-      if (any(r)) {i$t0[!r] <- i$t0[r]; i$t[, !r] <- i$t[, r]}; i
+      if (any(r)) {
+        i$t0[!r] <- i$t0[r]
+        i$t[, !r] <- i$t[, r]
+      }
+      i
     })
   }
 
@@ -132,32 +136,37 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
     # Function
     subNam <- function(x) {
-      if (is.character(x)) x <- gsub(p, r, x, ...)
-      else {
+      if (is.character(x)) {
+        x <- gsub(p, r, x, ...)
+      } else {
         if (!is.null(names(x))) {
           names(x) <- gsub(p, r, names(x), ...)
         } else if (is.matrix(x)) {
           colnames(x) <- gsub(p, r, colnames(x), ...)
         }
-      }; x
+      }
+      x
     }
 
     # Apply recursively
     rsubNam <- function(x, sN) {
       x <- sN(x)
       if (isList(x) || isBoot(x)) {
-        for (i in 1:length(x)) x[[i]] <- rsubNam(x[[i]], sN)
-      }; x
+        for (i in 1:length(x)) {
+          x[[i]] <- rsubNam(x[[i]], sN)
+        }
+      }
+      x
     }
     rsubNam(x, subNam)
 
   }
 
   # Replace any periods in variable names
-  # (periods used to separate var. names for indirect effects)
+  # (periods are used to separate variable names for indirect effects)
   sem <- subNam("[.]", "_", sem)
 
-  # Response names (default to endogenous vars.)
+  # Response names (default to endogenous variables)
   ce <- grepl("~~", names(sem))
   if (is.null(r)) r <- names(sem)[!ce]
 
@@ -181,6 +190,11 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
   # Calculate all direct, total indirect, total, and mediator effects
 
+  # Helper function to create data frames without name modification
+  dF <- function(...) {
+    data.frame(..., check.names = FALSE)
+  }
+
   # Function to extract direct effects for predictors
   dirEff <- function(D) {
     sapply(p, function(i) {
@@ -194,7 +208,9 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
     # Function to extract effect names
     effNam <- function(x) {
-      effNam <- function(x) {if (is.matrix(x)) colnames(x) else names(x)}
+      effNam <- function(x) {
+        if (is.matrix(x)) colnames(x) else names(x)
+      }
       en <- rMapply(effNam, x)
       unique(unlist(en))
     }
@@ -230,9 +246,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
     # vector/list of vectors
     unlist2 <- function(x) {
       if (all(rapply(x, is.matrix))) {
-        x <- rapply(x, function(i) {
-          as.list(data.frame(i, check.names = FALSE))
-        }, how = "list")
+        x <- rapply(x, function(i) as.list(dF(i)), how = "list")
         lapply(rapply(x, enquote), eval)
       } else unlist(x)
     }
@@ -305,11 +319,13 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 
   # Calculate bootstrapped confidence intervals for all effects
 
-  # Function to calculate CIs
+  # Function to calculate CIs (& bias/standard errors)
   bootCI2 <- function(e, eb, r) {
 
-    # Boot object for response var
+    # Boot object for response var. (replace estimates)
     B <- sem[[r]]
+    B$t0 <- e
+    B$t <- matrix(eb)
 
     # Change default CI type for parametric bootstrapping
     if (B$sim == "parametric" && ci.type == "bca") {
@@ -317,14 +333,19 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
       ci.type <- "perc"
     }
 
-    # Calculate CIs using boot object
+    # Calculate CIs (& bias/standard errors)
     if (!is.na(e)) {
       if (e != 0) {
-        B$t0 <- e; B$t <- matrix(eb)
-        ci <- do.call(boot::boot.ci, c(list(B, ci.conf, ci.type), bci.arg))
-        tail(as.vector(ci[[4]]), 2)
-      } else c(0, 0)
-    } else c(NA, NA)
+        bi <- mean(eb, na.rm = TRUE) - e
+        se <- sd(eb, na.rm = TRUE)
+        ci <- do.call(
+          boot::boot.ci,
+          c(list(B, ci.conf, ci.type), bci.arg)
+        )
+        ci <- tail(as.vector(ci[[4]]), 2)
+        c(bi, se, ci)
+      } else rep(0, 4)
+    } else rep(NA, 4)
 
   }
 
@@ -346,7 +367,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
           unlist(e)[unlist(e) != 0]
         }
         if (length(e) > 0) {
-          if (is.B) e <- as.matrix(data.frame(e, check.names = FALSE))
+          if (is.B) e <- as.matrix(dF(e))
           if (j != "Mediators") {
             B <- sem[[i]]
             if (is.B) {
@@ -364,38 +385,73 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
       }, simplify = FALSE)
     }, simplify = FALSE)
   }
-  e <- extE(E); eb <- extE(EB)
+  e <- extE(E)
+  eb <- extE(EB)
 
   # Generate summary tables of effects and CIs
   E <- rMapply(c, E, CI, SIMPLIFY = FALSE)
   s <- lapply(E, function(i) {
-    lapply(i, function(j) {
-      e <- data.frame(
-        if (isList(j)) t(do.call(rbind, j)) else j,
-        row.names = c("Estimate", "Lower CI", "Upper CI"),
-        check.names = FALSE
-      )
-      e <- e[, e[1, ] != 0, drop = FALSE]
-      if (ncol(e) > 0) {
-        e <- round(e, digits)
-        stars <- t(data.frame(sapply(e, function(k) {
-          if (!any(is.na(k))) {
-            if (all(k > 0) || all(k < 0)) "*" else ""
-          } else ""
-        })))
-        e <- format(e, nsmall = digits)
-        e <- rbind(e, " " = stars)
-        attr(e, "ci.conf") <- ci.conf
-        attr(e, "ci.type") <- ci.type
-        e
-      } else NA
+
+    # List of summary tables
+    s <- lapply(names(i), function(j) {
+
+      # Combine effects and CIs into table
+      s <- dF(t(dF(i[[j]])))
+      names(s) <- c("Effect", "Bias", "Std. Error", "Lower CI", "Upper CI")
+      s <- s[s[, 1] != 0, ]
+      s <- round(s, digits)
+      if (nrow(s) < 1) {
+        s[1, ] <- "-"
+        rownames(s) <- "n/a"
+      }
+
+      # Add significance stars
+      stars <- apply(s, 1, function(k) {
+        if (is.numeric(k)) {
+          k <- c(k[1], tail(k, 2))
+          if (all(k > 0) || all(k < 0)) "*" else ""
+        } else ""
+      })
+      s <- cbind(s, " " = stars)
+
+      # Format table (add title columns & top space)
+      s <- format(s, nsmall = digits)
+      s <- cbind(" " = "", " " = rownames(s), s)
+      s[1, 1] <- toupper(j)
+      rbind("", s)
+
     })
+
+    # Combine into one table
+    s <- do.call(rbind, s)
+
+    # Format table (text alignment, add top border)
+    s[1:2] <- format(s[1:2], justify = "left")
+    b <- mapply(function(j, k) {
+      n1 <- nchar(k)
+      n2 <- max(sapply(j, nchar), n1)
+      b <- if (n1 > 1) rep("_", n2) else ""
+      paste(b, collapse = "")
+    }, s, names(s))
+    s <- rbind(b, s)
+    rownames(s) <- NULL
+
+    # Set attributes and output
+    attr(s, "ci.conf") <- ci.conf
+    attr(s, "ci.type") <- ci.type
+    s
+
   })
 
-  # Add correlated errors
+  # Add any correlated errors
   if (any(ce)) {
     CE <- bootCI(sem[ce], ci.conf, ci.type, digits, bci.arg)
-    s <- c(s, list("Correlated Errors" = do.call(cbind, CE)))
+    if (length(ce) > 1) {
+      CE <- do.call(rbind, c(CE[1], lapply(CE[-1], "[", 3,)))
+      CE[1] <- format(CE[1], justify = "left")
+      rownames(CE) <- NULL
+    }
+    s <- c(s, list("Correlated Errors" = CE))
   }
 
   # Reinstate periods to all variable names (if they were present)
@@ -683,7 +739,9 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     # Random effects
     is.re <- isMer(m1) && !identical(rf, NA) && !identical(rf, ~ 0)
     re <- if (is.re) {
-      pRE <- function(x) {predict(x, nd, re.form = rf, random.only = TRUE)}
+      pRE <- function(x) {
+        predict(x, nd, re.form = rf, random.only = TRUE)
+      }
       re <- rMapply(pRE, m, SIMPLIFY = FALSE)
       if (isList(re)) re <- avgEst(re, w)
       if (is.null(nd)) re[obs] else re
@@ -712,7 +770,9 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     if (is.null(o)) o <- 0
 
     # Predictors
-    dF <- function(...) {data.frame(..., check.names = FALSE)}
+    dF <- function(...) {
+      data.frame(..., check.names = FALSE)
+    }
     dM <- function(d) {
       f <- reformulate(names(d))
       dF(model.matrix.lm(f, data = d, na.action = "na.pass"))

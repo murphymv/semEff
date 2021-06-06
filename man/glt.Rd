@@ -32,18 +32,19 @@ return an estimate of same.
 numeric variable, using the link function from a generalised linear model
 (GLM) fit to the variable. The transformation is generalised in the sense
 that it can extend even to cases where a standard link transformation would
-generate undefined values. It achieves this by using an estimate based on
+produce undefined values. It achieves this by using an estimate based on
 the 'working' response variable of the GLM (see below). If the error
 distribution \code{family} is not specified (default), then it is determined
 (roughly) from \code{x}, with \code{binomial(link = "logit")} used when all x <= 1
 and \code{poisson(link = "log")} otherwise. Although the function is generally
-intended for binomial or poisson variables, any variable which can be fit
-using \code{\link[=glm]{glm()}} can be supplied. One of the key purposes of \code{glt()} is to
-allow the calculation of fully standardised effects (coefficients) for GLMs
-(in which case \code{x} = the response variable), while it can also facilitate
-the proper calculation of SEM indirect effects (see below).
+intended for variables with a binomial or Poisson distribution, any
+variable which can be fit using \code{\link[=glm]{glm()}} can be supplied. One of the key
+purposes of \code{glt()} is to allow the calculation of fully standardised
+effects (coefficients) for GLMs (in which case \code{x} = the response
+variable), while it can also facilitate the proper calculation of SEM
+indirect effects (see below).
 
-\strong{Estimating the link transformation}
+\strong{Estimating the direct link transformation}
 
 A key challenge in generating fully standardised effects for a GLM with a
 non-gaussian link function is the difficulty in calculating appropriate
@@ -56,7 +57,7 @@ latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
 a more general variance-based method using a pseudo R-squared (Menard 2011)
 – here an alternative approach is used. Where transformed values are
 undefined, the function will instead return the synthetic 'working'
-response from the iteratively reweighted least squares algorithm (IRLS) of
+response from the iteratively reweighted least squares (IRLS) algorithm of
 the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
 linear predictor and the working residuals — with the latter comprising the
 error of the model on the link scale. The advantage of this approach is
@@ -75,18 +76,19 @@ original response variable – the function uses the following iterative
 fitting procedure to calculate a 'final' working response:
 \enumerate{
 \item A new GLM of the same error family is fit with the original response
-variable as both predictor and response, and using a single IWLS iteration.
-\item The working response is extracted from this model.
-\item The inverse transformation of the working response is then calculated.
+variable as both predictor and response, and using a single IRLS iteration.
+\item The working response is reconstructed from this model.
+\item The inverse transformation of the working response is calculated.
 \item If the inverse transformation is 'effectively equal' to the original
-response (tested using \code{\link[=all.equal]{all.equal()}}), the working response is returned;
-otherwise, the GLM is refit with the working response now as the predictor,
-and steps 2-4 are repeated — each time with an additional IWLS iteration.
+response (tested using \code{\link[=all.equal]{all.equal()}} with default tolerance), the working
+response is returned; otherwise, the GLM is refit with the working response
+now as the predictor, and steps 2-4 are repeated — each time with an
+additional IRLS iteration.
 }
 
 This approach will generate a very reasonable transformation of the
 response variable, which will also be practically indistinguishable from
-the direct transformation where this can be compared (see Examples). It
+the direct transformation, where this can be compared (see Examples). It
 also ensures that the transformed values, and hence the standard deviation,
 are the same for any GLM fitting the same response (provided it uses the
 same link function) — facilitating model comparisons, selection, and
@@ -94,19 +96,19 @@ averaging.
 }
 \note{
 As we often cannot directly observe the GLM response variable on the
-link scale, any method estimating its values or statistics will incorporate
-a degree of error. The aim should be to try to minimise this error as far
-as (reasonably) possible, while also generating standardised effects whose
-interpretation most closely resembles those of an ordinary linear model -
-something which the current method achieves. The solution of using the
-working response from the GLM to scale effects is a purely practical, but
-reasonable one, and one that takes advantage of modern computing power to
-minimise error through iterative model fitting. An added bonus is that the
-estimated variance is constant across models fit to the same response
-variable, which cannot be said of previous methods (Menard 2011). The
-overall approach would be classed as 'observed-empirical' by Grace \emph{et al.}
-(2018), as it utilises model error variance (the estimated working
-residuals) rather than theoretical distribution-specific variance.
+link scale, any method estimating its values or statistics will be wrong to
+some degree. The heuristic approach described here aims to reduce this
+error as far as (reasonably) possible, while also generating standardised
+effects whose interpretation most closely resembles those of the ordinary
+linear model. The solution of using the working response from the GLM to
+scale effects is a practical, but reasonable one, and one that takes
+advantage of modern computing power to minimise error through iterative
+model fitting. An added bonus is that the estimated variance is constant
+across models fit to the same response variable, which cannot be said of
+previous methods (Menard 2011). The overall approach would be classed as
+'observed-empirical' by Grace \emph{et al.} (2018), as it utilises model error
+variance (the estimated working residuals) rather than theoretical
+distribution-specific variance.
 }
 \examples{
 # Compare estimate with a direct link transformation

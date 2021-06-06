@@ -334,7 +334,9 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
     # Function to get (weighted) (avg.) resids from model/boot obj./list
     res <- function(x, w = NULL) {
       f <- function(m) {
-        if (!isGls(m) && !isGlm(m)) resid(m, "deviance") else resid(m)
+        if (!isGls(m) && !isGlm(m)) {
+          resid(m, type = "deviance")
+        } else resid(m)
       }
       if (isList(x)) {
         if (all(sapply(x, isBoot))) {
@@ -528,31 +530,54 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
       type <- "perc"
     }
 
-    # Calculate confidence intervals
+    # Effects/bias/standard errors
     e <- B$t0
+    bi <- colMeans(B$t, na.rm = TRUE) - e
+    se <- apply(B$t, 2, sd, na.rm = TRUE)
+    se[is.na(e)] <- NA
+
+    # Confidence intervals
     ci <- sapply(1:length(e), function(i) {
       if (!is.na(e[i])) {
         if (e[i] != 0) {
-          ci <- do.call(boot::boot.ci, c(list(B, conf, type, i), bci.arg))
+          ci <- do.call(
+            boot::boot.ci,
+            c(list(B, conf, type, i), bci.arg)
+          )
           tail(as.vector(ci[[4]]), 2)
-        } else c(0, 0)
-      } else c(NA, NA)
+        } else rep(0, 2)
+      } else rep(NA, 2)
     })
 
-    # Combine effects and CIs into table (add significance stars)
-    e <- data.frame(
-      rbind(e, ci),
-      row.names = c("Estimate", "Lower CI", "Upper CI"),
-      check.names = FALSE
-    )
+    # Combine into table
+    e <- data.frame("Effect" = e, "Bias" = bi, "Std. Error" = se,
+                    "Lower CI" = ci[1, ], "Upper CI" = ci[2, ],
+                    check.names = FALSE)
     e <- round(e, digits)
-    stars <- t(data.frame(sapply(e, function(i) {
+
+    # Add significance stars
+    stars <- apply(e, 1, function(i) {
       if (!any(is.na(i))) {
+        i <- c(i[1], tail(i, 2))
         if (all(i > 0) || all(i < 0)) "*" else ""
       } else ""
-    })))
+    })
+    e <- cbind(e, " " = stars)
+
+    # Format table (columns, borders, spaces, etc.)
     e <- format(e, nsmall = digits)
-    e <- rbind(e, " " = stars)
+    e <- cbind(" " = rownames(e), e)
+    e[1] <- format(e[1], justify = "left")
+    b <- mapply(function(i, j) {
+      n1 <- nchar(j)
+      n2 <- max(sapply(i, nchar), n1)
+      b <- if (n1 > 1) rep("_", n2) else ""
+      paste(b, collapse = "")
+    }, e, names(e))
+    e <- rbind(b, "", e)
+    rownames(e) <- NULL
+
+    # Set attributes and output
     attr(e, "ci.conf") <- conf
     attr(e, "ci.type") <- type
     e
