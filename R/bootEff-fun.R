@@ -61,35 +61,34 @@
 #'   the group-level, as individual observations are not independent. The name
 #'   of the random effect to resample must be supplied to `ran.eff`. For nested
 #'   random effects, this should be the highest-level group (Davison & Hinkley
-#'   1997, Ren *et al.* 2010). This form of resampling will result in
-#'   differently-sized datasets if observations are unbalanced across groups;
-#'   however this should not generally be an issue, as the number of independent
-#'   units (groups), and hence the 'degrees of freedom', remains
+#'   1997, Ren *et al.* 2010). This form of resampling will result in datasets
+#'   of different sizes if observations are unbalanced across groups; however
+#'   this should not generally be an issue, as the number of independent units
+#'   (groups), and hence the 'degrees of freedom', remains
 #'   [unchanged](https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap).
-#'
-#'
-#'
 #'
 #'   For mixed models with [non-nested random
 #'   effects](https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified),
-#'    nonparametric resampling will not be appropriate. In these cases,
-#'   (semi-)parametric bootstrapping can be performed instead via [bootMer()] in
-#'   the [lme4] package (with additional arguments passed to that function as
-#'   necessary). NOTE: As [bootMer()] takes only a fitted model as its first
-#'   argument, any model averaging is calculated 'post-hoc' using the estimates
-#'   in boot objects for each candidate model, rather than during the
-#'   bootstrapping process itself (i.e. the default procedure via [boot()]).
-#'   Results are then returned in a new boot object for each response variable
-#'   or correlated error estimate.
+#'   nonparametric resampling will not be appropriate. In these cases,
+#'   parametric or semiparametric bootstrapping can be performed instead via
+#'   [bootMer()] in the [lme4] package (with additional arguments passed to that
+#'   function as necessary). NOTE: As [bootMer()] takes only a fitted model as
+#'   its first argument (i.e. no lists), any model averaging is calculated
+#'   'post-hoc' using the estimates in boot objects for each candidate model,
+#'   rather than during the bootstrapping process itself (i.e. the default
+#'   procedure via [boot()]). Results are then returned in a new boot object for
+#'   each response variable or correlated error estimate.
 #'
 #'   If supplied a list containing both mixed and non-mixed models, [bootEff()]
 #'   with nonparametric bootstrapping will still work and will treat all models
-#'   as mixed for resampling (with a warning). This is probably a relatively
-#'   rare scenario, but may occur where the user decides that non-mixed models
-#'   perform similarly and/or cause less issues than their mixed counterparts
-#'   for at least some response variables (e.g. where random effect variance
-#'   estimates are at or near zero). If nonparametric bootstrapping is not used
-#'   however, an error will occur, as [bootMer()] will only accept mixed models.
+#'   as mixed models for resampling (with a warning). This is likely a
+#'   relatively rare scenario, but may occur where the user decides that
+#'   non-mixed models perform similarly and/or cause less fitting issues than
+#'   their mixed counterparts for at least some response variables (e.g. where
+#'   random effect variance estimates are at or near zero). The data will be
+#'   resampled on the supplied random effect for all models. If nonparametric
+#'   bootstrapping is not used in this scenario however, an error will occur, as
+#'   [bootMer()] will only accept mixed models.
 #'
 #'   Parallel processing is used by default via the [parallel] package and
 #'   option `parallel = "snow"` (and is generally recommended), but users can
@@ -105,7 +104,7 @@
 #' @note Bootstrapping mixed (or indeed any other) models may take a very long
 #'   time when the number of replicates, observations, parameters, and/or models
 #'   is high. To decrease processing time, it may be worth trying different
-#'   optimizers and/or other options to generate faster estimates (always check
+#'   optimisers and/or other options to generate faster estimates (always check
 #'   results).
 #' @return An object of class `"boot"` containing the bootstrapped effects, or a
 #'   list/nested list of such objects.
@@ -461,20 +460,24 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
 #'   excepting argument `index`.
 #' @param ... Arguments to [bootEff()].
-#' @details This is essentially a wrapper for [boot.ci()] from the [boot]
-#'   package, returning confidence intervals of the specified type and level
-#'   calculated from bootstrapped model effects. If a model or models is
-#'   supplied, bootstrapping will first be performed via [bootEff()]. Effects
-#'   for which the confidence intervals do not contain zero are highlighted with
-#'   an asterix.
+#' @details `bootCI()` uses [boot.ci()] from the [boot] package to calculate
+#'   confidence intervals of the specified type and level calculated from
+#'   bootstrapped model effects. If a model or models is supplied, bootstrapping
+#'   will first be performed via [bootEff()].
 #'
 #'   Nonparametric bias-corrected and accelerated confidence intervals (BC*a*,
 #'   Efron 1987) are calculated by default, which should provide the most
 #'   accurate coverage across a range of bootstrap sampling distributions (Puth
 #'   *et al.* 2015). They will, however, be
 #'   [inappropriate](https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot)
-#'    for parametric resampling — in which case the default will be set to the
+#'   for parametric resampling — in which case the default will be set to the
 #'   bootstrap percentile method instead (`"perc"`).
+#'
+#'   Effects and confidence intervals are returned in a summary table, along
+#'   with the bootstrap standard errors (standard deviations of the samples) and
+#'   the bootstrap biases (sample means minus original estimates). Effects for
+#'   which the confidence intervals do not contain zero are highlighted with a
+#'   star (i.e. 'significant' at the `conf` level).
 #'
 #' @note All bootstrapped confidence intervals will tend to underestimate the
 #'   true nominal coverage to some extent when sample size is small (Chernick &
@@ -485,8 +488,8 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
 #'   however, the bootstrap is [not a solution to small sample
 #'   size](https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size).
 #'
-#' @return A data frame of the effects and bootstrapped confidence intervals, or
-#'   a list or nested list of same.
+#' @return A summary table of the effects and bootstrapped confidence intervals,
+#'   or a list or nested list of same.
 #' @references Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
 #'   Bootstrap Confidence Intervals. *American Journal of Mathematical and
 #'   Management Sciences*, **29**(3–4), 437–456. <https://doi.org/c8zv>

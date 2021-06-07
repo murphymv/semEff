@@ -16,23 +16,24 @@
 #'   intervals on effects.
 #' @param ci.type The type of confidence interval to return (defaults to `"bca"`
 #'   — see Details). See [boot.ci()] for further specification details.
-#' @param digits The number of significant digits to return for numeric values.
+#' @param digits The number of significant digits to return for numeric values
+#'   in summary tables.
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
 #'   excepting argument `index`.
 #' @param ... Arguments to [bootEff()].
 #' @details The eponymous function of this package calculates all direct,
-#'   indirect, total, and mediator effects for endogenous variables in a
-#'   'piecewise' structural equation model (SEM), that is, one where parameter
-#'   estimation is local rather than global (Shipley 2000, 2009; Lefcheck 2016).
-#'   The SEM simply takes the form of a list of fitted models, or bootstrapped
-#'   estimates from such models, describing hypothesised causal pathways from
-#'   predictors to response ('endogenous') variables. These are either direct,
-#'   or operate indirectly via other response variables ('mediators'). This list
-#'   should represent a directed ('acyclic') causal model, which should be named
-#'   (exactly) for each response variable and ordered from 'upstream' or
-#'   'causal' variables through to 'downstream' (i.e. those at the end of the
-#'   pathway). If `sem` is a list of fitted models, effects will first be
-#'   bootstrapped using [bootEff()] (this may take a while!).
+#'   indirect, total, and mediator effects for a 'piecewise' structural equation
+#'   model (SEM), that is, one where parameter estimation is local rather than
+#'   global (Shipley 2000, 2009; Lefcheck 2016). The SEM simply takes the form
+#'   of a list of fitted models, or bootstrapped estimates from such models,
+#'   describing hypothesised causal pathways from predictors to response
+#'   ('endogenous') variables. These are either direct, or operate indirectly
+#'   via other response variables ('mediators'). This list should represent a
+#'   directed ('acyclic') causal model, which should be named (exactly) for each
+#'   response variable and ordered from 'upstream' or 'causal' variables through
+#'   to 'downstream' (i.e. those at the end of the pathway). If `sem` is a list
+#'   of fitted models, effects will first be bootstrapped using [bootEff()]
+#'   (this may take a while!).
 #'
 #'   Direct effects are calculated as fully standardised model coefficients for
 #'   each response variable, while indirect effects are the product of these
@@ -43,28 +44,33 @@
 #'   mediator — useful to assess the relative importance of different mediators
 #'   in affecting the response. All of these effect types are calculated
 #'   automatically for all (default) or a subset of predictors, mediators, or
-#'   response variables in the SEM.
+#'   response variables in the SEM. As indirect, total, and mediator effects are
+#'   not directly bootstrapped using the fitted models for response variables
+#'   (i.e. via [bootEff()]), their equivalent 'bootstrapped' estimates are
+#'   calculated instead using each bootstrapped direct effect.
 #'
-#'   Confidence intervals for effects are returned for each response, with BC*a*
-#'   intervals calculated by default using bootstrapped estimates for each
-#'   effect type (MacKinnon *et al.* 2004, Cheung 2009, Hayes & Scharkow 2013).
-#'   As indirect, total, and mediator effects are not directly bootstrapped
-#'   using the fitted models for response variables (i.e. via [bootEff()]),
-#'   their equivalent 'bootstrapped' estimates are calculated instead using each
-#'   bootstrapped direct effect.
+#'   Confidence intervals for all effects are returned in summary tables for
+#'   each response (similarly to [bootCI()]), with BC*a* intervals calculated by
+#'   default using the bootstrapped estimates for each effect type (MacKinnon
+#'   *et al.* 2004, Cheung 2009, Hayes & Scharkow 2013). Effects for which the
+#'   confidence intervals do not contain zero are highlighted with a star (i.e.
+#'   'significant' at the `ci.conf` level). Bootstrap standard errors (standard
+#'   deviations of the samples) and biases (sample means minus original
+#'   estimates) are also included for reference.
 #'
 #'   Correlated errors (and confidence intervals) are also returned if their
 #'   bootstrapped values are present in `sem`, or, if `sem` is a list of fitted
 #'   models, if specified to argument `cor.err` (see [bootEff()]). These
 #'   represent residual relationships among response variables, unaccounted for
-#'   by the SEM.
+#'   by the hypothesised SEM paths.
 #'
-#'   All effects and bootstrapped effects are returned in lists for each
-#'   response variable, with all except mediator effects also including the
+#'   All calculated effects and bootstrapped effects are returned in lists for
+#'   each response variable, with all except mediator effects also including the
 #'   model intercept(s) — required for prediction (this will be zero for
 #'   ordinary linear models with fully standardised effects).
-#' @return A list object of class `"semEff"`, comprising: 1. all effects 2. all
-#'   bootstrapped effects 3. summary tables of effects and confidence intervals
+#' @return A list object of class `"semEff"`, comprising: 1. All calculated
+#'   effects 2. All calculated bootstrapped effects 3. Summary tables of effects
+#'   and confidence intervals
 #' @references Cheung, M. W. L. (2009). Comparison of methods for constructing
 #'   confidence intervals of standardized indirect effects. *Behavior Research
 #'   Methods*, **41**(2), 425-438. <https://doi.org/fnx7xk>
@@ -460,7 +466,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
   s <- subNam("_", ".", s)
 
   # Output effects
-  e <- list("Effects" = e, "Boot. Effects" = eb, "Summary" = s)
+  e <- list("Effects" = e, "Bootstrapped Effects" = eb, "Summary" = s)
   class(e) <- c("semEff", "list")
   e
 
@@ -475,7 +481,27 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, responses = NULL,
 #' @param ... Further arguments passed to or from other methods.
 # S3 method for class 'semEff'
 #' @export
-print.semEff <- function(x, ...) print(x$Summary)
+print.semEff <- function(x, ...) {
+  print(x$Summary)
+}
+
+
+#' @title Summarise SEM Effects
+#' @description A summary method for an object of class `"semEff"`, which acts
+#'   the same as [print.semEff()] except that individual summary tables for
+#'   different response variables can be extracted.
+#' @param x An object of class `"semEff"`.
+#' @param responses An optional character vector, the names of one or more SEM
+#'   response variables for which to return summary tables. `"Correlated
+#'   Errors"` can also be specified/included here (where applicable).
+#' @param ... Further arguments passed to or from other methods.
+# S3 method for class 'semEff'
+#' @export
+summary.semEff <- function(x, responses = NULL, ...) {
+  s <- x$Summary
+  if (!is.null(responses)) s <- s[responses]
+  print(s)
+}
 
 
 #' @title Get SEM Effects

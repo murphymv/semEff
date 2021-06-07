@@ -99,31 +99,33 @@ For nonparametric bootstrapping of mixed models, resampling should occur at
 the group-level, as individual observations are not independent. The name
 of the random effect to resample must be supplied to \code{ran.eff}. For nested
 random effects, this should be the highest-level group (Davison & Hinkley
-1997, Ren \emph{et al.} 2010). This form of resampling will result in
-differently-sized datasets if observations are unbalanced across groups;
-however this should not generally be an issue, as the number of independent
-units (groups), and hence the 'degrees of freedom', remains
+1997, Ren \emph{et al.} 2010). This form of resampling will result in datasets
+of different sizes if observations are unbalanced across groups; however
+this should not generally be an issue, as the number of independent units
+(groups), and hence the 'degrees of freedom', remains
 \href{https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap}{unchanged}.
 
 For mixed models with \href{https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified}{non-nested random effects},
 nonparametric resampling will not be appropriate. In these cases,
-(semi-)parametric bootstrapping can be performed instead via \code{\link[=bootMer]{bootMer()}} in
-the \link{lme4} package (with additional arguments passed to that function as
-necessary). NOTE: As \code{\link[=bootMer]{bootMer()}} takes only a fitted model as its first
-argument, any model averaging is calculated 'post-hoc' using the estimates
-in boot objects for each candidate model, rather than during the
-bootstrapping process itself (i.e. the default procedure via \code{\link[=boot]{boot()}}).
-Results are then returned in a new boot object for each response variable
-or correlated error estimate.
+parametric or semiparametric bootstrapping can be performed instead via
+\code{\link[=bootMer]{bootMer()}} in the \link{lme4} package (with additional arguments passed to that
+function as necessary). NOTE: As \code{\link[=bootMer]{bootMer()}} takes only a fitted model as
+its first argument (i.e. no lists), any model averaging is calculated
+'post-hoc' using the estimates in boot objects for each candidate model,
+rather than during the bootstrapping process itself (i.e. the default
+procedure via \code{\link[=boot]{boot()}}). Results are then returned in a new boot object for
+each response variable or correlated error estimate.
 
 If supplied a list containing both mixed and non-mixed models, \code{\link[=bootEff]{bootEff()}}
 with nonparametric bootstrapping will still work and will treat all models
-as mixed for resampling (with a warning). This is probably a relatively
-rare scenario, but may occur where the user decides that non-mixed models
-perform similarly and/or cause less issues than their mixed counterparts
-for at least some response variables (e.g. where random effect variance
-estimates are at or near zero). If nonparametric bootstrapping is not used
-however, an error will occur, as \code{\link[=bootMer]{bootMer()}} will only accept mixed models.
+as mixed models for resampling (with a warning). This is likely a
+relatively rare scenario, but may occur where the user decides that
+non-mixed models perform similarly and/or cause less fitting issues than
+their mixed counterparts for at least some response variables (e.g. where
+random effect variance estimates are at or near zero). The data will be
+resampled on the supplied random effect for all models. If nonparametric
+bootstrapping is not used in this scenario however, an error will occur, as
+\code{\link[=bootMer]{bootMer()}} will only accept mixed models.
 
 Parallel processing is used by default via the \link{parallel} package and
 option \code{parallel = "snow"} (and is generally recommended), but users can
@@ -140,7 +142,7 @@ required external packages prior to calling the function.
 Bootstrapping mixed (or indeed any other) models may take a very long
 time when the number of replicates, observations, parameters, and/or models
 is high. To decrease processing time, it may be worth trying different
-optimizers and/or other options to generate faster estimates (always check
+optimisers and/or other options to generate faster estimates (always check
 results).
 }
 \examples{

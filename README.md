@@ -75,33 +75,20 @@ eff <- suppressWarnings(semEff(Shipley.SEM.Boot))
 
 # Summary of effects for response "Growth"
 eff$Summary$Growth
-#> $Direct
-#>           Date
-#> Estimate 0.382
-#> Lower CI 0.289
-#> Upper CI 0.513
-#>              *
-#> 
-#> $Indirect
-#>            lat     DD
-#> Estimate 0.165 -0.240
-#> Lower CI 0.088 -0.351
-#> Upper CI 0.290 -0.180
-#>              *      *
-#> 
-#> $Total
-#>            lat     DD  Date
-#> Estimate 0.165 -0.240 0.382
-#> Lower CI 0.088 -0.351 0.289
-#> Upper CI 0.290 -0.180 0.513
-#>              *      *     *
-#> 
-#> $Mediators
-#>             DD   Date
-#> Estimate 0.165 -0.075
-#> Lower CI 0.088 -0.105
-#> Upper CI 0.290 -0.048
-#>              *      *
+#>                   Effect   Bias Std. Error Lower CI Upper CI  
+#> 1                 ______ ______ __________ ________ ________  
+#> 2                                                             
+#> 3  DIRECT    Date  0.382  0.011      0.058    0.289    0.513 *
+#> 4                                                             
+#> 5  INDIRECT  lat   0.165  0.000      0.048    0.088    0.290 *
+#> 6            DD   -0.240 -0.006      0.042   -0.351   -0.180 *
+#> 7                                                             
+#> 8  TOTAL     lat   0.165  0.000      0.048    0.088    0.290 *
+#> 9            DD   -0.240 -0.006      0.042   -0.351   -0.180 *
+#> 10           Date  0.382  0.011      0.058    0.289    0.513 *
+#> 11                                                            
+#> 12 MEDIATORS DD    0.165  0.000      0.048    0.088    0.290 *
+#> 13           Date -0.075 -0.006      0.016   -0.105   -0.048 *
 
 # Extract total effects for Growth
 tot <- totEff(eff)[["Growth"]]

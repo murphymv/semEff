@@ -35,7 +35,8 @@ intervals on effects.}
 \item{ci.type}{The type of confidence interval to return (defaults to \code{"bca"}
 — see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
 
-\item{digits}{The number of significant digits to return for numeric values.}
+\item{digits}{The number of significant digits to return for numeric values
+in summary tables.}
 
 \item{bci.arg}{A named list of any additional arguments to \code{\link[=boot.ci]{boot.ci()}},
 excepting argument \code{index}.}
@@ -43,8 +44,9 @@ excepting argument \code{index}.}
 \item{...}{Arguments to \code{\link[=bootEff]{bootEff()}}.}
 }
 \value{
-A list object of class \code{"semEff"}, comprising: 1. all effects 2. all
-bootstrapped effects 3. summary tables of effects and confidence intervals
+A list object of class \code{"semEff"}, comprising: 1. All calculated
+effects 2. All calculated bootstrapped effects 3. Summary tables of effects
+and confidence intervals
 }
 \description{
 Automatically calculate direct, indirect, total, and mediator
@@ -53,18 +55,18 @@ equation model (SEM).
 }
 \details{
 The eponymous function of this package calculates all direct,
-indirect, total, and mediator effects for endogenous variables in a
-'piecewise' structural equation model (SEM), that is, one where parameter
-estimation is local rather than global (Shipley 2000, 2009; Lefcheck 2016).
-The SEM simply takes the form of a list of fitted models, or bootstrapped
-estimates from such models, describing hypothesised causal pathways from
-predictors to response ('endogenous') variables. These are either direct,
-or operate indirectly via other response variables ('mediators'). This list
-should represent a directed ('acyclic') causal model, which should be named
-(exactly) for each response variable and ordered from 'upstream' or
-'causal' variables through to 'downstream' (i.e. those at the end of the
-pathway). If \code{sem} is a list of fitted models, effects will first be
-bootstrapped using \code{\link[=bootEff]{bootEff()}} (this may take a while!).
+indirect, total, and mediator effects for a 'piecewise' structural equation
+model (SEM), that is, one where parameter estimation is local rather than
+global (Shipley 2000, 2009; Lefcheck 2016). The SEM simply takes the form
+of a list of fitted models, or bootstrapped estimates from such models,
+describing hypothesised causal pathways from predictors to response
+('endogenous') variables. These are either direct, or operate indirectly
+via other response variables ('mediators'). This list should represent a
+directed ('acyclic') causal model, which should be named (exactly) for each
+response variable and ordered from 'upstream' or 'causal' variables through
+to 'downstream' (i.e. those at the end of the pathway). If \code{sem} is a list
+of fitted models, effects will first be bootstrapped using \code{\link[=bootEff]{bootEff()}}
+(this may take a while!).
 
 Direct effects are calculated as fully standardised model coefficients for
 each response variable, while indirect effects are the product of these
@@ -75,24 +77,28 @@ the sum of all indirect paths which operate through each individual
 mediator — useful to assess the relative importance of different mediators
 in affecting the response. All of these effect types are calculated
 automatically for all (default) or a subset of predictors, mediators, or
-response variables in the SEM.
+response variables in the SEM. As indirect, total, and mediator effects are
+not directly bootstrapped using the fitted models for response variables
+(i.e. via \code{\link[=bootEff]{bootEff()}}), their equivalent 'bootstrapped' estimates are
+calculated instead using each bootstrapped direct effect.
 
-Confidence intervals for effects are returned for each response, with BC\emph{a}
-intervals calculated by default using bootstrapped estimates for each
-effect type (MacKinnon \emph{et al.} 2004, Cheung 2009, Hayes & Scharkow 2013).
-As indirect, total, and mediator effects are not directly bootstrapped
-using the fitted models for response variables (i.e. via \code{\link[=bootEff]{bootEff()}}),
-their equivalent 'bootstrapped' estimates are calculated instead using each
-bootstrapped direct effect.
+Confidence intervals for all effects are returned in summary tables for
+each response (similarly to \code{\link[=bootCI]{bootCI()}}), with BC\emph{a} intervals calculated by
+default using the bootstrapped estimates for each effect type (MacKinnon
+\emph{et al.} 2004, Cheung 2009, Hayes & Scharkow 2013). Effects for which the
+confidence intervals do not contain zero are highlighted with a star (i.e.
+'significant' at the \code{ci.conf} level). Bootstrap standard errors (standard
+deviations of the samples) and biases (sample means minus original
+estimates) are also included for reference.
 
 Correlated errors (and confidence intervals) are also returned if their
 bootstrapped values are present in \code{sem}, or, if \code{sem} is a list of fitted
 models, if specified to argument \code{cor.err} (see \code{\link[=bootEff]{bootEff()}}). These
 represent residual relationships among response variables, unaccounted for
-by the SEM.
+by the hypothesised SEM paths.
 
-All effects and bootstrapped effects are returned in lists for each
-response variable, with all except mediator effects also including the
+All calculated effects and bootstrapped effects are returned in lists for
+each response variable, with all except mediator effects also including the
 model intercept(s) — required for prediction (this will be zero for
 ordinary linear models with fully standardised effects).
 }

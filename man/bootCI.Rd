@@ -25,19 +25,17 @@ excepting argument \code{index}.}
 \item{...}{Arguments to \code{\link[=bootEff]{bootEff()}}.}
 }
 \value{
-A data frame of the effects and bootstrapped confidence intervals, or
-a list or nested list of same.
+A summary table of the effects and bootstrapped confidence intervals,
+or a list or nested list of same.
 }
 \description{
 Calculate confidence intervals from bootstrapped model effects.
 }
 \details{
-This is essentially a wrapper for \code{\link[=boot.ci]{boot.ci()}} from the \link{boot}
-package, returning confidence intervals of the specified type and level
-calculated from bootstrapped model effects. If a model or models is
-supplied, bootstrapping will first be performed via \code{\link[=bootEff]{bootEff()}}. Effects
-for which the confidence intervals do not contain zero are highlighted with
-an asterix.
+\code{bootCI()} uses \code{\link[=boot.ci]{boot.ci()}} from the \link{boot} package to calculate
+confidence intervals of the specified type and level calculated from
+bootstrapped model effects. If a model or models is supplied, bootstrapping
+will first be performed via \code{\link[=bootEff]{bootEff()}}.
 
 Nonparametric bias-corrected and accelerated confidence intervals (BC\emph{a},
 Efron 1987) are calculated by default, which should provide the most
@@ -46,6 +44,12 @@ accurate coverage across a range of bootstrap sampling distributions (Puth
 \href{https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot}{inappropriate}
 for parametric resampling — in which case the default will be set to the
 bootstrap percentile method instead (\code{"perc"}).
+
+Effects and confidence intervals are returned in a summary table, along
+with the bootstrap standard errors (standard deviations of the samples) and
+the bootstrap biases (sample means minus original estimates). Effects for
+which the confidence intervals do not contain zero are highlighted with a
+star (i.e. 'significant' at the \code{conf} level).
 }
 \note{
 All bootstrapped confidence intervals will tend to underestimate the
