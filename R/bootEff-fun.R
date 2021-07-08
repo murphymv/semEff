@@ -26,7 +26,7 @@
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param bM.arg A named list of any additional arguments to [bootMer()].
 #' @param ... Arguments to [stdEff()].
-#' @details `bootEff()` uses the [boot()] function (primarily) to bootstrap
+#' @details `bootEff()` uses [boot::boot()] (primarily) to bootstrap
 #'   standardised effects from a fitted model or list of models (calculated
 #'   using [stdEff()]). Bootstrapping is typically nonparametric, i.e. model
 #'   effects are calculated from data where the rows have been randomly sampled
@@ -71,13 +71,13 @@
 #'   effects](https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified),
 #'   nonparametric resampling will not be appropriate. In these cases,
 #'   parametric or semiparametric bootstrapping can be performed instead via
-#'   [bootMer()] in the [lme4] package (with additional arguments passed to that
-#'   function as necessary). NOTE: As [bootMer()] takes only a fitted model as
-#'   its first argument (i.e. no lists), any model averaging is calculated
-#'   'post-hoc' using the estimates in boot objects for each candidate model,
-#'   rather than during the bootstrapping process itself (i.e. the default
-#'   procedure via [boot()]). Results are then returned in a new boot object for
-#'   each response variable or correlated error estimate.
+#'   [lme4::bootMer()] (with additional arguments passed to that function as
+#'   necessary). NOTE: As [bootMer()] takes only a fitted model as its first
+#'   argument (i.e. no lists), any model averaging is calculated 'post-hoc'
+#'   using the estimates in boot objects for each candidate model, rather than
+#'   during the bootstrapping process itself (i.e. the default procedure via
+#'   [boot()]). Results are then returned in a new boot object for each response
+#'   variable or correlated error estimate.
 #'
 #'   If supplied a list containing both mixed and non-mixed models, [bootEff()]
 #'   with nonparametric bootstrapping will still work and will treat all models
@@ -136,7 +136,7 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
   if (missing(R))
     stop("Number of bootstrap resamples (R) must be specified.")
 
-  # Arguments to stdEff
+  # Arguments to stdEff()
   a <- list(...)
 
   # Weights (for model averaging)
@@ -167,10 +167,6 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
     warning("Mixed and non-mixed models together in list. Resampling will treat all models as mixed.")
   mer <- any(mer)
   mer2 <- isTRUE(if (mer) {
-    if (isTRUE(if (!is.null(re)) re == "crossed")) {
-      warning("Use of 'ran.eff = 'crossed'' to indicated parametric bootstrapping is deprecated; specify the 'type' argument in future.")
-      if (type == "nonparametric") type <- "parametric"
-    }
     pb <- type %in% c("parametric", "semiparametric")
     if (!pb && is.null(re))
       stop("Name of random effect to resample must be specified to 'ran.eff' (or use parametric bootstrapping).")
@@ -199,7 +195,6 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
     }
 
     # Create boot statistic object for later assignment
-    # (avoids package check note: "no visible binding for global variable 's'")
     s <- NULL
 
   }
@@ -460,10 +455,10 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
 #'   excepting argument `index`.
 #' @param ... Arguments to [bootEff()].
-#' @details `bootCI()` uses [boot.ci()] from the [boot] package to calculate
-#'   confidence intervals of the specified type and level calculated from
-#'   bootstrapped model effects. If a model or models is supplied, bootstrapping
-#'   will first be performed via [bootEff()].
+#' @details `bootCI()` uses [boot::boot.ci()] to calculate confidence intervals
+#'   of the specified type and level calculated from bootstrapped model effects.
+#'   If a model or models is supplied, bootstrapping will first be performed via
+#'   [bootEff()].
 #'
 #'   Nonparametric bias-corrected and accelerated confidence intervals (BC*a*,
 #'   Efron 1987) are calculated by default, which should provide the most
@@ -543,9 +538,11 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
     ci <- sapply(1:length(e), function(i) {
       if (!is.na(e[i])) {
         if (e[i] != 0) {
-          ci <- do.call(
-            boot::boot.ci,
-            c(list(B, conf, type, i), bci.arg)
+          ci <- suppressWarnings(
+            do.call(
+              boot::boot.ci,
+              c(list(B, conf, type, i), bci.arg)
+            )
           )
           tail(as.vector(ci[[4]]), 2)
         } else rep(0, 2)
@@ -570,7 +567,6 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
     # Format table (columns, borders, spaces, etc.)
     e <- format(e, nsmall = digits)
     e <- cbind(" " = rownames(e), e)
-    e[1] <- format(e[1], justify = "left")
     b <- mapply(function(i, j) {
       n1 <- nchar(j)
       n2 <- max(sapply(i, nchar), n1)
@@ -578,7 +574,8 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
       paste(b, collapse = "")
     }, e, names(e))
     e <- rbind(b, "", e)
-    rownames(e) <- NULL
+    e[1] <- format(e[1], justify = "left")
+    rownames(e) <- 1:nrow(e)
 
     # Set attributes and output
     attr(e, "ci.conf") <- conf

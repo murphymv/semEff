@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper-fun.R
 \name{pSapply}
 \alias{pSapply}
-\title{Parallel \code{sapply()}}
+\title{Parallel \code{\link[=sapply]{sapply()}}}
 \usage{
 pSapply(
   X,

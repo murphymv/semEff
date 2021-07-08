@@ -2,7 +2,7 @@
 % Please edit documentation in R/stdEff-fun.R
 \name{R2}
 \alias{R2}
-\title{(Pseudo) R-squared}
+\title{R-squared}
 \usage{
 R2(
   mod,
@@ -12,7 +12,9 @@ R2(
   offset = FALSE,
   re.form = NULL,
   type = "pearson",
-  env = parent.frame()
+  adj.type = "olkin-pratt",
+  positive.only = TRUE,
+  env = NULL
 )
 }
 \arguments{
@@ -35,7 +37,14 @@ are included. See \code{\link[=predict.merMod]{predict.merMod()}} for further sp
 \item{type}{The type of correlation coefficient to use. Can be either
 \code{"pearson"} (default) or \code{"spearman"}.}
 
-\item{env}{Environment in which to look for model data (if none supplied).}
+\item{adj.type}{The type of adjusted R-squared estimator to use. Can be
+\code{"olkin-pratt"} (default) or \code{"standard"}. See Details.}
+
+\item{positive.only}{Logical, whether to return only positive values for
+R-squared (negative values replaced with zero).}
+
+\item{env}{Environment in which to look for model data (if none supplied).
+Defaults to the \code{\link[=formula]{formula()}} environment.}
 }
 \value{
 A numeric vector of the R-squared value(s), or an array, list of
@@ -65,32 +74,39 @@ model (Kvalseth 1985). In the case of the ordinary linear model, the
 measure equals the more traditional R-squared based on sums of squares.
 
 If \code{adj = TRUE} (default), the 'adjusted' R-squared value is also returned,
-which provides an estimate of the population — as opposed to sample -
+which provides an estimate of the population — as opposed to sample —
 R-squared. This is achieved via an analytical formula which adjusts
 R-squared for the 'degrees of freedom' of the model (i.e. the ratio of
-observations to parameters). Here, this is calculated via the 'Pratt'
-rather than standard 'Ezekiel/Wherry' formula, shown in a previous
-simulation to be the most effective of a range of existing formulas at
-estimating the population R-squared across a range of model specification
-scenarios (Yin & Fan 2001). Adjusted R-squared can be used to safeguard
-against overfitting of the model to the original sample.
+observations to parameters). By default, this is calculated via the exact
+'Olkin-Pratt' estimator (Olkin & Pratt 1958), shown in a recent simulation
+study to be the optimal unbiased population R-squared estimator, across a
+range of model specification scenarios (Karch 2020). Setting \code{adj.type = "standard"} will use the more common 'Ezekiel/Wherry' formula, which can be
+preferred in certain circumstances, such as where minimising the mean
+squared error (MSE) of the estimate is more important than unbiasedness
+(Karch 2020), and/or for comparison purposes with other studies. Adjusted
+R-squared can be used to help safeguard against overfitting of the model to
+the original sample.
 
 If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned, which
 is calculated via the same formula as for R-squared but using
-cross-validated rather than standard fitted values. These are obtained by
-dividing the model response residuals by the complement of the observation
-leverages (diagonals of the hat matrix), then subtracting these inflated
-'predicted' residuals from the response variable. This is essentially a
-short cut to obtaining out-of-sample predictions, normally arising via a
-leave-one-out cross-validation procedure (in a GLM they will not be exactly
-equal to such predictions). The resulting R-squared is an estimate of the
-R-squared that would occur were the model to be fit to new data, and will
-be lower than the original — and likely also the adjusted — R-squared,
-highlighting the loss of explanatory power when predicting to new data.
-This measure is a variant of an \href{https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/}{existing one},
+cross-validated, rather than original, fitted values. These are obtained by
+dividing the model residuals (in the response scale) by the complement of
+the observation leverages (diagonals of the hat matrix), then subtracting
+these inflated 'predicted' residuals from the response variable. This is
+essentially a short cut to obtaining 'out-of-sample' predictions, normally
+arising via a 'leave-one-out' cross-validation procedure (they are not
+exactly equal for GLMs). The resulting R-squared is an estimate of the
+R-squared that would result were the model fit to new data, and will be
+lower than the original — and likely also the adjusted — R-squared,
+highlighting the loss of explanatory power due to sample noise. Predicted
+R-squared \href{https://stats.stackexchange.com/questions/242770/difference-between-adjusted-r-squared-and-predicted-r-squared}{may be a more powerful and general indicator of overfitting than adjusted R-squared},
+as it provides a true out-of-sample test. This measure is a variant of an
+\href{https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/}{existing one},
 calculated by substituting the 'PRESS' statistic, i.e. the sum of squares
 of the predicted residuals (Allen 1974), for the residual sum of squares in
-the classic R-squared formula.
+the classic R-squared formula. It is not calculated here for GLMMs, as the
+interpretation of the hat matrix is not reliable (see
+\code{\link[=hatvalues.merMod]{hatvalues.merMod()}}).
 
 For models fitted with one or more offsets, these will be removed by
 default from the response variable and fitted values prior to calculations.
@@ -102,32 +118,39 @@ variation due to the offset(s) they can set \code{offset = TRUE}.
 For mixed models, the function will, by default, calculate all R-squared
 measures using fitted values incorporating both the fixed and random
 effects, thus encompassing all variation captured by the model. This is
-equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017). To
-include only some or no random effects, simply set the appropriate formula
-using the argument \code{re.form}, which is passed directly to
-\code{\link[=predict.merMod]{predict.merMod()}}. If \code{re.form = NA}, R-squared is calculated for the
-fixed effects only — equivalent to the 'marginal' R-squared of Nakagawa \emph{et
-al.} (2017).
+equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017)
+(though see that reference for a more advanced approach to R-squared for
+mixed models). To include only some or no random effects, simply set the
+appropriate formula using the argument \code{re.form}, which is passed directly
+to \code{\link[=predict.merMod]{predict.merMod()}}. If \code{re.form = NA}, R-squared is calculated for the
+fixed effects only, i.e. the 'marginal' R-squared of Nakagawa \emph{et al.}
+(2017).
 
 As R-squared is calculated here as a squared correlation, the \code{type} of
 correlation coefficient can also be specified. Setting this to \code{"spearman"}
 may be desirable in some cases, such as where the relationship between
-response and fitted values is not necessarily bivariate normal or linear.
-Note that R-squared based on Spearman's rho (i.e. ranked variables) is not
-equivalent to the classic R-squared based on sums of squares, but can still
-be considered a \href{https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho}{useful goodness of fit measure}.
-It may also be considered more appropriate for comparisons of R-squared
-between GLMs and ordinary linear models in some situations.
+response and fitted values is not necessarily bivariate normal or linear,
+and a correlation of the ranks may be more informative and/or general. This
+purely monotonic R-squared can also be considered a \href{https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho}{useful goodness of fit measure},
+and may be more appropriate for comparisons between GLMs and ordinary
+linear models in some scenarios.
 
-R-squared values produced by this function will always be bounded between
-zero (no fit) and one (perfect fit), meaning that any negative values
-arising from calculations will be rounded up to zero. Negative values
-typically mean that the fit is 'worse' than the null expectation of no
-relationship between the variables, which can be difficult to interpret in
-practice and in any case usually only occurs in rare situations, such as
-where the intercept is suppressed. Hence, for simplicity and ease of
-interpretation, values less than zero are presented here as a complete lack
-of model fit.
+R-squared values produced by this function will by default be in the range
+0-1, meaning that any negative values arising from calculations will be
+converted to zero. Negative values essentially mean that the fit is 'worse'
+than the null expectation of no relationship between the variables, which
+can be difficult to interpret in practice and in any case usually only
+occurs in rare situations, such as where the intercept is suppressed or
+where a low value of R-squared is adjusted downwards via an analytic
+estimator. Such values are also 'impossible', given that R-squared is a
+strictly positive measure. Hence, for simplicity and ease of
+interpretation, values less than zero are presented as a complete lack of
+model fit. This is also recommended by Shieh (2008), who shows for adjusted
+R-squared that such 'positive-part' estimators have lower MSE in estimating
+the population R-squared (though higher bias). To allow return of negative
+values (even after squaring), set \code{positive.only = FALSE}. This may be
+desirable for simulation purposes, and where strict unbiasedness is
+prioritised.
 }
 \note{
 Caution must be exercised in interpreting the values of any pseudo
@@ -136,16 +159,13 @@ produced by this function), as such measures do not hold all the properties
 of R-squared in the ordinary linear model and as such may not always behave
 as expected. Care must also be taken in comparing the measures to their
 equivalents from ordinary linear models, particularly the adjusted and
-predicted versions. For example, for the adjusted R-squared for mixed
-models, it's not entirely clear what the sample size (\emph{n}) in the formula
-should represent — no. of observations? independent groups? something else?
-(the default interpretation of no. of observations is used). With all that
-being said, the value of standardised R-squared measures for even 'rough'
-model fit assessment and comparison may outweigh such reservations, and the
-adjusted and predicted versions in particular may aid the user in
-diagnosing and preventing overfitting. They should NOT, however, replace
-other measures such as AIC or BIC for formally comparing and/or ranking
-competing models fit to the same response variable.
+predicted versions, as assumptions and/or calculations may not generalise
+well. With that being said, the value of standardised R-squared measures
+for even 'rough' model fit assessment and comparison may outweigh such
+reservations, and the adjusted and predicted versions in particular may aid
+the user in diagnosing and preventing overfitting. They should NOT,
+however, replace other measures such as AIC or BIC for formally comparing
+and/or ranking competing models fit to the same response variable.
 }
 \examples{
 # Pseudo R-squared for mixed models
@@ -153,7 +173,7 @@ R2(Shipley.SEM)  # fixed + random ('conditional')
 R2(Shipley.SEM, re.form = ~ (1 | tree))  # fixed + 'tree'
 R2(Shipley.SEM, re.form = ~ (1 | site))  # fixed + 'site'
 R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
-R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's rho
+R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's Rho
 
 # Predicted R-squared: compare cross-validated predictions calculated/
 # approximated via the hat matrix to standard method (leave-one-out)
@@ -192,6 +212,9 @@ Allen, D. M. (1974). The Relationship Between Variable Selection
 and Data Augmentation and a Method for Prediction. \emph{Technometrics},
 \strong{16}(1), 125-127. \url{https://doi.org/gfgv57}
 
+Karch, J. (2020). Improving on Adjusted R-Squared. \emph{Collabra: Psychology},
+\strong{6}(1). \url{https://doi.org/gkgk2v}
+
 Kvalseth, T. O. (1985) Cautionary Note about R2. \emph{The American
 Statistician}, \strong{39}(4), 279-285. \url{https://doi.org/b8b782}
 
@@ -199,6 +222,15 @@ Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
 determination R2 and intra-class correlation coefficient from generalized
 linear mixed-effects models revisited and expanded. \emph{Journal of the Royal
 Society Interface}, \strong{14}(134). \url{https://doi.org/gddpnq}
+
+Olkin, I., & Pratt, J. W. (1958). Unbiased Estimation of Certain
+Correlation Coefficients. \emph{The Annals of Mathematical Statistics},
+\strong{29}(1), 201–211. \url{https://doi.org/10/dsjtxq}
+
+Shieh, G. (2008). Improved Shrinkage Estimation of Squared Multiple
+Correlation Coefficient and Squared Cross-Validity Coefficient.
+\emph{Organizational Research Methods}, \strong{11}(2), 387–407.
+\url{https://doi.org/bcwqf3}
 
 Yin, P. and Fan, X. (2001) Estimating R2 Shrinkage in Multiple Regression:
 A Comparison of Different Analytical Methods. \emph{The Journal of Experimental

@@ -10,7 +10,6 @@ stdEff(
   data = NULL,
   term.names = NULL,
   unique.eff = TRUE,
-  unique.x = TRUE,
   cen.x = TRUE,
   cen.y = TRUE,
   std.x = TRUE,
@@ -18,8 +17,8 @@ stdEff(
   refit.x = TRUE,
   r.squared = FALSE,
   incl.raw = FALSE,
-  env = parent.frame(),
-  ...
+  R2.arg = NULL,
+  env = NULL
 )
 }
 \arguments{
@@ -39,8 +38,6 @@ effects from the output.}
 \item{unique.eff}{Logical, whether unique effects should be calculated
 (adjusted for multicollinearity among predictors).}
 
-\item{unique.x}{Deprecated but allowed temporarily. Use \code{unique.eff} instead.}
-
 \item{cen.x, cen.y}{Logical, whether effects should be calculated as if from
 mean-centred variables.}
 
@@ -55,9 +52,11 @@ predictor variables (see Details).}
 \item{incl.raw}{Logical, whether to append the raw (unstandardised) effects
 to the output.}
 
-\item{env}{Environment in which to look for model data (if none supplied).}
+\item{R2.arg}{A named list of additional arguments to \code{\link[=R2]{R2()}} (where
+applicable), excepting argument \code{env}.}
 
-\item{...}{Arguments to \code{R2}.}
+\item{env}{Environment in which to look for model data (if none supplied).
+Defaults to the \code{\link[=formula]{formula()}} environment.}
 }
 \value{
 A numeric vector of the standardised effects, or a list or nested
@@ -68,16 +67,16 @@ Calculate fully standardised effects (model coefficients) in
 standard deviation units, adjusted for multicollinearity by default.
 }
 \details{
-\code{stdEff} will calculate fully standardised effects (coefficients) in
-standard deviation units for a fitted model or list of models. It achieves
-this via adjusting the 'raw' model coefficients, so no standardisation of
-input variables is required beforehand. Users can simply specify the model
-with all variables in their original units and the function will do the
-rest. However, the user is free to scale and/or centre any input variables
-should they choose, which should not affect the outcome of standardisation
-(provided any scaling is by standard deviations). This may be desirable in
-some cases, such as to increase numerical stability during model fitting
-when variables are on widely different scales.
+\code{stdEff()} will calculate fully standardised effects (coefficients)
+in standard deviation units for a fitted model or list of models. It
+achieves this via adjusting the 'raw' model coefficients, so no
+standardisation of input variables is required beforehand. Users can simply
+specify the model with all variables in their original units and the
+function will do the rest. However, the user is free to scale and/or centre
+any input variables should they choose, which should not affect the outcome
+of standardisation (provided any scaling is by standard deviations). This
+may be desirable in some cases, such as to increase numerical stability
+during model fitting when variables are on widely different scales.
 
 If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, effects will be calculated as
 if all predictors (x) and/or the response variable (y) were mean-centred
@@ -149,7 +148,7 @@ save time, especially with larger/more complex models and/or bootstrap
 runs.
 
 If \code{r.squared = TRUE}, model R-squared values are appended to effects via
-the \code{\link[=R2]{R2()}} function, with any additional arguments being passed via \code{...}.
+the \code{\link[=R2]{R2()}} function, with any additional arguments passed via \code{R2.arg}.
 
 If \code{incl.raw = TRUE}, raw (unstandardised) effects can also be appended,
 i.e. those with all centring and scaling options set to \code{FALSE} (though

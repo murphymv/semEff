@@ -32,10 +32,10 @@ or a list or nested list of same.
 Calculate confidence intervals from bootstrapped model effects.
 }
 \details{
-\code{bootCI()} uses \code{\link[=boot.ci]{boot.ci()}} from the \link{boot} package to calculate
-confidence intervals of the specified type and level calculated from
-bootstrapped model effects. If a model or models is supplied, bootstrapping
-will first be performed via \code{\link[=bootEff]{bootEff()}}.
+\code{bootCI()} uses \code{\link[boot:boot.ci]{boot::boot.ci()}} to calculate confidence intervals
+of the specified type and level calculated from bootstrapped model effects.
+If a model or models is supplied, bootstrapping will first be performed via
+\code{\link[=bootEff]{bootEff()}}.
 
 Nonparametric bias-corrected and accelerated confidence intervals (BC\emph{a},
 Efron 1987) are calculated by default, which should provide the most

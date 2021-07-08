@@ -121,8 +121,8 @@ observations to predict is very large, parallel processing (via
 \code{\link[=pSapply]{pSapply()}}) may speed up the calculation of intervals.
 
 Predictions are always returned in the original (typically unstandardised)
-units of the (link-)response variable. For GLMs, they can be returned in
-the response scale if \code{type = "response"}.
+units of the (link-transformed) response variable. For GLMs, they can be
+returned in the response scale if \code{type = "response"}.
 
 Additionally, if the name of an interactive effect is supplied to
 \code{interaction}, standardised effects (and confidence intervals) can be
@@ -130,8 +130,9 @@ returned for effects of a continuous 'main' variable across different
 values or levels of interacting variable(s). The name should be of the form
 \code{"x1:x2..."}, containing all the variables involved and matching the name
 of an interactive effect in the model(s) terms or in \code{effects}. The values
-for all variables should be supplied in \code{newdata}, with the continuous
-variable being automatically identified as having the most unique values.
+for all variables should be supplied in \code{newdata}, with the main continuous
+variable being automatically identified as that having the most unique
+values.
 }
 \examples{
 # Predict effects (direct, total)

@@ -64,7 +64,7 @@ Bootstrap model effects (standardised coefficients) and optional
 SEM correlated errors.
 }
 \details{
-\code{bootEff()} uses the \code{\link[=boot]{boot()}} function (primarily) to bootstrap
+\code{bootEff()} uses \code{\link[boot:boot]{boot::boot()}} (primarily) to bootstrap
 standardised effects from a fitted model or list of models (calculated
 using \code{\link[=stdEff]{stdEff()}}). Bootstrapping is typically nonparametric, i.e. model
 effects are calculated from data where the rows have been randomly sampled
@@ -108,13 +108,13 @@ this should not generally be an issue, as the number of independent units
 For mixed models with \href{https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified}{non-nested random effects},
 nonparametric resampling will not be appropriate. In these cases,
 parametric or semiparametric bootstrapping can be performed instead via
-\code{\link[=bootMer]{bootMer()}} in the \link{lme4} package (with additional arguments passed to that
-function as necessary). NOTE: As \code{\link[=bootMer]{bootMer()}} takes only a fitted model as
-its first argument (i.e. no lists), any model averaging is calculated
-'post-hoc' using the estimates in boot objects for each candidate model,
-rather than during the bootstrapping process itself (i.e. the default
-procedure via \code{\link[=boot]{boot()}}). Results are then returned in a new boot object for
-each response variable or correlated error estimate.
+\code{\link[lme4:bootMer]{lme4::bootMer()}} (with additional arguments passed to that function as
+necessary). NOTE: As \code{\link[=bootMer]{bootMer()}} takes only a fitted model as its first
+argument (i.e. no lists), any model averaging is calculated 'post-hoc'
+using the estimates in boot objects for each candidate model, rather than
+during the bootstrapping process itself (i.e. the default procedure via
+\code{\link[=boot]{boot()}}). Results are then returned in a new boot object for each response
+variable or correlated error estimate.
 
 If supplied a list containing both mixed and non-mixed models, \code{\link[=bootEff]{bootEff()}}
 with nonparametric bootstrapping will still work and will treat all models

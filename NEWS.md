@@ -4,11 +4,12 @@ xx/xx/2021 (binaries)
 
 ### New features:
 
--   New `summary()` method for `"semEff"` objects, to return effect tables for all or a subset of response variables.
+-   New `summary()` method for `"semEff"` objects......................
 -   New formatted table output for effect summaries from `semEff()` and `bootCI()`.
 
 ### Other changes:
 
+-   `R2()` updates..................
 -   Various code and documentation updates.
 
 ### Bugs fixed:

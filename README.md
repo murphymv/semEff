@@ -65,34 +65,38 @@ lapply(Shipley.SEM, formula)
 #> $Live
 #> Live ~ Growth + (1 | site) + (1 | tree)
 
-# Bootstrap model effects (10000 reps... can take a while)
+# Bootstrap model effects (10,000 reps... can take a while)
 # system.time(
 #   Shipley.SEM.Boot <- bootEff(Shipley.SEM, R = 10000, seed = 53908, ran.eff = "site")
 # )
 
-# Calculate SEM effects and CIs (use saved bootstrapped SEM)
-eff <- suppressWarnings(semEff(Shipley.SEM.Boot))
+# Calculate SEM effects (use saved bootstrapped SEM)
+eff <- semEff(Shipley.SEM.Boot)
 
-# Summary of effects for response "Growth"
-eff$Summary$Growth
-#>                   Effect   Bias Std. Error Lower CI Upper CI  
-#> 1                 ______ ______ __________ ________ ________  
-#> 2                                                             
-#> 3  DIRECT    Date  0.382  0.011      0.058    0.289    0.513 *
-#> 4                                                             
-#> 5  INDIRECT  lat   0.165  0.000      0.048    0.088    0.290 *
-#> 6            DD   -0.240 -0.006      0.042   -0.351   -0.180 *
-#> 7                                                             
-#> 8  TOTAL     lat   0.165  0.000      0.048    0.088    0.290 *
-#> 9            DD   -0.240 -0.006      0.042   -0.351   -0.180 *
-#> 10           Date  0.382  0.011      0.058    0.289    0.513 *
-#> 11                                                            
-#> 12 MEDIATORS DD    0.165  0.000      0.048    0.088    0.290 *
-#> 13           Date -0.075 -0.006      0.016   -0.105   -0.048 *
+# Effects and CIs for response "Growth"
+summary(eff, "Growth")
+#> 
+#> SEM direct, summed indirect, total, and mediator effects:
+#> Growth (3/4):
+#>            Variable Effect   Bias Std. Error Lower CI Upper CI  
+#>            ________ ______ ______ __________ ________ ________  
+#>                                                                 
+#>  DIRECT    Date      0.382  0.011      0.058    0.289    0.513 *
+#>                                                                 
+#>  INDIRECT  lat       0.165  0.000      0.048    0.088    0.290 *
+#>            DD       -0.240 -0.006      0.042   -0.351   -0.180 *
+#>                                                                 
+#>  TOTAL     lat       0.165  0.000      0.048    0.088    0.290 *
+#>            DD       -0.240 -0.006      0.042   -0.351   -0.180 *
+#>            Date      0.382  0.011      0.058    0.289    0.513 *
+#>                                                                 
+#>  MEDIATORS DD        0.165  0.000      0.048    0.088    0.290 *
+#>            Date     -0.075 -0.006      0.016   -0.105   -0.048 *
+#> 
 
 # Extract total effects for Growth
-tot <- totEff(eff)[["Growth"]]
-tot.b <- totEff(eff, type = "boot")[["Growth"]]
+tot <- totEff(eff, "Growth")
+tot.b <- totEff(eff, "Growth", type = "boot")
 
 # Predict effects for "Date" (direct) and "DD" (indirect) on Growth
 mod <- Shipley.SEM$Growth
@@ -100,7 +104,8 @@ dat <- na.omit(Shipley)
 fit <- sapply(c("Date", "DD"), function(i) {
   x <- seq(min(dat[i]), max(dat[i]), length = 100)
   x <- data.frame(x); names(x) <- i
-  c(x, predEff(mod, newdata = x, effects = tot[i], eff.boot = tot.b))
+  f <- predEff(mod, newdata = x, effects = tot[i], eff.boot = tot.b)
+  c(x, f)
 }, simplify = FALSE)
 
 # Function to plot predictions
@@ -110,8 +115,10 @@ plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
     geom_point(aes(x, y)) +
     geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u, alpha = "0.15"), fill = "blue") +
     geom_line(aes(x2, f), color = "blue", size = 1) +
-    xlab(x.lab) + ylab(y.lab) +
-    theme_bw() + theme(legend.position = "none")
+    xlab(x.lab) + 
+    ylab(y.lab) +
+    theme_bw() + 
+    theme(legend.position = "none")
 }
 
 # Direct effects of Date

@@ -2,16 +2,25 @@
 % Please edit documentation in R/semEff-fun.R
 \name{print.semEff}
 \alias{print.semEff}
-\title{Print SEM Effects}
+\title{Print \code{"semEff"} Objects}
 \usage{
 \method{print}{semEff}(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{"semEff"}.}
 
-\item{...}{Further arguments passed to or from other methods.}
+\item{...}{Further arguments passed to or from other methods. Not currently
+used.}
+}
+\value{
+A summary table for the SEM variables (data frame).
 }
 \description{
-A print method for an object of class \code{"semEff"}, returning
-summary tables of effects and confidence intervals for all responses.
+A \code{\link[=print]{print()}} method for an object of class \code{"semEff"}.
+}
+\details{
+This print method returns a summary table for the SEM variables,
+giving their status as exogenous/endogenous and
+predictor/mediator/response, and also the number of direct vs. indirect
+paths leading to each variable.
 }

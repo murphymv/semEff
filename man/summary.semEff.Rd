@@ -4,18 +4,31 @@
 \alias{summary.semEff}
 \title{Summarise SEM Effects}
 \usage{
-\method{summary}{semEff}(x, responses = NULL, ...)
+\method{summary}{semEff}(object, responses = NULL, ...)
 }
 \arguments{
-\item{x}{An object of class \code{"semEff"}.}
+\item{object}{An object of class \code{"semEff"}.}
 
 \item{responses}{An optional character vector, the names of one or more SEM
-response variables for which to return summary tables. \code{"Correlated Errors"} can also be specified/included here (where applicable).}
+response variables for which to return summaries (and/or \code{"Correlated Errors"}, where applicable). Can also be a numeric vector of indices of
+\code{object}. If \code{NULL} (default), all summaries are returned.}
 
-\item{...}{Further arguments passed to or from other methods.}
+\item{...}{Further arguments passed to or from other methods. Not currently
+used.}
+}
+\value{
+A summary table or tables of effects for the endogenous variables
+(data frames).
 }
 \description{
-A summary method for an object of class \code{"semEff"}, which acts
-the same as \code{\link[=print.semEff]{print.semEff()}} except that individual summary tables for
-different response variables can be extracted.
+A \code{\link[=summary]{summary()}} method for an object of class \code{"semEff"}.
+}
+\details{
+This summary method prints tables of effects and confidence
+intervals for SEM endogenous (response) variables.
+}
+\examples{
+# Effect tables for Shipley SEM
+summary(Shipley.SEM.Eff, "Live")  # variable 'Live'
+summary(Shipley.SEM.Eff)  # all variables
 }

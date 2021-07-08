@@ -4,7 +4,7 @@
 \alias{getData}
 \title{Get Model Data}
 \usage{
-getData(mod, subset = FALSE, merge = FALSE, env = parent.frame())
+getData(mod, subset = FALSE, merge = FALSE, env = NULL)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
@@ -14,9 +14,11 @@ are returned (i.e. missing observations (\code{NA}) or those with zero weight
 are removed).}
 
 \item{merge}{Logical. If \code{TRUE}, and \code{mod} is a list or nested list, a single
-dataset containing all variables used to fit models is returned.}
+dataset containing all variables used to fit models is returned (variables
+must be the same length).}
 
-\item{env}{Environment in which to look for data (passed to \code{\link[=eval]{eval()}}).}
+\item{env}{Environment in which to look for data (passed to \code{\link[=eval]{eval()}}).
+Defaults to the \code{\link[=formula]{formula()}} environment.}
 }
 \value{
 A data frame of the variables used to fit the model(s), or a list or

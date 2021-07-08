@@ -59,8 +59,10 @@ sdW <- function(...) {
 #'   are returned (i.e. missing observations (`NA`) or those with zero weight
 #'   are removed).
 #' @param merge Logical. If `TRUE`, and `mod` is a list or nested list, a single
-#'   dataset containing all variables used to fit models is returned.
+#'   dataset containing all variables used to fit models is returned (variables
+#'   must be the same length).
 #' @param env Environment in which to look for data (passed to [eval()]).
+#'   Defaults to the [formula()] environment.
 #' @details This is a simple convenience function to return the data used to fit
 #'   a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
@@ -82,7 +84,7 @@ sdW <- function(...) {
 #' getData(Shipley.SEM)  # from SEM (list)
 #' getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
 #' @export
-getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
+getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
 
   m <- mod
 
@@ -91,12 +93,14 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
 
     # Data from 'data' argument of model call
     mc <- getCall(m)
+    f <- formula(m)
+    if (is.null(env)) env <- environment(f)
     d <- eval(mc$data, env)
     if (!is.null(d)) d <- data.frame(d) else
       stop("'data' argument of model call not specified, or data is NULL.")
 
     # All var names from model call
-    f <- c(formula(m), mc$subset, mc$weights, mc$offset, mc$correlation)
+    f <- c(f, mc$subset, mc$weights, mc$offset, mc$correlation)
     vn <- unlist(lapply(f, all.vars))
     if (!all(vn %in% names(d)))
       stop("'data' does not contain all variables used to fit model.")
@@ -126,6 +130,191 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
 }
 
 
+#' @title Get Model Design Matrix
+#' @description Return the design matrix for a fitted model, with some
+#'   additional options.
+#' @param mod A fitted model object, or a list or nested list of such objects.
+#'   Can also be a model formula(s) or character vector(s) of term names (in
+#'   which case `data` must be supplied).
+#' @param data An optional dataset, used to refit the model(s) and/or construct
+#'   the design matrix.
+#' @param contrasts Optional, a named list of contrasts to apply to factors (see
+#'   the `contrasts.arg` argument of [model.matrix()] for specification). These
+#'   will override any existing contrasts in the data or model call.
+#' @param add.data Logical, whether to append data not specified in the model
+#'   formula (with factors converted to dummy variables).
+#' @param centre,scale Logical, whether to mean-centre and/or scale terms by
+#'   standard deviations (for interactions, this is carried out prior to
+#'   construction of product terms). Alternatively, a numeric vector of
+#'   means/standard deviations (or other statistics) can be supplied, whose
+#'   names must match term names.
+#' @param as.df Logical, whether to return the matrix as a data frame (without
+#'   modifying names).
+#' @param merge Logical. If `TRUE`, and `mod` is a list or nested list, a single
+#'   matrix containing all terms is returned (variables must be the same
+#'   length).
+#' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to the [formula()] environment.
+#' @details This is primarily a convenience function to enable more flexible
+#'   construction of design matrices, usually for internal use and for further
+#'   processing. Use cases include processing and/or return of terms which may
+#'   not be present in a typical design matrix (e.g. constituents of product
+#'   terms, dummy variables).
+#' @return A matrix or data frame of model(s) terms, or a list or nested list of
+#'   same.
+#' @seealso [model.matrix()]
+#' @examples
+#' # Model design matrix (original)
+#' m <- Shipley.Growth[[3]]
+#' x1 <- model.matrix(m)
+#' x2 <- getX(m)
+#' stopifnot(all.equal(x1, x2, check.attributes = FALSE))
+#'
+#' # Using formula or term names (supply data)
+#' d <- Shipley
+#' x1 <- getX(formula(m), data = d)
+#' x2 <- getX(labels(terms(m)), data = d)
+#' stopifnot(all.equal(x1, x2))
+#'
+#' # Scaled terms
+#' head(getX(m, centre = TRUE, scale = TRUE))
+#'
+#' # Combined matrix for SEM
+#' head(getX(Shipley.SEM, merge = TRUE))
+#' head(getX(Shipley.SEM, merge = TRUE, add.data = TRUE))  # add other variables
+#' @export
+getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
+                 centre = FALSE, scale = FALSE, as.df = FALSE, merge = FALSE,
+                 env = NULL) {
+
+  m <- mod; d <- data; ct <- contrasts; cn <- centre; sc <- scale
+
+  # Function
+  getX <- function(m) {
+
+    # Function to convert to data frame without modifying names
+    dF <- function(...) {
+      data.frame(..., check.names = FALSE)
+    }
+
+    # Function to evaluate a term name (x) in data (d)
+    eT <- function(x, d) {
+      eT <- function(x) {
+        if (!x %in% names(d)) {
+          eval(parse(text = x), d)
+        } else d[[x]]
+      }
+      if (grepl("poly\\(.*[0-9]$", x)) {
+        n <- nchar(x)
+        xd <- eT(substr(x, 1, n - 1))
+        xd[, substr(x, n, n)]
+      } else eT(x)
+    }
+
+    # Refit model with any supplied data
+    if (isMod(m) && !is.null(d)) {
+      m <- eval(update(m, data = d, evaluate = FALSE))
+      env <- environment()
+    }
+
+    # Data
+    if (isMod(m)) d <- getData(m, subset = TRUE, env = env)
+    if (is.null(d))
+      stop("'data' must be supplied.")
+
+    # Factor contrasts
+    if (isMod(m) && is.null(ct)) {
+      ct <- suppressWarnings(
+        attr(model.matrix(m, data = d), "contrasts")
+      )
+    }
+
+    # Formula(s)
+    i <- if (isMod(m)) attr(terms(m), "intercept") else any(isInt(m))
+    xn <- if (!is.character(m)) labels(terms(m, data = d)) else m
+    xn <- xn[!isInt(xn) & !grepl("[|]", xn)]
+    fd <- reformulate(c(xn, names(d)), intercept = i)
+    fx <- reformulate(xn, intercept = i)
+
+    # Design matrix (x)
+    d <- model.frame(fd, data = d, na.action = na.pass)
+    x <- suppressWarnings(
+      dF(model.matrix(fx, data = d, contrasts.arg = ct))
+    )
+    xn <- names(x)
+    obs <- rownames(x)
+
+    # Add other variables from data (convert factors to dummy vars)
+    d <- sapply(names(d), function(i) {
+      di <- d[[i]]
+      if (!is.numeric(di)) {
+        di <- as.factor(di)
+        ci <- if (!is.null(ct)) list(di = ct[[i]])
+        di <- cbind(
+          model.matrix( ~ 0 + di),
+          model.matrix( ~ di, contrasts.arg = ci)
+        )
+        colnames(di) <- gsub("^di", i, colnames(di))
+      }
+      di
+    }, simplify = FALSE)
+    d <- dF(do.call(cbind, d))
+    d <- d[unique(names(d))]
+    x <- dF(x, d[!names(d) %in% names(x)])
+
+    # Means/SDs (for centring/scaling)
+    xm <- sapply(names(x), function(i) {
+      if (!isFALSE(cn)) {
+        if (i %in% names(cn)) cn[[i]] else mean(x[[i]])
+      } else 0
+    })
+    xs <- sapply(names(x), function(i) {
+      if (!isFALSE(sc)) {
+        if (i %in% names(sc)) sc[[i]] else sd(x[[i]])
+      } else 1
+    })
+
+    # Names of terms to return
+    if (add.data) {
+      rn <- if (isMer(m)) {
+        unlist(lapply(lme4::VarCorr(m), rownames))
+      }
+      xn <- unique(c(names(x), rn))
+    }
+
+    # Construct final matrix
+    x <- sapply(xn, function(i) {
+      if (!isInt(i)) {
+        ii <- unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
+        xi <- sapply(ii, eT, x)
+        xn <- colnames(xi)
+        xi <- sweep(xi, 2, xm[xn])
+        xi <- sweep(xi, 2, xs[xn], "/")
+        apply(xi, 1, prod)
+      } else x[, i]
+    })
+    rownames(x) <- obs
+
+    # Return
+    if (as.df) dF(x) else x
+
+  }
+
+  # Apply recursively
+  rgetX <- function(m) {
+    if (isList(m)) {
+      x <- lapply(m, rgetX)
+      if (merge) {
+        x <- do.call(cbind, unname(x))
+        x[, unique(colnames(x)), drop = FALSE]
+      } else x
+    } else getX(m)
+  }
+  rgetX(m)
+
+}
+
+
 #' @title Get Model Term Names
 #' @description Extract term names from a fitted model object.
 #' @param mod A fitted model object, or a list or nested list of such objects.
@@ -135,7 +324,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
 #' @param list Logical, whether names should be returned as a list, with all
 #'   multi-coefficient terms grouped under their main term names.
 #' @param env Environment in which to look for model data (used to construct the
-#'   model frame).
+#'   model frame). Defaults to the [formula()] environment.
 #' @details Extract term names from a fitted model. Names of terms for which
 #'   coefficients cannot be estimated are also included if `aliased = TRUE`
 #'   (default). These may be terms which are perfectly correlated with other
@@ -160,7 +349,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = parent.frame()) {
 #' xNam(m, aliased = FALSE, list = TRUE)  # names as list
 #' @export
 xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
-                 env = parent.frame()) {
+                 env = NULL) {
 
   m <- mod
 
@@ -176,40 +365,34 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
     # Expand interaction terms (list)
     XN <- sapply(xn, function(i) {
       unlist(strsplit(i, "(?<!:):(?!:)", perl = TRUE))
-    })
+    }, simplify = FALSE)
 
-    # Predictor values
+    # Predictors
     d <- getData(m, env = env)
-    mf <- suppressWarnings(model.frame(m, data = d))
-    x <- mf[names(mf) %in% unlist(unname(XN))]
+    x <- suppressWarnings(model.frame(m, data = d))
+    x <- x[names(x) %in% unlist(unname(XN))]
+    xn2 <- unique(c(xn, names(x)))
 
-    # Factors?
-    x <- lapply(x, function(i) {
-      if (is.character(i)) as.factor(i) else i
-    })
-    f <- sapply(x, is.factor)
+    # Factor contrasts
+    ct <- suppressWarnings(
+      attr(model.matrix(m, data = d), "contrasts")
+    )
 
     # Expand factor/matrix terms (list)
-    xn2 <- unique(c(xn, names(x)))
     XN2 <- sapply(xn2, function(i) {
       if (i %in% names(x)) {
         xi <- x[[i]]
-        if (f[i]) {
-          ci <- contrasts(as.factor(d[[i]]))
-          ct <- getCall(m)$contrasts
-          xi <- if (!is.null(ct)) {
-            ci <- ct[names(ct) %in% i][[1]]
-            chr <- is.character(ci)
-            ci <- eval(if (chr) parse(text = ci) else ci)
-            if (is.function(ci)) {
-              l <- levels(xi)
-              ci(if (!chr) length(l) else l)
-            } else ci
-          } else ci
-        }
         j <- colnames(xi)
         n <- ncol(xi)
-        if (is.null(j) && (f[i] || isTRUE(n > 1))) j <- 1:n
+        if (!is.numeric(xi)) {
+          xi <- as.factor(xi)
+          ci <- list(xi = ct[[i]])
+          xi <- model.matrix( ~ xi, contrasts.arg = ci)
+          j <- gsub("^xi", "", colnames(xi)[-1])
+          j <- c(levels(xi), j)
+          n <- nlevels(xi)
+        }
+        j <- unique(c("", seq(n), j))
         paste0(i, j)
       } else i
     }, simplify = FALSE)
@@ -222,23 +405,17 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
       } else XN2[[i]]
     }, simplify = FALSE)
 
-    # If no intercept, generate all levels for first factor
-    if (!int && any(f)) {
-      f1 <- names(f[f][1])
-      XN[[f1]] <- paste0(f1, levels(x[[f1]]))
-    }
-
     # Drop some names? (aliased, subsetted factor levels, etc.)
     b <- if (isMer(m)) lme4::fixef(m, add.dropped = TRUE) else coef(m)
     bn <- names(b)
     if (!aliased) bn <- bn[!is.na(b)]
-    XN <- lapply(XN, function(i) i[i %in% bn])
+    XN <- lapply(XN, function(i) bn[bn %in% i])
     XN <- XN[sapply(XN, length) > 0]
 
     # Drop intercept?
     if (!intercept && int) XN <- XN[-1]
 
-    # Return as list?
+    # Return names
     if (!list) unlist(unname(XN)) else XN
 
   }
@@ -316,10 +493,10 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   3. The inverse transformation of the working response is calculated.
 #'
 #'   4. If the inverse transformation is 'effectively equal' to the original
-#'   response (tested using [all.equal()] with default tolerance), the working
-#'   response is returned; otherwise, the GLM is refit with the working response
-#'   now as the predictor, and steps 2-4 are repeated — each time with an
-#'   additional IRLS iteration.
+#'   response (tested using [all.equal()] using the default tolerance), the
+#'   working response is returned; otherwise, the GLM is refit with the working
+#'   response now as the predictor, and steps 2-4 are repeated — each time with
+#'   an additional IRLS iteration.
 #'
 #'   This approach will generate a very reasonable transformation of the
 #'   response variable, which will also be practically indistinguishable from
@@ -391,14 +568,14 @@ glt <- function(x, family = NULL, force.est = FALSE) {
     }
 
     # Transform variable to link scale
-    xl <- f$linkfun(x)
+    xl <- f$linkfun(as.numeric(x))
 
     # Return transformation or estimate (GLM working response)
     if (any(is.infinite(xl)) || force.est) {
       x2 <- x
-      suppressWarnings(
-        m <- do.call(glm, list(x ~ x2, family = f, control = list(maxit = 1),
-                               na.action = na.exclude))
+      m <- suppressWarnings(
+        do.call(glm, list(x ~ x2, family = f, control = list(maxit = 1),
+                          na.action = na.exclude))
       )
       i <- 0
       repeat {
@@ -410,8 +587,8 @@ glt <- function(x, family = NULL, force.est = FALSE) {
           return(xl)
         }
         i <- i + 1
-        suppressWarnings(
-          m <- update(m, . ~ xl, control = list(maxit = i))
+        m <- suppressWarnings(
+          update(m, . ~ xl, control = list(maxit = i))
         )
       }
     } else xl
@@ -433,6 +610,7 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 #'   scale (see Details).
 #' @param offset Logical. If `TRUE`, include model offset(s) in the response.
 #' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to the [formula()] environment.
 #' @details `getY()` will return the response variable from a model by summing
 #'   the fitted values and the response residuals. If `link = TRUE` and the
 #'   model is a GLM, the response is transformed to the link scale. If this
@@ -451,8 +629,7 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 #' # Estimated response in link scale from binomial model
 #' getY(Shipley.SEM$Live, link = TRUE)
 #' @export
-getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
-                 env = parent.frame()) {
+getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
 
   m <- mod; d <- data
 
@@ -471,7 +648,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
     # Model weights and offset
     w <- weights(m)
     o <- if (!offset) {
-      if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
+      d <- getData(m, subset = TRUE, env = env)
       mf <- suppressWarnings(model.frame(m, data = d))
       model.offset(mf)
     }
@@ -501,15 +678,16 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param data An optional dataset, used to first refit the model(s).
 #' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to the [formula()] environment.
 #' @details `VIF()` calculates generalised variance inflation factors (GVIF) as
 #'   described in Fox & Monette (1992), and also implemented in
-#'   [`car::vif()`](https://www.rdocumentation.org/packages/car/versions/3.0-10/topics/vif).
-#'    However, whereas `vif()` returns both GVIF and GVIF^(1/(2*Df)) values,
-#'   `VIF()` simply returns the squared result of the latter measure, which
-#'   equals the standard VIF for single-coefficient terms and is the equivalent
-#'   measure for multi-coefficient terms (e.g. categorical or polynomial). Also,
-#'   while `vif()` returns values per model term (i.e. predictor variable),
-#'   `VIF()` returns values per coefficient, meaning that the same value will be
+#'   [`car::vif()`](https://rdrr.io/cran/car/man/vif.html). However, whereas
+#'   `vif()` returns both GVIF and GVIF^(1/(2*Df)) values, `VIF()` simply
+#'   returns the squared result of the latter measure, which equals the standard
+#'   VIF for single-coefficient terms and is the equivalent measure for
+#'   multi-coefficient terms (e.g. categorical or polynomial). Also, while
+#'   `vif()` returns values per model term (i.e. predictor variable), `VIF()`
+#'   returns values per coefficient, meaning that the same value will be
 #'   returned per coefficient for multi-coefficient terms. Finally, `NA` is
 #'   returned for any terms which could not be estimated in the model (e.g.
 #'   aliased).
@@ -534,7 +712,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE,
 #' m <- lm(y ~ poly(x1, 2) + x2 + x3, data = d)
 #' VIF(m)
 #' @export
-VIF <- function(mod, data = NULL, env = parent.frame()) {
+VIF <- function(mod, data = NULL, env = NULL) {
 
   m <- mod; d <- data
 
@@ -569,11 +747,11 @@ VIF <- function(mod, data = NULL, env = parent.frame()) {
       # Function
       VIF <- function(i) {
         if (all(i %in% xn)) {
-          ni <- !xn %in% i
+          j <- !xn %in% i
           Ri <- R[i, i, drop = FALSE]
-          Rni <- R[ni, ni, drop = FALSE]
-          vif <- det(Ri) * det(Rni) / det.R
-          p <- (1 / (2 * length(i)))
+          Rj <- R[j, j, drop = FALSE]
+          vif <- det(Ri) * det(Rj) / det.R
+          p <- 1 / (2 * length(i))
           (vif^p)^2
         } else NA
       }
@@ -618,7 +796,7 @@ RVIF <- function(...) {
 }
 
 
-#' @title (Pseudo) R-squared
+#' @title R-squared
 #' @description Calculate (Pseudo) R-squared for a fitted model, defined here as
 #'   the squared multiple correlation between the observed and fitted values for
 #'   the response variable. 'Adjusted' and 'Predicted' versions are also
@@ -636,7 +814,12 @@ RVIF <- function(...) {
 #'   are included. See [predict.merMod()] for further specification details.
 #' @param type The type of correlation coefficient to use. Can be either
 #'   `"pearson"` (default) or `"spearman"`.
+#' @param adj.type The type of adjusted R-squared estimator to use. Can be
+#'   `"olkin-pratt"` (default) or `"standard"`. See Details.
+#' @param positive.only Logical, whether to return only positive values for
+#'   R-squared (negative values replaced with zero).
 #' @param env Environment in which to look for model data (if none supplied).
+#'   Defaults to the [formula()] environment.
 #' @details Various approaches to the calculation of a goodness of fit measure
 #'   for GLMs analogous to R-squared in the ordinary linear model have been
 #'   proposed. Generally termed 'pseudo R-squared' measures, they include
@@ -654,33 +837,43 @@ RVIF <- function(...) {
 #'   measure equals the more traditional R-squared based on sums of squares.
 #'
 #'   If `adj = TRUE` (default), the 'adjusted' R-squared value is also returned,
-#'   which provides an estimate of the population — as opposed to sample -
+#'   which provides an estimate of the population — as opposed to sample —
 #'   R-squared. This is achieved via an analytical formula which adjusts
 #'   R-squared for the 'degrees of freedom' of the model (i.e. the ratio of
-#'   observations to parameters). Here, this is calculated via the 'Pratt'
-#'   rather than standard 'Ezekiel/Wherry' formula, shown in a previous
-#'   simulation to be the most effective of a range of existing formulas at
-#'   estimating the population R-squared across a range of model specification
-#'   scenarios (Yin & Fan 2001). Adjusted R-squared can be used to safeguard
-#'   against overfitting of the model to the original sample.
+#'   observations to parameters). By default, this is calculated via the exact
+#'   'Olkin-Pratt' estimator (Olkin & Pratt 1958), shown in a recent simulation
+#'   study to be the optimal unbiased population R-squared estimator, across a
+#'   range of model specification scenarios (Karch 2020). Setting `adj.type =
+#'   "standard"` will use the more common 'Ezekiel/Wherry' formula, which can be
+#'   preferred in certain circumstances, such as where minimising the mean
+#'   squared error (MSE) of the estimate is more important than unbiasedness
+#'   (Karch 2020), and/or for comparison purposes with other studies. Adjusted
+#'   R-squared can be used to help safeguard against overfitting of the model to
+#'   the original sample.
 #'
 #'   If `pred = TRUE` (default), a 'predicted' R-squared is also returned, which
 #'   is calculated via the same formula as for R-squared but using
-#'   cross-validated rather than standard fitted values. These are obtained by
-#'   dividing the model response residuals by the complement of the observation
-#'   leverages (diagonals of the hat matrix), then subtracting these inflated
-#'   'predicted' residuals from the response variable. This is essentially a
-#'   short cut to obtaining out-of-sample predictions, normally arising via a
-#'   leave-one-out cross-validation procedure (in a GLM they will not be exactly
-#'   equal to such predictions). The resulting R-squared is an estimate of the
-#'   R-squared that would occur were the model to be fit to new data, and will
-#'   be lower than the original — and likely also the adjusted — R-squared,
-#'   highlighting the loss of explanatory power when predicting to new data.
-#'   This measure is a variant of an [existing
+#'   cross-validated, rather than original, fitted values. These are obtained by
+#'   dividing the model residuals (in the response scale) by the complement of
+#'   the observation leverages (diagonals of the hat matrix), then subtracting
+#'   these inflated 'predicted' residuals from the response variable. This is
+#'   essentially a short cut to obtaining 'out-of-sample' predictions, normally
+#'   arising via a 'leave-one-out' cross-validation procedure (they are not
+#'   exactly equal for GLMs). The resulting R-squared is an estimate of the
+#'   R-squared that would result were the model fit to new data, and will be
+#'   lower than the original — and likely also the adjusted — R-squared,
+#'   highlighting the loss of explanatory power due to sample noise. Predicted
+#'   R-squared [may be a more powerful and general indicator of overfitting than
+#'   adjusted
+#'   R-squared](https://stats.stackexchange.com/questions/242770/difference-between-adjusted-r-squared-and-predicted-r-squared),
+#'   as it provides a true out-of-sample test. This measure is a variant of an
+#'   [existing
 #'   one](https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/),
 #'   calculated by substituting the 'PRESS' statistic, i.e. the sum of squares
 #'   of the predicted residuals (Allen 1974), for the residual sum of squares in
-#'   the classic R-squared formula.
+#'   the classic R-squared formula. It is not calculated here for GLMMs, as the
+#'   interpretation of the hat matrix is not reliable (see
+#'   [hatvalues.merMod()]).
 #'
 #'   For models fitted with one or more offsets, these will be removed by
 #'   default from the response variable and fitted values prior to calculations.
@@ -692,33 +885,40 @@ RVIF <- function(...) {
 #'   For mixed models, the function will, by default, calculate all R-squared
 #'   measures using fitted values incorporating both the fixed and random
 #'   effects, thus encompassing all variation captured by the model. This is
-#'   equivalent to the 'conditional' R-squared of Nakagawa *et al.* (2017). To
-#'   include only some or no random effects, simply set the appropriate formula
-#'   using the argument `re.form`, which is passed directly to
-#'   [predict.merMod()]. If `re.form = NA`, R-squared is calculated for the
-#'   fixed effects only — equivalent to the 'marginal' R-squared of Nakagawa *et
-#'   al.* (2017).
+#'   equivalent to the 'conditional' R-squared of Nakagawa *et al.* (2017)
+#'   (though see that reference for a more advanced approach to R-squared for
+#'   mixed models). To include only some or no random effects, simply set the
+#'   appropriate formula using the argument `re.form`, which is passed directly
+#'   to [predict.merMod()]. If `re.form = NA`, R-squared is calculated for the
+#'   fixed effects only, i.e. the 'marginal' R-squared of Nakagawa *et al.*
+#'   (2017).
 #'
 #'   As R-squared is calculated here as a squared correlation, the `type` of
 #'   correlation coefficient can also be specified. Setting this to `"spearman"`
 #'   may be desirable in some cases, such as where the relationship between
-#'   response and fitted values is not necessarily bivariate normal or linear.
-#'   Note that R-squared based on Spearman's rho (i.e. ranked variables) is not
-#'   equivalent to the classic R-squared based on sums of squares, but can still
-#'   be considered a [useful goodness of fit
-#'   measure](https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho).
-#'    It may also be considered more appropriate for comparisons of R-squared
-#'   between GLMs and ordinary linear models in some situations.
+#'   response and fitted values is not necessarily bivariate normal or linear,
+#'   and a correlation of the ranks may be more informative and/or general. This
+#'   purely monotonic R-squared can also be considered a [useful goodness of fit
+#'   measure](https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho),
+#'   and may be more appropriate for comparisons between GLMs and ordinary
+#'   linear models in some scenarios.
 #'
-#'   R-squared values produced by this function will always be bounded between
-#'   zero (no fit) and one (perfect fit), meaning that any negative values
-#'   arising from calculations will be rounded up to zero. Negative values
-#'   typically mean that the fit is 'worse' than the null expectation of no
-#'   relationship between the variables, which can be difficult to interpret in
-#'   practice and in any case usually only occurs in rare situations, such as
-#'   where the intercept is suppressed. Hence, for simplicity and ease of
-#'   interpretation, values less than zero are presented here as a complete lack
-#'   of model fit.
+#'   R-squared values produced by this function will by default be in the range
+#'   0-1, meaning that any negative values arising from calculations will be
+#'   converted to zero. Negative values essentially mean that the fit is 'worse'
+#'   than the null expectation of no relationship between the variables, which
+#'   can be difficult to interpret in practice and in any case usually only
+#'   occurs in rare situations, such as where the intercept is suppressed or
+#'   where a low value of R-squared is adjusted downwards via an analytic
+#'   estimator. Such values are also 'impossible', given that R-squared is a
+#'   strictly positive measure. Hence, for simplicity and ease of
+#'   interpretation, values less than zero are presented as a complete lack of
+#'   model fit. This is also recommended by Shieh (2008), who shows for adjusted
+#'   R-squared that such 'positive-part' estimators have lower MSE in estimating
+#'   the population R-squared (though higher bias). To allow return of negative
+#'   values (even after squaring), set `positive.only = FALSE`. This may be
+#'   desirable for simulation purposes, and where strict unbiasedness is
+#'   prioritised.
 #'
 #' @note Caution must be exercised in interpreting the values of any pseudo
 #'   R-squared measure calculated for a GLM or mixed model (including those
@@ -726,21 +926,21 @@ RVIF <- function(...) {
 #'   of R-squared in the ordinary linear model and as such may not always behave
 #'   as expected. Care must also be taken in comparing the measures to their
 #'   equivalents from ordinary linear models, particularly the adjusted and
-#'   predicted versions. For example, for the adjusted R-squared for mixed
-#'   models, it's not entirely clear what the sample size (*n*) in the formula
-#'   should represent — no. of observations? independent groups? something else?
-#'   (the default interpretation of no. of observations is used). With all that
-#'   being said, the value of standardised R-squared measures for even 'rough'
-#'   model fit assessment and comparison may outweigh such reservations, and the
-#'   adjusted and predicted versions in particular may aid the user in
-#'   diagnosing and preventing overfitting. They should NOT, however, replace
-#'   other measures such as AIC or BIC for formally comparing and/or ranking
-#'   competing models fit to the same response variable.
+#'   predicted versions, as assumptions and/or calculations may not generalise
+#'   well. With that being said, the value of standardised R-squared measures
+#'   for even 'rough' model fit assessment and comparison may outweigh such
+#'   reservations, and the adjusted and predicted versions in particular may aid
+#'   the user in diagnosing and preventing overfitting. They should NOT,
+#'   however, replace other measures such as AIC or BIC for formally comparing
+#'   and/or ranking competing models fit to the same response variable.
 #' @return A numeric vector of the R-squared value(s), or an array, list of
 #'   vectors/arrays, or nested list.
 #' @references Allen, D. M. (1974). The Relationship Between Variable Selection
 #'   and Data Augmentation and a Method for Prediction. *Technometrics*,
 #'   **16**(1), 125-127. <https://doi.org/gfgv57>
+#'
+#'   Karch, J. (2020). Improving on Adjusted R-Squared. *Collabra: Psychology*,
+#'   **6**(1). <https://doi.org/gkgk2v>
 #'
 #'   Kvalseth, T. O. (1985) Cautionary Note about R2. *The American
 #'   Statistician*, **39**(4), 279-285. <https://doi.org/b8b782>
@@ -749,6 +949,15 @@ RVIF <- function(...) {
 #'   determination R2 and intra-class correlation coefficient from generalized
 #'   linear mixed-effects models revisited and expanded. *Journal of the Royal
 #'   Society Interface*, **14**(134). <https://doi.org/gddpnq>
+#'
+#'   Olkin, I., & Pratt, J. W. (1958). Unbiased Estimation of Certain
+#'   Correlation Coefficients. *The Annals of Mathematical Statistics*,
+#'   **29**(1), 201–211. <https://doi.org/10/dsjtxq>
+#'
+#'   Shieh, G. (2008). Improved Shrinkage Estimation of Squared Multiple
+#'   Correlation Coefficient and Squared Cross-Validity Coefficient.
+#'   *Organizational Research Methods*, **11**(2), 387–407.
+#'   <https://doi.org/bcwqf3>
 #'
 #'   Yin, P. and Fan, X. (2001) Estimating R2 Shrinkage in Multiple Regression:
 #'   A Comparison of Different Analytical Methods. *The Journal of Experimental
@@ -763,7 +972,7 @@ RVIF <- function(...) {
 #' R2(Shipley.SEM, re.form = ~ (1 | tree))  # fixed + 'tree'
 #' R2(Shipley.SEM, re.form = ~ (1 | site))  # fixed + 'site'
 #' R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
-#' R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's rho
+#' R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's Rho
 #'
 #' # Predicted R-squared: compare cross-validated predictions calculated/
 #' # approximated via the hat matrix to standard method (leave-one-out)
@@ -798,9 +1007,11 @@ RVIF <- function(...) {
 #' # exercise the appropriate caution in interpretation.
 #' @export
 R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
-               re.form = NULL, type = "pearson", env = parent.frame()) {
+               re.form = NULL, type = "pearson", adj.type = "olkin-pratt",
+               positive.only = TRUE, env = NULL) {
 
-  m <- mod; d <- data; rf <- re.form
+  m <- mod; d <- data; rf <- re.form; sp <- type == "spearman";
+  at <- adj.type; po <- positive.only
 
   # Function
   R2 <- function(m) {
@@ -821,7 +1032,8 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 
       # Model link function
       f <- if (isBet(m)) m$link$mean else family(m)
-      lF <- f$linkfun; lI <- f$linkinv
+      lF <- f$linkfun
+      lI <- f$linkinv
 
       # Model weights
       w <- weights(m)
@@ -829,8 +1041,8 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       w <- w[w > 0 & !is.na(w)]
 
       # Model offset
+      d <- getData(m, subset = TRUE, env = env)
       o <- if (!offset) {
-        if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
         mf <- suppressWarnings(model.frame(m, data = d))
         model.offset(mf)
       }
@@ -844,52 +1056,77 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       f <- predict(m, re.form = rf)[obs]
       f <- lI(f - o)
 
-      # R-squared
+      # Correlation
       yf <- cbind(y, f)
-      if (type == "spearman") yf <- apply(yf, 2, rank)
+      if (sp) yf <- apply(yf, 2, rank)
       R <- cov.wt(yf, w, cor = TRUE)$cor[1, 2]
-      max(R, 0, na.rm = TRUE)^2
+      if (is.na(R)) R <- 0
+
+      # Return R-squared
+      if (po) R <- max(R, 0)
+      if (R < 0) -R^2 else R^2
 
     } else 0
 
     # Adjusted R-squared
     R2a <- if (adj) {
+
       if (R2 > 0) {
 
-        # Pratt formula
-        R2a <- 1 - ((n - 3) * (1 - R2) / (n - k - i)) *
-          (1 + (2 * (1 - R2) / (n - k - 2.3)))
+        if (!at %in% c("olkin-pratt", "standard"))
+          stop("'adj.type' must be either 'olkin-pratt' or 'standard'")
 
-        # Standard formula
-        # R2a <- 1 - (1 - R2) * (n - i) / (n - k - i)
+        # Adjusted R-squared estimator
+        # (Olkin-Pratt formula adapted from altR2:::OPExactEstimator)
+        R2a <- if (at[1] == "olkin-pratt") {
+          1 - (n - 3) * (1 - R2) / (n - k - i) *
+            gsl::hyperg_2F1(1, 1, (n - k + 1) / 2, 1 - R2)
+        } else {
+          1 - (1 - R2) * (n - i) / (n - k - i)
+        }
 
-        max(R2a, 0)
+        # Return adjusted R-squared
+        if (po) R2a <- max(R2a, 0)
+        R2a
 
       } else 0
+
     }
 
     # Predicted R-squared
-    R2p <- if (pred && !isGls(m) && !(isMer(m) && isGlm(m))) {
-      if (R2 > 0) {
+    R2p <- if (pred) {
 
-        # Leverage values (diagonals of the hat matrix, hii)
-        hii <- hatvalues(m)[obs]
-        s <- hii < 1
+      if (!isGls(m) && !(isMer(m) && isGlm(m))) {
 
-        # CV fitted values (response minus 'predicted' residuals)
-        pr <- (y - f) / (1 - hii)
-        f <- y - pr
+        if (R2 > 0) {
 
-        # Predicted R-squared
-        yf[, 2] <- if (type == "spearman") rank(f) else f
-        Rp <- cov.wt(yf[s, ], w[s], cor = TRUE)$cor[1, 2]
-        max(Rp, 0)^2
+          # Leverage values (diagonals of the hat matrix, hii)
+          hii <- hatvalues(m)[obs]
+          s <- hii < 1
 
-      } else 0
+          # CV fitted values (response minus 'predicted' residuals)
+          rp <- (y - f) / (1 - hii)
+          f <- y - rp
+
+          # Correlation
+          yf[, 2] <- if (sp) rank(f) else f
+          Rp <- cov.wt(yf[s, ], w[s], cor = TRUE)$cor[1, 2]
+
+          # Return predicted R-squared
+          if (po) Rp <- max(Rp, 0)
+          if (Rp < 0) -Rp^2 else Rp^2
+
+        } else 0
+
+      } else NA
+
     }
 
     # Return values
-    c("(r.squared)" = R2, "(adj.r.squared)" = R2a, "(pred.r.squared)" = R2p)
+    R2 <- c(R2, R2a, R2p)
+    R2n <- if (sp) "R_squared_sp" else "R_squared"
+    R2n <- paste0(R2n, c("", "_adj", "_pred"))
+    setNames(R2, R2n)
 
   }
 
@@ -986,7 +1223,8 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
     en2 <- unique(unlist(lapply(e, names)))
     num <- suppressWarnings(as.numeric(en2))
     if (all(is.na(num))) {
-      s1 <- isInt(en2); s2 <- isPhi(en2) | isR2(en2)
+      s1 <- isInt(en2)
+      s2 <- isPhi(en2) | isR2(en2)
       en3 <- sort(en2[!s1 & !s2])
       en3 <- names(sort(sapply(en3, function(i) {
         lengths(regmatches(i, gregexpr(":", i)))
@@ -1027,7 +1265,6 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   effects from the output.
 #' @param unique.eff Logical, whether unique effects should be calculated
 #'   (adjusted for multicollinearity among predictors).
-#' @param unique.x Deprecated but allowed temporarily. Use `unique.eff` instead.
 #' @param cen.x,cen.y Logical, whether effects should be calculated as if from
 #'   mean-centred variables.
 #' @param std.x,std.y Logical, whether effects should be scaled by the standard
@@ -1037,18 +1274,20 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' @param r.squared Logical, whether R-squared values should also be calculated.
 #' @param incl.raw Logical, whether to append the raw (unstandardised) effects
 #'   to the output.
+#' @param R2.arg A named list of additional arguments to [R2()] (where
+#'   applicable), excepting argument `env`.
 #' @param env Environment in which to look for model data (if none supplied).
-#' @param ... Arguments to `R2`.
-#' @details `stdEff` will calculate fully standardised effects (coefficients) in
-#'   standard deviation units for a fitted model or list of models. It achieves
-#'   this via adjusting the 'raw' model coefficients, so no standardisation of
-#'   input variables is required beforehand. Users can simply specify the model
-#'   with all variables in their original units and the function will do the
-#'   rest. However, the user is free to scale and/or centre any input variables
-#'   should they choose, which should not affect the outcome of standardisation
-#'   (provided any scaling is by standard deviations). This may be desirable in
-#'   some cases, such as to increase numerical stability during model fitting
-#'   when variables are on widely different scales.
+#'   Defaults to the [formula()] environment.
+#' @details `stdEff()` will calculate fully standardised effects (coefficients)
+#'   in standard deviation units for a fitted model or list of models. It
+#'   achieves this via adjusting the 'raw' model coefficients, so no
+#'   standardisation of input variables is required beforehand. Users can simply
+#'   specify the model with all variables in their original units and the
+#'   function will do the rest. However, the user is free to scale and/or centre
+#'   any input variables should they choose, which should not affect the outcome
+#'   of standardisation (provided any scaling is by standard deviations). This
+#'   may be desirable in some cases, such as to increase numerical stability
+#'   during model fitting when variables are on widely different scales.
 #'
 #'   If arguments `cen.x` or `cen.y` are `TRUE`, effects will be calculated as
 #'   if all predictors (x) and/or the response variable (y) were mean-centred
@@ -1120,7 +1359,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   runs.
 #'
 #'   If `r.squared = TRUE`, model R-squared values are appended to effects via
-#'   the [R2()] function, with any additional arguments being passed via `...`.
+#'   the [R2()] function, with any additional arguments passed via `R2.arg`.
 #'
 #'   If `incl.raw = TRUE`, raw (unstandardised) effects can also be appended,
 #'   i.e. those with all centring and scaling options set to `FALSE` (though
@@ -1186,13 +1425,11 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' stdEff(m, w)
 #' @export
 stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
-                   unique.eff = TRUE, unique.x = TRUE, cen.x = TRUE,
-                   cen.y = TRUE, std.x = TRUE, std.y = TRUE, refit.x = TRUE,
-                   r.squared = FALSE, incl.raw = FALSE, env = parent.frame(),
-                   ...) {
+                   unique.eff = TRUE, cen.x = TRUE, cen.y = TRUE, std.x = TRUE,
+                   std.y = TRUE, refit.x = TRUE, r.squared = FALSE,
+                   incl.raw = FALSE, R2.arg = NULL, env = NULL) {
 
   m <- mod; w <- weights; d <- data; en <- term.names
-  if (!(unique.eff && unique.x)) unique.eff <- FALSE
 
   # Function
   stdEff <- function(m) {
@@ -1226,17 +1463,15 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (k > 0) {
 
       # Predictors
-      dF <- function(...) {
-        data.frame(..., check.names = FALSE)
-      }
-      if (is.null(d)) d <- getData(m, subset = TRUE, env = env)
-      x <- dF(model.matrix(m, data = d))[en]
+      x <- getX(m, add.data = TRUE, as.df = TRUE, env = env)
+      xm <- colMeans(x)
       inx <- any(isInx(en))  # interactions?
 
       # Adjust intercept (and possibly effects/predictors)
       if (cen.x) {
 
         # Model offset
+        d <- getData(m, subset = TRUE, env = env)
         mf <- suppressWarnings(model.frame(m, data = d))
         o <- model.offset(mf)
         if (is.null(o)) o <- 0
@@ -1250,22 +1485,19 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
         # For interactions, adjust effects and centre predictors
         if (inx) {
 
-          # Predictor means
+          # Adjust lower-order terms
+          # (ti = terms containing term i; ni = non-i components of ti)
           sI <- function(x) {
             unlist(strsplit(x, "(?<!:):(?!:)", perl = TRUE))
           }
-          EN <- lapply(labels(terms(m)), sI)
-          x2 <- dF(model.matrix(reformulate(unlist(EN)), data = d))
-          xm <- colMeans(x2)
-
-          # Adjust lower-order terms
-          # (ti = terms containing term i; ni = non-i components of ti)
+          EN <- sapply(en, sI)
           e[en] <- sapply(en, function(i) {
-            ei <- e[[i]]; ii <- sI(i)
-            ti <- en[en != i & sapply(en, function(j) all(ii %in% sI(j)))]
+            ei <- e[[i]]
+            ii <- EN[[i]]
+            ti <- en[en != i & sapply(en, function(j) all(ii %in% EN[[j]]))]
             if (length(ti) > 0) {
               ei + sum(sapply(ti, function(j) {
-                jj <- sI(j)
+                jj <- EN[[j]]
                 ni <- jj[!jj %in% ii]
                 prod(e[j], xm[ni])
               }))
@@ -1274,11 +1506,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
           # Centre predictors (for correct SDs for product terms)
           if (std.x) {
-            x <- dF(sapply(en, function(i) {
-              ii <- sI(i)
-              xi <- sweep(x2[ii], 2, xm[ii])
-              apply(xi, 1, prod)
-            }))
+            x <- getX(m, centre = TRUE, as.df = TRUE, env = env)
           }
 
         }
@@ -1287,7 +1515,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
 
       # Scale effects (x)
       if (std.x) {
-        xs <- sapply(x, sdW, w)
+        xs <- sapply(x[en], sdW, w)
         e[en] <- e[en] * xs
       }
 
@@ -1301,15 +1529,17 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           # Update dataset
           # (add response, weights, offset; set sum contrasts for factors)
           d2 <- data.frame(y, w, o, d)
-          d2 <- dF(sapply(d2, function(i) {
+          d2 <- data.frame(sapply(d2, function(i) {
             if (!is.numeric(i)) {
               i <- factor(i)
               contrasts(i) <- contr.sum(levels(i))
-            }; i
+            }
+            return(i)
           }))
 
           # Update term names (scale numeric predictors)
-          en2 <- unlist(lapply(EN, function(i) {
+          XN <- lapply(labels(terms(m)), sI)
+          xn <- unlist(lapply(XN, function(i) {
             paste(sapply(i, function(j) {
               if (is.numeric(mf[, j])) paste0("scale(", j, ")") else j
             }), collapse = ":")
@@ -1319,12 +1549,12 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           if (isMer(m)) {
             re <- lme4::findbars(formula(m))
             re <- sapply(re, function(i) paste0("(", deparse(i), ")"))
-            en2 <- c(en2, re)
+            xn <- c(xn, re)
           }
 
           # Rename any existing terms named "y", "w", "o"
           if (any(c("y", "w", "o") %in% names(d))) {
-            en2 <- sapply(en2, function(i) {
+            xn <- sapply(xn, function(i) {
               i <- gsub("([^\\w.])", "~\\1~", i, perl = TRUE)
               i <- unlist(strsplit(i, "~"))
               s <- i %in% c("y", "w", "o")
@@ -1334,7 +1564,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
           }
 
           # Refit model
-          eval(update(m, reformulate(en2, "y", int), data = d2, weights = w,
+          eval(update(m, reformulate(xn, "y", int), data = d2, weights = w,
                       offset = o, contrasts = NULL, evaluate = FALSE))
 
         } else m
@@ -1369,7 +1599,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     e <- sapply(bn, function(i) {
       if (i %in% names(e)) e[[i]] else b[[i]]
     })
-    if (r.squared) e <- c(e, R2(m, env = env, ...))
+    if (r.squared) e <- c(e, do.call(R2, c(list(m, env = env), R2.arg)))
     if (incl.raw) {
       b <- c(b, e[isR2(names(e))])
       names(b) <- paste0("(raw)_", names(b))
@@ -1382,10 +1612,11 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   e <- rMapply(stdEff, m, SIMPLIFY = FALSE)
 
   # Output effects or weighted average
-  if (isList(e) && !is.null(w)) avgEst(e, w, en)
-  else if (!is.null(en)) {
-    s <- function(i) {i[en[en %in% names(i)]]}
-    rMapply(s, e, SIMPLIFY = FALSE)
-  } else e
+  if (isList(e) && !is.null(w)) avgEst(e, w, en) else {
+    if (!is.null(en)) {
+      s <- function(i) {i[en[en %in% names(i)]]}
+      rMapply(s, e, SIMPLIFY = FALSE)
+    } else e
+  }
 
 }

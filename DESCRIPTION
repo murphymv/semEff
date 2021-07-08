@@ -13,6 +13,7 @@ BugReports: https://github.com/murphymv/semEff/issues
 Depends: R (>= 3.6.0)
 Imports: 
     boot,
+    gsl,
     lme4,
     parallel,
     stats,

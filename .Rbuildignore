@@ -9,3 +9,4 @@
 ^pkgdown$
 ^tests$
 ^.*\.bib$
+^data-raw$

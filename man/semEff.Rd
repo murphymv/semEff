@@ -8,7 +8,6 @@ semEff(
   sem,
   predictors = NULL,
   mediators = NULL,
-  responses = NULL,
   use.raw = FALSE,
   ci.conf = 0.95,
   ci.type = "bca",
@@ -22,12 +21,12 @@ semEff(
 alternatively, of boot objects (class \code{"boot"}), containing bootstrapped
 model effects.}
 
-\item{predictors, mediators, responses}{Names of variables for/through which to
-calculate effects. If \code{NULL} (default), all predictors, endogenous
-predictors (mediators), and endogenous variables (responses) will be used.}
+\item{predictors, mediators}{Names of variables for/through which to calculate
+effects. If \code{NULL} (default), all predictors/mediators in the SEM will be
+used.}
 
 \item{use.raw}{Logical, whether to use 'raw' (unstandardised) effects for all
-calculations (if present in \code{sem} object).}
+calculations (if present in \code{sem}).}
 
 \item{ci.conf}{A numeric value specifying the confidence level for confidence
 intervals on effects.}
@@ -36,7 +35,7 @@ intervals on effects.}
 — see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
 
 \item{digits}{The number of significant digits to return for numeric values
-in summary tables.}
+(for summary tables).}
 
 \item{bci.arg}{A named list of any additional arguments to \code{\link[=boot.ci]{boot.ci()}},
 excepting argument \code{index}.}
@@ -44,9 +43,10 @@ excepting argument \code{index}.}
 \item{...}{Arguments to \code{\link[=bootEff]{bootEff()}}.}
 }
 \value{
-A list object of class \code{"semEff"}, comprising: 1. All calculated
-effects 2. All calculated bootstrapped effects 3. Summary tables of effects
-and confidence intervals
+A list object of class \code{"semEff"} for which several methods and
+extractor functions exist. List contains: 1. Summary tables of effects and
+confidence intervals 2. All effects 3. All bootstrapped effects 4. All
+indirect effects (individual, not summed)
 }
 \description{
 Automatically calculate direct, indirect, total, and mediator
@@ -75,32 +75,33 @@ effects of any given predictor on a response are then the sum of its direct
 and (all) its indirect effects. 'Mediator' effects are also calculated, as
 the sum of all indirect paths which operate through each individual
 mediator — useful to assess the relative importance of different mediators
-in affecting the response. All of these effect types are calculated
-automatically for all (default) or a subset of predictors, mediators, or
-response variables in the SEM. As indirect, total, and mediator effects are
+in affecting the response. All of these effect types can be calculated
+automatically for all (default) or for a specified subset of predictors
+and/or mediators in the SEM. As indirect, total, and mediator effects are
 not directly bootstrapped using the fitted models for response variables
 (i.e. via \code{\link[=bootEff]{bootEff()}}), their equivalent 'bootstrapped' estimates are
 calculated instead using each bootstrapped direct effect.
 
 Confidence intervals for all effects are returned in summary tables for
-each response (similarly to \code{\link[=bootCI]{bootCI()}}), with BC\emph{a} intervals calculated by
-default using the bootstrapped estimates for each effect type (MacKinnon
-\emph{et al.} 2004, Cheung 2009, Hayes & Scharkow 2013). Effects for which the
-confidence intervals do not contain zero are highlighted with a star (i.e.
+each response (see \code{\link[=bootCI]{bootCI()}}), with BC\emph{a} intervals calculated by default
+using the bootstrapped estimates for each effect type (MacKinnon \emph{et al.}
+2004, Cheung 2009, Hayes & Scharkow 2013). Effects for which the confidence
+intervals do not contain zero are highlighted with a star (i.e.
 'significant' at the \code{ci.conf} level). Bootstrap standard errors (standard
 deviations of the samples) and biases (sample means minus original
-estimates) are also included for reference.
+estimates) are also included. Correlated errors (and confidence intervals)
+are also returned if their bootstrapped values are present in \code{sem}, or, if
+\code{sem} is a list of fitted models, if specified to argument \code{cor.err} (see
+\code{\link[=bootEff]{bootEff()}}). These represent residual relationships among response
+variables, unaccounted for by the hypothesised SEM paths. Use \code{summary()}
+to extract summary tables and \code{print()} to return a table of variable names
+and associated details.
 
-Correlated errors (and confidence intervals) are also returned if their
-bootstrapped values are present in \code{sem}, or, if \code{sem} is a list of fitted
-models, if specified to argument \code{cor.err} (see \code{\link[=bootEff]{bootEff()}}). These
-represent residual relationships among response variables, unaccounted for
-by the hypothesised SEM paths.
-
-All calculated effects and bootstrapped effects are returned in lists for
-each response variable, with all except mediator effects also including the
-model intercept(s) — required for prediction (this will be zero for
-ordinary linear models with fully standardised effects).
+All calculated effects and bootstrapped effects are also returned in lists
+for each response variable, with all except mediator effects also including
+the model intercept(s) — required for prediction (this will be zero for
+ordinary linear models with fully standardised effects). Effects can be
+conveniently extracted with \code{\link[=dirEff]{dirEff()}}, \code{\link[=indEff]{indEff()}} and \code{\link[=totEff]{totEff()}}.
 }
 \examples{
 # SEM effects

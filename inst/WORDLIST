@@ -1,3 +1,4 @@
+AICcmodavg
 Agresti
 Aminzadeh
 Arroita
@@ -10,6 +11,7 @@ CMD
 Calabrese
 Chernick
 Cheung
+Collabra
 Df
 GLMMs
 GVIF
@@ -20,6 +22,7 @@ Hesterberg
 Hou
 Huyvaert
 IRLS
+Karch
 Kvalseth
 Labudde
 Lai
@@ -28,9 +31,11 @@ Matechou
 McKelvey
 Modeling
 Monette
+MuMIn
 Multimodel
 Nelder
 Neuhäuser
+Poisson
 Puth
 RVIF
 RVIFs
@@ -40,12 +45,13 @@ SEM
 SEMs
 Scharkow
 Schielzeth
+Shieh
 Technometrics
 VIF
 VIFs
 Verlag
+YAML
 Zavoina
-asterix
 behavioral
 bqd
 cqm
@@ -54,7 +60,9 @@ doi
 ed
 hatvalues
 io
+knitr
 lme
+math
 merMod
 multimodel
 nd
@@ -66,4 +74,6 @@ rb
 rdrr
 residualised
 semipartial
-vif
+stylesheet
+unbiasedness
+unicode

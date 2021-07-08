@@ -80,10 +80,10 @@ variable as both predictor and response, and using a single IRLS iteration.
 \item The working response is reconstructed from this model.
 \item The inverse transformation of the working response is calculated.
 \item If the inverse transformation is 'effectively equal' to the original
-response (tested using \code{\link[=all.equal]{all.equal()}} with default tolerance), the working
-response is returned; otherwise, the GLM is refit with the working response
-now as the predictor, and steps 2-4 are repeated — each time with an
-additional IRLS iteration.
+response (tested using \code{\link[=all.equal]{all.equal()}} using the default tolerance), the
+working response is returned; otherwise, the GLM is refit with the working
+response now as the predictor, and steps 2-4 are repeated — each time with
+an additional IRLS iteration.
 }
 
 This approach will generate a very reasonable transformation of the

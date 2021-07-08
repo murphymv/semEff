@@ -4,7 +4,7 @@
 \alias{xNam}
 \title{Get Model Term Names}
 \usage{
-xNam(mod, intercept = TRUE, aliased = TRUE, list = FALSE, env = parent.frame())
+xNam(mod, intercept = TRUE, aliased = TRUE, list = FALSE, env = NULL)
 }
 \arguments{
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
@@ -18,7 +18,7 @@ xNam(mod, intercept = TRUE, aliased = TRUE, list = FALSE, env = parent.frame())
 multi-coefficient terms grouped under their main term names.}
 
 \item{env}{Environment in which to look for model data (used to construct the
-model frame).}
+model frame). Defaults to the \code{\link[=formula]{formula()}} environment.}
 }
 \value{
 A character vector or list/nested list of term names.

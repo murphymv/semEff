@@ -7,7 +7,7 @@
 \alias{totEff}
 \title{Get SEM Effects}
 \usage{
-getEff(eff, type = "orig")
+getEff(eff, responses = NULL, type = "orig")
 
 dirEff(...)
 
@@ -18,11 +18,15 @@ totEff(...)
 \arguments{
 \item{eff}{An object of class \code{"semEff"}.}
 
-\item{type}{The type of effects to return. Must be either \code{"orig"} (default)
-or \code{"boot"}.}
+\item{responses}{An optional character vector, the names of one or more SEM
+response variables for which to return effects. Can also be a numeric
+vector of indices of \code{eff}. If \code{NULL} (default), all effects are returned.}
 
-\item{...}{Arguments (above) to be passed to \code{\link[=getEff]{getEff()}} from other extractor
-functions.}
+\item{type}{The type of effects to return. Can be \code{"orig"} (default) or
+\code{"boot"} (for bootstrapped).}
+
+\item{...}{Arguments (above) to be passed to \code{\link[=getEff]{getEff()}} from the other
+extractor functions.}
 }
 \value{
 A list containing the original or bootstrapped effects for each

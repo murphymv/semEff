@@ -66,8 +66,8 @@ isPhi <- function(x) {
 }
 #' @describeIn Param.Type Is parameter an R-squared value?
 isR2 <- function(x) {
-  x %in% c("(r.squared)", "(adj.r.squared)", "(pred.r.squared)",
-           "(r_squared)", "(adj_r_squared)", "(pred_r_squared)")
+  x %in% c("(R_squared)", "(R_squared_adj)", "(R_squared_pred)",
+           "(R_squared_sp)", "(R_squared_sp_adj)", "(R_squared_sp_pred)")
 }
 #' @describeIn Param.Type Is parameter a raw (unstandardised) coefficient?
 isRaw <- function(x) {
@@ -75,7 +75,7 @@ isRaw <- function(x) {
 }
 
 
-#' @title Recursive `mapply()`
+#' @title Recursive [mapply()]
 #' @description Recursively apply a function to a list or lists.
 #' @param FUN Function to apply.
 #' @param ... Object(s) to which `FUN` can be applied, or lists of such objects
@@ -119,7 +119,7 @@ rMapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 }
 
 
-#' @title Parallel `sapply()`
+#' @title Parallel [sapply()]
 #' @description Apply a function to a vector using parallel processing.
 #' @param X A vector object (numeric, character, or list).
 #' @param FUN Function to apply to the elements of `X`.
