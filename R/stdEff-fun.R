@@ -812,10 +812,10 @@ RVIF <- function(...) {
 #'   effects to condition on when generating fitted values used in the
 #'   calculation of R-squared. Defaults to `NULL`, meaning all random effects
 #'   are included. See [predict.merMod()] for further specification details.
-#' @param type The type of correlation coefficient to use. Can be either
-#'   `"pearson"` (default) or `"spearman"`.
+#' @param type The type of correlation coefficient to use. Can be `"pearson"`
+#'   (default) or `"spearman"`.
 #' @param adj.type The type of adjusted R-squared estimator to use. Can be
-#'   `"olkin-pratt"` (default) or `"standard"`. See Details.
+#'   `"olkin-pratt"` (default) or `"ezekiel"`. See Details.
 #' @param positive.only Logical, whether to return only positive values for
 #'   R-squared (negative values replaced with zero).
 #' @param env Environment in which to look for model data (if none supplied).
@@ -834,22 +834,23 @@ RVIF <- function(...) {
 #'   does not depend on any specific error distribution or model estimating
 #'   procedure, it is also generally comparable across many different types of
 #'   model (Kvalseth 1985). In the case of the ordinary linear model, the
-#'   measure equals the more traditional R-squared based on sums of squares.
+#'   measure is exactly equal to the traditional R-squared based on sums of
+#'   squares.
 #'
 #'   If `adj = TRUE` (default), the 'adjusted' R-squared value is also returned,
 #'   which provides an estimate of the population — as opposed to sample —
 #'   R-squared. This is achieved via an analytical formula which adjusts
-#'   R-squared for the 'degrees of freedom' of the model (i.e. the ratio of
-#'   observations to parameters). By default, this is calculated via the exact
-#'   'Olkin-Pratt' estimator (Olkin & Pratt 1958), shown in a recent simulation
-#'   study to be the optimal unbiased population R-squared estimator, across a
-#'   range of model specification scenarios (Karch 2020). Setting `adj.type =
-#'   "standard"` will use the more common 'Ezekiel/Wherry' formula, which can be
-#'   preferred in certain circumstances, such as where minimising the mean
-#'   squared error (MSE) of the estimate is more important than unbiasedness
-#'   (Karch 2020), and/or for comparison purposes with other studies. Adjusted
-#'   R-squared can be used to help safeguard against overfitting of the model to
-#'   the original sample.
+#'   R-squared using the 'degrees of freedom' of the model (i.e. the ratio of
+#'   observations to parameters), helping to counter R-squared's positive bias
+#'   for multiple regression and guard against overfitting of the model to noise
+#'   in the original sample. By default, this is calculated via the exact
+#'   'Olkin-Pratt' estimator, shown in recent simulations to be the optimal
+#'   unbiased population R-squared estimator across a range of estimators and
+#'   specification scenarios (Karch 2020), and thus a good general first choice,
+#'   even for small sample sizes. Setting `adj.type = "ezekiel"` however will
+#'   use the simpler and more common 'Ezekiel' formula, which can be more
+#'   appropriate where minimising the mean squared error (MSE) of the estimate
+#'   is preferred over strict unbiasedness (Hittner 2019, Karch 2020).
 #'
 #'   If `pred = TRUE` (default), a 'predicted' R-squared is also returned, which
 #'   is calculated via the same formula as for R-squared but using
@@ -910,15 +911,14 @@ RVIF <- function(...) {
 #'   can be difficult to interpret in practice and in any case usually only
 #'   occurs in rare situations, such as where the intercept is suppressed or
 #'   where a low value of R-squared is adjusted downwards via an analytic
-#'   estimator. Such values are also 'impossible', given that R-squared is a
-#'   strictly positive measure. Hence, for simplicity and ease of
+#'   estimator. Such values are also 'impossible' in practice, given that
+#'   R-squared is a strictly positive measure. Hence, for simplicity and ease of
 #'   interpretation, values less than zero are presented as a complete lack of
 #'   model fit. This is also recommended by Shieh (2008), who shows for adjusted
 #'   R-squared that such 'positive-part' estimators have lower MSE in estimating
 #'   the population R-squared (though higher bias). To allow return of negative
-#'   values (even after squaring), set `positive.only = FALSE`. This may be
-#'   desirable for simulation purposes, and where strict unbiasedness is
-#'   prioritised.
+#'   values however, set `positive.only = FALSE`. This may be desirable for
+#'   simulation purposes, and/or where strict unbiasedness is prioritised.
 #'
 #' @note Caution must be exercised in interpreting the values of any pseudo
 #'   R-squared measure calculated for a GLM or mixed model (including those
@@ -939,6 +939,11 @@ RVIF <- function(...) {
 #'   and Data Augmentation and a Method for Prediction. *Technometrics*,
 #'   **16**(1), 125-127. <https://doi.org/gfgv57>
 #'
+#'   Hittner, J. B. (2019). Ezekiel’s classic estimator of the population
+#'   squared multiple correlation coefficient: Monte Carlo-based extensions and
+#'   refinements. *The Journal of General Psychology*, **147**(3), 213–227.
+#'   <https://doi.org/gk53wb>
+#'
 #'   Karch, J. (2020). Improving on Adjusted R-Squared. *Collabra: Psychology*,
 #'   **6**(1). <https://doi.org/gkgk2v>
 #'
@@ -950,18 +955,10 @@ RVIF <- function(...) {
 #'   linear mixed-effects models revisited and expanded. *Journal of the Royal
 #'   Society Interface*, **14**(134). <https://doi.org/gddpnq>
 #'
-#'   Olkin, I., & Pratt, J. W. (1958). Unbiased Estimation of Certain
-#'   Correlation Coefficients. *The Annals of Mathematical Statistics*,
-#'   **29**(1), 201–211. <https://doi.org/10/dsjtxq>
-#'
 #'   Shieh, G. (2008). Improved Shrinkage Estimation of Squared Multiple
 #'   Correlation Coefficient and Squared Cross-Validity Coefficient.
 #'   *Organizational Research Methods*, **11**(2), 387–407.
 #'   <https://doi.org/bcwqf3>
-#'
-#'   Yin, P. and Fan, X. (2001) Estimating R2 Shrinkage in Multiple Regression:
-#'   A Comparison of Different Analytical Methods. *The Journal of Experimental
-#'   Education*, **69**(2), 203-224. <https://doi.org/fbdq5g>
 #'
 #'   Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
 #'   generalized linear model. *Statistics in Medicine*, **19**(13), 1771-1781.
@@ -1007,11 +1004,12 @@ RVIF <- function(...) {
 #' # exercise the appropriate caution in interpretation.
 #' @export
 R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
-               re.form = NULL, type = "pearson", adj.type = "olkin-pratt",
-               positive.only = TRUE, env = NULL) {
+               re.form = NULL, type = c("pearson", "spearman"),
+               adj.type = c("olkin-pratt", "ezekiel"), positive.only = TRUE,
+               env = NULL) {
 
-  m <- mod; d <- data; rf <- re.form; sp <- type == "spearman";
-  at <- adj.type; po <- positive.only
+  m <- mod; d <- data; rf <- re.form; type <- match.arg(type);
+  adj.type <- match.arg(adj.type)
 
   # Function
   R2 <- function(m) {
@@ -1022,10 +1020,14 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       env <- environment()
     }
 
-    # No. observations/parameters
+    # Degrees of freedom
     n <- nobs(m)
     i <- attr(terms(m), "intercept")
-    k <- n - i - df.residual(m)
+    df <- n - i
+    rdf <- df.residual(m)
+
+    # No. predictors
+    k <- df - rdf
 
     # R-squared
     R2 <- if (k > 0) {
@@ -1058,12 +1060,13 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 
       # Correlation
       yf <- cbind(y, f)
-      if (sp) yf <- apply(yf, 2, rank)
-      R <- cov.wt(yf, w, cor = TRUE)$cor[1, 2]
+      if (type == "spearman") yf <- apply(yf, 2, rank)
+      cm <- cov.wt(yf, w, cor = TRUE, center = as.logical(i))
+      R <- cm$cor[1, 2]
       if (is.na(R)) R <- 0
 
       # Return R-squared
-      if (po) R <- max(R, 0)
+      if (positive.only) R <- max(R, 0)
       if (R < 0) -R^2 else R^2
 
     } else 0
@@ -1071,22 +1074,20 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     # Adjusted R-squared
     R2a <- if (adj) {
 
-      if (R2 > 0) {
+      if (k > 0) {
 
-        if (!at %in% c("olkin-pratt", "standard"))
-          stop("'adj.type' must be either 'olkin-pratt' or 'standard'")
+        # Variance unexplained (model 'error')
+        e <- 1 - R2
 
-        # Adjusted R-squared estimator
-        # (Olkin-Pratt formula adapted from altR2:::OPExactEstimator)
-        R2a <- if (at[1] == "olkin-pratt") {
-          1 - (n - 3) * (1 - R2) / (n - k - i) *
-            gsl::hyperg_2F1(1, 1, (n - k + 1) / 2, 1 - R2)
+        # Estimator (some code from altR2:::OPExactEstimator)
+        R2a <- if (adj.type == "olkin-pratt") {
+          1 - e * (df - 2) / rdf * gsl::hyperg_2F1(1, 1, (rdf + 2) / 2, e)
         } else {
-          1 - (1 - R2) * (n - i) / (n - k - i)
+          1 - e * df / rdf
         }
 
         # Return adjusted R-squared
-        if (po) R2a <- max(R2a, 0)
+        if (positive.only) R2a <- max(R2a, 0)
         R2a
 
       } else 0
@@ -1098,7 +1099,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 
       if (!isGls(m) && !(isMer(m) && isGlm(m))) {
 
-        if (R2 > 0) {
+        if (k > 0) {
 
           # Leverage values (diagonals of the hat matrix, hii)
           hii <- hatvalues(m)[obs]
@@ -1109,11 +1110,12 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
           f <- y - rp
 
           # Correlation
-          yf[, 2] <- if (sp) rank(f) else f
-          Rp <- cov.wt(yf[s, ], w[s], cor = TRUE)$cor[1, 2]
+          yf[, 2] <- if (type == "spearman") rank(f) else f
+          cm <- cov.wt(yf[s, ], w[s], cor = TRUE, center = as.logical(i))
+          Rp <- cm$cor[1, 2]
 
           # Return predicted R-squared
-          if (po) Rp <- max(Rp, 0)
+          if (positive.only) Rp <- max(Rp, 0)
           if (Rp < 0) -Rp^2 else Rp^2
 
         } else 0
@@ -1123,10 +1125,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     }
 
     # Return values
-    R2 <- c(R2, R2a, R2p)
-    R2n <- if (sp) "R_squared_sp" else "R_squared"
-    R2n <- paste0(R2n, c("", "_adj", "_pred"))
-    setNames(R2, R2n)
+    c("(R.squared)" = R2, "(R.squared.adj)" = R2a, "(R.squared.pred)" = R2p)
 
   }
 

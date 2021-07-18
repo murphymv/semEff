@@ -66,8 +66,7 @@ isPhi <- function(x) {
 }
 #' @describeIn Param.Type Is parameter an R-squared value?
 isR2 <- function(x) {
-  x %in% c("(R_squared)", "(R_squared_adj)", "(R_squared_pred)",
-           "(R_squared_sp)", "(R_squared_sp_adj)", "(R_squared_sp_pred)")
+  x %in% c("(R.squared)", "(R.squared.adj)", "(R.squared.pred)")
 }
 #' @describeIn Param.Type Is parameter a raw (unstandardised) coefficient?
 isRaw <- function(x) {
@@ -124,40 +123,44 @@ rMapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 #' @param X A vector object (numeric, character, or list).
 #' @param FUN Function to apply to the elements of `X`.
 #' @param parallel The type of parallel processing to use. Can be one of
-#'   `"snow"`, `"multicore"`, or `"no"` (for none). If none, [sapply()] is used
-#'   instead.
+#'   `"snow"`, `"multicore"` (not available on Windows), or `"no"` (for none).
+#'   See Details.
 #' @param ncpus Number of system cores to use for parallel processing. If `NULL`
 #'   (default), all available cores are used.
 #' @param cl Optional cluster to use if `parallel = "snow"`. If `NULL`
 #'   (default), a local cluster is created using the specified number of cores.
 #' @param add.obj A character vector of any additional object names to be
-#'   exported to the cluster for parallel processing. Use if a required object
-#'   or function cannot be found.
-#' @param ... Arguments to [parSapply()] or [sapply()].
-#' @details This is a wrapper for [parallel::parSapply()], enabling
-#'   (potentially) faster processing of a function over a vector of objects.
+#'   exported to the cluster. Use if a required object or function cannot be
+#'   found.
+#' @param ... Additional arguments to [parSapply()], [mcmapply()], or
+#'   [sapply()] (note: arguments `"simplify"` and `"SIMPLIFY"` are both allowed).
+#' @details This is a wrapper for [parallel::parSapply()] (`"snow"`) or
+#'   [parallel::mcmapply()] (`"multicore"`), enabling (potentially) faster
+#'   processing of a function over a vector of objects. If `parallel = "no"`,
+#'   [sapply()] is used instead.
+#'
 #'   Parallel processing via option `"snow"` (default) is carried out using a
 #'   cluster of workers, which is automatically set up via [makeCluster()] using
 #'   all available system cores or a user supplied number of cores. The function
 #'   then exports the required objects and functions to this cluster using
 #'   [clusterExport()], after performing a (rough) match of all objects and
 #'   functions in the current global environment to those referenced in the call
-#'   to `FUN` (and also any calls in `X`). Any additional required objects can
-#'   be supplied using `add.obj`.
+#'   to `FUN` (and also any calls in `X`). Any additional required object names
+#'   can be supplied using `add.obj`.
 #' @return The output of `FUN` in a list, or simplified to a vector or array.
 #' @export
-pSapply <- function(X, FUN, parallel = "snow", ncpus = NULL, cl = NULL,
-                    add.obj = NULL, ...) {
+pSapply <- function(X, FUN, parallel = c("snow", "multicore", "no"),
+                    ncpus = NULL, cl = NULL, add.obj = NULL, ...) {
 
-  p <- parallel; nc <- ncpus; ao <- add.obj
+  parallel <- match.arg(parallel); nc <- ncpus; ao <- add.obj; a <- list(...)
+  if (parallel == "multicore") a$simplify <- NULL else a$SIMPLIFY <- NULL
 
-  if (p != "no") {
+  if (parallel != "no") {
 
     # No. cores to use
     if (is.null(nc)) nc <- parallel::detectCores()
 
-    # Cluster
-    if (p == "snow") {
+    if (parallel == "snow") {
 
       # Create local cluster using system cores
       if (is.null(cl)) {
@@ -177,14 +180,19 @@ pSapply <- function(X, FUN, parallel = "snow", ncpus = NULL, cl = NULL,
       o <- c("X", o, ao)
       parallel::clusterExport(cl, o, environment())
 
+      # Run parSapply using cluster
+      out <- do.call(parallel::parSapply, c(list(cl, X, FUN), a))
+      parallel::stopCluster(cl)
+
+    } else {
+      out <- parallel::mcmapply(FUN, X, mc.cores = nc, MoreArgs = a)
     }
 
-    # Run parSapply using cluster and output results
-    out <- parallel::parSapply(cl, X, FUN, ...)
-    parallel::stopCluster(cl)
-    out
+  } else {
+    out <- do.call(sapply, c(list(X, FUN), a))
+  }
 
-  } else sapply(X, FUN, ...)
+  return(out)
 
 }
 

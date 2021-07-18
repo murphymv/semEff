@@ -128,13 +128,17 @@
 #' lapply(Shipley.SEM.Boot, "[[", 1)  # original
 #' lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
 #' @export
-bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
-                    cor.err = NULL, catch.err = TRUE, parallel = "snow",
-                    ncpus = NULL, cl = NULL, bM.arg = NULL, ...) {
+bootEff <- function(mod, R, seed = NULL,
+                    type = c("nonparametric", "parametric", "semiparametric"),
+                    ran.eff = NULL, cor.err = NULL, catch.err = TRUE,
+                    parallel = c("snow", "multicore", "no"), ncpus = NULL,
+                    cl = NULL, bM.arg = NULL, ...) {
 
-  m <- mod; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
   if (missing(R))
     stop("Number of bootstrap resamples (R) must be specified.")
+
+  m <- mod; type <- match.arg(type); re <- ran.eff; ce <- cor.err;
+  parallel <- match.arg(parallel); nc <- ncpus;
 
   # Arguments to stdEff()
   a <- list(...)
@@ -174,14 +178,16 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
   })
   if (mer2) {
 
+    type <- type[type != c("nonparametric")]
+
     # Modified bootMer function
     bootMer2 <- function(...) {
 
       # Set up function call with specified arguments
       C <- match.call()
       n <- length(C)
-      a <- c(list(FUN = s, nsim = R, seed = NULL, type = type, parallel = p,
-                  ncpus = nc, cl = cl), bM.arg)
+      a <- c(list(FUN = s, nsim = R, seed = NULL, type = type,
+                  parallel = parallel, ncpus = nc, cl = cl), bM.arg)
       for (i in 1:length(a)) {
         C[n + i] <- a[i]
         names(C)[n + i] <- names(a)[i]
@@ -213,12 +219,12 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
   }
 
   # Set up parallel processing
-  if (p != "no") {
+  if (parallel != "no") {
 
     # No. cores to use
     if (is.null(nc)) nc <- parallel::detectCores()
 
-    if (p == "snow") {
+    if (parallel == "snow") {
 
       # Create local cluster using system cores
       if (is.null(cl)) {
@@ -275,7 +281,7 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
     # Perform bootstrap
     B <- if (!mer2) {
       set.seed(seed)
-      boot::boot(x, s, R, parallel = p, ncpus = nc, cl = cl)
+      boot::boot(x, s, R, parallel = parallel, ncpus = nc, cl = cl)
     } else {
       if (isList(m)) {
 
@@ -394,7 +400,7 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
       # Perform bootstrap
       B <- if (!mer2) {
         set.seed(seed)
-        boot::boot(x, s, R, parallel = p, ncpus = nc, cl = cl)
+        boot::boot(x, s, R, parallel = parallel, ncpus = nc, cl = cl)
       } else {
 
         # Bootstrapped resids for model 1
@@ -435,7 +441,7 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
   }
 
   # Output results
-  if (p == "snow") parallel::stopCluster(cl)
+  if (parallel == "snow") parallel::stopCluster(cl)
   set.seed(NULL)
   BE
 
@@ -450,7 +456,7 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
 #' @param conf A numeric value specifying the confidence level for the
 #'   intervals.
 #' @param type The type of confidence interval to return (defaults to `"bca"` —
-#'   see Details). See [boot.ci()] for further specification details.
+#'   see Details). See [boot.ci()] for further options.
 #' @param digits The number of significant digits to return for numeric values.
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
 #'   excepting argument `index`.
@@ -523,7 +529,7 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   bootCI <- function(B) {
 
     # Change default CI type for parametric bootstrapping
-    if (B$sim == "parametric" && type == "bca") {
+    if (B$sim == "parametric" && type[1] == "bca") {
       message("Percentile confidence intervals used for parametric bootstrap samples.")
       type <- "perc"
     }

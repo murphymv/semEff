@@ -348,7 +348,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
     B$t <- matrix(eb)
 
     # Change default CI type for parametric bootstrapping
-    if (B$sim == "parametric" && ci.type == "bca") {
+    if (B$sim == "parametric" && ci.type[1] == "bca") {
       message("Percentile confidence intervals used for parametric bootstrap samples.")
       ci.type <- "perc"
     }
@@ -679,7 +679,8 @@ summary.semEff <- function(object, responses = NULL, ...) {
 NULL
 #' @describeIn getEff Extract all effects.
 #' @export
-getEff <- function(eff, responses = NULL, type = "orig") {
+getEff <- function(eff, responses = NULL, type = c("orig", "boot")) {
+  type <- match.arg(type)
   s <- if (type == "boot") "Bootstrapped Effects" else "Effects"
   e <- eff[[s]]
   r <- responses
@@ -851,13 +852,13 @@ totEff <- function(...) {
 #' stopifnot(all.equal(f1, f2))
 #' @export
 predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
-                    re.form = NA, type = "link", interaction = NULL,
-                    use.raw = FALSE, ci.conf = 0.95, ci.type = "bca",
-                    digits = 3, bci.arg = NULL, parallel = "no", ncpus = NULL,
-                    cl = NULL, ...) {
+                    re.form = NA, type = c("link", "response"),
+                    interaction = NULL, use.raw = FALSE, ci.conf = 0.95,
+                    ci.type = "bca", digits = 3, bci.arg = NULL,
+                    parallel = "no", ncpus = NULL, cl = NULL, ...) {
 
   m <- mod; nd <- newdata; e <- effects; eb <- eff.boot; rf <- re.form;
-  ix <- interaction; p <- parallel; nc <- ncpus
+  type <- match.arg(type); ix <- interaction; nc <- ncpus
 
   # Arguments to stdEff()
   a <- list(...)
@@ -1000,7 +1001,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       R <- nrow(eb)
 
       # Change default CI type for parametric bootstrapping
-      if (sim == "parametric" && ci.type == "bca") {
+      if (sim == "parametric" && ci.type[1] == "bca") {
         message("Percentile confidence intervals used for parametric bootstrap samples.")
         ci.type <- "perc"
       }
@@ -1031,7 +1032,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
           c(list(B, ci.conf, ci.type, i), bci.arg)
         )
         tail(as.vector(ci[[4]]), 2)
-      }, p, nc, cl)
+      }, parallel, nc, cl)
       ci <- as.matrix(ci)
       colnames(ci) <- obs
       f <- list(fit = f, ci.lower = ci[1, ], ci.upper = ci[2, ])
