@@ -4,17 +4,20 @@ xx/xx/2021 (binaries)
 
 ### New features:
 
--   New `summary()` method for `"semEff"` objects......................
+-   New `summary()` and `print()` methods for `"semEff"` objects.
 -   New formatted table output for effect summaries from `semEff()` and `bootCI()`.
+-   All indirect effects now also outputted as part of `"semEff"` object.
 
 ### Other changes:
 
--   `R2()` updates..................
--   Various code and documentation updates.
+-   New function `getX()`, for more flexible construction of model design matrices (mostly internal use).
+-   Updates to `R2()` (new arguments, new default method for adjusted R-squared).
+-   Various other code and documentation updates.
 
 ### Bugs fixed:
 
 -   Amendment to previous (incomplete) fix for issue where `xNam()` was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary.
+-   `pSapply()` did not work (presumably) with `parallel = "multicore"`, due to relying completely on `parallel::parSapply()` for parallel processing (which is `"snow"` only). The function now wraps `parallel::mcmapply()` where `parallel = "multicore"`.
 
 ## semEff 0.5.0
 

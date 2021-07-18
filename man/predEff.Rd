@@ -10,7 +10,7 @@ predEff(
   effects = NULL,
   eff.boot = NULL,
   re.form = NA,
-  type = "link",
+  type = c("link", "response"),
   interaction = NULL,
   use.raw = FALSE,
   ci.conf = 0.95,

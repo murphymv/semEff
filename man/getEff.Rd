@@ -7,7 +7,7 @@
 \alias{totEff}
 \title{Get SEM Effects}
 \usage{
-getEff(eff, responses = NULL, type = "orig")
+getEff(eff, responses = NULL, type = c("orig", "boot"))
 
 dirEff(...)
 

@@ -15,7 +15,7 @@ nested list of such objects.}
 intervals.}
 
 \item{type}{The type of confidence interval to return (defaults to \code{"bca"} —
-see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
+see Details). See \code{\link[=boot.ci]{boot.ci()}} for further options.}
 
 \item{digits}{The number of significant digits to return for numeric values.}
 
