@@ -66,7 +66,8 @@ isPhi <- function(x) {
 }
 #' @describeIn Param.Type Is parameter an R-squared value?
 isR2 <- function(x) {
-  x %in% c("(R.squared)", "(R.squared.adj)", "(R.squared.pred)")
+  x %in% c("(R.squared)", "(R.squared.adj)", "(R.squared.pred)",
+           "(R_squared)", "(R_squared_adj)", "(R_squared_pred)")
 }
 #' @describeIn Param.Type Is parameter a raw (unstandardised) coefficient?
 isRaw <- function(x) {
