@@ -70,9 +70,9 @@
 #'   ordinary linear models with fully standardised effects). Effects can be
 #'   conveniently extracted with [dirEff()], [indEff()] and [totEff()].
 #' @return A list object of class `"semEff"` for which several methods and
-#'   extractor functions exist. List contains: 1. Summary tables of effects and
-#'   confidence intervals 2. All effects 3. All bootstrapped effects 4. All
-#'   indirect effects (individual, not summed)
+#'   extractor functions are available. Contains: 1. Summary tables of variables
+#'   and effects/CIs 2. All effects 3. All bootstrapped effects 4. All indirect
+#'   effects (individual, not summed)
 #' @references Cheung, M. W. L. (2009). Comparison of methods for constructing
 #'   confidence intervals of standardized indirect effects. *Behavior Research
 #'   Methods*, **41**(2), 425-438. <https://doi.org/fnx7xk>
@@ -100,11 +100,12 @@
 #' @examples
 #' # SEM effects
 #' (Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot))
+#' summary(Shipley.SEM.Eff)
 #'
 #' # Effects for selected variables
-#' # semEff(Shipley.SEM.Boot, predictors = "lat")
-#' # semEff(Shipley.SEM.Boot, mediators = "DD")
-#' # semEff(Shipley.SEM.Boot, responses = "Live")
+#' # summary(Shipley.SEM.Eff, responses = "Live")
+#' # summary(semEff(Shipley.SEM.Boot, predictors = "lat"))
+#' # summary(semEff(Shipley.SEM.Boot, mediators = "DD"))
 #'
 #' # Effects calculated using original SEM (models)
 #' # (not typically recommended — better to use saved boot objects)

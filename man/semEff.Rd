@@ -44,9 +44,9 @@ excepting argument \code{index}.}
 }
 \value{
 A list object of class \code{"semEff"} for which several methods and
-extractor functions exist. List contains: 1. Summary tables of effects and
-confidence intervals 2. All effects 3. All bootstrapped effects 4. All
-indirect effects (individual, not summed)
+extractor functions are available. Contains: 1. Summary tables of variables
+and effects/CIs 2. All effects 3. All bootstrapped effects 4. All indirect
+effects (individual, not summed)
 }
 \description{
 Automatically calculate direct, indirect, total, and mediator
@@ -106,11 +106,12 @@ conveniently extracted with \code{\link[=dirEff]{dirEff()}}, \code{\link[=indEff
 \examples{
 # SEM effects
 (Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot))
+summary(Shipley.SEM.Eff)
 
 # Effects for selected variables
-# semEff(Shipley.SEM.Boot, predictors = "lat")
-# semEff(Shipley.SEM.Boot, mediators = "DD")
-# semEff(Shipley.SEM.Boot, responses = "Live")
+# summary(Shipley.SEM.Eff, responses = "Live")
+# summary(semEff(Shipley.SEM.Boot, predictors = "lat"))
+# summary(semEff(Shipley.SEM.Boot, mediators = "DD"))
 
 # Effects calculated using original SEM (models)
 # (not typically recommended â€” better to use saved boot objects)

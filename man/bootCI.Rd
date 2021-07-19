@@ -25,8 +25,8 @@ excepting argument \code{index}.}
 \item{...}{Arguments to \code{\link[=bootEff]{bootEff()}}.}
 }
 \value{
-A summary table of the effects and bootstrapped confidence intervals,
-or a list or nested list of same.
+A summary table of the effects and bootstrapped confidence intervals
+(data frame), or a list or nested list of same.
 }
 \description{
 Calculate confidence intervals from bootstrapped model effects.

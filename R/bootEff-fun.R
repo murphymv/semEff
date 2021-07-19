@@ -489,8 +489,8 @@ bootEff <- function(mod, R, seed = NULL,
 #'   however, the bootstrap is [not a solution to small sample
 #'   size](https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size).
 #'
-#' @return A summary table of the effects and bootstrapped confidence intervals,
-#'   or a list or nested list of same.
+#' @return A summary table of the effects and bootstrapped confidence intervals
+#'   (data frame), or a list or nested list of same.
 #' @references Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
 #'   Bootstrap Confidence Intervals. *American Journal of Mathematical and
 #'   Management Sciences*, **29**(3–4), 437–456. <https://doi.org/c8zv>
@@ -584,6 +584,7 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
     rownames(e) <- 1:nrow(e)
 
     # Set attributes and output
+    class(e) <- c("bootCI", class(e))
     attr(e, "ci.conf") <- conf
     attr(e, "ci.type") <- type
     e
@@ -593,5 +594,19 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   # Apply recursively
   rMapply(bootCI, B, SIMPLIFY = FALSE)
 
+}
+
+
+#' @title Print `"bootCI"` Objects
+#' @description A [print()] method for an object of class `"bootCI"`.
+#' @param x An object of class `"bootCI"`.
+#' @param ... Further arguments passed to or from other methods. Not currently
+#'   used.
+#' @return A summary table of the effects and bootstrapped confidence intervals
+#'   (data frame).
+# S3 method for class 'bootCI'
+#' @export
+print.bootCI <- function(x, ...) {
+  print.data.frame(x, row.names = FALSE)
 }
 
