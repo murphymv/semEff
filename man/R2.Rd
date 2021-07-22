@@ -78,16 +78,16 @@ If \code{adj = TRUE} (default), the 'adjusted' R-squared value is also returned,
 which provides an estimate of the population — as opposed to sample —
 R-squared. This is achieved via an analytical formula which adjusts
 R-squared using the 'degrees of freedom' of the model (i.e. the ratio of
-observations to parameters), helping to counter R-squared's positive bias
-for multiple regression and guard against overfitting of the model to noise
-in the original sample. By default, this is calculated via the exact
-'Olkin-Pratt' estimator, shown in recent simulations to be the optimal
-unbiased population R-squared estimator across a range of estimators and
+observations to parameters), helping to counter multiple R-squared's
+positive bias and guard against overfitting of the model to noise in the
+original sample. By default, this is calculated via the exact 'Olkin-Pratt'
+estimator, shown in recent simulations to be the optimal unbiased
+population R-squared estimator across a range of estimators and
 specification scenarios (Karch 2020), and thus a good general first choice,
-even for small sample sizes. Setting \code{adj.type = "ezekiel"} however will
+even for smaller sample sizes. Setting \code{adj.type = "ezekiel"} however will
 use the simpler and more common 'Ezekiel' formula, which can be more
 appropriate where minimising the mean squared error (MSE) of the estimate
-is preferred over strict unbiasedness (Hittner 2019, Karch 2020).
+is more important than strict unbiasedness (Hittner 2019, Karch 2020).
 
 If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned, which
 is calculated via the same formula as for R-squared but using
@@ -145,13 +145,14 @@ can be difficult to interpret in practice and in any case usually only
 occurs in rare situations, such as where the intercept is suppressed or
 where a low value of R-squared is adjusted downwards via an analytic
 estimator. Such values are also 'impossible' in practice, given that
-R-squared is a strictly positive measure. Hence, for simplicity and ease of
-interpretation, values less than zero are presented as a complete lack of
-model fit. This is also recommended by Shieh (2008), who shows for adjusted
-R-squared that such 'positive-part' estimators have lower MSE in estimating
-the population R-squared (though higher bias). To allow return of negative
-values however, set \code{positive.only = FALSE}. This may be desirable for
-simulation purposes, and/or where strict unbiasedness is prioritised.
+R-squared is a strictly positive measure (as generally known). Hence, for
+simplicity and ease of interpretation, values less than zero are presented
+as a complete lack of model fit. This is also recommended by Shieh (2008),
+who shows for adjusted R-squared that such 'positive-part' estimators have
+lower MSE in estimating the population R-squared (though higher bias). To
+allow return of negative values however, set \code{positive.only = FALSE}. This
+may be desirable for simulation purposes, and/or where strict unbiasedness
+is prioritised.
 }
 \note{
 Caution must be exercised in interpreting the values of any pseudo

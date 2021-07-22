@@ -464,7 +464,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
 
       # Format table (add title columns & top space)
       s <- format(s, nsmall = digits)
-      s <- cbind(" " = "", "Variable" = rownames(s), s)
+      s <- cbind(" " = "", " " = rownames(s), s)
       s[1, 1] <- toupper(j)
       rbind("", s)
 
@@ -478,6 +478,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
     rownames(s) <- 1:nrow(s)
 
     # Set attributes and output
+    class(s) <- c("semEff", class(s))
     attr(s, "ci.conf") <- ci.conf
     attr(s, "ci.type") <- ci.type
     s
@@ -488,12 +489,13 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
   if (any(ce)) {
     CE <- bootCI(sem[ce], ci.conf, ci.type, digits, bci.arg)
     if (length(ce) > 1) {
-      CE <- c(CE[1], lapply(CE[-1], "[", 3,))
+      CE <- c(CE[1], lapply(CE[-1], "[", 3,), "")
       CE <- do.call(rbind, CE)
       CE[1] <- format(CE[1], justify = "left")
       rownames(CE) <- 1:nrow(CE)
     }
     CE[, 1] <- subNam("_", ".", CE[, 1])
+    class(CE) <- c("semEff", class(CE))
     s <- c(s, list("Correlated Errors" = CE))
   }
 
@@ -516,7 +518,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
   ))
   v[c(1:2)] <- format(v[c(1:2)], justify = "left")
   rownames(v) <- 1:nrow(v)
-  class(v) <- c("unicode_df", class(v))
+  class(v) <- c("semEff", class(v))
   s <- c(list("Variables" = v), s)
 
   # Reinstate periods to variable names
@@ -535,88 +537,98 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
 }
 
 
-#' @title Print Data Frames (Unicode Support)
-#' @description A [print()] method for data frames of class `"unicode_df"`.
-#' @param x An object of class `"unicode_df"`.
-#' @param ...,digits,quote,right,row.names,max See [print.data.frame()].
-#' @details This is a simple modification of `print.data.frame()` to facilitate
-#'   correct printing of unicode characters in all cases, by bypassing
-#'   [format.data.frame()] ([bug
-#'   details](https://stat.ethz.ch/pipermail/r-devel/2015-May/071252.html),
-#'   workaround adapted from
-#'   [here](https://stat.ethz.ch/pipermail/r-devel/2015-May/071259.html)).
-# S3 method for class 'unicode_df'
-#' @export
-print.unicode_df <- function(x, ..., digits = NULL, quote = FALSE, right = TRUE,
-                             row.names = TRUE, max = NULL) {
-
-  n <- length(row.names(x))
-  if (length(x) == 0L) {
-    cat(sprintf(ngettext(n, "data frame with 0 columns and %d row",
-                         "data frame with 0 columns and %d rows"), n),
-        "\n", sep = "")
-  }
-  else if (n == 0L) {
-    print.default(names(x), quote = FALSE)
-    cat(gettext("<0 rows> (or 0-length row.names)\n"))
-  }
-  else {
-    if (is.null(max))
-      max <- getOption("max.print", 99999L)
-    if (!is.finite(max))
-      stop("invalid 'max' / getOption(\"max.print\"): ",
-           max)
-    omit <- (n0 <- max %/% length(x)) < n
-    # m <- as.matrix(format.data.frame(if (omit)
-    #   x[seq_len(n0), , drop = FALSE]
-    #   else x, digits = digits, na.encode = FALSE))
-    m <- as.matrix(if (omit)
-      x[seq_len(n0), , drop = FALSE]
-      else x)
-    if (!isTRUE(row.names))
-      dimnames(m)[[1L]] <- if (isFALSE(row.names))
-        rep.int("", if (omit)
-          n0
-          else n)
-    else row.names
-    print(m, ..., quote = quote, right = right, max = max)
-    if (omit)
-      cat(" [ reached 'max' / getOption(\"max.print\") -- omitted",
-          n - n0, "rows ]\n")
-  }
-  invisible(x)
-
-}
-
-
 #' @title Print `"semEff"` Objects
 #' @description A [print()] method for an object of class `"semEff"`.
 #' @param x An object of class `"semEff"`.
 #' @param ... Further arguments passed to or from other methods. Not currently
 #'   used.
 #' @details This print method returns a summary table for the SEM variables,
-#'   giving their status as exogenous/endogenous and
-#'   predictor/mediator/response, and also the number of direct vs. indirect
-#'   paths leading to each variable.
+#'   giving their status as exogenous or endogenous and as predictor, mediator
+#'   and/or response. It also gives the number of direct vs. indirect paths
+#'   leading to each variable.
+#'
+#'   Printing of summary tables uses a custom version of `print.data.frame()`,
+#'   facilitating correct rendering of unicode characters in all cases by
+#'   bypassing [format.data.frame()] ([bug
+#'   details](https://stat.ethz.ch/pipermail/r-devel/2015-May/071252.html),
+#'   workaround adapted from
+#'   [here](https://stat.ethz.ch/pipermail/r-devel/2015-May/071259.html)). Row
+#'   names (numbers) are also suppressed by default.
 #' @return A summary table for the SEM variables (data frame).
 # S3 method for class 'semEff'
 #' @export
 print.semEff <- function(x, ...) {
-  v <- x$Summary$Variables
-  ct <- v$Category
-  di <- v[tail(names(v), 2)]
-  di <- suppressWarnings(
-    na.omit(apply(di, 2, as.numeric))
-  )
-  n1 <- paste(sum(grepl("^ex", ct)))
-  n2 <- paste(sum(grepl("^en", ct)))
-  n3 <- paste(sum(di[, 1]))
-  n4 <- paste(sum(di[, 2]))
-  message("\nPiecewise SEM with:\n  * ", n1, " exogenous vs. ", n2,
-          " endogenous variable(s)\n  * ", n3, " direct vs. ", n4,
-          " indirect effect(s)\n\nVariables:\n")
-  print(v, row.names = FALSE)
-  message("Use summary() for effects and confidence intervals for endogenous variables.\n")
+
+  # Custom print.data.frame() for summary tables
+  # (unicode support, rownames suppressed)
+  print.semEff.table <- function(x, ..., digits = NULL, quote = FALSE,
+                                 right = TRUE, row.names = FALSE, max = NULL) {
+
+    n <- length(row.names(x))
+    if (length(x) == 0L) {
+      cat(sprintf(ngettext(n, "data frame with 0 columns and %d row",
+                           "data frame with 0 columns and %d rows"), n),
+          "\n", sep = "")
+    }
+    else if (n == 0L) {
+      print.default(names(x), quote = FALSE)
+      cat(gettext("<0 rows> (or 0-length row.names)\n"))
+    }
+    else {
+      if (is.null(max))
+        max <- getOption("max.print", 99999L)
+      if (!is.finite(max))
+        stop("invalid 'max' / getOption(\"max.print\"): ",
+             max)
+      omit <- (n0 <- max %/% length(x)) < n
+      # m <- as.matrix(format.data.frame(if (omit)
+      #   x[seq_len(n0), , drop = FALSE]
+      #   else x, digits = digits, na.encode = FALSE))
+      m <- as.matrix(if (omit)
+        x[seq_len(n0), , drop = FALSE]
+        else x)
+      if (!isTRUE(row.names))
+        dimnames(m)[[1L]] <- if (isFALSE(row.names))
+          rep.int("", if (omit)
+            n0
+            else n)
+      else row.names
+      print(m, ..., quote = quote, right = right, max = max)
+      if (omit)
+        cat(" [ reached 'max' / getOption(\"max.print\") -- omitted",
+            n - n0, "rows ]\n")
+    }
+    invisible(x)
+
+  }
+
+  # Print semEff object
+  if ("list" %in% class(x)) {
+
+    # SEM variable details
+    v <- x$Summary$Variables
+    ct <- v$Category
+    di <- v[tail(names(v), 2)]
+    di <- suppressWarnings(
+      na.omit(apply(di, 2, as.numeric))
+    )
+    n1 <- paste(sum(grepl("^ex", ct)))
+    n2 <- paste(sum(grepl("^en", ct)))
+    n3 <- paste(sum(di[, 1]))
+    n4 <- paste(sum(di[, 2]))
+
+    # Print variable table
+    message("\nPiecewise SEM with:\n  * ", n1, " exogenous vs. ", n2,
+            " endogenous variable(s)\n  * ", n3, " direct vs. ", n4,
+            " indirect effect(s)\n\nVariables:\n")
+    print.semEff.table(v)
+    message("Use summary() for effects and confidence intervals for endogenous variables.\n")
+
+  } else {
+    cat("\n")
+    print.semEff.table(x)
+  }
+
 }
 
 
@@ -640,11 +652,15 @@ print.semEff <- function(x, ...) {
 # S3 method for class 'semEff'
 #' @export
 summary.semEff <- function(object, responses = NULL, ...) {
+
+  # SEM response names
   s <- object$Summary[-1]
   r <- names(s)
   r2 <- responses
   if (is.null(r2)) r2 <- r
   if (is.numeric(r2)) r2 <- r[r2]
+
+  # Print summary tables
   ce <- "Correlated Errors"
   if (length(r2[r2 != ce]) > 0) {
     message("\nSEM direct, summed indirect, total, and mediator effects:\n")
@@ -656,8 +672,9 @@ summary.semEff <- function(object, responses = NULL, ...) {
       paste0(i, " (", n, "/", length(r), ")")
     } else i
     message(paste0(ii, ":\n"))
-    print(s[[i]], row.names = FALSE)
+    print(s[[i]])
   }
+
 }
 
 

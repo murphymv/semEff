@@ -20,7 +20,14 @@ A \code{\link[=print]{print()}} method for an object of class \code{"semEff"}.
 }
 \details{
 This print method returns a summary table for the SEM variables,
-giving their status as exogenous/endogenous and
-predictor/mediator/response, and also the number of direct vs. indirect
-paths leading to each variable.
+giving their status as exogenous or endogenous and as predictor, mediator
+and/or response. It also gives the number of direct vs. indirect paths
+leading to each variable.
+
+Printing of summary tables uses a custom version of \code{print.data.frame()},
+facilitating correct rendering of unicode characters in all cases by
+bypassing \code{\link[=format.data.frame]{format.data.frame()}} (\href{https://stat.ethz.ch/pipermail/r-devel/2015-May/071252.html}{bug details},
+workaround adapted from
+\href{https://stat.ethz.ch/pipermail/r-devel/2015-May/071259.html}{here}). Row
+names (numbers) are also suppressed by default.
 }

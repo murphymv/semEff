@@ -2,7 +2,6 @@
 
 S3method(print,bootCI)
 S3method(print,semEff)
-S3method(print,unicode_df)
 S3method(summary,semEff)
 export(R2)
 export(RVIF)

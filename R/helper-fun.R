@@ -170,7 +170,9 @@ pSapply <- function(X, FUN, parallel = c("snow", "multicore", "no"),
 
       # Export required objects/functions to cluster
       # (search global env. for objects in calls to X/FUN)
-      P <- function(...) {paste(..., collapse = " ")}
+      P <- function(...) {
+        paste(..., collapse = " ")
+      }
       xc <- P(unlist(rMapply(function(i) {
         if (isMod(i) || isBoot(i)) P(getCall(i))
       }, X)))

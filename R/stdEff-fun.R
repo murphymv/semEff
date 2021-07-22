@@ -841,16 +841,16 @@ RVIF <- function(...) {
 #'   which provides an estimate of the population — as opposed to sample —
 #'   R-squared. This is achieved via an analytical formula which adjusts
 #'   R-squared using the 'degrees of freedom' of the model (i.e. the ratio of
-#'   observations to parameters), helping to counter R-squared's positive bias
-#'   for multiple regression and guard against overfitting of the model to noise
-#'   in the original sample. By default, this is calculated via the exact
-#'   'Olkin-Pratt' estimator, shown in recent simulations to be the optimal
-#'   unbiased population R-squared estimator across a range of estimators and
+#'   observations to parameters), helping to counter multiple R-squared's
+#'   positive bias and guard against overfitting of the model to noise in the
+#'   original sample. By default, this is calculated via the exact 'Olkin-Pratt'
+#'   estimator, shown in recent simulations to be the optimal unbiased
+#'   population R-squared estimator across a range of estimators and
 #'   specification scenarios (Karch 2020), and thus a good general first choice,
-#'   even for small sample sizes. Setting `adj.type = "ezekiel"` however will
+#'   even for smaller sample sizes. Setting `adj.type = "ezekiel"` however will
 #'   use the simpler and more common 'Ezekiel' formula, which can be more
 #'   appropriate where minimising the mean squared error (MSE) of the estimate
-#'   is preferred over strict unbiasedness (Hittner 2019, Karch 2020).
+#'   is more important than strict unbiasedness (Hittner 2019, Karch 2020).
 #'
 #'   If `pred = TRUE` (default), a 'predicted' R-squared is also returned, which
 #'   is calculated via the same formula as for R-squared but using
@@ -912,13 +912,14 @@ RVIF <- function(...) {
 #'   occurs in rare situations, such as where the intercept is suppressed or
 #'   where a low value of R-squared is adjusted downwards via an analytic
 #'   estimator. Such values are also 'impossible' in practice, given that
-#'   R-squared is a strictly positive measure. Hence, for simplicity and ease of
-#'   interpretation, values less than zero are presented as a complete lack of
-#'   model fit. This is also recommended by Shieh (2008), who shows for adjusted
-#'   R-squared that such 'positive-part' estimators have lower MSE in estimating
-#'   the population R-squared (though higher bias). To allow return of negative
-#'   values however, set `positive.only = FALSE`. This may be desirable for
-#'   simulation purposes, and/or where strict unbiasedness is prioritised.
+#'   R-squared is a strictly positive measure (as generally known). Hence, for
+#'   simplicity and ease of interpretation, values less than zero are presented
+#'   as a complete lack of model fit. This is also recommended by Shieh (2008),
+#'   who shows for adjusted R-squared that such 'positive-part' estimators have
+#'   lower MSE in estimating the population R-squared (though higher bias). To
+#'   allow return of negative values however, set `positive.only = FALSE`. This
+#'   may be desirable for simulation purposes, and/or where strict unbiasedness
+#'   is prioritised.
 #'
 #' @note Caution must be exercised in interpreting the values of any pseudo
 #'   R-squared measure calculated for a GLM or mixed model (including those
@@ -1023,11 +1024,11 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     # Degrees of freedom
     n <- nobs(m)
     i <- attr(terms(m), "intercept")
-    df <- n - i
+    ndf <- n - i
     rdf <- df.residual(m)
 
     # No. predictors
-    k <- df - rdf
+    k <- ndf - rdf
 
     # R-squared
     R2 <- if (k > 0) {
@@ -1081,9 +1082,9 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 
         # Estimator (some code from altR2:::OPExactEstimator)
         R2a <- if (adj.type == "olkin-pratt") {
-          1 - e * (df - 2) / rdf * gsl::hyperg_2F1(1, 1, (rdf + 2) / 2, e)
+          1 - e * (ndf - 2) / rdf * gsl::hyperg_2F1(1, 1, (rdf + 2) / 2, e)
         } else {
-          1 - e * df / rdf
+          1 - e * ndf / rdf
         }
 
         # Return adjusted R-squared
@@ -1125,7 +1126,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     }
 
     # Return values
-    c("(R.squared)" = R2, "(R.squared.adj)" = R2a, "(R.squared.pred)" = R2p)
+    c("R.squared" = R2, "R.squared.adj" = R2a, "R.squared.pred" = R2p)
 
   }
 
@@ -1211,7 +1212,9 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 
   # Weights
   if (all(w == "equal")) {
-    eqW <- function(i) {rep(1, length(i))}
+    eqW <- function(x) {
+      rep(1, length(x))
+    }
     w <- if (any(sapply(e, isList))) lapply(e, eqW) else eqW(e)
   }
 
@@ -1598,7 +1601,11 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     e <- sapply(bn, function(i) {
       if (i %in% names(e)) e[[i]] else b[[i]]
     })
-    if (r.squared) e <- c(e, do.call(R2, c(list(m, env = env), R2.arg)))
+    if (r.squared) {
+      r2 <- do.call(R2, c(list(m, env = env), R2.arg))
+      names(r2) <- paste0("(", names(r2), ")")
+      e <- c(e, r2)
+    }
     if (incl.raw) {
       b <- c(b, e[isR2(names(e))])
       names(b) <- paste0("(raw)_", names(b))
@@ -1613,8 +1620,9 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   # Output effects or weighted average
   if (isList(e) && !is.null(w)) avgEst(e, w, en) else {
     if (!is.null(en)) {
-      s <- function(i) {i[en[en %in% names(i)]]}
-      rMapply(s, e, SIMPLIFY = FALSE)
+      rMapply(function(i) {
+        i[en[en %in% names(i)]]
+      }, e, SIMPLIFY = FALSE)
     } else e
   }
 

@@ -153,7 +153,9 @@ bootEff <- function(mod, R, seed = NULL,
 
   # Refit model(s) with any supplied data
   upd <- function(m, d) {
-    upd <- function(m) {eval(update(m, data = d, evaluate = FALSE))}
+    upd <- function(m) {
+      eval(update(m, data = d, evaluate = FALSE))
+    }
     rMapply(upd, m, SIMPLIFY = FALSE)
   }
   d <- a$data; a$data <- NULL
@@ -233,7 +235,9 @@ bootEff <- function(mod, R, seed = NULL,
 
       # Export required objects/functions to cluster
       # (search global env. for objects in model call(s))
-      P <- function(...) {paste(..., collapse = " ")}
+      P <- function(...) {
+        paste(..., collapse = " ")
+      }
       mc <- P(unlist(rMapply(function(i) P(getCall(i)), m)))
       o <- unlist(lapply(search(), ls))
       o <- o[sapply(o, function(i) grepl(i, mc, fixed = TRUE))]
@@ -579,7 +583,7 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
       b <- if (n1 > 1) rep("_", n2) else ""
       paste(b, collapse = "")
     }, e, names(e))
-    e <- rbind(b, "", e)
+    e <- rbind(b, "", e, "")
     e[1] <- format(e[1], justify = "left")
     rownames(e) <- 1:nrow(e)
 
@@ -607,6 +611,7 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
 # S3 method for class 'bootCI'
 #' @export
 print.bootCI <- function(x, ...) {
+  cat("\n")
   print.data.frame(x, row.names = FALSE)
 }
 
