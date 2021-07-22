@@ -81,7 +81,7 @@ fit <- sapply(c("Date", "DD"), function(i) {
 
 # Function to plot predictions
 plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
-  x2 <- fit[[1]]; f <- fit[[2]]; ci.l <- fit[[3]]; ci.u <- fit[[4]]
+  x2 <- fit[[1]]; f <- fit$fit; ci.l <- fit$ci.lower; ci.u <- fit$ci.upper
   ggplot () + 
     geom_point(aes(x, y)) +
     geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u, alpha = "0.15"), fill = "blue") +

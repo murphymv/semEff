@@ -5,11 +5,12 @@ xx/xx/2021 (binaries)
 ### New features:
 
 -   New formatted table output for effect summaries for `semEff()` and `bootCI()`, accessed via new `print()` and `summary()` methods.
--   Updates to `R2()` (control of negative values, new default method for adjusted R-squared).
+-   Updates to `R2()` (control of negative values, new improved default method for adjusted R-squared).
 
 ### Other changes:
 
--   All indirect effects now outputted as part of `"semEff"` object (individual effects, not summed).
+-   All indirect effects (individual, not summed) now outputted as part of `"semEff"` object (for reference).
+-   Bootstrap bias (mean minus original estimate) and standard errors now included in effect summaries and with fitted values from `predEff()`.
 -   New function `getX()`, for more flexible construction of model design matrices (mostly internal use).
 -   Various code and documentation updates.
 

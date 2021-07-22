@@ -864,7 +864,7 @@ totEff <- function(...) {
 #' f2 <- fitted(m)
 #' stopifnot(all.equal(f1, f2))
 #'
-#' # Compare predictions for standardised vs. raw effects
+#' # Compare predictions using standardised vs. raw effects (same)
 #' f1 <- predEff(m)
 #' f2 <- predEff(m, use.raw = TRUE)
 #' stopifnot(all.equal(f1, f2))
@@ -1009,7 +1009,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     if (type == "response") f <- lI(f)
     names(f) <- obs
 
-    # Add CIs
+    # Add CIs (& bias/SE)
     if (!is.null(eb)) {
 
       # Bootstrap attributes
@@ -1035,6 +1035,11 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       if (nrow(fb) != R) fb <- t(fb)
       if (type == "response") fb <- lI(fb)
 
+      # Bootstrap bias/standard errors
+      bi <- colMeans(fb, na.rm = TRUE) - f
+      se <- apply(fb, 2, sd, na.rm = TRUE)
+      se[is.na(f)] <- NA
+
       # Create dummy boot object (for CIs)
       set.seed(seed)
       dd <- data.frame(rep(1, n))  # dummy data
@@ -1053,7 +1058,8 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
       }, parallel, nc, cl)
       ci <- as.matrix(ci)
       colnames(ci) <- obs
-      f <- list(fit = f, ci.lower = ci[1, ], ci.upper = ci[2, ])
+      f <- list(fit = f, bias = bi, se.fit = se, ci.lower = ci[1, ],
+                ci.upper = ci[2, ])
 
     }
 
@@ -1110,7 +1116,11 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     }
 
     # Output
-    if (!is.null(eb)) set.seed(NULL)
+    if (!is.null(eb)) {
+      set.seed(NULL)
+      attr(f, "ci.conf") <- ci.conf
+      attr(f, "ci.type") <- ci.type
+    }
     f
 
   }

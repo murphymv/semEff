@@ -184,7 +184,7 @@ f1 <- predEff(m, unique.eff = FALSE, re.form = NULL, type = "response")
 f2 <- fitted(m)
 stopifnot(all.equal(f1, f2))
 
-# Compare predictions for standardised vs. raw effects
+# Compare predictions using standardised vs. raw effects (same)
 f1 <- predEff(m)
 f2 <- predEff(m, use.raw = TRUE)
 stopifnot(all.equal(f1, f2))
