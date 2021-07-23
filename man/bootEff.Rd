@@ -20,7 +20,10 @@ bootEff(
 )
 }
 \arguments{
-\item{mod}{A fitted model object, or a list or nested list of such objects.}
+\item{mod}{A fitted model object, or a list or nested list of such objects.
+Alternatively, a \code{"psem"} object from
+\href{https://rdrr.io/cran/piecewiseSEM/man/psem.html}{\code{piecewiseSEM::psem()}}.
+If model lists are unnamed, response variable names will be used.}
 
 \item{R}{Number of bootstrap resamples to generate.}
 
@@ -34,9 +37,9 @@ only for mixed models, via \code{\link[=bootMer]{bootMer()}}).}
 \item{ran.eff}{For nonparametric bootstrapping of mixed models, the name of
 the (highest-level) random effect to resample (see Details).}
 
-\item{cor.err}{Optional, names of SEM correlated errors to be bootstrapped.
-Should be of the form: \code{c("mod1 ~~ mod2", "mod3 ~~ mod4", ...)} (spaces
-optional), with names matching model names.}
+\item{cor.err}{Optional, names of SEM correlated errors to be bootstrapped
+(ignored if \code{mod} is a \code{"psem"} object). Should be of the form: \code{c("var1 ~~ var2", "var3 ~~ var4", ...)} (spaces optional), using model/response
+variable names.}
 
 \item{catch.err}{Logical, should errors generated during model fitting or
 estimation be caught and \code{NA} returned for estimates? If \code{FALSE}, any such
@@ -57,7 +60,7 @@ errors will cause the function to exit.}
 }
 \value{
 An object of class \code{"boot"} containing the bootstrapped effects, or a
-list/nested list of such objects.
+(named) list/nested list of such objects.
 }
 \description{
 Bootstrap model effects (standardised coefficients) and optional
@@ -87,13 +90,13 @@ for a presumed model averaging scenario. If instead the user wishes to
 bootstrap each individual model, they should recursively apply the function
 using \code{\link[=rMapply]{rMapply()}} (remember to set a seed).
 
-Where names of models with correlated errors are specified to \code{cor.err},
-the function will also return bootstrapped Pearson correlated errors
-(weighted residuals) for those models. If \code{weights} are supplied and \code{mod}
-is a nested list, residuals will first be averaged across candidate models.
-If any two models (or candidate sets) with correlated errors were fit to
-different subsets of data observations, both models/sets are first refit to
-data containing only the observations in common.
+Where names of response variables with correlated errors are specified to
+\code{cor.err}, the function will also return bootstrapped Pearson correlated
+errors (weighted residuals) for those models. If \code{weights} are supplied and
+\code{mod} is a nested list, residuals will first be averaged across candidate
+models. If any two models (or candidate sets) with correlated errors were
+fit to different subsets of data observations, both models/sets are first
+refit to data containing only the observations in common.
 
 For nonparametric bootstrapping of mixed models, resampling should occur at
 the group-level, as individual observations are not independent. The name

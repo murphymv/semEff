@@ -4,6 +4,9 @@
 #' @description Bootstrap model effects (standardised coefficients) and optional
 #'   SEM correlated errors.
 #' @param mod A fitted model object, or a list or nested list of such objects.
+#'   Alternatively, a `"psem"` object from
+#'   [`piecewiseSEM::psem()`](https://rdrr.io/cran/piecewiseSEM/man/psem.html).
+#'   If model lists are unnamed, response variable names will be used.
 #' @param R Number of bootstrap resamples to generate.
 #' @param seed Seed for the random number generator. If not provided, a random
 #'   five-digit integer is used (see Details).
@@ -12,9 +15,10 @@
 #'   only for mixed models, via [bootMer()]).
 #' @param ran.eff For nonparametric bootstrapping of mixed models, the name of
 #'   the (highest-level) random effect to resample (see Details).
-#' @param cor.err Optional, names of SEM correlated errors to be bootstrapped.
-#'   Should be of the form: `c("mod1 ~~ mod2", "mod3 ~~ mod4", ...)` (spaces
-#'   optional), with names matching model names.
+#' @param cor.err Optional, names of SEM correlated errors to be bootstrapped
+#'   (ignored if `mod` is a `"psem"` object). Should be of the form: `c("var1 ~~
+#'   var2", "var3 ~~ var4", ...)` (spaces optional), using model/response
+#'   variable names.
 #' @param catch.err Logical, should errors generated during model fitting or
 #'   estimation be caught and `NA` returned for estimates? If `FALSE`, any such
 #'   errors will cause the function to exit.
@@ -49,13 +53,13 @@
 #'   bootstrap each individual model, they should recursively apply the function
 #'   using [rMapply()] (remember to set a seed).
 #'
-#'   Where names of models with correlated errors are specified to `cor.err`,
-#'   the function will also return bootstrapped Pearson correlated errors
-#'   (weighted residuals) for those models. If `weights` are supplied and `mod`
-#'   is a nested list, residuals will first be averaged across candidate models.
-#'   If any two models (or candidate sets) with correlated errors were fit to
-#'   different subsets of data observations, both models/sets are first refit to
-#'   data containing only the observations in common.
+#'   Where names of response variables with correlated errors are specified to
+#'   `cor.err`, the function will also return bootstrapped Pearson correlated
+#'   errors (weighted residuals) for those models. If `weights` are supplied and
+#'   `mod` is a nested list, residuals will first be averaged across candidate
+#'   models. If any two models (or candidate sets) with correlated errors were
+#'   fit to different subsets of data observations, both models/sets are first
+#'   refit to data containing only the observations in common.
 #'
 #'   For nonparametric bootstrapping of mixed models, resampling should occur at
 #'   the group-level, as individual observations are not independent. The name
@@ -107,7 +111,7 @@
 #'   optimisers and/or other options to generate faster estimates (always check
 #'   results).
 #' @return An object of class `"boot"` containing the bootstrapped effects, or a
-#'   list/nested list of such objects.
+#'   (named) list/nested list of such objects.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
 #'   ed.). New York: Springer-Verlag. Retrieved from
@@ -139,6 +143,20 @@ bootEff <- function(mod, R, seed = NULL,
 
   m <- mod; type <- match.arg(type); re <- ran.eff; ce <- cor.err;
   parallel <- match.arg(parallel); nc <- ncpus;
+
+  # Convert psem object to list of models
+  if (class(m)[1] == "psem") {
+    m <- m[sapply(m, isMod)]
+    ce <- do.call(c, m[sapply(m, class) == "formula.cerror"])
+  }
+
+  # Set model names if none present (response names)
+  if (isList(m) && is.null(names(m))) {
+    names(m) <- sapply(m, function(i) {
+      if (isList(i)) i <- i[[1]]
+      names(model.frame(i, data = getData(i)))[1]
+    })
+  }
 
   # Arguments to stdEff()
   a <- list(...)
@@ -179,8 +197,6 @@ bootEff <- function(mod, R, seed = NULL,
     mer && pb
   })
   if (mer2) {
-
-    type <- type[type != c("nonparametric")]
 
     # Modified bootMer function
     bootMer2 <- function(...) {

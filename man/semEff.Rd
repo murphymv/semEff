@@ -17,9 +17,11 @@ semEff(
 )
 }
 \arguments{
-\item{sem}{A piecewise SEM, comprising a list of fitted model objects, or,
-alternatively, of boot objects (class \code{"boot"}), containing bootstrapped
-model effects.}
+\item{sem}{A piecewise SEM, comprising a list of fitted model objects or of
+boot objects (containing bootstrapped model effects). Alternatively, a
+\code{"psem"} object from
+\href{https://rdrr.io/cran/piecewiseSEM/man/psem.html}{\code{piecewiseSEM::psem()}}.
+If list is unnamed, response variable names will be used.}
 
 \item{predictors, mediators}{Names of variables for/through which to calculate
 effects. If \code{NULL} (default), all predictors/mediators in the SEM will be
@@ -44,8 +46,8 @@ excepting argument \code{index}.}
 }
 \value{
 A list object of class \code{"semEff"} for which several methods and
-extractor functions are available. Contains: 1. Summary tables of variables
-and effects/CIs 2. All effects 3. All bootstrapped effects 4. All indirect
+extractor functions exist. Contains: 1. Summary tables of variables and
+effects/CIs 2. All effects 3. All bootstrapped effects 4. All indirect
 effects (individual, not summed)
 }
 \description{
@@ -90,16 +92,16 @@ intervals do not contain zero are highlighted with a star (i.e.
 'significant' at the \code{ci.conf} level). Bootstrap standard errors (standard
 deviations of the samples) and biases (sample means minus original
 estimates) are also included. Correlated errors (and confidence intervals)
-are also returned if their bootstrapped values are present in \code{sem}, or, if
-\code{sem} is a list of fitted models, if specified to argument \code{cor.err} (see
-\code{\link[=bootEff]{bootEff()}}). These represent residual relationships among response
+are also returned if their bootstrapped values are present in \code{sem}, or if
+they are specified to argument \code{cor.err} or as part of a \code{"psem"} object
+(see \code{\link[=bootEff]{bootEff()}}). These represent residual relationships among response
 variables, unaccounted for by the hypothesised SEM paths. Use \code{summary()}
-to extract summary tables and \code{print()} to return a table of variable names
+for effect summary tables and \code{print()} to return a table of variable names
 and associated details.
 
 All calculated effects and bootstrapped effects are also returned in lists
 for each response variable, with all except mediator effects also including
-the model intercept(s) — required for prediction (this will be zero for
+the model intercept(s) — required for prediction (these will be zero for
 ordinary linear models with fully standardised effects). Effects can be
 conveniently extracted with \code{\link[=dirEff]{dirEff()}}, \code{\link[=indEff]{indEff()}} and \code{\link[=totEff]{totEff()}}.
 }
