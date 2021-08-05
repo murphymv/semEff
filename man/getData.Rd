@@ -43,9 +43,9 @@ observations (rows).
 }
 \examples{
 # Get data used to fit SEM from Shipley (2009)
-getData(Shipley.SEM[[1]])  # from single model
-getData(Shipley.SEM)  # from SEM (list)
-getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
+getData(shipley.sem[[1]])  # from single model
+getData(shipley.sem)  # from SEM (list)
+getData(shipley.sem, merge = TRUE)  # from SEM (single dataset)
 }
 \seealso{
 \code{\link[=getCall]{getCall()}}

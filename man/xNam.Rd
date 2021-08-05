@@ -34,7 +34,7 @@ terms in the model, so that the model design matrix is rank deficient.
 }
 \examples{
 # Term names from Shipley SEM
-m <- Shipley.SEM
+m <- shipley.sem
 xNam(m)
 xNam(m, intercept = FALSE)
 

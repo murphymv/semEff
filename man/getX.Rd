@@ -64,13 +64,13 @@ terms, dummy variables).
 }
 \examples{
 # Model design matrix (original)
-m <- Shipley.Growth[[3]]
+m <- shipley.growth[[3]]
 x1 <- model.matrix(m)
 x2 <- getX(m)
 stopifnot(all.equal(x1, x2, check.attributes = FALSE))
 
 # Using formula or term names (supply data)
-d <- Shipley
+d <- shipley
 x1 <- getX(formula(m), data = d)
 x2 <- getX(labels(terms(m)), data = d)
 stopifnot(all.equal(x1, x2))
@@ -79,8 +79,8 @@ stopifnot(all.equal(x1, x2))
 head(getX(m, centre = TRUE, scale = TRUE))
 
 # Combined matrix for SEM
-head(getX(Shipley.SEM, merge = TRUE))
-head(getX(Shipley.SEM, merge = TRUE, add.data = TRUE))  # add other variables
+head(getX(shipley.sem, merge = TRUE))
+head(getX(shipley.sem, merge = TRUE, add.data = TRUE))  # add other variables
 }
 \seealso{
 \code{\link[=model.matrix]{model.matrix()}}

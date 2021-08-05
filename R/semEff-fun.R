@@ -101,18 +101,18 @@
 #'   context. *Ecology*, **90**(2), 363-368. <https://doi.org/bqd43d>
 #' @examples
 #' # SEM effects
-#' (Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot))
-#' summary(Shipley.SEM.Eff)
+#' (shipley.sem.eff <- semEff(shipley.sem.boot))
+#' summary(shipley.sem.eff)
 #'
 #' # Effects for selected variables
-#' # summary(Shipley.SEM.Eff, responses = "Live")
-#' # summary(semEff(Shipley.SEM.Boot, predictors = "lat"))
-#' # summary(semEff(Shipley.SEM.Boot, mediators = "DD"))
+#' # summary(shipley.sem.eff, responses = "Live")
+#' # summary(semEff(shipley.sem.boot, predictors = "lat"))
+#' # summary(semEff(shipley.sem.boot, mediators = "DD"))
 #'
 #' # Effects calculated using original SEM (models)
 #' # (not typically recommended — better to use saved boot objects)
 #' # system.time(
-#' #  Shipley.SEM.Eff <- semEff(Shipley.SEM, R = 10000, seed = 53908,
+#' #  shipley.sem.eff <- semEff(shipley.sem, R = 10000, seed = 53908,
 #' #                            ran.eff = "site")
 #' # )
 #' @export
@@ -649,8 +649,8 @@ print.semEff <- function(x, ...) {
 #'   (data frames).
 #' @examples
 #' # Effect tables for Shipley SEM
-#' summary(Shipley.SEM.Eff, "Live")  # variable 'Live'
-#' summary(Shipley.SEM.Eff)  # all variables
+#' summary(shipley.sem.eff, "Live")  # variable 'Live'
+#' summary(shipley.sem.eff)  # all variables
 # S3 method for class 'semEff'
 #' @export
 summary.semEff <- function(object, responses = NULL, ...) {
@@ -818,14 +818,15 @@ totEff <- function(...) {
 #' @seealso [predict()]
 #' @examples
 #' # Predict effects (direct, total)
-#' m <- Shipley.SEM
-#' e <- Shipley.SEM.Eff
-#' dir <- dirEff(e); tot <- totEff(e)
+#' m <- shipley.sem
+#' e <- shipley.sem.eff
+#' dir <- dirEff(e)
+#' tot <- totEff(e)
 #' f.dir <- predEff(m, effects = dir, type = "response")
 #' f.tot <- predEff(m, effects = tot, type = "response")
 #'
 #' # Using new data for predictors
-#' d <- na.omit(Shipley)
+#' d <- na.omit(shipley)
 #' xn <- c("lat", "DD", "Date", "Growth")
 #' seq100 <- function(x) seq(min(x), max(x), length = 100)
 #' nd <- data.frame(sapply(d[xn], seq100))
@@ -851,7 +852,7 @@ totEff <- function(...) {
 #' # f <- predEff(m, nd, B, type = "response", interaction = "Growth:DD")
 #'
 #' # Model-averaged predictions (several approaches)
-#' m <- Shipley.Growth  # candidate models (list)
+#' m <- shipley.growth  # candidate models (list)
 #' w <- runif(length(m), 0, 1)  # weights
 #' e <- stdEff(m, w)  # averaged effects
 #' f1 <- predEff(m[[1]], effects = e)  # pass avg. effects
@@ -861,7 +862,7 @@ totEff <- function(...) {
 #' stopifnot(all.equal(f2, f3))
 #'
 #' # Compare model fitted values: predEff() vs. fitted()
-#' m <- Shipley.SEM$Live
+#' m <- shipley.sem$Live
 #' f1 <- predEff(m, unique.eff = FALSE, re.form = NULL, type = "response")
 #' f2 <- fitted(m)
 #' stopifnot(all.equal(f1, f2))

@@ -42,7 +42,7 @@ library(semEff)
 library(ggplot2)
 
 # Simulated data from Shipley (2009) on tree growth and survival (see ?Shipley)
-head(Shipley)
+head(shipley)
 #>   site tree      lat year     Date       DD   Growth  Survival Live
 #> 1    1    1 40.38063 1970 115.4956 160.5703 61.36852 0.9996238    1
 #> 2    1    2 40.38063 1970 118.4959 158.9896 43.77182 0.8433521    1
@@ -52,7 +52,7 @@ head(Shipley)
 #> 6    1    1 40.38063 1972 114.2315 160.6120 56.29615 0.9983398    1
 
 # Hypothesised SEM: latitude -> degree days to bud burst -> date of burst -> growth -> survival
-lapply(Shipley.SEM, formula)
+lapply(shipley.sem, formula)
 #> $DD
 #> DD ~ lat + (1 | site) + (1 | tree)
 #> 
@@ -67,11 +67,11 @@ lapply(Shipley.SEM, formula)
 
 # Bootstrap model effects (10,000 reps... can take a while)
 # system.time(
-#   Shipley.SEM.Boot <- bootEff(Shipley.SEM, R = 10000, seed = 53908, ran.eff = "site")
+#   shipley.sem.boot <- bootEff(shipley.sem, R = 10000, seed = 53908, ran.eff = "site")
 # )
 
 # Calculate SEM effects (use saved bootstrapped SEM)
-eff <- semEff(Shipley.SEM.Boot)
+eff <- semEff(shipley.sem.boot)
 
 # Effects and CIs for response "Growth"
 summary(eff, "Growth")
@@ -100,8 +100,8 @@ tot <- totEff(eff, "Growth")
 tot.b <- totEff(eff, "Growth", type = "boot")
 
 # Predict effects for "Date" (direct) and "DD" (indirect) on Growth
-mod <- Shipley.SEM$Growth
-dat <- na.omit(Shipley)
+mod <- shipley.sem$Growth
+dat <- na.omit(shipley)
 fit <- sapply(c("Date", "DD"), function(i) {
   x <- seq(min(dat[i]), max(dat[i]), length = 100)
   x <- data.frame(x); names(x) <- i

@@ -18,7 +18,7 @@
 #' @source <https://doi.org/c886>
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
 #'   multilevel context. *Ecology*, **90**(2), 363-368. <https://doi.org/bqd43d>
-"Shipley"
+"shipley"
 
 
 #' @title Hypothesised SEM from Shipley (2009)
@@ -28,15 +28,15 @@
 #'   multilevel context. *Ecology*, **90**(2), 363-368. <https://doi.org/bqd43d>
 #' @examples
 #' # Specification
-#' # Shipley.SEM <- list(
-#' #   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
-#' #   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
+#' # shipley.sem <- list(
+#' #   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = shipley),
+#' #   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = shipley),
 #' #   Growth = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree),
-#' #                       data = Shipley),
+#' #                       data = shipley),
 #' #   Live = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), binomial,
-#' #                      data = Shipley)
+#' #                      data = shipley)
 #' # )
-"Shipley.SEM"
+"shipley.sem"
 
 
 #' @title Candidate Model Set from Shipley 'Growth' Model
@@ -49,13 +49,13 @@
 #'   multilevel context. *Ecology*, **90**(2), 363-368. <https://doi.org/bqd43d>
 #' @examples
 #' # Specification
-#' # Shipley.Growth <- list(
-#' #   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
-#' #   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
+#' # shipley.growth <- list(
+#' #   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = shipley),
+#' #   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = shipley),
 #' #   lme4::lmer(Growth ~ Date + DD + lat + (1 | site) + (1 | tree),
-#' #              data = Shipley)
+#' #              data = shipley)
 #' # )
-"Shipley.Growth"
+"shipley.growth"
 
 
 #' @title Bootstrapped Estimates for Shipley SEM
@@ -67,9 +67,9 @@
 #'   multilevel context. *Ecology*, **90**(2), 363-368. <https://doi.org/bqd43d>
 #' @examples
 #' # Specification
-#' # Shipley.SEM.Boot <- bootEff(Shipley.SEM, R = 10000, seed = 53908,
+#' # shipley.sem.boot <- bootEff(shipley.sem, R = 10000, seed = 53908,
 #' #                             ran.eff = "site")
-"Shipley.SEM.Boot"
+"shipley.sem.boot"
 
 
 #' @title Effects for Shipley SEM
@@ -81,6 +81,6 @@
 #'   multilevel context. *Ecology*, **90**(2), 363-368. <https://doi.org/bqd43d>
 #' @examples
 #' # Specification
-#' # Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
-"Shipley.SEM.Eff"
+#' # shipley.sem.eff <- semEff(shipley.sem.boot)
+"shipley.sem.eff"
 

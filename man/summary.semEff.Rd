@@ -29,6 +29,6 @@ intervals for SEM endogenous (response) variables.
 }
 \examples{
 # Effect tables for Shipley SEM
-summary(Shipley.SEM.Eff, "Live")  # variable 'Live'
-summary(Shipley.SEM.Eff)  # all variables
+summary(shipley.sem.eff, "Live")  # variable 'Live'
+summary(shipley.sem.eff)  # all variables
 }

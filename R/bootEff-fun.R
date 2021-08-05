@@ -126,11 +126,11 @@
 #' @examples
 #' # Bootstrap Shipley SEM (test)
 #' # (set 'site' as group for resampling — highest-level random effect)
-#' bootEff(Shipley.SEM, ran.eff = "site", R = 1, parallel = "no")
+#' bootEff(shipley.sem, ran.eff = "site", R = 1, parallel = "no")
 #'
 #' # Estimates (use saved boot object, 10000 resamples)
-#' lapply(Shipley.SEM.Boot, "[[", 1)  # original
-#' lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
+#' lapply(shipley.sem.boot, "[[", 1)  # original
+#' lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 #' @export
 bootEff <- function(mod, R, seed = NULL,
                     type = c("nonparametric", "parametric", "semiparametric"),
@@ -528,12 +528,12 @@ bootEff <- function(mod, R, seed = NULL,
 #'   Animal Ecology*, **84**(4), 892–897. <https://doi.org/f8n9rq>
 #' @examples
 #' # CIs from bootstrapped SEM
-#' (Shipley.SEM.CI <- bootCI(Shipley.SEM.Boot))
+#' (shipley.sem.ci <- bootCI(shipley.sem.boot))
 #'
 #' # From original SEM (models)
 #' # (not typically recommended — better to use saved boot objects)
 #' # system.time(
-#' #   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)
+#' #   shipley.sem.ci <- bootCI(shipley.sem, ran.eff = "site", seed = 53908)
 #' # )
 #' @export
 bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,

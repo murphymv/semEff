@@ -62,12 +62,12 @@ however, the bootstrap is \href{https://stats.stackexchange.com/questions/112147
 }
 \examples{
 # CIs from bootstrapped SEM
-(Shipley.SEM.CI <- bootCI(Shipley.SEM.Boot))
+(shipley.sem.ci <- bootCI(shipley.sem.boot))
 
 # From original SEM (models)
 # (not typically recommended â€” better to use saved boot objects)
 # system.time(
-#   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)
+#   shipley.sem.ci <- bootCI(shipley.sem, ran.eff = "site", seed = 53908)
 # )
 }
 \references{

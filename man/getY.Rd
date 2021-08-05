@@ -40,8 +40,8 @@ poisson GLMs (where applicable).
 }
 \examples{
 # All SEM responses (original scale)
-getY(Shipley.SEM)
+getY(shipley.sem)
 
 # Estimated response in link scale from binomial model
-getY(Shipley.SEM$Live, link = TRUE)
+getY(shipley.sem$Live, link = TRUE)
 }

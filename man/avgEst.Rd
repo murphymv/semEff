@@ -48,7 +48,7 @@ calculations. This provides a form of shrinkage and thus reduces \href{https://s
 }
 \examples{
 # Model-averaged effects (coefficients)
-m <- Shipley.Growth  # candidate models
+m <- shipley.growth  # candidate models
 e <- lapply(m, function(i) coef(summary(i))[, 1])
 avgEst(e)
 

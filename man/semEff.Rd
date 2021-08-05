@@ -107,18 +107,18 @@ conveniently extracted with \code{\link[=dirEff]{dirEff()}}, \code{\link[=indEff
 }
 \examples{
 # SEM effects
-(Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot))
-summary(Shipley.SEM.Eff)
+(shipley.sem.eff <- semEff(shipley.sem.boot))
+summary(shipley.sem.eff)
 
 # Effects for selected variables
-# summary(Shipley.SEM.Eff, responses = "Live")
-# summary(semEff(Shipley.SEM.Boot, predictors = "lat"))
-# summary(semEff(Shipley.SEM.Boot, mediators = "DD"))
+# summary(shipley.sem.eff, responses = "Live")
+# summary(semEff(shipley.sem.boot, predictors = "lat"))
+# summary(semEff(shipley.sem.boot, mediators = "DD"))
 
 # Effects calculated using original SEM (models)
 # (not typically recommended â€” better to use saved boot objects)
 # system.time(
-#  Shipley.SEM.Eff <- semEff(Shipley.SEM, R = 10000, seed = 53908,
+#  shipley.sem.eff <- semEff(shipley.sem, R = 10000, seed = 53908,
 #                            ran.eff = "site")
 # )
 }

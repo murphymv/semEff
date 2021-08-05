@@ -80,9 +80,9 @@ sdW <- function(...) {
 #' @seealso [getCall()]
 #' @examples
 #' # Get data used to fit SEM from Shipley (2009)
-#' getData(Shipley.SEM[[1]])  # from single model
-#' getData(Shipley.SEM)  # from SEM (list)
-#' getData(Shipley.SEM, merge = TRUE)  # from SEM (single dataset)
+#' getData(shipley.sem[[1]])  # from single model
+#' getData(shipley.sem)  # from SEM (list)
+#' getData(shipley.sem, merge = TRUE)  # from SEM (single dataset)
 #' @export
 getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
 
@@ -165,13 +165,13 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
 #' @seealso [model.matrix()]
 #' @examples
 #' # Model design matrix (original)
-#' m <- Shipley.Growth[[3]]
+#' m <- shipley.growth[[3]]
 #' x1 <- model.matrix(m)
 #' x2 <- getX(m)
 #' stopifnot(all.equal(x1, x2, check.attributes = FALSE))
 #'
 #' # Using formula or term names (supply data)
-#' d <- Shipley
+#' d <- shipley
 #' x1 <- getX(formula(m), data = d)
 #' x2 <- getX(labels(terms(m)), data = d)
 #' stopifnot(all.equal(x1, x2))
@@ -180,8 +180,8 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
 #' head(getX(m, centre = TRUE, scale = TRUE))
 #'
 #' # Combined matrix for SEM
-#' head(getX(Shipley.SEM, merge = TRUE))
-#' head(getX(Shipley.SEM, merge = TRUE, add.data = TRUE))  # add other variables
+#' head(getX(shipley.sem, merge = TRUE))
+#' head(getX(shipley.sem, merge = TRUE, add.data = TRUE))  # add other variables
 #' @export
 getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
                  centre = FALSE, scale = FALSE, as.df = FALSE, merge = FALSE,
@@ -332,7 +332,7 @@ getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
 #' @return A character vector or list/nested list of term names.
 #' @examples
 #' # Term names from Shipley SEM
-#' m <- Shipley.SEM
+#' m <- shipley.sem
 #' xNam(m)
 #' xNam(m, intercept = FALSE)
 #'
@@ -624,10 +624,10 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 #'   link scale, or an array, list of vectors/arrays, or nested list.
 #' @examples
 #' # All SEM responses (original scale)
-#' getY(Shipley.SEM)
+#' getY(shipley.sem)
 #'
 #' # Estimated response in link scale from binomial model
-#' getY(Shipley.SEM$Live, link = TRUE)
+#' getY(shipley.sem$Live, link = TRUE)
 #' @export
 getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
 
@@ -698,7 +698,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
 #'   178-183. <https://doi.org/dm9wbw>
 #' @examples
 #' # Model with two correlated terms
-#' m <- Shipley.Growth[[3]]
+#' m <- shipley.growth[[3]]
 #' VIF(m)  # Date & DD somewhat correlated
 #' VIF(update(m, . ~ . - DD))  # drop DD
 #'
@@ -966,17 +966,17 @@ RVIF <- function(...) {
 #'   <https://doi.org/db7rfv>
 #' @examples
 #' # Pseudo R-squared for mixed models
-#' R2(Shipley.SEM)  # fixed + random ('conditional')
-#' R2(Shipley.SEM, re.form = ~ (1 | tree))  # fixed + 'tree'
-#' R2(Shipley.SEM, re.form = ~ (1 | site))  # fixed + 'site'
-#' R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
-#' R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's Rho
+#' R2(shipley.sem)  # fixed + random ('conditional')
+#' R2(shipley.sem, re.form = ~ (1 | tree))  # fixed + 'tree'
+#' R2(shipley.sem, re.form = ~ (1 | site))  # fixed + 'site'
+#' R2(shipley.sem, re.form = NA)  # fixed only ('marginal')
+#' R2(shipley.sem, re.form = NA, type = "spearman")  # using Spearman's Rho
 #'
 #' # Predicted R-squared: compare cross-validated predictions calculated/
 #' # approximated via the hat matrix to standard method (leave-one-out)
 #'
 #' # Fit test models using Shipley data — compare lm vs glm
-#' d <- na.omit(Shipley)
+#' d <- na.omit(shipley)
 #' m <- lm(Live ~ Date + DD + lat, d)
 #' # m <- glm(Live ~ Date + DD + lat, binomial, d)
 #'
@@ -1194,7 +1194,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   133785. <https://doi.org/c8zt>
 #' @examples
 #' # Model-averaged effects (coefficients)
-#' m <- Shipley.Growth  # candidate models
+#' m <- shipley.growth  # candidate models
 #' e <- lapply(m, function(i) coef(summary(i))[, 1])
 #' avgEst(e)
 #'
@@ -1391,7 +1391,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' library(lme4)
 #'
 #' # Standardised (direct) effects for SEM
-#' m <- Shipley.SEM
+#' m <- shipley.sem
 #' stdEff(m)
 #' stdEff(m, cen.y = FALSE, std.y = FALSE)  # x-only
 #' stdEff(m, std.x = FALSE, std.y = FALSE)  # centred only
@@ -1402,15 +1402,15 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'
 #' # Demonstrate equality with effects from manually-standardised variables
 #' # (gaussian models only)
-#' m <- Shipley.Growth[[3]]
-#' d <- data.frame(scale(na.omit(Shipley)))
+#' m <- shipley.growth[[3]]
+#' d <- data.frame(scale(na.omit(shipley)))
 #' e1 <- stdEff(m, unique.eff = FALSE)
 #' e2 <- coef(summary(update(m, data = d)))[, 1]
 #' stopifnot(all.equal(e1, e2))
 #'
 #' # Demonstrate equality with square root of increment in R-squared
 #' # (ordinary linear models only)
-#' m <- lm(Growth ~ Date + DD + lat, data = Shipley)
+#' m <- lm(Growth ~ Date + DD + lat, data = shipley)
 #' r2 <- summary(m)$r.squared
 #' e1 <- stdEff(m)[-1]
 #' en <- names(e1)
@@ -1422,7 +1422,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' stopifnot(all.equal(e1, e2))
 #'
 #' # Model-averaged standardised effects
-#' m <- Shipley.Growth  # candidate models
+#' m <- shipley.growth  # candidate models
 #' w <- runif(length(m), 0, 1)  # weights
 #' stdEff(m, w)
 #' @export

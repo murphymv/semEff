@@ -151,11 +151,11 @@ results).
 \examples{
 # Bootstrap Shipley SEM (test)
 # (set 'site' as group for resampling â€” highest-level random effect)
-bootEff(Shipley.SEM, ran.eff = "site", R = 1, parallel = "no")
+bootEff(shipley.sem, ran.eff = "site", R = 1, parallel = "no")
 
 # Estimates (use saved boot object, 10000 resamples)
-lapply(Shipley.SEM.Boot, "[[", 1)  # original
-lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
+lapply(shipley.sem.boot, "[[", 1)  # original
+lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 }
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection and

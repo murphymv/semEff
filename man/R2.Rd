@@ -171,17 +171,17 @@ and/or ranking competing models fit to the same response variable.
 }
 \examples{
 # Pseudo R-squared for mixed models
-R2(Shipley.SEM)  # fixed + random ('conditional')
-R2(Shipley.SEM, re.form = ~ (1 | tree))  # fixed + 'tree'
-R2(Shipley.SEM, re.form = ~ (1 | site))  # fixed + 'site'
-R2(Shipley.SEM, re.form = NA)  # fixed only ('marginal')
-R2(Shipley.SEM, re.form = NA, type = "spearman")  # using Spearman's Rho
+R2(shipley.sem)  # fixed + random ('conditional')
+R2(shipley.sem, re.form = ~ (1 | tree))  # fixed + 'tree'
+R2(shipley.sem, re.form = ~ (1 | site))  # fixed + 'site'
+R2(shipley.sem, re.form = NA)  # fixed only ('marginal')
+R2(shipley.sem, re.form = NA, type = "spearman")  # using Spearman's Rho
 
 # Predicted R-squared: compare cross-validated predictions calculated/
 # approximated via the hat matrix to standard method (leave-one-out)
 
 # Fit test models using Shipley data â€” compare lm vs glm
-d <- na.omit(Shipley)
+d <- na.omit(shipley)
 m <- lm(Live ~ Date + DD + lat, d)
 # m <- glm(Live ~ Date + DD + lat, binomial, d)
 

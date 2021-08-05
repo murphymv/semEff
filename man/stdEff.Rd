@@ -164,7 +164,7 @@ via \code{\link[=avgEst]{avgEst()}}.
 library(lme4)
 
 # Standardised (direct) effects for SEM
-m <- Shipley.SEM
+m <- shipley.sem
 stdEff(m)
 stdEff(m, cen.y = FALSE, std.y = FALSE)  # x-only
 stdEff(m, std.x = FALSE, std.y = FALSE)  # centred only
@@ -175,15 +175,15 @@ stdEff(m, incl.raw = TRUE)  # add unstandardised
 
 # Demonstrate equality with effects from manually-standardised variables
 # (gaussian models only)
-m <- Shipley.Growth[[3]]
-d <- data.frame(scale(na.omit(Shipley)))
+m <- shipley.growth[[3]]
+d <- data.frame(scale(na.omit(shipley)))
 e1 <- stdEff(m, unique.eff = FALSE)
 e2 <- coef(summary(update(m, data = d)))[, 1]
 stopifnot(all.equal(e1, e2))
 
 # Demonstrate equality with square root of increment in R-squared
 # (ordinary linear models only)
-m <- lm(Growth ~ Date + DD + lat, data = Shipley)
+m <- lm(Growth ~ Date + DD + lat, data = shipley)
 r2 <- summary(m)$r.squared
 e1 <- stdEff(m)[-1]
 en <- names(e1)
@@ -195,7 +195,7 @@ e2 <- sapply(en, function(i) {
 stopifnot(all.equal(e1, e2))
 
 # Model-averaged standardised effects
-m <- Shipley.Growth  # candidate models
+m <- shipley.growth  # candidate models
 w <- runif(length(m), 0, 1)  # weights
 stdEff(m, w)
 }

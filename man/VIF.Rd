@@ -38,7 +38,7 @@ aliased).
 }
 \examples{
 # Model with two correlated terms
-m <- Shipley.Growth[[3]]
+m <- shipley.growth[[3]]
 VIF(m)  # Date & DD somewhat correlated
 VIF(update(m, . ~ . - DD))  # drop DD
 
