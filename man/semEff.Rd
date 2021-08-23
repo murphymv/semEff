@@ -64,7 +64,7 @@ of a list of fitted models, or bootstrapped estimates from such models,
 describing hypothesised causal pathways from predictors to response
 ('endogenous') variables. These are either direct, or operate indirectly
 via other response variables ('mediators'). This list should represent a
-directed ('acyclic') causal model, which should be named (exactly) for each
+directed ('acyclic') causal model, which should be named exactly for each
 response variable and ordered from 'upstream' or 'causal' variables through
 to 'downstream' (i.e. those at the end of the pathway). If \code{sem} is a list
 of fitted models, effects will first be bootstrapped using \code{\link[=bootEff]{bootEff()}}

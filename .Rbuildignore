@@ -8,5 +8,4 @@
 ^docs$
 ^pkgdown$
 ^tests$
-^.*\.bib$
 ^data-raw$

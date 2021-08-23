@@ -4,7 +4,6 @@
 # semEff
 
 <!-- badges: start -->
-<!-- [![Travis build status](https://travis-ci.com/murphymv/semEff.svg?branch=main)](https://travis-ci.com/murphymv/semEff) -->
 
 [![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions)
 

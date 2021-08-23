@@ -1273,11 +1273,12 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   deviations of variables.
 #' @param refit.x Logical, whether the model should be refit with mean-centred
 #'   predictor variables (see Details).
-#' @param r.squared Logical, whether R-squared values should also be calculated.
 #' @param incl.raw Logical, whether to append the raw (unstandardised) effects
 #'   to the output.
+#' @param R.squared Logical, whether R-squared values should also be calculated
+#'   (via [R2()]).
 #' @param R2.arg A named list of additional arguments to [R2()] (where
-#'   applicable), excepting argument `env`.
+#'   applicable), excepting argument `env`. Ignored if `R.squared = FALSE`.
 #' @param env Environment in which to look for model data (if none supplied).
 #'   Defaults to the [formula()] environment.
 #' @details `stdEff()` will calculate fully standardised effects (coefficients)
@@ -1360,18 +1361,19 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   save time, especially with larger/more complex models and/or bootstrap
 #'   runs.
 #'
-#'   If `r.squared = TRUE`, model R-squared values are appended to effects via
-#'   the [R2()] function, with any additional arguments passed via `R2.arg`.
-#'
 #'   If `incl.raw = TRUE`, raw (unstandardised) effects can also be appended,
 #'   i.e. those with all centring and scaling options set to `FALSE` (though
 #'   still adjusted for multicollinearity, where applicable). These may be of
 #'   interest in some cases, for example to compare their bootstrapped
 #'   distributions with those of standardised effects.
 #'
+#'   If `R.squared = TRUE`, model R-squared values are appended to effects via
+#'   the [R2()] function, with any additional arguments passed via `R2.arg`.
+#'
 #'   Finally, if `weights` are specified, the function calculates a weighted
-#'   average of the standardised effects across models (Burnham & Anderson 2002)
-#'   via [avgEst()].
+#'   average of standardised effects across a set (or sets) of different
+#'   candidate models for a particular response variable(s) (Burnham & Anderson
+#'   2002), via the [avgEst()] function.
 #' @return A numeric vector of the standardised effects, or a list or nested
 #'   list of such vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
@@ -1397,7 +1399,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' stdEff(m, std.x = FALSE, std.y = FALSE)  # centred only
 #' stdEff(m, cen.x = FALSE, cen.y = FALSE)  # scaled only
 #' stdEff(m, unique.eff = FALSE)  # include multicollinearity
-#' stdEff(m, r.squared = TRUE)  # add R-squared
+#' stdEff(m, R.squared = TRUE)  # add R-squared
 #' stdEff(m, incl.raw = TRUE)  # add unstandardised
 #'
 #' # Demonstrate equality with effects from manually-standardised variables
@@ -1428,8 +1430,8 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #' @export
 stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
                    unique.eff = TRUE, cen.x = TRUE, cen.y = TRUE, std.x = TRUE,
-                   std.y = TRUE, refit.x = TRUE, r.squared = FALSE,
-                   incl.raw = FALSE, R2.arg = NULL, env = NULL) {
+                   std.y = TRUE, refit.x = TRUE, incl.raw = FALSE,
+                   R.squared = FALSE, R2.arg = NULL, env = NULL) {
 
   m <- mod; w <- weights; d <- data; en <- term.names
 
@@ -1601,7 +1603,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     e <- sapply(bn, function(i) {
       if (i %in% names(e)) e[[i]] else b[[i]]
     })
-    if (r.squared) {
+    if (R.squared) {
       r2 <- do.call(R2, c(list(m, env = env), R2.arg))
       names(r2) <- paste0("(", names(r2), ")")
       e <- c(e, r2)
@@ -1627,3 +1629,4 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
   }
 
 }
+

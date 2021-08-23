@@ -31,7 +31,7 @@
 #'   describing hypothesised causal pathways from predictors to response
 #'   ('endogenous') variables. These are either direct, or operate indirectly
 #'   via other response variables ('mediators'). This list should represent a
-#'   directed ('acyclic') causal model, which should be named (exactly) for each
+#'   directed ('acyclic') causal model, which should be named exactly for each
 #'   response variable and ordered from 'upstream' or 'causal' variables through
 #'   to 'downstream' (i.e. those at the end of the pathway). If `sem` is a list
 #'   of fitted models, effects will first be bootstrapped using [bootEff()]
@@ -511,10 +511,10 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
     "Response" = sapply(v, function(i) {
       if (sum(E[[i]]$Total != 0)) "\u2713" else "x"
     }),
-    "Dir. Eff" = sapply(v, function(i) {
+    "Dir. Eff." = sapply(v, function(i) {
       if (!i %in% ex) sum(E[[i]]$Direct != 0) else "-"
     }),
-    "Ind. Eff" = sapply(v, function(i) {
+    "Ind. Eff." = sapply(v, function(i) {
       if (!i %in% ex) length(na.omit(ai[[i]])) else "-"
     })
   ))

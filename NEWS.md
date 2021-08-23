@@ -3,21 +3,23 @@
 ### New features:
 
 -   New formatted table output for effect summaries for `semEff()` and `bootCI()`, accessed via new `print()` and `summary()` methods.
+-   Bootstrap standard errors and bias (bootstrap mean minus original estimate) now included with effect summaries and fitted values from `predEff()`.
 -   Support for `"psem"` objects in `bootEff()`/`semEff()`.
 
 ### Other changes:
 
--   All indirect effects (individual, not summed) now returned as part of `"semEff"` object.
--   Bootstrap standard errors and bias (mean minus original estimate) now included with effect summaries and fitted values from `predEff()`.
--   Unnamed model lists can now be supplied to `bootEff()`/`semEff()` (names generated automatically).
--   Updates to `R2()` (control of negative values, new improved default method for adjusted R-squared).
--   New function `getX()`, for more flexible construction of model design matrices (mostly internal use).
+-   Added package vignette.....................
+-   All indirect effects (individual, not summed) are now also returned as part of `"semEff"` object.
+-   Unnamed model lists can now be supplied to `bootEff()`/`semEff()` (names are generated automatically).
+-   Updates to `R2()` (control of negative values, new improved default method for adjusted R-squared --- Olkin-Pratt exact estimator).
+-   New function `getX()`, for more flexible construction of model design matrices (mostly for internal use).
+-   Removed `…` argument of `stdEff()` --- arguments to `R2()` are now passed as named list to `R2.arg`.
 -   Various code and documentation updates.
 
 ### Bugs fixed:
 
 -   Amendment to previous incomplete fix for issue where `xNam()` was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary. It also has improved handling of factor contrasts when evaluating names.
--   `pSapply()` did not work with `parallel = "multicore"`, due to relying on `parallel::parSapply()` for all parallel processing (which is `"snow"` only). It now wraps `parallel::mcmapply()` for `"multicore"` (not available on Windows systems).
+-   `pSapply()` did not work with `parallel = "multicore"`, due to relying completely on `parallel::parSapply()` for parallel processing (which is `"snow"` only). The function now wraps `parallel::mcmapply()` for `"multicore"` (not available on Windows systems).
 
 ## semEff 0.5.0
 

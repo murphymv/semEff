@@ -15,8 +15,8 @@ stdEff(
   std.x = TRUE,
   std.y = TRUE,
   refit.x = TRUE,
-  r.squared = FALSE,
   incl.raw = FALSE,
+  R.squared = FALSE,
   R2.arg = NULL,
   env = NULL
 )
@@ -47,13 +47,14 @@ deviations of variables.}
 \item{refit.x}{Logical, whether the model should be refit with mean-centred
 predictor variables (see Details).}
 
-\item{r.squared}{Logical, whether R-squared values should also be calculated.}
-
 \item{incl.raw}{Logical, whether to append the raw (unstandardised) effects
 to the output.}
 
+\item{R.squared}{Logical, whether R-squared values should also be calculated
+(via \code{\link[=R2]{R2()}}).}
+
 \item{R2.arg}{A named list of additional arguments to \code{\link[=R2]{R2()}} (where
-applicable), excepting argument \code{env}.}
+applicable), excepting argument \code{env}. Ignored if \code{R.squared = FALSE}.}
 
 \item{env}{Environment in which to look for model data (if none supplied).
 Defaults to the \code{\link[=formula]{formula()}} environment.}
@@ -147,18 +148,19 @@ been mean-centred, and whose values will not subsequently be resampled
 save time, especially with larger/more complex models and/or bootstrap
 runs.
 
-If \code{r.squared = TRUE}, model R-squared values are appended to effects via
-the \code{\link[=R2]{R2()}} function, with any additional arguments passed via \code{R2.arg}.
-
 If \code{incl.raw = TRUE}, raw (unstandardised) effects can also be appended,
 i.e. those with all centring and scaling options set to \code{FALSE} (though
 still adjusted for multicollinearity, where applicable). These may be of
 interest in some cases, for example to compare their bootstrapped
 distributions with those of standardised effects.
 
+If \code{R.squared = TRUE}, model R-squared values are appended to effects via
+the \code{\link[=R2]{R2()}} function, with any additional arguments passed via \code{R2.arg}.
+
 Finally, if \code{weights} are specified, the function calculates a weighted
-average of the standardised effects across models (Burnham & Anderson 2002)
-via \code{\link[=avgEst]{avgEst()}}.
+average of standardised effects across a set (or sets) of different
+candidate models for a particular response variable(s) (Burnham & Anderson
+2002), via the \code{\link[=avgEst]{avgEst()}} function.
 }
 \examples{
 library(lme4)
@@ -170,7 +172,7 @@ stdEff(m, cen.y = FALSE, std.y = FALSE)  # x-only
 stdEff(m, std.x = FALSE, std.y = FALSE)  # centred only
 stdEff(m, cen.x = FALSE, cen.y = FALSE)  # scaled only
 stdEff(m, unique.eff = FALSE)  # include multicollinearity
-stdEff(m, r.squared = TRUE)  # add R-squared
+stdEff(m, R.squared = TRUE)  # add R-squared
 stdEff(m, incl.raw = TRUE)  # add unstandardised
 
 # Demonstrate equality with effects from manually-standardised variables
