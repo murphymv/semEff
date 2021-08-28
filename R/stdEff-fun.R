@@ -524,18 +524,17 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   vectors/arrays, or nested list.
 #' @references Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
 #'   (2018) Quantifying relative importance: computing standardized effects in
-#'   models with binary outcomes. *Ecosphere*, **9**, e02283.
-#'   <https://doi.org/gdm5bj>
+#'   models with binary outcomes. *Ecosphere*, **9**, e02283. \doi{10/gdm5bj}
 #'
 #'   McCullagh P. and Nelder, J. A. (1989) *Generalized Linear Models* (2nd
 #'   Edition). London: Chapman and Hall.
 #'
 #'   McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
 #'   of ordinal level dependent variables. *The Journal of Mathematical
-#'   Sociology*, **4**(1), 103-120. <https://doi.org/dqfhpp>
+#'   Sociology*, **4**(1), 103-120. \doi{10/dqfhpp}
 #'
 #'   Menard, S. (2011) Standards for Standardized Logistic Regression
-#'   Coefficients. *Social Forces*, **89**, 1409-1428. <https://doi.org/bvxb6s>
+#'   Coefficients. *Social Forces*, **89**, 1409-1428. \doi{10/bvxb6s}
 #' @examples
 #' # Compare estimate with a direct link transformation
 #' # (test with a poisson variable, log link)
@@ -695,7 +694,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
 #'   nested list.
 #' @references Fox, J. and Monette, G. (1992) Generalized Collinearity
 #'   Diagnostics. *Journal of the American Statistical Association*, **87**,
-#'   178-183. <https://doi.org/dm9wbw>
+#'   178-183. \doi{10/dm9wbw}
 #' @examples
 #' # Model with two correlated terms
 #' m <- shipley.growth[[3]]
@@ -938,32 +937,31 @@ RVIF <- function(...) {
 #'   vectors/arrays, or nested list.
 #' @references Allen, D. M. (1974). The Relationship Between Variable Selection
 #'   and Data Augmentation and a Method for Prediction. *Technometrics*,
-#'   **16**(1), 125-127. <https://doi.org/gfgv57>
+#'   **16**(1), 125-127. \doi{10/gfgv57}
 #'
 #'   Hittner, J. B. (2019). Ezekiel’s classic estimator of the population
 #'   squared multiple correlation coefficient: Monte Carlo-based extensions and
 #'   refinements. *The Journal of General Psychology*, **147**(3), 213–227.
-#'   <https://doi.org/gk53wb>
+#'   \doi{10/gk53wb}
 #'
 #'   Karch, J. (2020). Improving on Adjusted R-Squared. *Collabra: Psychology*,
-#'   **6**(1). <https://doi.org/gkgk2v>
+#'   **6**(1). \doi{10/gkgk2v}
 #'
 #'   Kvalseth, T. O. (1985) Cautionary Note about R2. *The American
-#'   Statistician*, **39**(4), 279-285. <https://doi.org/b8b782>
+#'   Statistician*, **39**(4), 279-285. \doi{10/b8b782}
 #'
 #'   Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
 #'   determination R2 and intra-class correlation coefficient from generalized
 #'   linear mixed-effects models revisited and expanded. *Journal of the Royal
-#'   Society Interface*, **14**(134). <https://doi.org/gddpnq>
+#'   Society Interface*, **14**(134). \doi{10/gddpnq}
 #'
 #'   Shieh, G. (2008). Improved Shrinkage Estimation of Squared Multiple
 #'   Correlation Coefficient and Squared Cross-Validity Coefficient.
-#'   *Organizational Research Methods*, **11**(2), 387–407.
-#'   <https://doi.org/bcwqf3>
+#'   *Organizational Research Methods*, **11**(2), 387–407. \doi{10/bcwqf3}
 #'
 #'   Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
 #'   generalized linear model. *Statistics in Medicine*, **19**(13), 1771-1781.
-#'   <https://doi.org/db7rfv>
+#'   \doi{10/db7rfv}
 #' @examples
 #' # Pseudo R-squared for mixed models
 #' R2(shipley.sem)  # fixed + random ('conditional')
@@ -1176,22 +1174,20 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
 #'   selection and multimodel inference in behavioral ecology: some background,
 #'   observations, and comparisons. *Behavioral Ecology and Sociobiology*,
-#'   **65**(1), 23-35. <https://doi.org/c4mrns>
+#'   **65**(1), 23-35. \doi{10/c4mrns}
 #'
 #'   Dormann, C. F., Calabrese, J. M., Guillera-Arroita, G., Matechou, E., Bahn,
 #'   V., Barton, K., ... Hartig, F. (2018). Model averaging in ecology: a review
 #'   of Bayesian, information-theoretic, and tactical approaches for predictive
-#'   inference. *Ecological Monographs*, **88**(4), 485-504.
-#'   <https://doi.org/gfgwrv>
+#'   inference. *Ecological Monographs*, **88**(4), 485-504. \doi{10/gfgwrv}
 #'
 #'   Grueber, C. E., Nakagawa, S., Laws, R. J., & Jamieson, I. G. (2011).
 #'   Multimodel inference in ecology and evolution: challenges and solutions.
-#'   *Journal of Evolutionary Biology*, **24**(4), 699-711.
-#'   <https://doi.org/b7b5d4>
+#'   *Journal of Evolutionary Biology*, **24**(4), 699-711. \doi{10/b7b5d4}
 #'
 #'   Walker, J. A. (2019). Model-averaged regression coefficients have a
 #'   straightforward interpretation using causal conditioning. *BioRxiv*,
-#'   133785. <https://doi.org/c8zt>
+#'   133785. \doi{10/c8zt}
 #' @examples
 #' # Model-averaged effects (coefficients)
 #' m <- shipley.growth  # candidate models
@@ -1383,12 +1379,12 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'
 #'   Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 #'   Independent Variables in Linear Regression. *Multivariate Behavioral
-#'   Research*, **51**(2-3), 139-153. <https://doi.org/gfww3f>
+#'   Research*, **51**(2-3), 139-153. \doi{10/gfww3f}
 #'
 #'   Thompson, C. G., Kim, R. S., Aloe, A. M., & Becker, B. J. (2017).
 #'   Extracting the Variance Inflation Factor and Other Multicollinearity
 #'   Diagnostics from Typical Regression Results. *Basic and Applied Social
-#'   Psychology*, **39**(2), 81-90. <https://doi.org/gfww2w>
+#'   Psychology*, **39**(2), 81-90. \doi{10/gfww2w}
 #' @examples
 #' library(lme4)
 #'

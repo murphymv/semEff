@@ -212,30 +212,29 @@ cor(cvf1, cvf2)
 \references{
 Allen, D. M. (1974). The Relationship Between Variable Selection
 and Data Augmentation and a Method for Prediction. \emph{Technometrics},
-\strong{16}(1), 125-127. \url{https://doi.org/gfgv57}
+\strong{16}(1), 125-127. \doi{10/gfgv57}
 
 Hittner, J. B. (2019). Ezekiel’s classic estimator of the population
 squared multiple correlation coefficient: Monte Carlo-based extensions and
 refinements. \emph{The Journal of General Psychology}, \strong{147}(3), 213–227.
-\url{https://doi.org/gk53wb}
+\doi{10/gk53wb}
 
 Karch, J. (2020). Improving on Adjusted R-Squared. \emph{Collabra: Psychology},
-\strong{6}(1). \url{https://doi.org/gkgk2v}
+\strong{6}(1). \doi{10/gkgk2v}
 
 Kvalseth, T. O. (1985) Cautionary Note about R2. \emph{The American
-Statistician}, \strong{39}(4), 279-285. \url{https://doi.org/b8b782}
+Statistician}, \strong{39}(4), 279-285. \doi{10/b8b782}
 
 Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
 determination R2 and intra-class correlation coefficient from generalized
 linear mixed-effects models revisited and expanded. \emph{Journal of the Royal
-Society Interface}, \strong{14}(134). \url{https://doi.org/gddpnq}
+Society Interface}, \strong{14}(134). \doi{10/gddpnq}
 
 Shieh, G. (2008). Improved Shrinkage Estimation of Squared Multiple
 Correlation Coefficient and Squared Cross-Validity Coefficient.
-\emph{Organizational Research Methods}, \strong{11}(2), 387–407.
-\url{https://doi.org/bcwqf3}
+\emph{Organizational Research Methods}, \strong{11}(2), 387–407. \doi{10/bcwqf3}
 
 Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
 generalized linear model. \emph{Statistics in Medicine}, \strong{19}(13), 1771-1781.
-\url{https://doi.org/db7rfv}
+\doi{10/db7rfv}
 }

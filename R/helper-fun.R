@@ -124,8 +124,8 @@ rMapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 #' @param X A vector object (numeric, character, or list).
 #' @param FUN Function to apply to the elements of `X`.
 #' @param parallel The type of parallel processing to use. Can be one of
-#'   `"snow"`, `"multicore"` (not available on Windows), or `"no"` (for none).
-#'   See Details.
+#'   `"snow"` (default), `"multicore"` (not available on Windows), or `"no"`
+#'   (for none). See Details.
 #' @param ncpus Number of system cores to use for parallel processing. If `NULL`
 #'   (default), all available cores are used.
 #' @param cl Optional cluster to use if `parallel = "snow"`. If `NULL`
@@ -133,12 +133,14 @@ rMapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE,
 #' @param add.obj A character vector of any additional object names to be
 #'   exported to the cluster. Use if a required object or function cannot be
 #'   found.
-#' @param ... Additional arguments to [parSapply()], [mcmapply()], or
-#'   [sapply()] (note: arguments `"simplify"` and `"SIMPLIFY"` are both allowed).
+#' @param ... Additional arguments to [parSapply()],
+#'   [`mcmapply()`](https://rdrr.io/r/parallel/unix/mclapply.html), or
+#'   [sapply()] (note: arguments `"simplify"` and `"SIMPLIFY"` are both
+#'   allowed).
 #' @details This is a wrapper for [parallel::parSapply()] (`"snow"`) or
-#'   [parallel::mcmapply()] (`"multicore"`), enabling (potentially) faster
-#'   processing of a function over a vector of objects. If `parallel = "no"`,
-#'   [sapply()] is used instead.
+#'   [`parallel::mcmapply()`](https://rdrr.io/r/parallel/unix/mclapply.html)
+#'   (`"multicore"`), enabling (potentially) faster processing of a function
+#'   over a vector of objects. If `parallel = "no"`, [sapply()] is used instead.
 #'
 #'   Parallel processing via option `"snow"` (default) is carried out using a
 #'   cluster of workers, which is automatically set up via [makeCluster()] using

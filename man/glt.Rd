@@ -128,16 +128,15 @@ all.equal(log(y), yl, tolerance = .Machine$double.eps)
 \references{
 Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
 (2018) Quantifying relative importance: computing standardized effects in
-models with binary outcomes. \emph{Ecosphere}, \strong{9}, e02283.
-\url{https://doi.org/gdm5bj}
+models with binary outcomes. \emph{Ecosphere}, \strong{9}, e02283. \doi{10/gdm5bj}
 
 McCullagh P. and Nelder, J. A. (1989) \emph{Generalized Linear Models} (2nd
 Edition). London: Chapman and Hall.
 
 McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
 of ordinal level dependent variables. \emph{The Journal of Mathematical
-Sociology}, \strong{4}(1), 103-120. \url{https://doi.org/dqfhpp}
+Sociology}, \strong{4}(1), 103-120. \doi{10/dqfhpp}
 
 Menard, S. (2011) Standards for Standardized Logistic Regression
-Coefficients. \emph{Social Forces}, \strong{89}, 1409-1428. \url{https://doi.org/bvxb6s}
+Coefficients. \emph{Social Forces}, \strong{89}, 1409-1428. \doi{10/bvxb6s}
 }

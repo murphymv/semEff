@@ -122,7 +122,7 @@
 #'
 #'   Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
 #'   Nonparametric bootstrapping for hierarchical data. *Journal of Applied
-#'   Statistics*, **37**(9), 1487–1498. <https://doi.org/dvfzcn>
+#'   Statistics*, **37**(9), 1487–1498. \doi{10/dvfzcn}
 #' @examples
 #' # Bootstrap Shipley SEM (test)
 #' # (set 'site' as group for resampling — highest-level random effect)
@@ -513,19 +513,18 @@ bootEff <- function(mod, R, seed = NULL,
 #'   (data frame), or a list or nested list of same.
 #' @references Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
 #'   Bootstrap Confidence Intervals. *American Journal of Mathematical and
-#'   Management Sciences*, **29**(3–4), 437–456. <https://doi.org/c8zv>
+#'   Management Sciences*, **29**(3–4), 437–456. \doi{10/c8zv}
 #'
 #'   Efron, B. (1987). Better Bootstrap Confidence Intervals. *Journal of the
-#'   American Statistical Association*, **82**(397), 171–185.
-#'   <https://doi.org/gfww2z>
+#'   American Statistical Association*, **82**(397), 171–185. \doi{10/gfww2z}
 #'
 #'   Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
 #'   Resampling in the Undergraduate Statistics Curriculum. *The American
-#'   Statistician*, **69**(4), 371–386. <https://doi.org/gd85v5>
+#'   Statistician*, **69**(4), 371–386. \doi{10/gd85v5}
 #'
 #'   Puth, M.-T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of
 #'   methods for calculating confidence intervals by bootstrapping. *Journal of
-#'   Animal Ecology*, **84**(4), 892–897. <https://doi.org/f8n9rq>
+#'   Animal Ecology*, **84**(4), 892–897. \doi{10/f8n9rq}
 #' @examples
 #' # CIs from bootstrapped SEM
 #' (shipley.sem.ci <- bootCI(shipley.sem.boot))

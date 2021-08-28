@@ -27,6 +27,6 @@ model estimates can be compared and/or averaged.
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-multilevel context. \emph{Ecology}, \strong{90}(2), 363-368. \url{https://doi.org/bqd43d}
+multilevel context. \emph{Ecology}, \strong{90}(2), 363-368. \doi{10/bqd43d}
 }
 \keyword{datasets}

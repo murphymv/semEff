@@ -21,6 +21,7 @@ Imports:
 Suggests: 
     ggplot2,
     knitr,
+    markdown,
     piecewiseSEM,
     rmarkdown
 VignetteBuilder: knitr

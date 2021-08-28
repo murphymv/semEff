@@ -55,5 +55,5 @@ VIF(m)
 \references{
 Fox, J. and Monette, G. (1992) Generalized Collinearity
 Diagnostics. \emph{Journal of the American Statistical Association}, \strong{87},
-178-183. \url{https://doi.org/dm9wbw}
+178-183. \doi{10/dm9wbw}
 }

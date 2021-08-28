@@ -73,17 +73,16 @@ however, the bootstrap is \href{https://stats.stackexchange.com/questions/112147
 \references{
 Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
 Bootstrap Confidence Intervals. \emph{American Journal of Mathematical and
-Management Sciences}, \strong{29}(3–4), 437–456. \url{https://doi.org/c8zv}
+Management Sciences}, \strong{29}(3–4), 437–456. \doi{10/c8zv}
 
 Efron, B. (1987). Better Bootstrap Confidence Intervals. \emph{Journal of the
-American Statistical Association}, \strong{82}(397), 171–185.
-\url{https://doi.org/gfww2z}
+American Statistical Association}, \strong{82}(397), 171–185. \doi{10/gfww2z}
 
 Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
 Resampling in the Undergraduate Statistics Curriculum. \emph{The American
-Statistician}, \strong{69}(4), 371–386. \url{https://doi.org/gd85v5}
+Statistician}, \strong{69}(4), 371–386. \doi{10/gd85v5}
 
 Puth, M.-T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of
 methods for calculating confidence intervals by bootstrapping. \emph{Journal of
-Animal Ecology}, \strong{84}(4), 892–897. \url{https://doi.org/f8n9rq}
+Animal Ecology}, \strong{84}(4), 892–897. \doi{10/f8n9rq}
 }

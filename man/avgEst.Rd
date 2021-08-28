@@ -69,20 +69,18 @@ ed.). New York: Springer-Verlag. Retrieved from
 Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
 selection and multimodel inference in behavioral ecology: some background,
 observations, and comparisons. \emph{Behavioral Ecology and Sociobiology},
-\strong{65}(1), 23-35. \url{https://doi.org/c4mrns}
+\strong{65}(1), 23-35. \doi{10/c4mrns}
 
 Dormann, C. F., Calabrese, J. M., Guillera-Arroita, G., Matechou, E., Bahn,
 V., Barton, K., ... Hartig, F. (2018). Model averaging in ecology: a review
 of Bayesian, information-theoretic, and tactical approaches for predictive
-inference. \emph{Ecological Monographs}, \strong{88}(4), 485-504.
-\url{https://doi.org/gfgwrv}
+inference. \emph{Ecological Monographs}, \strong{88}(4), 485-504. \doi{10/gfgwrv}
 
 Grueber, C. E., Nakagawa, S., Laws, R. J., & Jamieson, I. G. (2011).
 Multimodel inference in ecology and evolution: challenges and solutions.
-\emph{Journal of Evolutionary Biology}, \strong{24}(4), 699-711.
-\url{https://doi.org/b7b5d4}
+\emph{Journal of Evolutionary Biology}, \strong{24}(4), 699-711. \doi{10/b7b5d4}
 
 Walker, J. A. (2019). Model-averaged regression coefficients have a
 straightforward interpretation using causal conditioning. \emph{BioRxiv},
-133785. \url{https://doi.org/c8zt}
+133785. \doi{10/c8zt}
 }

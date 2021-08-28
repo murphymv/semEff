@@ -209,10 +209,10 @@ ed.). New York: Springer-Verlag. Retrieved from
 
 Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 Independent Variables in Linear Regression. \emph{Multivariate Behavioral
-Research}, \strong{51}(2-3), 139-153. \url{https://doi.org/gfww3f}
+Research}, \strong{51}(2-3), 139-153. \doi{10/gfww3f}
 
 Thompson, C. G., Kim, R. S., Aloe, A. M., & Becker, B. J. (2017).
 Extracting the Variance Inflation Factor and Other Multicollinearity
 Diagnostics from Typical Regression Results. \emph{Basic and Applied Social
-Psychology}, \strong{39}(2), 81-90. \url{https://doi.org/gfww2w}
+Psychology}, \strong{39}(2), 81-90. \doi{10/gfww2w}
 }

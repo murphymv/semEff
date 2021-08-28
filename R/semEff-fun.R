@@ -77,28 +77,27 @@
 #'   effects (individual, not summed)
 #' @references Cheung, M. W. L. (2009). Comparison of methods for constructing
 #'   confidence intervals of standardized indirect effects. *Behavior Research
-#'   Methods*, **41**(2), 425-438. <https://doi.org/fnx7xk>
+#'   Methods*, **41**(2), 425-438. \doi{10/fnx7xk}
 #'
 #'   Hayes, A. F., & Scharkow, M. (2013). The Relative Trustworthiness of
 #'   Inferential Tests of the Indirect Effect in Statistical Mediation Analysis:
 #'   Does Method Really Matter? *Psychological Science*, **24**(10), 1918-1927.
-#'   <https://doi.org/bbhr>
+#'   \doi{10/bbhr}
 #'
 #'   Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
 #'   modelling in `R` for ecology, evolution, and systematics. *Methods in
-#'   Ecology and Evolution*, **7**(5), 573-579. <https://doi.org/f8s8rb>
+#'   Ecology and Evolution*, **7**(5), 573-579. \doi{10/f8s8rb}
 #'
 #'   MacKinnon, D. P., Lockwood, C. M., & Williams, J. (2004). Confidence Limits
 #'   for the Indirect Effect: Distribution of the Product and Resampling
-#'   Methods. *Multivariate Behavioral Research*, **39**(1), 99.
-#'   <https://doi.org/chqcnx>
+#'   Methods. *Multivariate Behavioral Research*, **39**(1), 99. \doi{10/chqcnx}
 #'
 #'   Shipley, B. (2000). A New Inferential Test for Path Models Based on
 #'   Directed Acyclic Graphs. *Structural Equation Modeling: A Multidisciplinary
-#'   Journal*, **7**(2), 206-218. <https://doi.org/cqm32d>
+#'   Journal*, **7**(2), 206-218. \doi{10/cqm32d}
 #'
 #'   Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
-#'   context. *Ecology*, **90**(2), 363-368. <https://doi.org/bqd43d>
+#'   context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # SEM effects
 #' (shipley.sem.eff <- semEff(shipley.sem.boot))

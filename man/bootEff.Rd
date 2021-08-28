@@ -168,5 +168,5 @@ Application}. Cambridge University Press.
 
 Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
 Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
-Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
+Statistics}, \strong{37}(9), 1487–1498. \doi{10/dvfzcn}
 }
