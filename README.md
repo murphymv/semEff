@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![](https://www.r-pkg.org/badges/version/semEff?color=blue)](https://CRAN.R-project.org/package=semEff)
+[![Downloads](https://cranlogs.r-pkg.org/badges/semEff)](https://cran.rstudio.com/package=semEff)
 [![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions)
 
 <!-- badges: end -->
