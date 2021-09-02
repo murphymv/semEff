@@ -1,6 +1,7 @@
 ---
 title: "semEff"
 author: "Mark V. Murphy"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{semEff}
@@ -45,7 +46,7 @@ keeley.sem <- list(
 
 And visualise it using `piecewiseSEM:::plot.psem()` (wrapper for `DiagrammeR::render_graph()`), which helps to make the direction of effect and the pathways in the system clear:
 
-```{r warning = FALSE}
+```{r message = FALSE, warning = FALSE}
 piecewiseSEM::as.psem(keeley.sem) |> 
   piecewiseSEM:::plot.psem(
     node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "grey"),
@@ -67,13 +68,13 @@ Note that bootstrapping is performed here using only 100 reps to save time, wher
 (keeley.sem.eff <- semEff(keeley.sem.boot))
 ```
 
-Let's examine effects for the final response variable, plant species richness, which has four direct and five indirect paths leading to it:
+Let's examine effects for the terminal response variable, plant species richness, which has four direct and five indirect paths leading to it:
 
 ```{r}
 summary(keeley.sem.eff, response = "rich")
 ```
 
-All effects are significantly different from zero at the 95% confidence level. We can see that the standardised total effect of distance from coast on plant species richness is moderately high at 0.453 (CIs: 0.373, 0.526), and is split almost equally between direct (0.233) and indirect (0.220) effects (involving five mediators). The mediator effects listed here are the sum of all the indirect paths from predictors to response involving each mediator, and can be useful as a rough indicator of the overall importance and direction of effect of each. *hetero*, *abiotic*, and *cover* appear to be relatively important, with *cover* having the strongest influence (-0.155). However, this considers all predictors in the system collectively --- meaning that mediators are themselves counted as predictors. To examine only the exogenous variable *distance*, let's recalculate:
+All effects are significantly different from zero at the 95% confidence level. We can see that the standardised total effect of distance from coast on plant species richness is moderately high at 0.453 (CIs: 0.373, 0.526), and is split almost equally between direct (0.233) and indirect (0.220) effects (involving five mediators). The mediator effects listed here are the sum of all the indirect paths from predictors to response involving each mediator, and can be useful as a rough indicator of the overall importance and net effect direction of each. *hetero*, *abiotic*, and *cover* appear to be relatively important, with *cover* having the strongest influence (-0.155). However, this considers all predictors in the system collectively --- meaning that mediators are themselves counted as predictors. To examine only the exogenous variable *distance*, let's recalculate:
 
 ```{r}
 semEff(keeley.sem.boot, predictor = "distance") |> summary(response = "rich")
@@ -89,12 +90,12 @@ Now we can see that *hetero* and *abiotic* are the important mediators for dista
 
 This is only one potential way of analysing the paths in this SEM. Depending on the size of the system and the particular research questions, any number of predictors, mediators and/or response variables can be investigated separately or collectively for direct vs. indirect effects. If there are multiple hypotheses (competing or complementary), these can potentially all be tested in a single large SEM by comparing the relative importance of different variables and pathways of effect.
 
-**NOTE**: All effects presented here are standardised unique effects (adjusted for multicollinearity, a.k.a. semipartial correlations), which is the only way to fully partition effects in the system. These will usually be a bit smaller than the 'traditional' standardised coefficients, since most variables are correlated to some degree. If there are large differences between the two, consideration should probably be given to the impact of multicollinearity in the system. In this particular case, it's minimal, with coefficient standard errors less than twice as large as they should be (checked using `RVIF()` for the species richness model):
+**NOTE**: All effects presented here are standardised unique effects (adjusted for multicollinearity, a.k.a. semipartial correlations), which is the only way to fully partition effects in the system. These will usually be a bit smaller than the 'traditional' standardised coefficients, since most variables are correlated to some degree. If there are large differences between the two, consideration should be given to the impact of multicollinearity in the system. In this particular case, it's minimal, with standard errors of estimates less than twice as large as they should be (checked using `RVIF()` for the species richness model):
 
 ```{r}
 RVIF(keeley.sem[[6]])
 ```
 
-To use original standardised coefficients, specify `unique.eff = FALSE`, which can be passed to `stdEff()`, `bootEff()`, and/or `semEff()`. This may be preferred if prediction is the primary goal rather than explanation/inference, or for comparison purposes with unique effects or with other standardised coefficients.
+To use original standardised coefficients, specify `unique.eff = FALSE`, which can be passed to `stdEff()`, `bootEff()`, and/or `semEff()`. This may be preferred if prediction is the primary goal rather than explanation/inference, for comparison purposes with unique effects or with other standardised coefficients, or other reasons.
 
 #### References

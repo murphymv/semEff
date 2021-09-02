@@ -446,7 +446,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
 
       # Combine effects and CIs into table
       s <- dF(t(dF(i[[j]])))
-      names(s) <- c("Effect", "Bias", "Std. Error", "Lower CI", "Upper CI")
+      names(s) <- c("Effect", "Bias", "Std. Err.", "Lower CI", "Upper CI")
       s <- s[s[, 1] != 0, ]
       s <- round(s, digits)
       if (nrow(s) < 1) {
@@ -502,13 +502,15 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
 
   # Add table of variables
   v <- c(ex, r)
+  # y <- "\u2713"; n <- "x"
+  y <- "Y"; n <- "N"
   v <- tB(dF(
     " " = subNam("_", ".", v),
     "Category" = ifelse(v %in% ex, "exog.", "endog."),
-    "Predictor" = ifelse(v %in% p, "\u2713", "x"),
-    "Mediator" = ifelse(v %in% m, "\u2713", "x"),
+    "Predictor" = ifelse(v %in% p, y, n),
+    "Mediator" = ifelse(v %in% m, y, n),
     "Response" = sapply(v, function(i) {
-      if (sum(E[[i]]$Total != 0)) "\u2713" else "x"
+      if (sum(E[[i]]$Total != 0)) y else n
     }),
     "Dir. Eff." = sapply(v, function(i) {
       if (!i %in% ex) sum(E[[i]]$Direct != 0) else "-"

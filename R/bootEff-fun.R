@@ -575,7 +575,7 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
     })
 
     # Combine into table
-    e <- data.frame("Effect" = e, "Bias" = bi, "Std. Error" = se,
+    e <- data.frame("Effect" = e, "Bias" = bi, "Std. Err." = se,
                     "Lower CI" = ci[1, ], "Upper CI" = ci[2, ],
                     check.names = FALSE)
     e <- round(e, digits)

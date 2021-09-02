@@ -7,7 +7,10 @@
 
 [![](https://www.r-pkg.org/badges/version/semEff?color=blue)](https://CRAN.R-project.org/package=semEff)
 [![Downloads](https://cranlogs.r-pkg.org/badges/semEff)](https://cran.rstudio.com/package=semEff)
+[![GPLv3
+license](https://img.shields.io/badge/License-GPL3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions)
+[![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-yellow.svg)](https://paypal.me/murphymv1)
 
 <!-- badges: end -->
 
@@ -72,7 +75,23 @@ lapply(shipley.sem, formula)
 # )
 
 # Calculate SEM effects (use saved bootstrapped SEM)
-eff <- semEff(shipley.sem.boot)
+(eff <- semEff(shipley.sem.boot))
+#> 
+#> Piecewise SEM with:
+#>   * 1 exogenous vs. 4 endogenous variable(s)
+#>   * 4 direct vs. 6 indirect effect(s)
+#> 
+#> Variables:
+#>         Category Predictor Mediator Response Dir. Eff. Ind. Eff.
+#>         ________ _________ ________ ________ _________ _________
+#>                                                                 
+#>  lat    exog.            Y        N        N         -         -
+#>  DD     endog.           Y        Y        Y         1         0
+#>  Date   endog.           Y        Y        Y         1         1
+#>  Growth endog.           Y        Y        Y         1         2
+#>  Live   endog.           N        N        Y         1         3
+#> 
+#> Use summary() for effects and confidence intervals for endogenous variables.
 
 # Effects and CIs for response "Growth"
 summary(eff, "Growth")
@@ -80,20 +99,20 @@ summary(eff, "Growth")
 #> SEM direct, summed indirect, total, and mediator effects:
 #> Growth (3/4):
 #> 
-#>                 Effect   Bias Std. Error Lower CI Upper CI  
-#>                 ______ ______ __________ ________ ________  
-#>                                                             
-#>  DIRECT    Date  0.382  0.011      0.058    0.289    0.513 *
-#>                                                             
-#>  INDIRECT  lat   0.165  0.000      0.048    0.088    0.290 *
-#>            DD   -0.240 -0.006      0.042   -0.351   -0.180 *
-#>                                                             
-#>  TOTAL     lat   0.165  0.000      0.048    0.088    0.290 *
-#>            DD   -0.240 -0.006      0.042   -0.351   -0.180 *
-#>            Date  0.382  0.011      0.058    0.289    0.513 *
-#>                                                             
-#>  MEDIATORS DD    0.165  0.000      0.048    0.088    0.290 *
-#>            Date -0.075 -0.006      0.016   -0.105   -0.048 *
+#>                 Effect   Bias Std. Err. Lower CI Upper CI  
+#>                 ______ ______ _________ ________ ________  
+#>                                                            
+#>  DIRECT    Date  0.382  0.011     0.058    0.289    0.513 *
+#>                                                            
+#>  INDIRECT  lat   0.165  0.000     0.048    0.088    0.290 *
+#>            DD   -0.240 -0.006     0.042   -0.351   -0.180 *
+#>                                                            
+#>  TOTAL     lat   0.165  0.000     0.048    0.088    0.290 *
+#>            DD   -0.240 -0.006     0.042   -0.351   -0.180 *
+#>            Date  0.382  0.011     0.058    0.289    0.513 *
+#>                                                            
+#>  MEDIATORS DD    0.165  0.000     0.048    0.088    0.290 *
+#>            Date -0.075 -0.006     0.016   -0.105   -0.048 *
 #> 
 
 # Extract total effects for Growth
