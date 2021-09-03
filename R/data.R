@@ -67,7 +67,7 @@
 #'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # Specification
-#' # shipley.sem.boot <- bootEff(shipley.sem, R = 10000, seed = 53908,
+#' # shipley.sem.boot <- bootEff(shipley.sem, R = 1000, seed = 53908,
 #' #                             ran.eff = "site")
 "shipley.sem.boot"
 

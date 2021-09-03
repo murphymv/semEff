@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
- [![](https://www.r-pkg.org/badges/version/semEff?color=blue)](https://CRAN.R-project.org/package=semEff) [![Downloads](https://cranlogs.r-pkg.org/badges/semEff)](https://cran.rstudio.com/package=semEff) [![GPLv3 license](https://img.shields.io/badge/License-GPL3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions) [![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-yellow.svg)](https://paypal.me/murphymv1)
+[![](https://www.r-pkg.org/badges/version/semEff?color=blue)](https://CRAN.R-project.org/package=semEff) [![Downloads](https://cranlogs.r-pkg.org/badges/semEff)](https://cran.rstudio.com/package=semEff) [![GPLv3 license](https://img.shields.io/badge/License-GPL3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions) [![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-yellow.svg)](https://paypal.me/murphymv1)
 
 <!-- badges: end -->
 

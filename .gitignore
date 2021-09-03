@@ -28,4 +28,4 @@ vignettes/*.pdf
 inst/doc
 docs
 tests
-/*.png
+various
