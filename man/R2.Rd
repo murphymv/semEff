@@ -180,7 +180,7 @@ R2(shipley.sem, re.form = NA, type = "spearman")  # using Spearman's Rho
 # Predicted R-squared: compare cross-validated predictions calculated/
 # approximated via the hat matrix to standard method (leave-one-out)
 
-# Fit test models using Shipley data â€” compare lm vs glm
+# Fit test models using Shipley data — compare lm vs glm
 d <- na.omit(shipley)
 m <- lm(Live ~ Date + DD + lat, d)
 # m <- glm(Live ~ Date + DD + lat, binomial, d)

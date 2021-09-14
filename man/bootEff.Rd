@@ -150,7 +150,7 @@ results).
 }
 \examples{
 # Bootstrap Shipley SEM (test)
-# (set 'site' as group for resampling â€” highest-level random effect)
+# (set 'site' as group for resampling — highest-level random effect)
 bootEff(shipley.sem, ran.eff = "site", R = 1, parallel = "no")
 
 # Estimates (use saved boot object, 10000 resamples)

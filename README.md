@@ -5,17 +5,18 @@
 
 <!-- badges: start -->
 
-[![CRAN](https://www.r-pkg.org/badges/version/semEff?color=blue)](https://CRAN.R-project.org/package=semEff)
-[![Downloads:
-Total](http://cranlogs.r-pkg.org/badges/grand-total/semEff)]()
-[![Downloads: Monthly](https://cranlogs.r-pkg.org/badges/semEff)]()
-[![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![Repo
 Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
-[![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions)
-[![Codecov test
-coverage](https://codecov.io/gh/murphymv/semEff/branch/main/graph/badge.svg)](https://codecov.io/gh/murphymv/semEff?branch=main)
+[![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg?label=Lifecycle)](https://lifecycle.r-lib.org/articles/stages.html)
 [![Licence](https://img.shields.io/badge/License-GPL3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+![GitHub language
+count](https://img.shields.io/github/languages/count/murphymv/semEff?label=Languages)
+[![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions)
+
+[![CRAN](https://www.r-pkg.org/badges/version/semEff?color=blue)](https://CRAN.R-project.org/package=semEff)
+![Downloads: Total](http://cranlogs.r-pkg.org/badges/grand-total/semEff)
+![Downloads: Monthly](https://cranlogs.r-pkg.org/badges/semEff)
+
 [![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-yellow.svg)](https://paypal.me/murphymv1)
 
 <!-- badges: end -->
@@ -60,7 +61,6 @@ head(shipley)
 #> 4    1    4 40.38063 1970 110.9889 161.1282 48.20004 0.9568525    1
 #> 5    1    5 40.38063 1970 120.9946 157.3778 50.02237 0.9759584    1
 #> 6    1    1 40.38063 1972 114.2315 160.6120 56.29615 0.9983398    1
-
 # Hypothesised SEM: latitude -> degree days to bud burst -> date of burst -> growth -> survival
 lapply(shipley.sem, formula)
 #> $DD
@@ -74,7 +74,6 @@ lapply(shipley.sem, formula)
 #> 
 #> $Live
 #> Live ~ Growth + (1 | site) + (1 | tree)
-
 # Bootstrap model effects (10,000 reps... can take a while)
 # system.time(
 #   shipley.sem.boot <- bootEff(shipley.sem, R = 10000, seed = 53908, ran.eff = "site")
@@ -98,7 +97,6 @@ lapply(shipley.sem, formula)
 #>  Live   endog.           N        N        Y         1         3
 #> 
 #> Use summary() for effects and confidence intervals for endogenous variables.
-
 # Effects and CIs for response "Growth"
 summary(eff, "Growth")
 #> 
@@ -120,7 +118,6 @@ summary(eff, "Growth")
 #>  MEDIATORS DD    0.165 -0.003     0.046    0.089    0.293 *
 #>            Date -0.075 -0.006     0.017   -0.107   -0.047 *
 #> 
-
 # Extract total effects for Growth
 tot <- totEff(eff, "Growth")
 tot.b <- totEff(eff, "Growth", type = "boot")

@@ -116,7 +116,7 @@ summary(shipley.sem.eff)
 # summary(semEff(shipley.sem.boot, mediators = "DD"))
 
 # Effects calculated using original SEM (models)
-# (not typically recommended â€” better to use saved boot objects)
+# (not typically recommended — better to use saved boot objects)
 # system.time(
 #  shipley.sem.eff <- semEff(shipley.sem, R = 10000, seed = 53908,
 #                            ran.eff = "site")

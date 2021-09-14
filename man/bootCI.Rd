@@ -65,7 +65,7 @@ however, the bootstrap is \href{https://stats.stackexchange.com/questions/112147
 (shipley.sem.ci <- bootCI(shipley.sem.boot))
 
 # From original SEM (models)
-# (not typically recommended â€” better to use saved boot objects)
+# (not typically recommended — better to use saved boot objects)
 # system.time(
 #   shipley.sem.ci <- bootCI(shipley.sem, ran.eff = "site", seed = 53908)
 # )
