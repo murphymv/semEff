@@ -464,8 +464,8 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   circumventing this issue by indirectly estimating the variance of the
 #'   response on the link scale have been proposed – including a
 #'   latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
-#'   a more general variance-based method using a pseudo R-squared (Menard 2011)
-#'   – here an alternative approach is used. Where transformed values are
+#'   a more general variance-based method using pseudo R-squared (Menard 2011) —
+#'   here an alternative approach is used. Where transformed values are
 #'   undefined, the function will instead return the synthetic 'working'
 #'   response from the iteratively reweighted least squares (IRLS) algorithm of
 #'   the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
@@ -493,10 +493,10 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   3. The inverse transformation of the working response is calculated.
 #'
 #'   4. If the inverse transformation is 'effectively equal' to the original
-#'   response (tested using [all.equal()] using the default tolerance), the
-#'   working response is returned; otherwise, the GLM is refit with the working
-#'   response now as the predictor, and steps 2-4 are repeated — each time with
-#'   an additional IRLS iteration.
+#'   response (tested using [all.equal()] with the default tolerance of
+#'   `1.5e-8`), the working response is returned; otherwise, the GLM is refit
+#'   with the working response now as the predictor, and steps 2-4 are repeated
+#'   — each time with an additional IRLS iteration.
 #'
 #'   This approach will generate a very reasonable transformation of the
 #'   response variable, which will also be practically indistinguishable from
@@ -1251,7 +1251,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 
 #' @title Standardised Effects
 #' @description Calculate fully standardised effects (model coefficients) in
-#'   standard deviation units, adjusted for multicollinearity by default.
+#'   standard deviation units, adjusted for multicollinearity.
 #' @param mod A fitted model object, or a list or nested list of such objects.
 #' @param weights An optional numeric vector of weights to use for model
 #'   averaging, or a named list of such vectors. The former should be supplied

@@ -12,6 +12,7 @@ Calabrese
 Chernick
 Cheung
 Collabra
+DD
 Df
 GLMMs
 GVIF
@@ -24,10 +25,12 @@ Hou
 Huyvaert
 IRLS
 Karch
+Keeley
 Kvalseth
 Labudde
 Lai
 Lefcheck
+Lifecycle
 Matechou
 McKelvey
 Modeling
@@ -51,7 +54,6 @@ Technometrics
 VIF
 VIFs
 Verlag
-YAML
 Zavoina
 behavioral
 bqd
@@ -59,11 +61,10 @@ cqm
 cran
 doi
 ed
+firesev
 hatvalues
 io
-knitr
 lme
-math
 merMod
 multimodel
 nd
@@ -76,6 +77,5 @@ rdrr
 residualised
 semipartial
 squared's
-stylesheet
 unbiasedness
 unicode

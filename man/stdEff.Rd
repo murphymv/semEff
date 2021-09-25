@@ -65,7 +65,7 @@ list of such vectors.
 }
 \description{
 Calculate fully standardised effects (model coefficients) in
-standard deviation units, adjusted for multicollinearity by default.
+standard deviation units, adjusted for multicollinearity.
 }
 \details{
 \code{stdEff()} will calculate fully standardised effects (coefficients)

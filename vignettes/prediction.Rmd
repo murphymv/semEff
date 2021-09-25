@@ -1,0 +1,138 @@
+---
+title: "Predicting Effects"
+author: "Mark V. Murphy"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Predicting Effects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`semEff` can be used to predict values for different types of effects in an SEM. For example, we may be interested in the predictions of an indirect effect of a variable vs. its direct effect, or we may simply wish to predict the total (combined) effect. Here we'll use simulated data from @shipleyConfirmatoryPathAnalysis2009 on tree growth and survival for a single tree species (see `?shipley`) to predict and plot a direct vs. indirect effect.
+
+```{r message = FALSE}
+# install.packages(c("semEff", "ggplot2"))
+library(semEff)
+library(ggplot2)
+```
+
+Let's preview the data (n = 1900):
+
+```{r}
+knitr::kable(head(shipley))
+```
+
+Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970---2006 (repeated measures). The hypothesised SEM from @shipleyConfirmatoryPathAnalysis2009 tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the `lme4` package:
+
+```{r eval = FALSE}
+shipley.sem <- list(
+  DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = shipley),
+  Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = shipley),
+  Growth = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = shipley),
+  Live = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), data = shipley, 
+                     family = binomial)
+)
+```
+
+We can bootstrap estimates for these models:
+
+```{r eval = FALSE}
+shipley.sem.boot <- bootEff(shipley.sem, R = 1000, seed = 53908, ran.eff = "site")
+```
+
+And use the bootstrap samples to calculate effects and confidence intervals:
+
+```{r}
+(shipley.sem.eff <- semEff(shipley.sem.boot))
+```
+
+For this example, let's compare the direct effects of 'Date' (Julian date of first bud burst) vs. the indirect effects of 'DD' (cumulative degree days to first bud burst, °C) on tree 'Growth' (increase in stem diameter, mm):
+
+```{r}
+summary(shipley.sem.eff, "Growth")
+```
+
+We'll extract the (total) effects of each variable to use for prediction:
+
+```{r}
+tot <- totEff(shipley.sem.eff, "Growth")
+tot.b <- totEff(shipley.sem.eff, "Growth", type = "boot")
+```
+
+Now we can predict values for Growth using `predEff()`. We'll need the model object, and we'll generate 100 values of the predictors to predict from:
+
+```{r}
+dat <- na.omit(shipley)
+mod <- shipley.sem$Growth
+fit <- sapply(c("Date", "DD"), function(i) {
+  x <- data.frame(seq(min(dat[i]), max(dat[i]), length = 100)); names(x) <- i
+  f <- predEff(mod, newdata = x, effects = tot[i], eff.boot = tot.b)
+  c(x, f)
+}, simplify = FALSE)
+```
+
+OK let's plot the predictions. We'll first create a custom plotting function which uses `ggplot2::ggplot()`:
+
+```{r}
+plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
+  d <- fit[[1]]
+  f <- fit$fit
+  ci.l <- fit$ci.lower
+  ci.u <- fit$ci.upper
+  ggplot () + 
+    geom_point(aes(x, y)) +
+    geom_ribbon(aes(d, ymin = ci.l, ymax = ci.u, alpha = "0.15"), fill = "blue") +
+    geom_line(aes(d, f), color = "blue", size = 1) +
+    xlab(x.lab) + 
+    ylab(y.lab) +
+    theme_bw() + 
+    theme(legend.position = "none")
+}
+```
+
+Effects of Date (direct):
+
+```{r warning = FALSE}
+plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date, 
+        x.lab = "Julian Date of Bud Burst (direct)", y.lab = "Stem Growth (mm)")
+```
+
+Effects of DD (indirect, via Date):
+
+```{r warning = FALSE}
+plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD, 
+        x.lab = "Degree Days to Bud Burst (indirect)", y.lab = "Stem Growth (mm)")
+```
+
+We can see that the effects are in opposite directions: positive for Date (direct) and negative for DD (indirect). This is because trees at higher latitudes require fewer degree days to break buds (cooler climate), break buds later, and grow more in the growing season than trees at lower latitudes. Thus DD negatively affects Growth by reducing the Date to first bud burst. This is just a toy example to illustrate contrasting effects of similar magnitude; DD in this case is acting as a proxy for latitude (high DD = low latitude).
+
+It's also evident from the plots that there is a huge amount of scatter around the fits. This is due to the random effects ('site' and 'tree') accounting for most variation in tree growth in this particular case. We can get a rough breakdown of this using R-squared, here via `R2()` (squared multiple correlation):
+
+```{r}
+c(
+  r2_fixed = R2(mod, re.form = NA)[[1]],
+  r2_site = R2(mod, re.form = ~ 1 | site)[[1]],
+  r2_tree = R2(mod, re.form = ~ 1 | tree)[[1]],
+  r2_total = R2(mod)[[1]]
+)
+
+```
+
+Fixed ('marginal') effects account for only about 5% of variation, compared to almost 80% when adding all random effects ('conditional').
+
+#### References
+
+Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation modelling in R for ecology, evolution, and systematics. *Methods in Ecology and Evolution*, **7**(5), 573--579. <https://doi.org/f8s8rb>
+
+Shipley, B. (2000). A New Inferential Test for Path Models Based on Directed Acyclic Graphs. *Structural Equation Modeling: A Multidisciplinary Journal*, **7**(2), 206--218. <https://doi.org/cqm32d>
+
+Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel context. *Ecology*, **90**(2), 363--368. <https://doi.org/bqd43d>

@@ -54,8 +54,8 @@ response will often produce undefined values. Although methods for
 circumventing this issue by indirectly estimating the variance of the
 response on the link scale have been proposed – including a
 latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
-a more general variance-based method using a pseudo R-squared (Menard 2011)
-– here an alternative approach is used. Where transformed values are
+a more general variance-based method using pseudo R-squared (Menard 2011) —
+here an alternative approach is used. Where transformed values are
 undefined, the function will instead return the synthetic 'working'
 response from the iteratively reweighted least squares (IRLS) algorithm of
 the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
@@ -80,10 +80,10 @@ variable as both predictor and response, and using a single IRLS iteration.
 \item The working response is reconstructed from this model.
 \item The inverse transformation of the working response is calculated.
 \item If the inverse transformation is 'effectively equal' to the original
-response (tested using \code{\link[=all.equal]{all.equal()}} using the default tolerance), the
-working response is returned; otherwise, the GLM is refit with the working
-response now as the predictor, and steps 2-4 are repeated — each time with
-an additional IRLS iteration.
+response (tested using \code{\link[=all.equal]{all.equal()}} with the default tolerance of
+\code{1.5e-8}), the working response is returned; otherwise, the GLM is refit
+with the working response now as the predictor, and steps 2-4 are repeated
+— each time with an additional IRLS iteration.
 }
 
 This approach will generate a very reasonable transformation of the
