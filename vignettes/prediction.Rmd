@@ -55,7 +55,7 @@ And use the bootstrap samples to calculate effects and confidence intervals:
 (shipley.sem.eff <- semEff(shipley.sem.boot))
 ```
 
-For this example, let's compare the direct effects of 'Date' (Julian date of first bud burst) vs. the indirect effects of 'DD' (cumulative degree days to first bud burst, °C) on tree 'Growth' (increase in stem diameter, mm):
+For this example, let's compare the direct effects of *Date* (Julian date of first bud burst) vs. the indirect effects of *DD* (cumulative degree days to first bud burst, °C) on tree *Growth* (increase in stem diameter, mm):
 
 ```{r}
 summary(shipley.sem.eff, "Growth")
@@ -68,7 +68,7 @@ tot <- totEff(shipley.sem.eff, "Growth")
 tot.b <- totEff(shipley.sem.eff, "Growth", type = "boot")
 ```
 
-Now we can predict values for Growth using `predEff()`. We'll need the model object, and we'll generate 100 values of the predictors to predict from:
+Now we can predict values for *Growth* using `predEff()`. We'll need the model object, and we'll generate 100 values of the predictors to predict from:
 
 ```{r}
 dat <- na.omit(shipley)
@@ -99,21 +99,21 @@ plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
 }
 ```
 
-Effects of Date (direct):
+Effects of *Date* (direct):
 
 ```{r warning = FALSE}
 plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date, 
         x.lab = "Julian Date of Bud Burst (direct)", y.lab = "Stem Growth (mm)")
 ```
 
-Effects of DD (indirect, via Date):
+Effects of *DD* (indirect, via *Date*):
 
 ```{r warning = FALSE}
 plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD, 
         x.lab = "Degree Days to Bud Burst (indirect)", y.lab = "Stem Growth (mm)")
 ```
 
-We can see that the effects are in opposite directions: positive for Date (direct) and negative for DD (indirect). This is because trees at higher latitudes require fewer degree days to break buds (cooler climate), break buds later, and grow more in the growing season than trees at lower latitudes. Thus DD negatively affects Growth by reducing the Date to first bud burst. This is just a toy example to illustrate contrasting effects of similar magnitude; DD in this case is acting as a proxy for latitude (high DD = low latitude).
+We can see that the effects are in opposite directions: positive for *Date* (direct) and negative for *DD* (indirect). This is because trees at higher latitudes require fewer degree days to break buds (cooler climate), break buds later, and grow more in the growing season than trees at lower latitudes. Thus *DD* negatively affects *Growth* by reducing the *Date* to first bud burst. This is just a toy example from the SEM to illustrate contrasting effects of similar magnitude. *DD* in this case is acting as a proxy for latitude (high *DD* = low latitude).
 
 It's also evident from the plots that there is a huge amount of scatter around the fits. This is due to the random effects ('site' and 'tree') accounting for most variation in tree growth in this particular case. We can get a rough breakdown of this using R-squared, here via `R2()` (squared multiple correlation):
 
@@ -130,9 +130,3 @@ c(
 Fixed ('marginal') effects account for only about 5% of variation, compared to almost 80% when adding all random effects ('conditional').
 
 #### References
-
-Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation modelling in R for ecology, evolution, and systematics. *Methods in Ecology and Evolution*, **7**(5), 573--579. <https://doi.org/f8s8rb>
-
-Shipley, B. (2000). A New Inferential Test for Path Models Based on Directed Acyclic Graphs. *Structural Equation Modeling: A Multidisciplinary Journal*, **7**(2), 206--218. <https://doi.org/cqm32d>
-
-Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel context. *Ecology*, **90**(2), 363--368. <https://doi.org/bqd43d>

@@ -5,7 +5,7 @@
 -   New formatted table output for effect summaries for `semEff()` and `bootCI()`, accessed via new `print()` and `summary()` methods.
 -   Bootstrap standard errors and bias (bootstrap mean minus original estimate) now included with effect summaries and fitted values from `predEff()`.
 -   Support for `"psem"` objects (`piecewiseSEM::psem()`) in `bootEff()`/`semEff()`.
--   Added package vignettes with some example usages.
+-   New package vignettes with example usages.
 
 ### Other changes:
 
