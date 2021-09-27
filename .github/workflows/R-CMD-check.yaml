@@ -10,8 +10,7 @@ name: R-CMD-check
 
 jobs:
   R-CMD-check:
-    # runs-on: ubuntu-latest
-    runs-on: ubuntu-21.04
+    runs-on: macos-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
