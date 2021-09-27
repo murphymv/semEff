@@ -2,7 +2,9 @@
 title: "semEff"
 author: "Mark V. Murphy"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    pandoc_args: --citeproc
 vignette: >
   %\VignetteIndexEntry{semEff}
   %\VignetteEngine{knitr::rmarkdown}
