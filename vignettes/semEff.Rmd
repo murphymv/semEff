@@ -50,11 +50,11 @@ keeley.sem <- list(
 And visualise it using `piecewiseSEM:::plot.psem()` (wrapper for `DiagrammeR::render_graph()`), which helps to make the direction of effect and the pathways in the system clear:
 
 ```{r message = FALSE, warning = FALSE}
-piecewiseSEM::as.psem(keeley.sem) |> 
-  piecewiseSEM:::plot.psem(
-    node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "grey"),
-    layout = "tree"
-  )
+piecewiseSEM:::plot.psem(
+  piecewiseSEM::as.psem(keeley.sem)
+  node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "grey"),
+  layout = "tree"
+)
 ```
 
 Now, to calculate effects, we first bootstrap the standardised direct effects:
@@ -80,7 +80,10 @@ summary(keeley.sem.eff, response = "rich")
 All effects are significantly different from zero at the 95% confidence level. We can see that the standardised total effect of distance from coast on plant species richness is moderately high at 0.453 (CIs: 0.373, 0.526), and is split almost equally between direct (0.233) and indirect (0.220) effects (involving five mediators). The mediator effects listed here are the sum of all the indirect paths from predictors to response involving each mediator, and can be useful as a rough indicator of the overall importance and net effect direction of each. *hetero*, *abiotic*, and *cover* appear to be relatively important, with *cover* having the strongest influence (-0.155). However, this considers all predictors in the system collectively --- meaning that mediators are themselves counted as predictors. To examine only the exogenous variable *distance*, let's recalculate:
 
 ```{r}
-semEff(keeley.sem.boot, predictor = "distance") |> summary(response = "rich")
+summary(
+  semEff(keeley.sem.boot, predictor = "distance"),
+  response = "rich"
+)
 ```
 
 Now we can see that *hetero* and *abiotic* are the important mediators for distance, while the relative influence of *cover* is much lower due to being part of a single longer chain of effect (involving *age* and *firesev*). The total indirect effect of 0.220 can thus be broken down into three individual paths:
