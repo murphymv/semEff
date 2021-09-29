@@ -51,7 +51,7 @@ And visualise it using `piecewiseSEM:::plot.psem()` (wrapper for `DiagrammeR::re
 
 ```{r message = FALSE, warning = FALSE}
 piecewiseSEM:::plot.psem(
-  piecewiseSEM::as.psem(keeley.sem)
+  piecewiseSEM::as.psem(keeley.sem),
   node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "grey"),
   layout = "tree"
 )
