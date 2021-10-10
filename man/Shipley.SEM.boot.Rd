@@ -17,7 +17,7 @@ Shipley (2009), using \code{\link[=bootEff]{bootEff()}}.
 }
 \examples{
 # Specification
-# shipley.sem.boot <- bootEff(shipley.sem, R = 1000, seed = 53908,
+# shipley.sem.boot <- bootEff(shipley.sem, R = 1000, seed = 13,
 #                             ran.eff = "site")
 }
 \references{

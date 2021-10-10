@@ -43,9 +43,17 @@ And the development version from [GitHub](https://github.com/) with:
 devtools::install_github("murphymv/semEff@dev")
 ```
 
+## Usage
+
+The primary function is [`semEff()`](https://murphymv.github.io/semEff/reference/semEff.html), which returns an object of class `"semEff"` with `print()` and `summary()` methods. Everything can technically be accomplished in a single call to `semEff()`; however, since bootstrapping is employed to generate resamples for confidence intervals (via [`bootEff()`](https://murphymv.github.io/semEff/reference/bootEff.html)), it is usually preferable to save these estimates separately prior to calling `semEff()` — allowing more flexibility and saving time if/when recalling the function.
+
 ## Examples
 
-See [here](https://murphymv.github.io/semEff/articles/semEff.html) for examples and further details.
+Package functions are well-documented and most include some short examples. In addition, see the following vignettes for some longer demonstrations:
+
+-   [Analysing direct vs. indirect effects of landscape location on plant species richness](https://murphymv.github.io/semEff/articles/semEff.html)
+
+-   [Predicting and plotting indirect effects of degree days to bud burst on tree growth](https://murphymv.github.io/semEff/articles/prediction.html)
 
 ## References
 

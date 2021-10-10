@@ -103,7 +103,7 @@ All calculated effects and bootstrapped effects are also returned in lists
 for each response variable, with all except mediator effects also including
 the model intercept(s) — required for prediction (these will be zero for
 ordinary linear models with fully standardised effects). Effects can be
-conveniently extracted with \code{\link[=dirEff]{dirEff()}}, \code{\link[=indEff]{indEff()}} and \code{\link[=totEff]{totEff()}}.
+conveniently extracted with \code{\link[=getDirEff]{getDirEff()}}, \code{\link[=getIndEff]{getIndEff()}} and \code{\link[=getTotEff]{getTotEff()}}.
 }
 \examples{
 # SEM effects
@@ -118,7 +118,7 @@ summary(shipley.sem.eff)
 # Effects calculated using original SEM (models)
 # (not typically recommended — better to use saved boot objects)
 # system.time(
-#  shipley.sem.eff <- semEff(shipley.sem, R = 10000, seed = 53908,
+#  shipley.sem.eff <- semEff(shipley.sem, R = 10000, seed = 13,
 #                            ran.eff = "site")
 # )
 }

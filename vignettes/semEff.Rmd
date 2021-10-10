@@ -3,9 +3,6 @@ title: "semEff"
 author: "Mark V. Murphy"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-# output: 
-#   rmarkdown::html_vignette:
-#     pandoc_args: --citeproc
 vignette: >
   %\VignetteIndexEntry{semEff}
   %\VignetteEngine{knitr::rmarkdown}
@@ -47,7 +44,7 @@ keeley.sem <- list(
 )
 ```
 
-And visualise it using `piecewiseSEM:::plot.psem()` (wrapper for `DiagrammeR::render_graph()`), which helps to make the direction of effect and the pathways in the system clear:
+And visualise it using `piecewiseSEM:::plot.psem()` (wrapper for `DiagrammeR::render_graph()`), which helps to clarify the directions of causal pathways in the system:
 
 ```{r message = FALSE, warning = FALSE}
 piecewiseSEM:::plot.psem(
@@ -57,27 +54,27 @@ piecewiseSEM:::plot.psem(
 )
 ```
 
-Now, to calculate effects, we first bootstrap the standardised direct effects:
+Now, to calculate effects, we first bootstrap and save the standardised direct effects:
 
 ```{r}
 system.time(
-  keeley.sem.boot <- bootEff(keeley.sem, R = 100, seed = 17, parallel = "no")
+  keeley.sem.boot <- bootEff(keeley.sem, R = 100, seed = 13, parallel = "no")
 )
 ```
 
-Note that bootstrapping is performed here using only 100 reps to save time, whereas typically we should use a lot more for accurate confidence intervals, e.g. 1,000---10,000+. Using the bootstrapped estimates we can now calculate direct, indirect, and total effects:
+Note that here we use only 100 reps to save time, where typically we should use a lot more for greater accuracy of confidence intervals (e.g. 1,000---10,000+). Using the bootstrapped estimates we can now calculate direct, indirect, and total effects:
 
 ```{r}
 (keeley.sem.eff <- semEff(keeley.sem.boot))
 ```
 
-Let's examine effects for the terminal response variable, plant species richness, which has four direct and five indirect paths leading to it:
+Let's examine effects for the final response variable, plant species richness, which has four direct and five indirect paths leading to it:
 
 ```{r}
 summary(keeley.sem.eff, response = "rich")
 ```
 
-All effects are significantly different from zero at the 95% confidence level. We can see that the standardised total effect of distance from coast on plant species richness is moderately high at 0.453 (CIs: 0.373, 0.526), and is split almost equally between direct (0.233) and indirect (0.220) effects (involving five mediators). The mediator effects listed here are the sum of all the indirect paths from predictors to response involving each mediator, and can be useful as a rough indicator of the overall importance and net effect direction of each. *hetero*, *abiotic*, and *cover* appear to be relatively important, with *cover* having the strongest influence (-0.155). However, this considers all predictors in the system collectively --- meaning that mediators are themselves counted as predictors. To examine only the exogenous variable *distance*, let's recalculate:
+We can see that the standardised total effect of distance from coast on plant species richness is moderately high at 0.453 (CIs: 0.373, 0.526), and is split almost equally between direct (0.233) and indirect (0.220) effects (involving five mediators). The mediator effects listed here are the sum of all the indirect paths from all predictors which involve each mediator, and can be useful as a rough indicator of the overall importance and net direction of effect of each. *hetero*, *abiotic*, and *cover* appear to be relatively important, with *cover* having the strongest influence (-0.155). However, this considers all predictors in the system collectively --- meaning that mediators are themselves counted as predictors. To focus only on the exogenous variable *distance*, let's recalculate:
 
 ```{r}
 summary(
@@ -86,7 +83,7 @@ summary(
 )
 ```
 
-Now we can see that *hetero* and *abiotic* are the important mediators for distance, while the relative influence of *cover* is much lower due to being part of a single longer chain of effect (involving *age* and *firesev*). The total indirect effect of 0.220 can thus be broken down into three individual paths:
+Now we can see that *hetero* and *abiotic* are the important mediators for distance, while the relative influence of *cover* is much lower --- weakened due to being part of a single longer chain of effect (involving *age* and *firesev*). The total indirect effect of 0.220 can thus be broken down into three individual paths:
 
 1.  *distance* -> *age* -> *firesev* -> *cover* -> *rich* (0.015)
 
@@ -94,14 +91,14 @@ Now we can see that *hetero* and *abiotic* are the important mediators for dista
 
 3.  *distance* -> *abiotic* -> *rich* (0.101)
 
-This is only one potential way of analysing the paths in this SEM. Depending on the size of the system and the particular research questions, any number of predictors, mediators and/or response variables can be investigated separately or collectively for direct vs. indirect effects. If there are multiple hypotheses (competing or complementary), these can potentially all be tested in a single large SEM by comparing the relative importance of different variables and pathways of effect.
+This is only one potential way of analysing paths in this SEM. Depending on the size of the system and the particular research questions, any number of predictors, mediators and/or response variables can be investigated separately or collectively for direct vs. indirect effects. If there are multiple hypotheses (competing or complementary), these can all be tested in a single SEM by comparing the relative importance of different variables and pathways of effect.
 
-**NOTE**: All effects presented here are standardised unique effects (adjusted for multicollinearity, a.k.a. semipartial correlations), which is the only way to fully partition effects in the system. These will usually be a bit smaller than the 'traditional' standardised coefficients, since most variables are correlated to some degree. If there are large differences between the two, consideration should be given to the impact of multicollinearity in the system. In this particular case, it's minimal, with standard errors of estimates less than twice as large as they should be (checked using `RVIF()` for the species richness model):
+**NOTE**: All effects presented here are standardised unique effects (i.e. adjusted for multicollinearity, a.k.a. semipartial correlations), which is the only way to fully partition effects in the system. These will usually be a bit smaller than the unadjusted standardised coefficients, since most variables are correlated to some degree. If there are large differences between the two, consideration should be given to the impact (and relevance) of multicollinearity in the system. In this particular case, it's minimal, with standard errors of coefficients less than twice as large as they should be (checked using [`RVIF()`](https://murphymv.github.io/semEff/reference/RVIF.html) for the species richness model):
 
 ```{r}
 RVIF(keeley.sem[[6]])
 ```
 
-To use original standardised coefficients, specify `unique.eff = FALSE`, which can be passed to `stdEff()`, `bootEff()`, and/or `semEff()`. This may be preferred if prediction is the primary goal rather than explanation/inference, for comparison purposes with unique effects or with other standardised coefficients, or other reasons.
+To use original standardised coefficients instead, specify `unique.eff = FALSE`, which can be passed to [`stdEff()`](https://murphymv.github.io/semEff/reference/stdEff.html), [`bootEff()`](https://murphymv.github.io/semEff/reference/bootEff.html), and/or [`semEff()`](https://murphymv.github.io/semEff/reference/semEff.html). These can be preferred if prediction is the primary goal rather than inference, for comparison with the unique effects or with other standardised coefficients, or for other reasons.
 
 #### References

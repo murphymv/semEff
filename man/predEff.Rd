@@ -138,8 +138,8 @@ values.
 # Predict effects (direct, total)
 m <- shipley.sem
 e <- shipley.sem.eff
-dir <- dirEff(e)
-tot <- totEff(e)
+dir <- getDirEff(e)
+tot <- getTotEff(e)
 f.dir <- predEff(m, effects = dir, type = "response")
 f.tot <- predEff(m, effects = tot, type = "response")
 
@@ -151,7 +151,8 @@ nd <- data.frame(sapply(d[xn], seq100))
 f.dir <- predEff(m, nd, dir, type = "response")
 f.tot <- predEff(m, nd, tot, type = "response")
 # Add CIs
-# dir.b <- dirEff(e, "boot"); tot.b <- totEff(e, "boot")
+# dir.b <- getDirEff(e, "boot")
+# tot.b <- getTotEff(e, "boot")
 # f.dir <- predEff(m, nd, dir, dir.b, type = "response")
 # f.tot <- predEff(m, nd, tot, tot.b, type = "response")
 

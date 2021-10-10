@@ -2,18 +2,18 @@
 % Please edit documentation in R/semEff-fun.R
 \name{getEff}
 \alias{getEff}
-\alias{dirEff}
-\alias{indEff}
-\alias{totEff}
+\alias{getDirEff}
+\alias{getIndEff}
+\alias{getTotEff}
 \title{Get SEM Effects}
 \usage{
 getEff(eff, responses = NULL, type = c("orig", "boot"))
 
-dirEff(...)
+getDirEff(...)
 
-indEff(...)
+getIndEff(...)
 
-totEff(...)
+getTotEff(...)
 }
 \arguments{
 \item{eff}{An object of class \code{"semEff"}.}
@@ -44,10 +44,10 @@ These are simple extractor functions for effects calculated using
 \itemize{
 \item \code{getEff}: Extract all effects.
 
-\item \code{dirEff}: Extract direct effects.
+\item \code{getDirEff}: Extract direct effects.
 
-\item \code{indEff}: Extract indirect effects.
+\item \code{getIndEff}: Extract indirect effects.
 
-\item \code{totEff}: Extract total effects.
+\item \code{getTotEff}: Extract total effects.
 }}
 

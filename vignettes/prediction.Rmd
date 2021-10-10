@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-`semEff` can be used to predict values for different types of effects in an SEM. For example, we may be interested in the predictions of an indirect effect of a variable vs. its direct effect, or we may simply wish to predict the total (combined) effect. Here we'll use simulated data from @shipleyConfirmatoryPathAnalysis2009 on tree growth and survival for a single tree species (see `?shipley`) to predict and plot a direct vs. indirect effect.
+`semEff` can be used to predict values for different types of effects in an SEM. For example, we may be interested in the predictions of an indirect effect of a variable vs. its direct effect, or we may simply wish to predict the total (combined) effect. Here we'll use [simulated data](https://murphymv.github.io/semEff/reference/shipley.html) from @shipleyConfirmatoryPathAnalysis2009 on tree growth and survival for a single tree species to predict and plot a direct vs. indirect effect.
 
 ```{r message = FALSE}
 # install.packages(c("semEff", "ggplot2"))
@@ -46,7 +46,7 @@ shipley.sem <- list(
 We can bootstrap estimates for these models:
 
 ```{r eval = FALSE}
-shipley.sem.boot <- bootEff(shipley.sem, R = 1000, seed = 53908, ran.eff = "site")
+shipley.sem.boot <- bootEff(shipley.sem, R = 1000, seed = 13, ran.eff = "site")
 ```
 
 And use the bootstrap samples to calculate effects and confidence intervals:
@@ -64,11 +64,11 @@ summary(shipley.sem.eff, "Growth")
 We'll extract the (total) effects of each variable to use for prediction:
 
 ```{r}
-tot <- totEff(shipley.sem.eff, "Growth")
-tot.b <- totEff(shipley.sem.eff, "Growth", type = "boot")
+tot <- getTotEff(shipley.sem.eff, "Growth")
+tot.b <- getTotEff(shipley.sem.eff, "Growth", type = "boot")
 ```
 
-Now we can predict values for *Growth* using `predEff()`. We'll need the model object, and we'll generate 100 values of the predictors to predict from:
+Now we can predict values for *Growth* using [`predEff()`](https://murphymv.github.io/semEff/reference/predEff.html). We'll need the model object, and we'll generate 100 values of the predictors to predict from:
 
 ```{r}
 dat <- na.omit(shipley)
@@ -80,7 +80,7 @@ fit <- sapply(c("Date", "DD"), function(i) {
 }, simplify = FALSE)
 ```
 
-OK let's plot the predictions. We'll first create a custom plotting function which uses `ggplot2::ggplot()`:
+OK let's plot the predictions. We'll use a custom plotting function which wraps `ggplot2::ggplot()`:
 
 ```{r}
 plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
@@ -103,30 +103,31 @@ Effects of *Date* (direct):
 
 ```{r warning = FALSE}
 plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date, 
-        x.lab = "Julian Date of Bud Burst (direct)", y.lab = "Stem Growth (mm)")
+        x.lab = "Julian Date of Bud Burst (direct effect)", y.lab = "Stem Growth (mm)")
 ```
 
 Effects of *DD* (indirect, via *Date*):
 
 ```{r warning = FALSE}
 plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD, 
-        x.lab = "Degree Days to Bud Burst (indirect)", y.lab = "Stem Growth (mm)")
+        x.lab = "Degree Days to Bud Burst (indirect effect)", y.lab = "Stem Growth (mm)")
 ```
 
 We can see that the effects are in opposite directions: positive for *Date* (direct) and negative for *DD* (indirect). This is because trees at higher latitudes require fewer degree days to break buds (cooler climate), break buds later, and grow more in the growing season than trees at lower latitudes. Thus *DD* negatively affects *Growth* by reducing the *Date* to first bud burst. This is just a toy example from the SEM to illustrate contrasting effects of similar magnitude. *DD* in this case is acting as a proxy for latitude (high *DD* = low latitude).
 
-It's also evident from the plots that there is a huge amount of scatter around the fits. This is due to the random effects ('site' and 'tree') accounting for most variation in tree growth in this particular case. We can get a rough breakdown of this using R-squared, here via `R2()` (squared multiple correlation):
+It's also evident from the plots that there is a huge amount of scatter around the fits. This is due to the random effects ('site' and 'tree') accounting for most variation in tree growth. We can get a rough breakdown of this using R-squared, here via [`R2()`](https://murphymv.github.io/semEff/reference/R2.html) (squared multiple correlation):
 
 ```{r}
-c(
-  r2_fixed = R2(mod, re.form = NA)[[1]],
-  r2_site = R2(mod, re.form = ~ 1 | site)[[1]],
-  r2_tree = R2(mod, re.form = ~ 1 | tree)[[1]],
-  r2_total = R2(mod)[[1]]
-)
+c(r2_marg = R2(mod, re.form = NA)[[1]],
+  r2_cond = R2(mod)[[1]])
 
 ```
 
-Fixed ('marginal') effects account for only about 5% of variation, compared to almost 80% when adding all random effects ('conditional').
+Fixed ('marginal') effects account for only about 5% of variation, compared to almost 80% when adding all random effects ('conditional'). We can also condition on individual random effects, showing that 'tree' accounts for most random variation:
+
+```{r}
+c(r2_site = R2(mod, re.form = ~ 1 | site)[[1]],
+  r2_tree = R2(mod, re.form = ~ 1 | tree)[[1]])
+```
 
 #### References

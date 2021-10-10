@@ -70,7 +70,7 @@
 #'   for each response variable, with all except mediator effects also including
 #'   the model intercept(s) — required for prediction (these will be zero for
 #'   ordinary linear models with fully standardised effects). Effects can be
-#'   conveniently extracted with [dirEff()], [indEff()] and [totEff()].
+#'   conveniently extracted with [getDirEff()], [getIndEff()] and [getTotEff()].
 #' @return A list object of class `"semEff"` for which several methods and
 #'   extractor functions exist. Contains: 1. Summary tables of variables and
 #'   effects/CIs 2. All effects 3. All bootstrapped effects 4. All indirect
@@ -111,7 +111,7 @@
 #' # Effects calculated using original SEM (models)
 #' # (not typically recommended — better to use saved boot objects)
 #' # system.time(
-#' #  shipley.sem.eff <- semEff(shipley.sem, R = 10000, seed = 53908,
+#' #  shipley.sem.eff <- semEff(shipley.sem, R = 10000, seed = 13,
 #' #                            ran.eff = "site")
 #' # )
 #' @export
@@ -188,8 +188,8 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
   am <- r[r %in% ap]
   m <- if (length(am) > 0) {
     if (is.null(m)) m <- am
-    if (!all(m %in% am))
-      stop("Some or all mediator variable(s) not in SEM.")
+    if (!any(m %in% am))
+      stop("Mediator(s) not in SEM.")
     am[am %in% m]
   }
 
@@ -200,8 +200,8 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
   })))
   ap <- c(ex, am)
   if (is.null(p)) p <- ap
-  if (!all(p %in% ap))
-    stop("Some or all predictor variable(s) not in SEM.")
+  if (!any(p %in% ap))
+    stop("Predictor(s) not in SEM.")
   p <- ap[ap %in% p]
 
 
@@ -209,7 +209,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
 
   # Helper function to create data frames without modifying names
   dF <- function(...) {
-    data.frame(..., check.names = FALSE)
+    data.frame(..., check.names = FALSE, fix.empty.names = FALSE)
   }
 
   # Function to extract direct effects for predictors
@@ -380,15 +380,15 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
 
   # Compile and output effects
 
-  # Helper function to add a top border (and spaces) to a data frame
+  # Helper function to add a top border to a data frame
   tB <- function(d) {
     b <- mapply(function(i, j) {
       n1 <- nchar(j)
-      n2 <- max(sapply(i, nchar), n1)
-      b <- if (n1 > 1) rep("_", n2) else ""
+      n2 <- max(sapply(i, nchar), n1, 3)
+      b <- if (n1 > 1) rep("-", n2) else ""
       paste(b, collapse = "")
     }, d, names(d))
-    rbind(b, "", d, "")
+    rbind(b, d)
   }
 
   # Extract all effects into lists of vectors/matrices
@@ -461,20 +461,20 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
           if (all(k > 0) || all(k < 0)) "*" else ""
         } else ""
       })
-      s <- cbind(s, " " = stars)
+      s <- dF(s, " " = stars)
 
-      # Format table (add title columns & top space)
+      # Format table (add title columns, borders, top space)
       s <- format(s, nsmall = digits)
-      s <- cbind(" " = "", " " = rownames(s), s)
+      s <- dF(" " = "", " " = rownames(s), "|",
+              s[1], "|", s[2], "|", s[3], "|", s[4:5], "|", s[6])
       s[1, 1] <- toupper(j)
       rbind("", s)
 
     })
 
-    # Combine into one and format (add top border, text alignment, etc.)
-    s <- do.call(rbind, s)
+    # Combine into one and format (add borders, text alignment, etc.)
+    s <- tB(do.call(rbind, s))[-2, ]
     s[, 2] <- subNam("_", ".", s[, 2])
-    s <- tB(s)[-2, ]
     s[1:2] <- format(s[1:2], justify = "left")
     rownames(s) <- 1:nrow(s)
 
@@ -490,7 +490,7 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
   if (any(ce)) {
     CE <- bootCI(sem[ce], ci.conf, ci.type, digits, bci.arg)
     if (length(ce) > 1) {
-      CE <- c(CE[1], lapply(CE[-1], "[", 3,), "")
+      CE <- c(CE[1], lapply(CE[-1], "[", 2,))
       CE <- do.call(rbind, CE)
       CE[1] <- format(CE[1], justify = "left")
       rownames(CE) <- 1:nrow(CE)
@@ -501,25 +501,45 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
   }
 
   # Add table of variables
-  v <- c(ex, r)
-  # y <- "\u2713"; n <- "x"
+  v <- c(ex[ex %in% p], r)
+  # y <- "\u2713"; n <- "x"  # issues w/ unicode tick marks...
   y <- "Y"; n <- "N"
-  v <- tB(dF(
+  v <- dF(
     " " = subNam("_", ".", v),
-    "Category" = ifelse(v %in% ex, "exog.", "endog."),
+    "|",
+    "Category" = ifelse(v %in% ex, "Exog.", "Endog."),
+    "|",
     "Predictor" = ifelse(v %in% p, y, n),
     "Mediator" = ifelse(v %in% m, y, n),
     "Response" = sapply(v, function(i) {
       if (sum(E[[i]]$Total != 0)) y else n
     }),
+    "|",
     "Dir. Eff." = sapply(v, function(i) {
       if (!i %in% ex) sum(E[[i]]$Direct != 0) else "-"
     }),
     "Ind. Eff." = sapply(v, function(i) {
       if (!i %in% ex) length(na.omit(ai[[i]])) else "-"
-    })
-  ))
-  v[c(1:2)] <- format(v[c(1:2)], justify = "left")
+    }),
+    "|"
+  )
+  if (any(ce)) {
+    v <- dF(
+      v,
+      "Cor. Err." = sapply(v[, 1], function(i) {
+        if (!i %in% ex) {
+          cv <- unlist(lapply(CE[, 1], function(j) {
+            gsub(" ", "", unlist(strsplit(j, "~~")))
+          }))
+          sum(cv == i)
+        } else "-"
+      }),
+      "|"
+    )
+  }
+  v <- tB(v)
+  v[c(1:3)] <- format(v[c(1:3)], justify = "left")
+  v[c(5:7)] <- format(v[c(5:7)], justify = "centre")
   rownames(v) <- 1:nrow(v)
   class(v) <- c("semEff", class(v))
   s <- c(list("Variables" = v), s)
@@ -611,26 +631,33 @@ print.semEff <- function(x, ...) {
     # SEM variable details
     v <- x$Summary$Variables
     ct <- v$Category
-    di <- v[tail(names(v), 2)]
+    di <- v[c("Dir. Eff.", "Ind. Eff.")]
     di <- suppressWarnings(
       na.omit(apply(di, 2, as.numeric))
     )
-    n1 <- paste(sum(grepl("^ex", ct)))
-    n2 <- paste(sum(grepl("^en", ct)))
+    n1 <- paste(sum(grepl("^Ex", ct)))
+    n2 <- paste(sum(grepl("^En", ct)))
     n3 <- paste(sum(di[, 1]))
     n4 <- paste(sum(di[, 2]))
+
+    # Correlated errors?
+    ce <- "Cor. Err."
+    ce <- if (ce %in% names(v)) {
+      n5 <- suppressWarnings(
+        sum(na.omit(as.numeric(v[, ce]))) / 2
+      )
+      paste0("  * ", n5, " correlated error(s)\n")
+    }
 
     # Print variable table
     message("\nPiecewise SEM with:\n  * ", n1, " exogenous vs. ", n2,
             " endogenous variable(s)\n  * ", n3, " direct vs. ", n4,
-            " indirect effect(s)\n\nVariables:\n")
+            " indirect effect(s)\n", ce, "\nVariables:\n")
     print.semEff.table(v)
-    message("Use summary() for effects and confidence intervals for endogenous variables.\n")
+    message("\nUse summary() for effects and confidence intervals for endogenous variables.\n")
 
-  } else {
-    cat("\n")
-    print.semEff.table(x)
   }
+  else print.semEff.table(x)
 
 }
 
@@ -662,11 +689,13 @@ summary.semEff <- function(object, responses = NULL, ...) {
   r2 <- responses
   if (is.null(r2)) r2 <- r
   if (is.numeric(r2)) r2 <- r[r2]
+  if (!any(r2 %in% r))
+    stop("Response(s) not in SEM.")
 
   # Print summary tables
   ce <- "Correlated Errors"
   if (length(r2[r2 != ce]) > 0) {
-    message("\nSEM direct, summed indirect, total, and mediator effects:\n")
+    message("\nSEM direct, summed indirect, total, and mediator effects:")
   }
   r <- r[r != ce]
   for (i in r2) {
@@ -674,8 +703,9 @@ summary.semEff <- function(object, responses = NULL, ...) {
     ii <- if (length(n) > 0) {
       paste0(i, " (", n, "/", length(r), ")")
     } else i
-    message(paste0(ii, ":\n"))
+    message("\n", ii, ":\n")
     print(s[[i]])
+    cat("\n")
   }
 
 }
@@ -709,19 +739,19 @@ getEff <- function(eff, responses = NULL, type = c("orig", "boot")) {
 }
 #' @describeIn getEff Extract direct effects.
 #' @export
-dirEff <- function(...) {
+getDirEff <- function(...) {
   e <- lapply(getEff(...), "[[", 1)
   if (length(e) < 2) e[[1]] else e
 }
 #' @describeIn getEff Extract indirect effects.
 #' @export
-indEff <- function(...) {
+getIndEff <- function(...) {
   e <- lapply(getEff(...), "[[", 2)
   if (length(e) < 2) e[[1]] else e
 }
 #' @describeIn getEff Extract total effects.
 #' @export
-totEff <- function(...) {
+getTotEff <- function(...) {
   e <- lapply(getEff(...), "[[", 3)
   if (length(e) < 2) e[[1]] else e
 }
@@ -821,8 +851,8 @@ totEff <- function(...) {
 #' # Predict effects (direct, total)
 #' m <- shipley.sem
 #' e <- shipley.sem.eff
-#' dir <- dirEff(e)
-#' tot <- totEff(e)
+#' dir <- getDirEff(e)
+#' tot <- getTotEff(e)
 #' f.dir <- predEff(m, effects = dir, type = "response")
 #' f.tot <- predEff(m, effects = tot, type = "response")
 #'
@@ -834,7 +864,8 @@ totEff <- function(...) {
 #' f.dir <- predEff(m, nd, dir, type = "response")
 #' f.tot <- predEff(m, nd, tot, type = "response")
 #' # Add CIs
-#' # dir.b <- dirEff(e, "boot"); tot.b <- totEff(e, "boot")
+#' # dir.b <- getDirEff(e, "boot")
+#' # tot.b <- getTotEff(e, "boot")
 #' # f.dir <- predEff(m, nd, dir, dir.b, type = "response")
 #' # f.tot <- predEff(m, nd, tot, tot.b, type = "response")
 #'

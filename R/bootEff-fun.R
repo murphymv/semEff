@@ -591,14 +591,16 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
 
     # Format table (columns, borders, spaces, etc.)
     e <- format(e, nsmall = digits)
-    e <- cbind(" " = rownames(e), e)
+    e <- cbind(" " = rownames(e), "|",
+               e[1], "|", e[2], "|", e[3], "|", e[4:5], "|", e[6],
+               fix.empty.names = FALSE)
     b <- mapply(function(i, j) {
       n1 <- nchar(j)
-      n2 <- max(sapply(i, nchar), n1)
-      b <- if (n1 > 1) rep("_", n2) else ""
+      n2 <- max(sapply(i, nchar), n1, 3)
+      b <- if (n1 > 1) rep("-", n2) else ""
       paste(b, collapse = "")
     }, e, names(e))
-    e <- rbind(b, "", e, "")
+    e <- rbind(b, e)
     e[1] <- format(e[1], justify = "left")
     rownames(e) <- 1:nrow(e)
 
@@ -626,7 +628,6 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
 # S3 method for class 'bootCI'
 #' @export
 print.bootCI <- function(x, ...) {
-  cat("\n")
   print.data.frame(x, row.names = FALSE)
 }
 
