@@ -142,6 +142,8 @@ dir <- getDirEff(e)
 tot <- getTotEff(e)
 f.dir <- predEff(m, effects = dir, type = "response")
 f.tot <- predEff(m, effects = tot, type = "response")
+head(f.dir$Live)
+head(f.tot$Live)
 
 # Using new data for predictors
 d <- na.omit(shipley)
@@ -150,6 +152,8 @@ seq100 <- function(x) seq(min(x), max(x), length = 100)
 nd <- data.frame(sapply(d[xn], seq100))
 f.dir <- predEff(m, nd, dir, type = "response")
 f.tot <- predEff(m, nd, tot, type = "response")
+head(f.dir$Live)
+head(f.tot$Live)
 # Add CIs
 # dir.b <- getDirEff(e, "boot")
 # tot.b <- getTotEff(e, "boot")
@@ -166,6 +170,8 @@ nd <- with(d, expand.grid(
   DD = mean(DD) + c(-sd(DD), sd(DD))  # two levels for DD
 ))
 f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
+head(f$fit)
+f$interaction
 # Add CIs (need to bootstrap model...)
 # system.time(B <- bootEff(m, R = 1000, ran.eff = "site"))
 # f <- predEff(m, nd, B, type = "response", interaction = "Growth:DD")

@@ -149,11 +149,11 @@ optimisers and/or other options to generate faster estimates (always check
 results).
 }
 \examples{
-# Bootstrap Shipley SEM (test)
+# Bootstrap Shipley SEM (test — 1 rep)
 # (set 'site' as group for resampling — highest-level random effect)
 bootEff(shipley.sem, R = 1, ran.eff = "site", parallel = "no")
 
-# Estimates (use saved boot object, 1000 resamples)
+# Check estimates (use saved boot object — 1000 reps)
 lapply(shipley.sem.boot, "[[", 1)  # original
 lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 }

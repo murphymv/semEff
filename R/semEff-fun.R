@@ -70,11 +70,13 @@
 #'   for each response variable, with all except mediator effects also including
 #'   the model intercept(s) — required for prediction (these will be zero for
 #'   ordinary linear models with fully standardised effects). Effects can be
-#'   conveniently extracted with [getDirEff()], [getIndEff()] and [getTotEff()].
+#'   conveniently extracted with [getEff()] and related functions.
 #' @return A list object of class `"semEff"` for which several methods and
-#'   extractor functions exist. Contains: 1. Summary tables of variables and
-#'   effects/CIs 2. All effects 3. All bootstrapped effects 4. All indirect
-#'   effects (individual, not summed)
+#'   extractor functions exist. Contains:
+#'   1. Summary tables of effects and confidence intervals
+#'   2. All effects
+#'   3. All bootstrapped effects
+#'   4. All indirect effects (individual, not summed)
 #' @references Cheung, M. W. L. (2009). Comparison of methods for constructing
 #'   confidence intervals of standardized indirect effects. *Behavior Research
 #'   Methods*, **41**(2), 425-438. \doi{10/fnx7xk}
@@ -104,9 +106,9 @@
 #' summary(shipley.sem.eff)
 #'
 #' # Effects for selected variables
-#' # summary(shipley.sem.eff, responses = "Live")
-#' # summary(semEff(shipley.sem.boot, predictors = "lat"))
-#' # summary(semEff(shipley.sem.boot, mediators = "DD"))
+#' summary(shipley.sem.eff, response = "Live")
+#' # summary(semEff(shipley.sem.boot, predictor = "lat"))
+#' # summary(semEff(shipley.sem.boot, mediator = "DD"))
 #'
 #' # Effects calculated using original SEM (models)
 #' # (not typically recommended — better to use saved boot objects)
@@ -568,11 +570,12 @@ semEff <- function(sem, predictors = NULL, mediators = NULL, use.raw = FALSE,
 #' @details This print method returns a summary table for the SEM variables,
 #'   giving their status as exogenous or endogenous and as predictor, mediator
 #'   and/or response. It also gives the number of direct vs. indirect paths
-#'   leading to each variable.
+#'   leading to each variable, and the number of correlated errors (if
+#'   applicable).
 #'
 #'   Printing of summary tables uses a custom version of `print.data.frame()`,
-#'   facilitating correct rendering of unicode characters in all cases by
-#'   bypassing [format.data.frame()] ([bug
+#'   facilitating correct rendering of unicode characters by bypassing
+#'   [format.data.frame()] ([bug
 #'   details](https://stat.ethz.ch/pipermail/r-devel/2015-May/071252.html),
 #'   workaround adapted from
 #'   [here](https://stat.ethz.ch/pipermail/r-devel/2015-May/071259.html)). Row
@@ -675,10 +678,6 @@ print.semEff <- function(x, ...) {
 #'   intervals for SEM endogenous (response) variables.
 #' @return A summary table or tables of effects for the endogenous variables
 #'   (data frames).
-#' @examples
-#' # Effect tables for Shipley SEM
-#' summary(shipley.sem.eff, "Live")  # variable 'Live'
-#' summary(shipley.sem.eff)  # all variables
 # S3 method for class 'semEff'
 #' @export
 summary.semEff <- function(object, responses = NULL, ...) {
@@ -879,6 +878,8 @@ getAllInd <- function(eff, ...) {
 #' tot <- getTotEff(e)
 #' f.dir <- predEff(m, effects = dir, type = "response")
 #' f.tot <- predEff(m, effects = tot, type = "response")
+#' head(f.dir$Live)
+#' head(f.tot$Live)
 #'
 #' # Using new data for predictors
 #' d <- na.omit(shipley)
@@ -887,6 +888,8 @@ getAllInd <- function(eff, ...) {
 #' nd <- data.frame(sapply(d[xn], seq100))
 #' f.dir <- predEff(m, nd, dir, type = "response")
 #' f.tot <- predEff(m, nd, tot, type = "response")
+#' head(f.dir$Live)
+#' head(f.tot$Live)
 #' # Add CIs
 #' # dir.b <- getDirEff(e, "boot")
 #' # tot.b <- getTotEff(e, "boot")
@@ -903,6 +906,8 @@ getAllInd <- function(eff, ...) {
 #'   DD = mean(DD) + c(-sd(DD), sd(DD))  # two levels for DD
 #' ))
 #' f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
+#' head(f$fit)
+#' f$interaction
 #' # Add CIs (need to bootstrap model...)
 #' # system.time(B <- bootEff(m, R = 1000, ran.eff = "site"))
 #' # f <- predEff(m, nd, B, type = "response", interaction = "Growth:DD")

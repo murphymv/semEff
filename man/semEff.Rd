@@ -46,9 +46,13 @@ excepting argument \code{index}.}
 }
 \value{
 A list object of class \code{"semEff"} for which several methods and
-extractor functions exist. Contains: 1. Summary tables of variables and
-effects/CIs 2. All effects 3. All bootstrapped effects 4. All indirect
-effects (individual, not summed)
+extractor functions exist. Contains:
+\enumerate{
+\item Summary tables of variables and effects/CIs
+\item All effects
+\item All bootstrapped effects
+\item All calculated indirect effects (individual, not summed)
+}
 }
 \description{
 Automatically calculate direct, indirect, total, and mediator
@@ -103,7 +107,7 @@ All calculated effects and bootstrapped effects are also returned in lists
 for each response variable, with all except mediator effects also including
 the model intercept(s) — required for prediction (these will be zero for
 ordinary linear models with fully standardised effects). Effects can be
-conveniently extracted with \code{\link[=getDirEff]{getDirEff()}}, \code{\link[=getIndEff]{getIndEff()}} and \code{\link[=getTotEff]{getTotEff()}}.
+conveniently extracted using \code{\link[=getEff]{getEff()}} and related functions.
 }
 \examples{
 # SEM effects
@@ -111,9 +115,9 @@ conveniently extracted with \code{\link[=getDirEff]{getDirEff()}}, \code{\link[=
 summary(shipley.sem.eff)
 
 # Effects for selected variables
-# summary(shipley.sem.eff, responses = "Live")
-# summary(semEff(shipley.sem.boot, predictors = "lat"))
-# summary(semEff(shipley.sem.boot, mediators = "DD"))
+summary(shipley.sem.eff, response = "Live")
+# summary(semEff(shipley.sem.boot, predictor = "lat"))
+# summary(semEff(shipley.sem.boot, mediator = "DD"))
 
 # Effects calculated using original SEM (models)
 # (not typically recommended — better to use saved boot objects)

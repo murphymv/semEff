@@ -27,8 +27,3 @@ A \code{\link[=summary]{summary()}} method for an object of class \code{"semEff"
 This summary method prints tables of effects and confidence
 intervals for SEM endogenous (response) variables.
 }
-\examples{
-# Effect tables for Shipley SEM
-summary(shipley.sem.eff, "Live")  # variable 'Live'
-summary(shipley.sem.eff)  # all variables
-}

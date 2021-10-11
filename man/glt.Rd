@@ -113,7 +113,7 @@ distribution-specific variance.
 \examples{
 # Compare estimate with a direct link transformation
 # (test with a poisson variable, log link)
-set.seed(1)
+set.seed(13)
 y <- rpois(30, lambda = 10)
 yl <- unname(glt(y, force.est = TRUE))
 
@@ -123,7 +123,7 @@ all.equal(log(y), yl)
 
 # Actual difference...
 all.equal(log(y), yl, tolerance = .Machine$double.eps)
-# "Mean relative difference: 1.05954e-12"
+# "Mean relative difference: 2.489317e-10"
 }
 \references{
 Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.

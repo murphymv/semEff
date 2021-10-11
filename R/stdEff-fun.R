@@ -80,9 +80,9 @@ sdW <- function(...) {
 #' @seealso [getCall()]
 #' @examples
 #' # Get data used to fit SEM from Shipley (2009)
-#' getData(shipley.sem[[1]])  # from single model
-#' getData(shipley.sem)  # from SEM (list)
-#' getData(shipley.sem, merge = TRUE)  # from SEM (single dataset)
+#' head(getData(shipley.sem[[1]]))  # from single model
+#' lapply(getData(shipley.sem), head)  # from SEM (list)
+#' head(getData(shipley.sem, merge = TRUE))  # from SEM (single dataset)
 #' @export
 getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
 
@@ -538,7 +538,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #' @examples
 #' # Compare estimate with a direct link transformation
 #' # (test with a poisson variable, log link)
-#' set.seed(1)
+#' set.seed(13)
 #' y <- rpois(30, lambda = 10)
 #' yl <- unname(glt(y, force.est = TRUE))
 #'
@@ -548,7 +548,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'
 #' # Actual difference...
 #' all.equal(log(y), yl, tolerance = .Machine$double.eps)
-#' # "Mean relative difference: 1.05954e-12"
+#' # "Mean relative difference: 2.489317e-10"
 #' @export
 glt <- function(x, family = NULL, force.est = FALSE) {
 
@@ -623,10 +623,10 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 #'   link scale, or an array, list of vectors/arrays, or nested list.
 #' @examples
 #' # All SEM responses (original scale)
-#' getY(shipley.sem)
+#' head(getY(shipley.sem))
 #'
 #' # Estimated response in link scale from binomial model
-#' getY(shipley.sem$Live, link = TRUE)
+#' head(getY(shipley.sem$Live, link = TRUE))
 #' @export
 getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
 
@@ -1200,7 +1200,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'
 #' # Model-averaged predictions
 #' f <- lapply(m, predict)
-#' avgEst(f, w)
+#' head(avgEst(f, w))
 #' @export
 avgEst <-  function(est, weights = "equal", est.names = NULL) {
 

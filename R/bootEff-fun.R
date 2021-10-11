@@ -124,11 +124,11 @@
 #'   Nonparametric bootstrapping for hierarchical data. *Journal of Applied
 #'   Statistics*, **37**(9), 1487–1498. \doi{10/dvfzcn}
 #' @examples
-#' # Bootstrap Shipley SEM (test)
+#' # Bootstrap Shipley SEM (test — 1 rep)
 #' # (set 'site' as group for resampling — highest-level random effect)
 #' bootEff(shipley.sem, R = 1, ran.eff = "site", parallel = "no")
 #'
-#' # Estimates (use saved boot object, 1000 resamples)
+#' # Check estimates (use saved boot object — 1000 reps)
 #' lapply(shipley.sem.boot, "[[", 1)  # original
 #' lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 #' @export

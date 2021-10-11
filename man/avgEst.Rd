@@ -58,7 +58,7 @@ avgEst(e, w)
 
 # Model-averaged predictions
 f <- lapply(m, predict)
-avgEst(f, w)
+head(avgEst(f, w))
 }
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection and
