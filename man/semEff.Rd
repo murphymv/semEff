@@ -48,10 +48,10 @@ excepting argument \code{index}.}
 A list object of class \code{"semEff"} for which several methods and
 extractor functions exist. Contains:
 \enumerate{
-\item Summary tables of variables and effects/CIs
+\item Summary tables of effects and confidence intervals
 \item All effects
 \item All bootstrapped effects
-\item All calculated indirect effects (individual, not summed)
+\item All indirect effects (individual, not summed)
 }
 }
 \description{
@@ -107,7 +107,7 @@ All calculated effects and bootstrapped effects are also returned in lists
 for each response variable, with all except mediator effects also including
 the model intercept(s) — required for prediction (these will be zero for
 ordinary linear models with fully standardised effects). Effects can be
-conveniently extracted using \code{\link[=getEff]{getEff()}} and related functions.
+conveniently extracted with \code{\link[=getEff]{getEff()}} and related functions.
 }
 \examples{
 # SEM effects
