@@ -712,30 +712,40 @@ summary.semEff <- function(object, responses = NULL, ...) {
 
 
 #' @title Get SEM Effects
-#' @description Extract SEM direct, indirect, and/or total effects from an
-#'   object of class `"semEff"`.
+#' @description Extract SEM effects from an object of class `"semEff"`.
 #' @param eff An object of class `"semEff"`.
 #' @param responses An optional character vector, the names of one or more SEM
 #'   response variables for which to return effects. Can also be a numeric
 #'   vector of indices of `eff`. If `NULL` (default), all effects are returned.
 #' @param type The type of effects to return. Can be `"orig"` (default) or
 #'   `"boot"` (for bootstrapped).
-#' @param ... Arguments (above) to be passed to [getEff()] from the other
-#'   extractor functions.
+#' @param ... Arguments (above) to be passed to `getEff()` from the other
+#'   extractor functions (`type = "boot"` is not available for `getAllInd()`).
 #' @details These are simple extractor functions for effects calculated using
 #'   [semEff()], intended for convenience (e.g. for use with [predEff()]).
 #' @return A list containing the original or bootstrapped effects for each
 #'   response variable, as numeric vectors or matrices (respectively).
 #' @name getEff
 NULL
-#' @describeIn getEff Extract all effects.
+#' @describeIn getEff Extract effects.
 #' @export
 getEff <- function(eff, responses = NULL, type = c("orig", "boot")) {
-  type <- match.arg(type)
-  s <- if (type == "boot") "Bootstrapped Effects" else "Effects"
-  e <- eff[[s]]
-  r <- responses
-  if (!is.null(r)) e[r] else e
+
+  e <- eff; r <- responses; type <- match.arg(type)
+  if (class(e)[1] != "semEff")
+    stop("Object is not of class 'semEff'")
+
+  # Extract effects
+  e <- if (type == "boot") e[[3]] else e[[2]]
+  en <- names(e)
+
+  # Subset responses
+  if (is.null(r)) r <- en
+  if (is.numeric(r)) r <- en[r]
+  if (!any(r %in% en))
+    stop("Response(s) not in SEM.")
+  e[en %in% r]
+
 }
 #' @describeIn getEff Extract direct effects.
 #' @export
@@ -753,6 +763,20 @@ getIndEff <- function(...) {
 #' @export
 getTotEff <- function(...) {
   e <- lapply(getEff(...), "[[", 3)
+  if (length(e) < 2) e[[1]] else e
+}
+#' @describeIn getEff Extract mediator effects.
+#' @export
+getMedEff <- function(...) {
+  e <- lapply(getEff(...), "[[", 4)
+  if (length(e) < 2) e[[1]] else e
+}
+#' @describeIn getEff Extract all indirect effects.
+#' @export
+getAllInd <- function(eff, ...) {
+  e <- eff[c(1, 4)]
+  class(e) <- class(eff)
+  e <- getEff(e, type = "orig", ...)
   if (length(e) < 2) e[[1]] else e
 }
 

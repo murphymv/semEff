@@ -5,6 +5,8 @@
 \alias{getDirEff}
 \alias{getIndEff}
 \alias{getTotEff}
+\alias{getMedEff}
+\alias{getAllInd}
 \title{Get SEM Effects}
 \usage{
 getEff(eff, responses = NULL, type = c("orig", "boot"))
@@ -14,6 +16,10 @@ getDirEff(...)
 getIndEff(...)
 
 getTotEff(...)
+
+getMedEff(...)
+
+getAllInd(eff, ...)
 }
 \arguments{
 \item{eff}{An object of class \code{"semEff"}.}
@@ -25,16 +31,15 @@ vector of indices of \code{eff}. If \code{NULL} (default), all effects are retur
 \item{type}{The type of effects to return. Can be \code{"orig"} (default) or
 \code{"boot"} (for bootstrapped).}
 
-\item{...}{Arguments (above) to be passed to \code{\link[=getEff]{getEff()}} from the other
-extractor functions.}
+\item{...}{Arguments (above) to be passed to \code{getEff()} from the other
+extractor functions (\code{type = "boot"} is not available for \code{getAllInd()}).}
 }
 \value{
 A list containing the original or bootstrapped effects for each
 response variable, as numeric vectors or matrices (respectively).
 }
 \description{
-Extract SEM direct, indirect, and/or total effects from an
-object of class \code{"semEff"}.
+Extract SEM effects from an object of class \code{"semEff"}.
 }
 \details{
 These are simple extractor functions for effects calculated using
@@ -42,12 +47,16 @@ These are simple extractor functions for effects calculated using
 }
 \section{Functions}{
 \itemize{
-\item \code{getEff}: Extract all effects.
+\item \code{getEff}: Extract effects.
 
 \item \code{getDirEff}: Extract direct effects.
 
 \item \code{getIndEff}: Extract indirect effects.
 
 \item \code{getTotEff}: Extract total effects.
+
+\item \code{getMedEff}: Extract mediator effects.
+
+\item \code{getAllInd}: Extract all indirect effects.
 }}
 

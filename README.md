@@ -50,9 +50,10 @@ devtools::install_github("murphymv/semEff@dev")
 The primary function is
 [`semEff()`](https://murphymv.github.io/semEff/reference/semEff.html),
 which returns an object of class `"semEff"` with `print()` and
-`summary()` methods. Everything can technically be accomplished in a
-single call to `semEff()`; however, since bootstrapping is employed to
-generate resamples for confidence intervals (via
+`summary()` methods to extract information. Everything can technically
+be accomplished in a single call to `semEff()`; however, since
+bootstrapping is employed to generate resamples for confidence intervals
+(via
 [`bootEff()`](https://murphymv.github.io/semEff/reference/bootEff.html)),
 it is usually preferable to save these estimates separately prior to
 calling `semEff()` — allowing more flexibility and saving time if/when

@@ -5,17 +5,17 @@
 -   New formatted table output for effect summaries for `semEff()` and `bootCI()`, accessed via new `print()` and `summary()` methods.
 -   Bootstrap standard errors and bias (mean minus original estimate) now included with effect summaries and fitted values from `predEff()`.
 -   Support for `"psem"` objects (`piecewiseSEM::psem()`) in `bootEff()`/`semEff()`.
--   New package vignettes with example usages.
+-   New package vignettes with some example usages.
 
 ### Other changes:
 
--   All indirect effects (individual, not summed) now also returned as part of `"semEff"` object.
+-   All calculated indirect effects (individual, not summed) now also returned as part of `"semEff"` object (for reference; does not include bootstrapped effects). Extract using `getAllInd()`.
 -   Unnamed model lists can now be supplied to `bootEff()`/`semEff()` (names are generated automatically).
 -   Updates to `R2()` (control of negative values, new improved default method for adjusted R-squared --- Olkin-Pratt exact estimator).
 -   New function `getX()`, for more flexible construction of model design matrices (mostly for internal use).
 -   Removed `…` argument of `stdEff()` --- arguments to `R2()` are now passed as named list to `R2.arg`.
 -   Renamed extractor functions for effects (e.g. `dirEff()` -> `getDirEff()`).
--   Various code and documentation updates.
+-   Various other code and documentation updates.
 
 ### Bugs fixed:
 
