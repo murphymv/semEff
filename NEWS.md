@@ -14,7 +14,7 @@
 -   Updates to `R2()` (control of negative values, new improved default method for adjusted R-squared --- Olkin-Pratt exact estimator).
 -   New function `getX()`, for more flexible construction of model design matrices (mostly for internal use).
 -   Removed `…` argument of `stdEff()` --- arguments to `R2()` are now passed as named list to `R2.arg`.
--   Renamed extractor functions for effects (e.g. `dirEff()` -> `getDirEff()`).
+-   Renamed extractor functions for effects (e.g. `dirEff()` -> `getDirEff()`) and added some new ones.
 -   Various other code and documentation updates.
 
 ### Bugs fixed:
