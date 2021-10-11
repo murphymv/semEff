@@ -61,13 +61,14 @@ bootstrap percentile methods when n < 34 (Hesterberg 2015). Ultimately
 however, the bootstrap is \href{https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size}{not a solution to small sample size}.
 }
 \examples{
-# CIs from bootstrapped SEM
+# CIs calculated from bootstrapped SEM
 (shipley.sem.ci <- bootCI(shipley.sem.boot))
 
 # From original SEM (models)
 # (not typically recommended — better to use saved boot objects)
 # system.time(
-#   shipley.sem.ci <- bootCI(shipley.sem, ran.eff = "site", seed = 53908)
+#   shipley.sem.ci <- bootCI(shipley.sem, R = 1000, seed = 13,
+#                            ran.eff = "site")
 # )
 }
 \references{

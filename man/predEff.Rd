@@ -167,7 +167,7 @@ nd <- with(d, expand.grid(
 ))
 f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
 # Add CIs (need to bootstrap model...)
-# system.time(B <- bootEff(m, ran.eff = "site", R = 1000))
+# system.time(B <- bootEff(m, R = 1000, ran.eff = "site"))
 # f <- predEff(m, nd, B, type = "response", interaction = "Growth:DD")
 
 # Model-averaged predictions (several approaches)

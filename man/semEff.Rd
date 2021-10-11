@@ -118,7 +118,7 @@ summary(shipley.sem.eff)
 # Effects calculated using original SEM (models)
 # (not typically recommended — better to use saved boot objects)
 # system.time(
-#  shipley.sem.eff <- semEff(shipley.sem, R = 10000, seed = 13,
+#  shipley.sem.eff <- semEff(shipley.sem, R = 1000, seed = 13,
 #                            ran.eff = "site")
 # )
 }

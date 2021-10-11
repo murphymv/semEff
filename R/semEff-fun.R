@@ -111,7 +111,7 @@
 #' # Effects calculated using original SEM (models)
 #' # (not typically recommended — better to use saved boot objects)
 #' # system.time(
-#' #  shipley.sem.eff <- semEff(shipley.sem, R = 10000, seed = 13,
+#' #  shipley.sem.eff <- semEff(shipley.sem, R = 1000, seed = 13,
 #' #                            ran.eff = "site")
 #' # )
 #' @export
@@ -904,7 +904,7 @@ getAllInd <- function(eff, ...) {
 #' ))
 #' f <- predEff(m, nd, type = "response", interaction = "Growth:DD")
 #' # Add CIs (need to bootstrap model...)
-#' # system.time(B <- bootEff(m, ran.eff = "site", R = 1000))
+#' # system.time(B <- bootEff(m, R = 1000, ran.eff = "site"))
 #' # f <- predEff(m, nd, B, type = "response", interaction = "Growth:DD")
 #'
 #' # Model-averaged predictions (several approaches)

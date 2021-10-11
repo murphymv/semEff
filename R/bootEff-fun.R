@@ -126,9 +126,9 @@
 #' @examples
 #' # Bootstrap Shipley SEM (test)
 #' # (set 'site' as group for resampling — highest-level random effect)
-#' bootEff(shipley.sem, ran.eff = "site", R = 1, parallel = "no")
+#' bootEff(shipley.sem, R = 1, ran.eff = "site", parallel = "no")
 #'
-#' # Estimates (use saved boot object, 10000 resamples)
+#' # Estimates (use saved boot object, 1000 resamples)
 #' lapply(shipley.sem.boot, "[[", 1)  # original
 #' lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 #' @export
@@ -526,13 +526,14 @@ bootEff <- function(mod, R, seed = NULL,
 #'   methods for calculating confidence intervals by bootstrapping. *Journal of
 #'   Animal Ecology*, **84**(4), 892–897. \doi{10/f8n9rq}
 #' @examples
-#' # CIs from bootstrapped SEM
+#' # CIs calculated from bootstrapped SEM
 #' (shipley.sem.ci <- bootCI(shipley.sem.boot))
 #'
 #' # From original SEM (models)
 #' # (not typically recommended — better to use saved boot objects)
 #' # system.time(
-#' #   shipley.sem.ci <- bootCI(shipley.sem, ran.eff = "site", seed = 53908)
+#' #   shipley.sem.ci <- bootCI(shipley.sem, R = 1000, seed = 13,
+#' #                            ran.eff = "site")
 #' # )
 #' @export
 bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,

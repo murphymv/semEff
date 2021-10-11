@@ -151,9 +151,9 @@ results).
 \examples{
 # Bootstrap Shipley SEM (test)
 # (set 'site' as group for resampling — highest-level random effect)
-bootEff(shipley.sem, ran.eff = "site", R = 1, parallel = "no")
+bootEff(shipley.sem, R = 1, ran.eff = "site", parallel = "no")
 
-# Estimates (use saved boot object, 10000 resamples)
+# Estimates (use saved boot object, 1000 resamples)
 lapply(shipley.sem.boot, "[[", 1)  # original
 lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 }
