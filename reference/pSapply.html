@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Parallel sapply — pSapply • semEff</title>
+<title>Parallel sapply() — pSapply • semEff</title>
 
 
 <!-- jquery -->
@@ -41,7 +41,7 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Parallel sapply — pSapply" />
+<meta property="og:title" content="Parallel sapply() — pSapply" />
 <meta property="og:description" content="Apply a function to a vector using parallel processing." />
 
 
@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -91,6 +91,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -116,8 +128,8 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Parallel <code>sapply</code></h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/helper-fun.R'><code>R/helper-fun.R</code></a></small>
+    <h1>Parallel <code><a href='https://rdrr.io/r/base/lapply.html'>sapply()</a></code></h1>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/helper-fun.R'><code>R/helper-fun.R</code></a></small>
     <div class="hidden name"><code>pSapply.Rd</code></div>
     </div>
 
@@ -128,7 +140,7 @@
     <pre class="usage"><span class='fu'>pSapply</span><span class='op'>(</span>
   <span class='va'>X</span>,
   <span class='va'>FUN</span>,
-  parallel <span class='op'>=</span> <span class='st'>"snow"</span>,
+  parallel <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"snow"</span>, <span class='st'>"multicore"</span>, <span class='st'>"no"</span><span class='op'>)</span>,
   ncpus <span class='op'>=</span> <span class='cn'>NULL</span>,
   cl <span class='op'>=</span> <span class='cn'>NULL</span>,
   add.obj <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -149,13 +161,13 @@
     <tr>
       <th>parallel</th>
       <td><p>The type of parallel processing to use. Can be one of
-<code>"snow"</code>, <code>"multicore"</code>, or <code>"no"</code> (for none). If none,
-<code>sapply</code> is used instead.</p></td>
+<code>"snow"</code> (default), <code>"multicore"</code> (not available on Windows), or <code>"no"</code>
+(for none). See Details.</p></td>
     </tr>
     <tr>
       <th>ncpus</th>
-      <td><p>Number of system cores to use for parallel processing. If
-<code>NULL</code> (default), all available cores are used.</p></td>
+      <td><p>Number of system cores to use for parallel processing. If <code>NULL</code>
+(default), all available cores are used.</p></td>
     </tr>
     <tr>
       <th>cl</th>
@@ -165,33 +177,35 @@
     <tr>
       <th>add.obj</th>
       <td><p>A character vector of any additional object names to be
-exported to the cluster for parallel processing. Use if a required object
-or function cannot be found.</p></td>
+exported to the cluster. Use if a required object or function cannot be
+found.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments to <code><a href='https://rdrr.io/r/parallel/clusterApply.html'>parSapply</a></code> or
-<code><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></code>.</p></td>
+      <td><p>Additional arguments to <code>parSapply()</code>,
+<a href='https://rdrr.io/r/parallel/unix/mclapply.html'><code>mcmapply()</code></a>, or
+<code><a href='https://rdrr.io/r/base/lapply.html'>sapply()</a></code> (note: arguments <code>"simplify"</code> and <code>"SIMPLIFY"</code> are both
+allowed).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The output of <code>FUN</code> in a list, or simplified to a vector or
-array.</p>
+    <p>The output of <code>FUN</code> in a list, or simplified to a vector or array.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This is a wrapper for <code>parSapply</code> from the <span class="pkg">parallel</span>
-package, enabling (potentially) faster processing of a function over a
-vector of objects. Parallel processing via option <code>"snow"</code> (default)
-is carried out using a cluster of workers, which is automatically set up
-via <code>makeCluster</code> using all available system cores or a user supplied
-number of cores. The function then exports the required objects and
-functions to this cluster using <code>clusterExport</code>, after performing a
-(rough) match of all objects and functions in the current global
-environment to those referenced in the call to <code>FUN</code> (and also any
-calls in <code>X</code>). Any additional required objects can be supplied using
-<code>add.obj</code>.</p>
+    <p>This is a wrapper for <code><a href='https://rdrr.io/r/parallel/clusterApply.html'>parallel::parSapply()</a></code> (<code>"snow"</code>) or
+<a href='https://rdrr.io/r/parallel/unix/mclapply.html'><code><a href='https://rdrr.io/r/parallel/mclapply.html'>parallel::mcmapply()</a></code></a>
+(<code>"multicore"</code>), enabling (potentially) faster processing of a function
+over a vector of objects. If <code>parallel = "no"</code>, <code><a href='https://rdrr.io/r/base/lapply.html'>sapply()</a></code> is used instead.</p>
+<p>Parallel processing via option <code>"snow"</code> (default) is carried out using a
+cluster of workers, which is automatically set up via <code>makeCluster()</code> using
+all available system cores or a user supplied number of cores. The function
+then exports the required objects and functions to this cluster using
+<code>clusterExport()</code>, after performing a (rough) match of all objects and
+functions in the current global environment to those referenced in the call
+to <code>FUN</code> (and also any calls in <code>X</code>). Any additional required object names
+can be supplied using <code>add.obj</code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

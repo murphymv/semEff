@@ -75,7 +75,7 @@ effects." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -92,6 +92,18 @@ effects." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -118,7 +130,7 @@ effects." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Predict Effects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/semEff-fun.R'><code>R/semEff-fun.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/semEff-fun.R'><code>R/semEff-fun.R</code></a></small>
     <div class="hidden name"><code>predEff.Rd</code></div>
     </div>
 
@@ -133,7 +145,7 @@ effects.</p>
   effects <span class='op'>=</span> <span class='cn'>NULL</span>,
   eff.boot <span class='op'>=</span> <span class='cn'>NULL</span>,
   re.form <span class='op'>=</span> <span class='cn'>NA</span>,
-  type <span class='op'>=</span> <span class='st'>"link"</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"link"</span>, <span class='st'>"response"</span><span class='op'>)</span>,
   interaction <span class='op'>=</span> <span class='cn'>NULL</span>,
   use.raw <span class='op'>=</span> <span class='cn'>FALSE</span>,
   ci.conf <span class='op'>=</span> <span class='fl'>0.95</span>,
@@ -163,22 +175,21 @@ contain all the variables named in <code>effects</code> or all those used to fit
       <th>effects</th>
       <td><p>A numeric vector of effects to predict, or a list or nested
 list of such vectors. These will typically have been calculated using
-<code><a href='semEff.html'>semEff</a></code>, <code><a href='bootEff.html'>bootEff</a></code>, or
-<code><a href='stdEff.html'>stdEff</a></code>. Alternatively, a boot object produced by
-<code>bootEff</code> can be supplied.</p></td>
+<code><a href='semEff.html'>semEff()</a></code>, <code><a href='bootEff.html'>bootEff()</a></code>, or <code><a href='stdEff.html'>stdEff()</a></code>. Alternatively, a boot object
+produced by <code><a href='bootEff.html'>bootEff()</a></code> can be supplied.</p></td>
     </tr>
     <tr>
       <th>eff.boot</th>
       <td><p>A matrix of bootstrapped effects used to calculate confidence
 intervals for predictions, or a list or nested list of such matrices. These
-will have been calculated using <code>semEff</code> or <code>bootEff</code>.</p></td>
+will have been calculated using <code><a href='semEff.html'>semEff()</a></code> or <code><a href='bootEff.html'>bootEff()</a></code>.</p></td>
     </tr>
     <tr>
       <th>re.form</th>
-      <td><p>For mixed models of class <code>"merMod"</code>, the formula for
-random effects to condition on when predicting effects. Defaults to
-<code>NA</code>, meaning random effects are averaged over. See
-<code><a href='https://rdrr.io/pkg/lme4/man/predict.merMod.html'>predict.merMod</a></code> for further specification details.</p></td>
+      <td><p>For mixed models of class <code>"merMod"</code>, the formula for random
+effects to condition on when predicting effects. Defaults to <code>NA</code>, meaning
+random effects are averaged over. See <code>predict.merMod()</code> for further
+specification details.</p></td>
     </tr>
     <tr>
       <th>type</th>
@@ -193,8 +204,8 @@ different values or levels of interacting variables (see Details).</p></td>
     </tr>
     <tr>
       <th>use.raw</th>
-      <td><p>Logical, whether to use raw (unstandardised) effects for
-all calculations (if present).</p></td>
+      <td><p>Logical, whether to use raw (unstandardised) effects for all
+calculations (if present).</p></td>
     </tr>
     <tr>
       <th>ci.conf</th>
@@ -203,9 +214,8 @@ intervals on predictions (and any interactive effects).</p></td>
     </tr>
     <tr>
       <th>ci.type</th>
-      <td><p>The type of confidence interval to return (defaults to
-<code>"bca"</code> - see Details). See <code><a href='https://rdrr.io/pkg/boot/man/boot.ci.html'>boot.ci</a></code> for further
-specification details.</p></td>
+      <td><p>The type of confidence interval to return (defaults to <code>"bca"</code>
+— see Details). See <code>boot.ci()</code> for further specification details.</p></td>
     </tr>
     <tr>
       <th>digits</th>
@@ -214,19 +224,19 @@ effects.</p></td>
     </tr>
     <tr>
       <th>bci.arg</th>
-      <td><p>A named list of any additional arguments to <code>boot.ci</code>,
+      <td><p>A named list of any additional arguments to <code>boot.ci()</code>,
 excepting argument <code>index</code>.</p></td>
     </tr>
     <tr>
       <th>parallel</th>
       <td><p>The type of parallel processing to use for calculating
-confidence intervals on predictions. Can be one of <code>"snow"</code>,
-<code>"multicore"</code>, or <code>"no"</code> (for none - the default).</p></td>
+confidence intervals on predictions. Can be one of <code>"snow"</code>, <code>"multicore"</code>,
+or <code>"no"</code> (for none — the default).</p></td>
     </tr>
     <tr>
       <th>ncpus</th>
-      <td><p>Number of system cores to use for parallel processing. If
-<code>NULL</code> (default), all available cores are used.</p></td>
+      <td><p>Number of system cores to use for parallel processing. If <code>NULL</code>
+(default), all available cores are used.</p></td>
     </tr>
     <tr>
       <th>cl</th>
@@ -235,7 +245,7 @@ confidence intervals on predictions. Can be one of <code>"snow"</code>,
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments to <code><a href='stdEff.html'>stdEff</a></code>.</p></td>
+      <td><p>Arguments to <code><a href='stdEff.html'>stdEff()</a></code>.</p></td>
     </tr>
     </table>
 
@@ -249,66 +259,83 @@ structure of <code>mod</code> (and other arguments).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Generate predicted values for SEM direct, indirect, or total effects
-on a response variable, which should be supplied to <code>effects</code>. These
-are used in place of model coefficients in the standard prediction formula,
+on a response variable, which should be supplied to <code>effects</code>. These are
+used in place of model coefficients in the standard prediction formula,
 with values for predictors drawn either from the data used to fit the
-original model(s) (<code>mod</code>) or from <code>newdata</code>. It is assumed that
-effects are fully standardised; however, if this is not the case, then the
-same centring and scaling options originally specified to <code>stdEff</code>
-should be re-specified - which will then be used to standardise the data.
-If no effects are supplied, standardised (direct) effects will be
-calculated from the model and used to generate predictions. These
-predictions will equal the model(s) fitted values if <code>newdata = NULL</code>,
-<code>unique.eff = FALSE</code>, and <code>re.form = NULL</code> (where applicable).</p>
+original model(s) (<code>mod</code>) or from <code>newdata</code>. It is assumed that effects are
+fully standardised; however, if this is not the case, then the same
+centring and scaling options originally specified to <code><a href='stdEff.html'>stdEff()</a></code> should be
+re-specified — which will then be used to standardise the data. If no
+effects are supplied, standardised (direct) effects will be calculated from
+the model and used to generate predictions. These predictions will equal
+the model(s) fitted values if <code>newdata = NULL</code>, <code>unique.eff = FALSE</code>, and
+<code>re.form = NULL</code> (where applicable).</p>
 <p>Model-averaged predictions can be generated if averaged <code>effects</code> are
-supplied to the model in <code>mod</code>, or, alternatively, if <code>weights</code>
-are specified (passed to <code>stdEff</code>) and <code>mod</code> is a list of
-candidate models (<code>effects</code> can also be passed using this latter
-method). For mixed model predictions where random effects are included
-(e.g. <code>re.form = NULL</code>), the latter approach should be used, otherwise
-the contribution of random effects will be taken from the single model
-instead of (correctly) being averaged over a candidate set.</p>
-<p>If bootstrapped effects are supplied to <code>eff.boot</code> (or to
-<code>effects</code>, as part of a boot object), bootstrapped predictions are
-calculated by predicting from each effect. Confidence intervals can then be
-returned via <code><a href='bootCI.html'>bootCI</a></code>, for which the <code>type</code> should
-be appropriate for the original form of bootstrap sampling (defaults to
-<code>"bca"</code>). If the number of observations to predict is very large,
-parallel processing (via <code><a href='pSapply.html'>pSapply</a></code>) may speed up the
-calculation of intervals.</p>
+supplied to the model in <code>mod</code>, or, alternatively, if <code>weights</code> are
+specified (passed to <code><a href='stdEff.html'>stdEff()</a></code>) and <code>mod</code> is a list of candidate models
+(<code>effects</code> can also be passed using this latter method). For mixed model
+predictions where random effects are included (e.g. <code>re.form = NULL</code>), the
+latter approach should be used, otherwise the contribution of random
+effects will be taken from the single model instead of (correctly) being
+averaged over a candidate set.</p>
+<p>If bootstrapped effects are supplied to <code>eff.boot</code> (or to <code>effects</code>, as
+part of a boot object), bootstrapped predictions are calculated by
+predicting from each effect. Confidence intervals can then be returned via
+<code><a href='bootCI.html'>bootCI()</a></code>, for which the <code>type</code> should be appropriate for the original
+form of bootstrap sampling (defaults to <code>"bca"</code>). If the number of
+observations to predict is very large, parallel processing (via
+<code><a href='pSapply.html'>pSapply()</a></code>) may speed up the calculation of intervals.</p>
 <p>Predictions are always returned in the original (typically unstandardised)
-units of the (link-)response variable. For GLMs, they can be returned in
-the response scale if <code>type = "response"</code>.</p>
+units of the (link-transformed) response variable. For GLMs, they can be
+returned in the response scale if <code>type = "response"</code>.</p>
 <p>Additionally, if the name of an interactive effect is supplied to
 <code>interaction</code>, standardised effects (and confidence intervals) can be
 returned for effects of a continuous 'main' variable across different
 values or levels of interacting variable(s). The name should be of the form
-<code>"x1:x2..."</code>, containing all the variables involved and matching the
-name of an interactive effect in the model(s) terms or in <code>effects</code>.
-The values for all variables should be supplied in <code>newdata</code>, with the
-continuous variable being automatically identified as having the most
-unique values.</p>
+<code>"x1:x2..."</code>, containing all the variables involved and matching the name
+of an interactive effect in the model(s) terms or in <code>effects</code>. The values
+for all variables should be supplied in <code>newdata</code>, with the main continuous
+variable being automatically identified as that having the most unique
+values.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://rdrr.io/r/stats/predict.html'>predict</a></code></p></div>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/r/stats/predict.html'>predict()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Predict effects (direct, total)</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>Shipley.SEM</span>
-<span class='va'>e</span> <span class='op'>&lt;-</span> <span class='va'>Shipley.SEM.Eff</span>
-<span class='va'>dir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getEff.html'>dirEff</a></span><span class='op'>(</span><span class='va'>e</span><span class='op'>)</span>; <span class='va'>tot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getEff.html'>totEff</a></span><span class='op'>(</span><span class='va'>e</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>shipley.sem</span>
+<span class='va'>e</span> <span class='op'>&lt;-</span> <span class='va'>shipley.sem.eff</span>
+<span class='va'>dir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getEff.html'>getDirEff</a></span><span class='op'>(</span><span class='va'>e</span><span class='op'>)</span>
+<span class='va'>tot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getEff.html'>getTotEff</a></span><span class='op'>(</span><span class='va'>e</span><span class='op'>)</span>
 <span class='va'>f.dir</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='va'>dir</span>, type <span class='op'>=</span> <span class='st'>"response"</span><span class='op'>)</span>
 <span class='va'>f.tot</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span>, effects <span class='op'>=</span> <span class='va'>tot</span>, type <span class='op'>=</span> <span class='st'>"response"</span><span class='op'>)</span>
-
+<span class='va'>f.dir</span><span class='op'>$</span><span class='va'>Live</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;         1         2         3         4         5         6         7         8 
+#&gt; 0.9998907 0.9525798 0.9657500 0.9894445 0.9943723 0.9993621 0.9911463 0.9582557 
+#&gt;         9        10 
+#&gt; 0.9982749 0.9989735 </div><div class='input'><span class='va'>f.tot</span><span class='op'>$</span><span class='va'>Live</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;         1         2         3         4         5         6         7         8 
+#&gt; 0.9975858 0.5742006 0.5783691 0.7196629 0.9436709 0.9840953 0.8998478 0.5468860 
+#&gt;         9        10 
+#&gt; 0.9462890 0.9887104 </div><div class='input'>
 <span class='co'># Using new data for predictors</span>
-<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Shipley</span><span class='op'>)</span>
+<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>shipley</span><span class='op'>)</span>
 <span class='va'>xn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lat"</span>, <span class='st'>"DD"</span>, <span class='st'>"Date"</span>, <span class='st'>"Growth"</span><span class='op'>)</span>
 <span class='va'>seq100</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, length <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
 <span class='va'>nd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>[</span><span class='va'>xn</span><span class='op'>]</span>, <span class='va'>seq100</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>f.dir</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>nd</span>, <span class='va'>dir</span>, type <span class='op'>=</span> <span class='st'>"response"</span><span class='op'>)</span>
 <span class='va'>f.tot</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>nd</span>, <span class='va'>tot</span>, type <span class='op'>=</span> <span class='st'>"response"</span><span class='op'>)</span>
-<span class='co'># Add CIs</span>
-<span class='co'># dir.b &lt;- dirEff(e, "boot"); tot.b &lt;- totEff(e, "boot")</span>
+<span class='va'>f.dir</span><span class='op'>$</span><span class='va'>Live</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;         1         2         3         4         5         6         7         8 
+#&gt; 0.3000301 0.3279412 0.3571239 0.3874066 0.4185852 0.4504280 0.4826822 0.5150813 
+#&gt;         9        10 
+#&gt; 0.5473542 0.5792338 </div><div class='input'><span class='va'>f.tot</span><span class='op'>$</span><span class='va'>Live</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;          1          2          3          4          5          6          7 
+#&gt; 0.05467217 0.06338280 0.07337353 0.08479648 0.09781007 0.11257517 0.12924985 
+#&gt;          8          9         10 
+#&gt; 0.14798252 0.16890356 0.19211539 </div><div class='input'><span class='co'># Add CIs</span>
+<span class='co'># dir.b &lt;- getDirEff(e, "boot")</span>
+<span class='co'># tot.b &lt;- getTotEff(e, "boot")</span>
 <span class='co'># f.dir &lt;- predEff(m, nd, dir, dir.b, type = "response")</span>
 <span class='co'># f.tot &lt;- predEff(m, nd, tot, tot.b, type = "response")</span>
 
@@ -322,12 +349,18 @@ unique values.</p>
   DD <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>DD</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>DD</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>DD</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># two levels for DD</span>
 <span class='op'>)</span><span class='op'>)</span>
 <span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>nd</span>, type <span class='op'>=</span> <span class='st'>"response"</span>, interaction <span class='op'>=</span> <span class='st'>"Growth:DD"</span><span class='op'>)</span>
-<span class='co'># Add CIs (need to bootstrap model...)</span>
-<span class='co'># system.time(B &lt;- bootEff(m, ran.eff = "site", R = 1000))</span>
+<span class='va'>f</span><span class='op'>$</span><span class='va'>fit</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;         1         2         3         4         5         6         7         8 
+#&gt; 0.2935548 0.3230365 0.3539953 0.3862284 0.4194906 0.4535009 0.4879507 0.5225155 
+#&gt;         9        10 
+#&gt; 0.5568659 0.5906810 </div><div class='input'><span class='va'>f</span><span class='op'>$</span><span class='va'>interaction</span>
+</div><div class='output co'>#&gt; Growth:DD_1 Growth:DD_2 
+#&gt;       0.393       0.286 </div><div class='input'><span class='co'># Add CIs (need to bootstrap model...)</span>
+<span class='co'># system.time(B &lt;- bootEff(m, R = 1000, ran.eff = "site"))</span>
 <span class='co'># f &lt;- predEff(m, nd, B, type = "response", interaction = "Growth:DD")</span>
 
 <span class='co'># Model-averaged predictions (several approaches)</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>Shipley.Growth</span>  <span class='co'># candidate models (list)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>shipley.growth</span>  <span class='co'># candidate models (list)</span>
 <span class='va'>w</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># weights</span>
 <span class='va'>e</span> <span class='op'>&lt;-</span> <span class='fu'><a href='stdEff.html'>stdEff</a></span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>w</span><span class='op'>)</span>  <span class='co'># averaged effects</span>
 <span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, effects <span class='op'>=</span> <span class='va'>e</span><span class='op'>)</span>  <span class='co'># pass avg. effects</span>
@@ -337,12 +370,12 @@ unique values.</p>
 <span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>f2</span>, <span class='va'>f3</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Compare model fitted values: predEff() vs. fitted()</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>Shipley.SEM</span><span class='op'>$</span><span class='va'>Live</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>shipley.sem</span><span class='op'>$</span><span class='va'>Live</span>
 <span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span>, unique.eff <span class='op'>=</span> <span class='cn'>FALSE</span>, re.form <span class='op'>=</span> <span class='cn'>NULL</span>, type <span class='op'>=</span> <span class='st'>"response"</span><span class='op'>)</span>
 <span class='va'>f2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>f1</span>, <span class='va'>f2</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='co'># Compare predictions for standardised vs. raw effects</span>
+<span class='co'># Compare predictions using standardised vs. raw effects (same)</span>
 <span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 <span class='va'>f2</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span>, use.raw <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>f1</span>, <span class='va'>f2</span><span class='op'>)</span><span class='op'>)</span>

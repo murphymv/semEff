@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Effects for Shipley SEM — Shipley.SEM.Eff • semEff</title>
+<title>Effects for Shipley SEM — shipley.sem.eff • semEff</title>
 
 
 <!-- jquery -->
@@ -41,9 +41,9 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Effects for Shipley SEM — Shipley.SEM.Eff" />
+<meta property="og:title" content="Effects for Shipley SEM — shipley.sem.eff" />
 <meta property="og:description" content="SEM effects calculated from bootstrapped estimates of the
-hypothesised SEM from Shipley (2009), using semEff." />
+hypothesised SEM from Shipley (2009), using semEff()." />
 
 
 
@@ -75,7 +75,7 @@ hypothesised SEM from Shipley (2009), using semEff." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -92,6 +92,18 @@ hypothesised SEM from Shipley (2009), using semEff." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -118,31 +130,30 @@ hypothesised SEM from Shipley (2009), using semEff." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Effects for Shipley SEM</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/data.R'><code>R/data.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/data.R'><code>R/data.R</code></a></small>
     <div class="hidden name"><code>Shipley.SEM.eff.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>SEM effects calculated from bootstrapped estimates of the
-hypothesised SEM from Shipley (2009), using <code>semEff</code>.</p>
+hypothesised SEM from Shipley (2009), using <code><a href='semEff.html'>semEff()</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='va'>Shipley.SEM.Eff</span></pre>
+    <pre class="usage"><span class='va'>shipley.sem.eff</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A list object of class <code>"semEff"</code>, containing SEM effects and
-summary tables.</p>
+    <p>A list object of class <code>"semEff"</code>, containing SEM effects and summary
+tables.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Shipley, B. (2009). Confirmatory path analysis in a generalized
-multilevel context. <em>Ecology</em>, <strong>90</strong>(2), 363-368.
-<a href='https://doi.org/bqd43d'>https://doi.org/bqd43d</a></p>
+multilevel context. <em>Ecology</em>, <strong>90</strong>(2), 363-368. doi: <a href='https://doi.org/10/bqd43d'>10/bqd43d</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Specification</span>
-<span class='co'># Shipley.SEM.Eff &lt;- semEff(Shipley.SEM.Boot)</span>
+<span class='co'># shipley.sem.eff &lt;- semEff(shipley.sem.boot)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

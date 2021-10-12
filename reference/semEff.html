@@ -76,7 +76,7 @@ equation model (SEM)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -93,6 +93,18 @@ equation model (SEM)." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -119,7 +131,7 @@ equation model (SEM)." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>SEM Effects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/semEff-fun.R'><code>R/semEff-fun.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/semEff-fun.R'><code>R/semEff-fun.R</code></a></small>
     <div class="hidden name"><code>semEff.Rd</code></div>
     </div>
 
@@ -133,7 +145,6 @@ equation model (SEM).</p>
   <span class='va'>sem</span>,
   predictors <span class='op'>=</span> <span class='cn'>NULL</span>,
   mediators <span class='op'>=</span> <span class='cn'>NULL</span>,
-  responses <span class='op'>=</span> <span class='cn'>NULL</span>,
   use.raw <span class='op'>=</span> <span class='cn'>FALSE</span>,
   ci.conf <span class='op'>=</span> <span class='fl'>0.95</span>,
   ci.type <span class='op'>=</span> <span class='st'>"bca"</span>,
@@ -147,20 +158,22 @@ equation model (SEM).</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sem</th>
-      <td><p>A piecewise SEM, comprising a list of fitted model objects, or,
-alternatively, of boot objects (class <code>"boot"</code>), containing
-bootstrapped model effects.</p></td>
+      <td><p>A piecewise SEM, comprising a list of fitted model objects or of
+boot objects (containing bootstrapped model effects). Alternatively, a
+<code>"psem"</code> object from
+<a href='https://rdrr.io/cran/piecewiseSEM/man/psem.html'><code><a href='https://rdrr.io/pkg/piecewiseSEM/man/psem.html'>piecewiseSEM::psem()</a></code></a>.
+If list is unnamed, response variable names will be used.</p></td>
     </tr>
     <tr>
-      <th>predictors, mediators, responses</th>
-      <td><p>Names of variables for/through which to
-calculate effects. If <code>NULL</code> (default), all predictors, endogenous
-predictors (mediators), and endogenous variables (responses) will be used.</p></td>
+      <th>predictors, mediators</th>
+      <td><p>Names of variables for/through which to calculate
+effects. If <code>NULL</code> (default), all predictors/mediators in the SEM will be
+used.</p></td>
     </tr>
     <tr>
       <th>use.raw</th>
-      <td><p>Logical, whether to use 'raw' (unstandardised) effects for
-all calculations (if present in <code>sem</code> object).</p></td>
+      <td><p>Logical, whether to use 'raw' (unstandardised) effects for all
+calculations (if present in <code>sem</code>).</p></td>
     </tr>
     <tr>
       <th>ci.conf</th>
@@ -169,223 +182,200 @@ intervals on effects.</p></td>
     </tr>
     <tr>
       <th>ci.type</th>
-      <td><p>The type of confidence interval to return (defaults to
-<code>"bca"</code> - see Details). See <code><a href='https://rdrr.io/pkg/boot/man/boot.ci.html'>boot.ci</a></code> for further
-specification details.</p></td>
+      <td><p>The type of confidence interval to return (defaults to <code>"bca"</code>
+— see Details). See <code>boot.ci()</code> for further specification details.</p></td>
     </tr>
     <tr>
       <th>digits</th>
-      <td><p>The number of significant digits to return for numeric values.</p></td>
+      <td><p>The number of significant digits to return for numeric values
+(for summary tables).</p></td>
     </tr>
     <tr>
       <th>bci.arg</th>
-      <td><p>A named list of any additional arguments to <code>boot.ci</code>,
+      <td><p>A named list of any additional arguments to <code>boot.ci()</code>,
 excepting argument <code>index</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments to <code><a href='bootEff.html'>bootEff</a></code>.</p></td>
+      <td><p>Arguments to <code><a href='bootEff.html'>bootEff()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list object of class <code>"semEff"</code>, comprising:</p><ol>
-<li><p>all bootstrapped effects</p></li>
-<li><p>summary tables of effects
-and confidence intervals</p></li>
+    <p>A list object of class <code>"semEff"</code> for which several methods and
+extractor functions exist. Contains:</p><ol>
+<li><p>Summary tables of effects and confidence intervals</p></li>
+<li><p>All effects</p></li>
+<li><p>All bootstrapped effects</p></li>
+<li><p>All indirect effects (individual, not summed)</p></li>
 </ol>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The eponymous function of this package calculates all direct,
-indirect, total, and mediator effects for endogenous variables in a
-'piecewise' structural equation model (SEM), that is, one where parameter
-estimation is local rather than global (Shipley 2000, 2009; Lefcheck 2016).
-The SEM simply takes the form of a list of fitted models, or bootstrapped
-estimates from such models, describing hypothesised causal pathways from
-predictors to response ('endogenous') variables. These are either direct,
-or operate indirectly via other response variables ('mediators'). This list
-should represent a directed ('acyclic') causal model, which should be named
-(exactly) for each response variable and ordered from 'upstream' or
-'causal' variables through to 'downstream' (i.e. those at the end of the
-pathway). If <code>sem</code> is a list of fitted models, effects will first be
-bootstrapped using <code>bootEff</code> (this may take a while!).</p>
+indirect, total, and mediator effects for a 'piecewise' structural equation
+model (SEM), that is, one where parameter estimation is local rather than
+global (Shipley 2000, 2009; Lefcheck 2016). The SEM simply takes the form
+of a list of fitted models, or bootstrapped estimates from such models,
+describing hypothesised causal pathways from predictors to response
+('endogenous') variables. These are either direct, or operate indirectly
+via other response variables ('mediators'). This list should represent a
+directed ('acyclic') causal model, which should be named exactly for each
+response variable and ordered from 'upstream' or 'causal' variables through
+to 'downstream' (i.e. those at the end of the pathway). If <code>sem</code> is a list
+of fitted models, effects will first be bootstrapped using <code><a href='bootEff.html'>bootEff()</a></code>
+(this may take a while!).</p>
 <p>Direct effects are calculated as fully standardised model coefficients for
 each response variable, while indirect effects are the product of these
 direct effects operating along causal pathways in the SEM. The total
 effects of any given predictor on a response are then the sum of its direct
 and (all) its indirect effects. 'Mediator' effects are also calculated, as
 the sum of all indirect paths which operate through each individual
-mediator - useful to assess the relative importance of different mediators
-in affecting the response. All of these effect types are calculated
-automatically for all (default) or a subset of predictors, mediators, or
-response variables in the SEM.</p>
-<p>Confidence intervals for effects are returned for each response, with
-BC<em>a</em> intervals calculated by default using bootstrapped estimates for
-each effect type (MacKinnon <em>et al.</em> 2004, Cheung 2009, Hayes &amp;
-Scharkow 2013). As indirect, total, and mediator effects are not directly
-bootstrapped using the fitted models for response variables (i.e. via
-<code>bootEff</code>), their equivalent 'bootstrapped' estimates are calculated
-instead using each bootstrapped direct effect.</p>
-<p>Correlated errors (and confidence intervals) are also returned if their
-bootstrapped values are present in <code>sem</code>, or, if <code>sem</code> is a list
-of fitted models, if specified to argument <code>cor.err</code> (see
-<code><a href='bootEff.html'>bootEff</a></code>). These represent residual relationships
-among response variables, unaccounted for by the SEM.</p>
-<p>All effects and bootstrapped effects are returned in lists for each
-response variable, with all except mediator effects also including the
-model intercept(s) - required for prediction (this will be zero for
-ordinary linear models with fully standardised effects).</p>
+mediator — useful to assess the relative importance of different mediators
+in affecting the response. All of these effect types can be calculated
+automatically for all (default) or for a specified subset of predictors
+and/or mediators in the SEM. As indirect, total, and mediator effects are
+not directly bootstrapped using the fitted models for response variables
+(i.e. via <code><a href='bootEff.html'>bootEff()</a></code>), their equivalent 'bootstrapped' estimates are
+calculated instead using each bootstrapped direct effect.</p>
+<p>Confidence intervals for all effects are returned in summary tables for
+each response (see <code><a href='bootCI.html'>bootCI()</a></code>), with BC<em>a</em> intervals calculated by default
+using the bootstrapped estimates for each effect type (MacKinnon <em>et al.</em>
+2004, Cheung 2009, Hayes &amp; Scharkow 2013). Effects for which the confidence
+intervals do not contain zero are highlighted with a star (i.e.
+'significant' at the <code>ci.conf</code> level). Bootstrap standard errors (standard
+deviations of the samples) and biases (sample means minus original
+estimates) are also included. Correlated errors (and confidence intervals)
+are also returned if their bootstrapped values are present in <code>sem</code>, or if
+they are specified to argument <code>cor.err</code> or as part of a <code>"psem"</code> object
+(see <code><a href='bootEff.html'>bootEff()</a></code>). These represent residual relationships among response
+variables, unaccounted for by the hypothesised SEM paths. Use <code><a href='https://rdrr.io/r/base/summary.html'>summary()</a></code>
+for effect summary tables and <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code> to return a table of variable names
+and associated details.</p>
+<p>All calculated effects and bootstrapped effects are also returned in lists
+for each response variable, with all except mediator effects also including
+the model intercept(s) — required for prediction (these will be zero for
+ordinary linear models with fully standardised effects). Effects can be
+conveniently extracted with <code><a href='getEff.html'>getEff()</a></code> and related functions.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Cheung, M. W. L. (2009). Comparison of methods for constructing
-confidence intervals of standardized indirect effects. <em>Behavior
-Research Methods</em>, <strong>41</strong>(2), 425-438. <a href='https://doi.org/fnx7xk'>https://doi.org/fnx7xk</a></p>
+confidence intervals of standardized indirect effects. <em>Behavior Research
+Methods</em>, <strong>41</strong>(2), 425-438. doi: <a href='https://doi.org/10/fnx7xk'>10/fnx7xk</a></p>
 <p>Hayes, A. F., &amp; Scharkow, M. (2013). The Relative Trustworthiness of
 Inferential Tests of the Indirect Effect in Statistical Mediation Analysis:
-Does Method Really Matter? <em>Psychological Science</em>, <strong>24</strong>(10),
-1918-1927. <a href='https://doi.org/bbhr'>https://doi.org/bbhr</a></p>
+Does Method Really Matter? <em>Psychological Science</em>, <strong>24</strong>(10), 1918-1927.
+doi: <a href='https://doi.org/10/bbhr'>10/bbhr</a></p>
 <p>Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
-modelling in <code>R</code> for ecology, evolution, and systematics.
-<em>Methods in Ecology and Evolution</em>, <strong>7</strong>(5), 573-579.
-<a href='https://doi.org/f8s8rb'>https://doi.org/f8s8rb</a></p>
+modelling in <code>R</code> for ecology, evolution, and systematics. <em>Methods in
+Ecology and Evolution</em>, <strong>7</strong>(5), 573-579. doi: <a href='https://doi.org/10/f8s8rb'>10/f8s8rb</a></p>
 <p>MacKinnon, D. P., Lockwood, C. M., &amp; Williams, J. (2004). Confidence Limits
 for the Indirect Effect: Distribution of the Product and Resampling
-Methods. <em>Multivariate Behavioral Research</em>, <strong>39</strong>(1), 99.
-<a href='https://doi.org/chqcnx'>https://doi.org/chqcnx</a></p>
+Methods. <em>Multivariate Behavioral Research</em>, <strong>39</strong>(1), 99. doi: <a href='https://doi.org/10/chqcnx'>10/chqcnx</a></p>
 <p>Shipley, B. (2000). A New Inferential Test for Path Models Based on
-Directed Acyclic Graphs. <em>Structural Equation Modeling: A
-Multidisciplinary Journal</em>, <strong>7</strong>(2), 206-218.
-<a href='https://doi.org/cqm32d'>https://doi.org/cqm32d</a></p>
+Directed Acyclic Graphs. <em>Structural Equation Modeling: A Multidisciplinary
+Journal</em>, <strong>7</strong>(2), 206-218. doi: <a href='https://doi.org/10/cqm32d'>10/cqm32d</a></p>
 <p>Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
-context. <em>Ecology</em>, <strong>90</strong>(2), 363-368.
-<a href='https://doi.org/bqd43d'>https://doi.org/bqd43d</a></p>
+context. <em>Ecology</em>, <strong>90</strong>(2), 363-368. doi: <a href='https://doi.org/10/bqd43d'>10/bqd43d</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># SEM effects</span>
-<span class='op'>(</span><span class='va'>Shipley.SEM.Eff</span> <span class='op'>&lt;-</span> <span class='fu'>semEff</span><span class='op'>(</span><span class='va'>Shipley.SEM.Boot</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; $DD
-#&gt; $DD$Direct
-#&gt;             lat
-#&gt; Estimate -0.688
-#&gt; Lower CI -0.823
-#&gt; Upper CI -0.476
-#&gt;               *
-#&gt; 
-#&gt; $DD$Indirect
-#&gt; [1] NA
-#&gt; 
-#&gt; $DD$Total
-#&gt;             lat
-#&gt; Estimate -0.688
-#&gt; Lower CI -0.823
-#&gt; Upper CI -0.476
-#&gt;               *
-#&gt; 
-#&gt; $DD$Mediators
-#&gt; [1] NA
-#&gt; 
-#&gt; 
-#&gt; $Date
-#&gt; $Date$Direct
-#&gt;              DD
-#&gt; Estimate -0.628
-#&gt; Lower CI -0.754
-#&gt; Upper CI -0.523
-#&gt;               *
-#&gt; 
-#&gt; $Date$Indirect
-#&gt;            lat
-#&gt; Estimate 0.432
-#&gt; Lower CI 0.258
-#&gt; Upper CI 0.595
-#&gt;              *
-#&gt; 
-#&gt; $Date$Total
-#&gt;            lat     DD
-#&gt; Estimate 0.432 -0.628
-#&gt; Lower CI 0.258 -0.754
-#&gt; Upper CI 0.595 -0.523
-#&gt;              *      *
-#&gt; 
-#&gt; $Date$Mediators
-#&gt;             DD
-#&gt; Estimate 0.432
-#&gt; Lower CI 0.258
-#&gt; Upper CI 0.595
-#&gt;              *
-#&gt; 
-#&gt; 
-#&gt; $Growth
-#&gt; $Growth$Direct
-#&gt;           Date
-#&gt; Estimate 0.382
-#&gt; Lower CI 0.289
-#&gt; Upper CI 0.513
-#&gt;              *
-#&gt; 
-#&gt; $Growth$Indirect
-#&gt;            lat     DD
-#&gt; Estimate 0.165 -0.240
-#&gt; Lower CI 0.088 -0.351
-#&gt; Upper CI 0.290 -0.180
-#&gt;              *      *
-#&gt; 
-#&gt; $Growth$Total
-#&gt;            lat     DD  Date
-#&gt; Estimate 0.165 -0.240 0.382
-#&gt; Lower CI 0.088 -0.351 0.289
-#&gt; Upper CI 0.290 -0.180 0.513
-#&gt;              *      *     *
-#&gt; 
-#&gt; $Growth$Mediators
-#&gt;             DD   Date
-#&gt; Estimate 0.165 -0.075
-#&gt; Lower CI 0.088 -0.105
-#&gt; Upper CI 0.290 -0.048
-#&gt;              *      *
-#&gt; 
-#&gt; 
-#&gt; $Live
-#&gt; $Live$Direct
-#&gt;          Growth
-#&gt; Estimate  0.368
-#&gt; Lower CI  0.230
-#&gt; Upper CI  0.406
-#&gt;               *
-#&gt; 
-#&gt; $Live$Indirect
-#&gt;            lat     DD  Date
-#&gt; Estimate 0.061 -0.088 0.141
-#&gt; Lower CI 0.012 -0.105 0.080
-#&gt; Upper CI 0.091 -0.042 0.162
-#&gt;              *      *     *
-#&gt; 
-#&gt; $Live$Total
-#&gt;            lat     DD  Date Growth
-#&gt; Estimate 0.061 -0.088 0.141  0.368
-#&gt; Lower CI 0.012 -0.105 0.080  0.230
-#&gt; Upper CI 0.091 -0.042 0.162  0.406
-#&gt;              *      *     *      *
-#&gt; 
-#&gt; $Live$Mediators
-#&gt;             DD   Date Growth
-#&gt; Estimate 0.061 -0.028  0.113
-#&gt; Lower CI 0.012 -0.034  0.055
-#&gt; Upper CI 0.091 -0.012  0.141
-#&gt;              *      *      *
-#&gt; 
+<span class='op'>(</span><span class='va'>shipley.sem.eff</span> <span class='op'>&lt;-</span> <span class='fu'>semEff</span><span class='op'>(</span><span class='va'>shipley.sem.boot</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Piecewise SEM with:</span>
+#&gt; <span class='message'>  * 1 exogenous vs. 4 endogenous variable(s)</span>
+#&gt; <span class='message'>  * 4 direct vs. 6 indirect effect(s)</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>Variables:</span></div><div class='output co'>#&gt;           Category   Predictor Mediator Response   Dir. Eff. Ind. Eff.  
+#&gt;           --------   --------- -------- --------   --------- ---------  
+#&gt;  lat    | Exog.    |     Y        N        N     |         -         - |
+#&gt;  DD     | Endog.   |     Y        Y        Y     |         1         0 |
+#&gt;  Date   | Endog.   |     Y        Y        Y     |         1         1 |
+#&gt;  Growth | Endog.   |     Y        Y        Y     |         1         2 |
+#&gt;  Live   | Endog.   |     N        N        Y     |         1         3 |</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Use summary() for effects and confidence intervals for endogenous variables.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>shipley.sem.eff</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>SEM direct, summed indirect, total, and mediator effects:</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>DD (1/4):</span></div><div class='output co'>#&gt;                  Effect    Bias   Std. Err.   Lower CI Upper CI    
+#&gt;                  ------   -----   ---------   -------- --------    
+#&gt;  DIRECT    lat | -0.688 | 0.026 |     0.101 |   -0.828   -0.459 | *
+#&gt;                                                                    
+#&gt;  INDIRECT  n/a |      - |     - |         - |        -        - |  
+#&gt;                                                                    
+#&gt;  TOTAL     lat | -0.688 | 0.026 |     0.101 |   -0.828   -0.459 | *
+#&gt;                                                                    
+#&gt;  MEDIATORS n/a |      - |     - |         - |        -        - |  
+#&gt; </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Date (2/4):</span></div><div class='output co'>#&gt;                  Effect     Bias   Std. Err.   Lower CI Upper CI    
+#&gt;                  ------   ------   ---------   -------- --------    
+#&gt;  DIRECT    DD  | -0.628 |  0.000 |     0.057 |   -0.741   -0.519 | *
+#&gt;                                                                     
+#&gt;  INDIRECT  lat |  0.432 | -0.012 |     0.089 |    0.239    0.580 | *
+#&gt;                                                                     
+#&gt;  TOTAL     lat |  0.432 | -0.012 |     0.089 |    0.239    0.580 | *
+#&gt;            DD  | -0.628 |  0.000 |     0.057 |   -0.741   -0.519 | *
+#&gt;                                                                     
+#&gt;  MEDIATORS DD  |  0.432 | -0.012 |     0.089 |    0.239    0.580 | *
+#&gt; </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Growth (3/4):</span></div><div class='output co'>#&gt;                   Effect     Bias   Std. Err.   Lower CI Upper CI    
+#&gt;                   ------   ------   ---------   -------- --------    
+#&gt;  DIRECT    Date |  0.382 |  0.011 |     0.058 |    0.293    0.515 | *
+#&gt;                                                                      
+#&gt;  INDIRECT  lat  |  0.165 |  0.001 |     0.048 |    0.086    0.281 | *
+#&gt;            DD   | -0.240 | -0.007 |     0.042 |   -0.344   -0.181 | *
+#&gt;                                                                      
+#&gt;  TOTAL     lat  |  0.165 |  0.001 |     0.048 |    0.086    0.281 | *
+#&gt;            DD   | -0.240 | -0.007 |     0.042 |   -0.344   -0.181 | *
+#&gt;            Date |  0.382 |  0.011 |     0.058 |    0.293    0.515 | *
+#&gt;                                                                      
+#&gt;  MEDIATORS DD   |  0.165 |  0.001 |     0.048 |    0.086    0.281 | *
+#&gt;            Date | -0.075 | -0.006 |     0.017 |   -0.109   -0.049 | *
+#&gt; </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Live (4/4):</span></div><div class='output co'>#&gt;                     Effect     Bias   Std. Err.   Lower CI Upper CI    
+#&gt;                     ------   ------   ---------   -------- --------    
+#&gt;  DIRECT    Growth |  0.368 |  0.151 |     0.130 |    0.246    0.411 | *
+#&gt;                                                                        
+#&gt;  INDIRECT  lat    |  0.061 |  0.025 |     0.032 |    0.007    0.095 | *
+#&gt;            DD     | -0.088 | -0.039 |     0.037 |   -0.106   -0.055 | *
+#&gt;            Date   |  0.141 |  0.063 |     0.059 |    0.093    0.163 | *
+#&gt;                                                                        
+#&gt;  TOTAL     lat    |  0.061 |  0.025 |     0.032 |    0.007    0.095 | *
+#&gt;            DD     | -0.088 | -0.039 |     0.037 |   -0.106   -0.055 | *
+#&gt;            Date   |  0.141 |  0.063 |     0.059 |    0.093    0.163 | *
+#&gt;            Growth |  0.368 |  0.151 |     0.130 |    0.246    0.411 | *
+#&gt;                                                                        
+#&gt;  MEDIATORS DD     |  0.061 |  0.025 |     0.032 |    0.007    0.095 | *
+#&gt;            Date   | -0.028 | -0.014 |     0.014 |   -0.033   -0.011 | *
+#&gt;            Growth |  0.113 |  0.049 |     0.051 |    0.051    0.142 | *
 #&gt; </div><div class='input'>
 <span class='co'># Effects for selected variables</span>
-<span class='co'># semEff(Shipley.SEM.Boot, predictors = "lat")</span>
-<span class='co'># semEff(Shipley.SEM.Boot, mediators = "DD")</span>
-<span class='co'># semEff(Shipley.SEM.Boot, responses = "Live")</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>shipley.sem.eff</span>, response <span class='op'>=</span> <span class='st'>"Live"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>SEM direct, summed indirect, total, and mediator effects:</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Live (4/4):</span></div><div class='output co'>#&gt;                     Effect     Bias   Std. Err.   Lower CI Upper CI    
+#&gt;                     ------   ------   ---------   -------- --------    
+#&gt;  DIRECT    Growth |  0.368 |  0.151 |     0.130 |    0.246    0.411 | *
+#&gt;                                                                        
+#&gt;  INDIRECT  lat    |  0.061 |  0.025 |     0.032 |    0.007    0.095 | *
+#&gt;            DD     | -0.088 | -0.039 |     0.037 |   -0.106   -0.055 | *
+#&gt;            Date   |  0.141 |  0.063 |     0.059 |    0.093    0.163 | *
+#&gt;                                                                        
+#&gt;  TOTAL     lat    |  0.061 |  0.025 |     0.032 |    0.007    0.095 | *
+#&gt;            DD     | -0.088 | -0.039 |     0.037 |   -0.106   -0.055 | *
+#&gt;            Date   |  0.141 |  0.063 |     0.059 |    0.093    0.163 | *
+#&gt;            Growth |  0.368 |  0.151 |     0.130 |    0.246    0.411 | *
+#&gt;                                                                        
+#&gt;  MEDIATORS DD     |  0.061 |  0.025 |     0.032 |    0.007    0.095 | *
+#&gt;            Date   | -0.028 | -0.014 |     0.014 |   -0.033   -0.011 | *
+#&gt;            Growth |  0.113 |  0.049 |     0.051 |    0.051    0.142 | *
+#&gt; </div><div class='input'><span class='co'># summary(semEff(shipley.sem.boot, predictor = "lat"))</span>
+<span class='co'># summary(semEff(shipley.sem.boot, mediator = "DD"))</span>
 
 <span class='co'># Effects calculated using original SEM (models)</span>
-<span class='co'># (not typically recommended - better to use saved boot objects)</span>
+<span class='co'># (not typically recommended — better to use saved boot objects)</span>
 <span class='co'># system.time(</span>
-<span class='co'>#  Shipley.SEM.Eff &lt;- semEff(Shipley.SEM, R = 10000, seed = 53908,</span>
+<span class='co'>#  shipley.sem.eff &lt;- semEff(shipley.sem, R = 1000, seed = 13,</span>
 <span class='co'>#                            ran.eff = "site")</span>
 <span class='co'># )</span>
 </div></pre>

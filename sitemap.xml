@@ -49,6 +49,9 @@
     <loc>https://murphymv.github.io/semEff//reference/getEff.html</loc>
   </url>
   <url>
+    <loc>https://murphymv.github.io/semEff//reference/getX.html</loc>
+  </url>
+  <url>
     <loc>https://murphymv.github.io/semEff//reference/getY.html</loc>
   </url>
   <url>
@@ -59,6 +62,9 @@
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/predEff.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff//reference/print.bootCI.html</loc>
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/print.semEff.html</loc>
@@ -79,10 +85,16 @@
     <loc>https://murphymv.github.io/semEff//reference/stdEff.html</loc>
   </url>
   <url>
+    <loc>https://murphymv.github.io/semEff//reference/summary.semEff.html</loc>
+  </url>
+  <url>
     <loc>https://murphymv.github.io/semEff//reference/varW.html</loc>
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/xNam.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff//articles/predicting-effects.html</loc>
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//articles/semEff.html</loc>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>(Pseudo) R-squared — R2 • semEff</title>
+<title>R-squared — R2 • semEff</title>
 
 
 <!-- jquery -->
@@ -41,7 +41,7 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="(Pseudo) R-squared — R2" />
+<meta property="og:title" content="R-squared — R2" />
 <meta property="og:description" content="Calculate (Pseudo) R-squared for a fitted model, defined here as
 the squared multiple correlation between the observed and fitted values for
 the response variable. 'Adjusted' and 'Predicted' versions are also
@@ -77,7 +77,7 @@ calculated (see Details)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -94,6 +94,18 @@ calculated (see Details)." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -119,8 +131,8 @@ calculated (see Details)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>(Pseudo) R-squared</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/stdEff-fun.R'><code>R/stdEff-fun.R</code></a></small>
+    <h1>R-squared</h1>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/stdEff-fun.R'><code>R/stdEff-fun.R</code></a></small>
     <div class="hidden name"><code>R2.Rd</code></div>
     </div>
 
@@ -138,8 +150,10 @@ calculated (see Details).</p>
   pred <span class='op'>=</span> <span class='cn'>TRUE</span>,
   offset <span class='op'>=</span> <span class='cn'>FALSE</span>,
   re.form <span class='op'>=</span> <span class='cn'>NULL</span>,
-  type <span class='op'>=</span> <span class='st'>"pearson"</span>,
-  env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pearson"</span>, <span class='st'>"spearman"</span><span class='op'>)</span>,
+  adj.type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"olkin-pratt"</span>, <span class='st'>"ezekiel"</span><span class='op'>)</span>,
+  positive.only <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  env <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -161,25 +175,35 @@ types).</p></td>
     </tr>
     <tr>
       <th>offset</th>
-      <td><p>Logical. If <code>TRUE</code>, include model offset(s) in the
-calculations (i.e. in the response variable and fitted values).</p></td>
+      <td><p>Logical. If <code>TRUE</code>, include model offset(s) in the calculations
+(i.e. in the response variable and fitted values).</p></td>
     </tr>
     <tr>
       <th>re.form</th>
-      <td><p>For mixed models of class <code>"merMod"</code>, the formula for
-random effects to condition on when generating fitted values used in the
-calculation of R-squared. Defaults to <code>NULL</code>, meaning all random
-effects are included. See <code><a href='https://rdrr.io/pkg/lme4/man/predict.merMod.html'>predict.merMod</a></code> for further
-specification details.</p></td>
+      <td><p>For mixed models of class <code>"merMod"</code>, the formula for random
+effects to condition on when generating fitted values used in the
+calculation of R-squared. Defaults to <code>NULL</code>, meaning all random effects
+are included. See <code>predict.merMod()</code> for further specification details.</p></td>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>The type of correlation coefficient to use. Can be either
-<code>"pearson"</code> (default) or <code>"spearman"</code>.</p></td>
+      <td><p>The type of correlation coefficient to use. Can be <code>"pearson"</code>
+(default) or <code>"spearman"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>adj.type</th>
+      <td><p>The type of adjusted R-squared estimator to use. Can be
+<code>"olkin-pratt"</code> (default) or <code>"ezekiel"</code>. See Details.</p></td>
+    </tr>
+    <tr>
+      <th>positive.only</th>
+      <td><p>Logical, whether to return only positive values for
+R-squared (negative values replaced with zero).</p></td>
     </tr>
     <tr>
       <th>env</th>
-      <td><p>Environment in which to look for model data (if none supplied).</p></td>
+      <td><p>Environment in which to look for model data (if none supplied).
+Defaults to the <code><a href='https://rdrr.io/r/stats/formula.html'>formula()</a></code> environment.</p></td>
     </tr>
     </table>
 
@@ -203,34 +227,42 @@ goodness of fit describing the predictive power of a model. As the measure
 does not depend on any specific error distribution or model estimating
 procedure, it is also generally comparable across many different types of
 model (Kvalseth 1985). In the case of the ordinary linear model, the
-measure equals the more traditional R-squared based on sums of squares.</p>
-<p>If <code>adj = TRUE</code> (default), the 'adjusted' R-squared value is also
-returned, which provides an estimate of the population - as opposed to
-sample - R-squared. This is achieved via an analytical formula which
-adjusts R-squared for the 'degrees of freedom' of the model (i.e. the ratio
-of observations to parameters). Here, this is calculated via the 'Pratt'
-rather than standard 'Ezekiel/Wherry' formula, shown in a previous
-simulation to be the most effective of a range of existing formulas at
-estimating the population R-squared across a range of model specification
-scenarios (Yin &amp; Fan 2001). Adjusted R-squared can be used to safeguard
-against overfitting of the model to the original sample.</p>
-<p>If <code>pred = TRUE</code> (default), a 'predicted' R-squared is also returned,
-which is calculated via the same formula as for R-squared but using
-cross-validated rather than standard fitted values. These are obtained by
-dividing the model response residuals by the complement of the observation
-leverages (diagonals of the hat matrix), then subtracting these inflated
-'predicted' residuals from the response variable. This is essentially a
-short cut to obtaining out-of-sample predictions, normally arising via a
-leave-one-out cross-validation procedure (in a GLM they will not be exactly
-equal to such predictions). The resulting R-squared is an estimate of the
-R-squared that would occur were the model to be fit to new data, and will
-be lower than the original - and likely also the adjusted - R-squared,
-highlighting the loss of explanatory power when predicting to new data.
-This measure is a variant of an
-<a href='https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/'>existing
-one</a>, calculated by substituting the 'PRESS' statistic, i.e. the sum of
-squares of the predicted residuals (Allen 1974), for the residual sum of
-squares in the classic R-squared formula.</p>
+measure is exactly equal to the traditional R-squared based on sums of
+squares.</p>
+<p>If <code>adj = TRUE</code> (default), the 'adjusted' R-squared value is also returned,
+which provides an estimate of the population — as opposed to sample —
+R-squared. This is achieved via an analytical formula which adjusts
+R-squared using the 'degrees of freedom' of the model (i.e. the ratio of
+observations to parameters), helping to counter multiple R-squared's
+positive bias and guard against overfitting of the model to noise in the
+original sample. By default, this is calculated via the exact 'Olkin-Pratt'
+estimator, shown in recent simulations to be the optimal unbiased
+population R-squared estimator across a range of estimators and
+specification scenarios (Karch 2020), and thus a good general first choice,
+even for smaller sample sizes. Setting <code>adj.type = "ezekiel"</code> however will
+use the simpler and more common 'Ezekiel' formula, which can be more
+appropriate where minimising the mean squared error (MSE) of the estimate
+is more important than strict unbiasedness (Hittner 2019, Karch 2020).</p>
+<p>If <code>pred = TRUE</code> (default), a 'predicted' R-squared is also returned, which
+is calculated via the same formula as for R-squared but using
+cross-validated, rather than original, fitted values. These are obtained by
+dividing the model residuals (in the response scale) by the complement of
+the observation leverages (diagonals of the hat matrix), then subtracting
+these inflated 'predicted' residuals from the response variable. This is
+essentially a short cut to obtaining 'out-of-sample' predictions, normally
+arising via a 'leave-one-out' cross-validation procedure (they are not
+exactly equal for GLMs). The resulting R-squared is an estimate of the
+R-squared that would result were the model fit to new data, and will be
+lower than the original — and likely also the adjusted — R-squared,
+highlighting the loss of explanatory power due to sample noise. Predicted
+R-squared <a href='https://stats.stackexchange.com/questions/242770/difference-between-adjusted-r-squared-and-predicted-r-squared'>may be a more powerful and general indicator of overfitting than adjusted R-squared</a>,
+as it provides a true out-of-sample test. This measure is a variant of an
+<a href='https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/'>existing one</a>,
+calculated by substituting the 'PRESS' statistic, i.e. the sum of squares
+of the predicted residuals (Allen 1974), for the residual sum of squares in
+the classic R-squared formula. It is not calculated here for GLMMs, as the
+interpretation of the hat matrix is not reliable (see
+<code>hatvalues.merMod()</code>).</p>
 <p>For models fitted with one or more offsets, these will be removed by
 default from the response variable and fitted values prior to calculations.
 Thus R-squared will measure goodness of fit only for the predictors with
@@ -240,32 +272,37 @@ variation due to the offset(s) they can set <code>offset = TRUE</code>.</p>
 <p>For mixed models, the function will, by default, calculate all R-squared
 measures using fitted values incorporating both the fixed and random
 effects, thus encompassing all variation captured by the model. This is
-equivalent to the 'conditional' R-squared of Nakagawa <em>et al.</em> (2017).
-To include only some or no random effects, simply set the appropriate
-formula using the argument <code>re.form</code>, which is passed directly to
-<code>predict.merMod</code>. If <code>re.form = NA</code>, R-squared is calculated for
-the fixed effects only - equivalent to the 'marginal' R-squared of Nakagawa
-<em>et al.</em> (2017).</p>
-<p>As R-squared is calculated here as a squared correlation, the <code>type</code>
-of correlation coefficient can also be specified. Setting this to
-<code>"spearman"</code> may be desirable in some cases, such as where the
-relationship between response and fitted values is not necessarily
-bivariate normal or linear. Note that R-squared based on Spearman's rho
-(i.e. ranked variables) is not equivalent to the classic R-squared based on
-sums of squares, but can still be considered a
-<a href='https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho'>useful
-goodness of fit measure</a>. It may also be considered more appropriate for
-comparisons of R-squared between GLMs and ordinary linear models in some
-situations.</p>
-<p>R-squared values produced by this function will always be bounded between
-zero (no fit) and one (perfect fit), meaning that any negative values
-arising from calculations will be rounded up to zero. Negative values
-typically mean that the fit is 'worse' than the null expectation of no
-relationship between the variables, which can be difficult to interpret in
-practice and in any case usually only occurs in rare situations, such as
-where the intercept is suppressed. Hence, for simplicity and ease of
-interpretation, values less than zero are presented here as a complete lack
-of model fit.</p>
+equivalent to the 'conditional' R-squared of Nakagawa <em>et al.</em> (2017)
+(though see that reference for a more advanced approach to R-squared for
+mixed models). To include only some or no random effects, simply set the
+appropriate formula using the argument <code>re.form</code>, which is passed directly
+to <code>predict.merMod()</code>. If <code>re.form = NA</code>, R-squared is calculated for the
+fixed effects only, i.e. the 'marginal' R-squared of Nakagawa <em>et al.</em>
+(2017).</p>
+<p>As R-squared is calculated here as a squared correlation, the <code>type</code> of
+correlation coefficient can also be specified. Setting this to <code>"spearman"</code>
+may be desirable in some cases, such as where the relationship between
+response and fitted values is not necessarily bivariate normal or linear,
+and a correlation of the ranks may be more informative and/or general. This
+purely monotonic R-squared can also be considered a <a href='https://stats.stackexchange.com/questions/44268/reporting-coefficient-of-determination-using-spearmans-rho'>useful goodness of fit measure</a>,
+and may be more appropriate for comparisons between GLMs and ordinary
+linear models in some scenarios.</p>
+<p>R-squared values produced by this function will by default be in the range
+0-1, meaning that any negative values arising from calculations will be
+converted to zero. Negative values essentially mean that the fit is 'worse'
+than the null expectation of no relationship between the variables, which
+can be difficult to interpret in practice and in any case usually only
+occurs in rare situations, such as where the intercept is suppressed or
+where a low value of R-squared is adjusted downwards via an analytic
+estimator. Such values are also 'impossible' in practice, given that
+R-squared is a strictly positive measure (as generally known). Hence, for
+simplicity and ease of interpretation, values less than zero are presented
+as a complete lack of model fit. This is also recommended by Shieh (2008),
+who shows for adjusted R-squared that such 'positive-part' estimators have
+lower MSE in estimating the population R-squared (though higher bias). To
+allow return of negative values however, set <code>positive.only = FALSE</code>. This
+may be desirable for simulation purposes, and/or where strict unbiasedness
+is prioritised.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>Caution must be exercised in interpreting the values of any pseudo
@@ -274,123 +311,65 @@ produced by this function), as such measures do not hold all the properties
 of R-squared in the ordinary linear model and as such may not always behave
 as expected. Care must also be taken in comparing the measures to their
 equivalents from ordinary linear models, particularly the adjusted and
-predicted versions. For example, for the adjusted R-squared for mixed
-models, it's not entirely clear what the sample size (n) in the formula
-should represent - no. of observations? independent groups? something else?
-(the default interpretation of no. of observations is used). With all that
-being said, the value of standardised R-squared measures for even 'rough'
-model fit assessment and comparison may outweigh such reservations, and the
-adjusted and predicted versions in particular may aid the user in
-diagnosing and preventing overfitting. They should NOT, however, replace
-other measures such as AIC or BIC for formally comparing and/or ranking
-competing models fit to the same response variable.</p>
+predicted versions, as assumptions and/or calculations may not generalise
+well. With that being said, the value of standardised R-squared measures
+for even 'rough' model fit assessment and comparison may outweigh such
+reservations, and the adjusted and predicted versions in particular may aid
+the user in diagnosing and preventing overfitting. They should NOT,
+however, replace other measures such as AIC or BIC for formally comparing
+and/or ranking competing models fit to the same response variable.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Allen, D. M. (1974). The Relationship Between Variable Selection
 and Data Augmentation and a Method for Prediction. <em>Technometrics</em>,
-<strong>16</strong>(1), 125-127. <a href='https://doi.org/gfgv57'>https://doi.org/gfgv57</a></p>
+<strong>16</strong>(1), 125-127. doi: <a href='https://doi.org/10/gfgv57'>10/gfgv57</a></p>
+<p>Hittner, J. B. (2019). Ezekiel’s classic estimator of the population
+squared multiple correlation coefficient: Monte Carlo-based extensions and
+refinements. <em>The Journal of General Psychology</em>, <strong>147</strong>(3), 213–227.
+doi: <a href='https://doi.org/10/gk53wb'>10/gk53wb</a></p>
+<p>Karch, J. (2020). Improving on Adjusted R-Squared. <em>Collabra: Psychology</em>,
+<strong>6</strong>(1). doi: <a href='https://doi.org/10/gkgk2v'>10/gkgk2v</a></p>
 <p>Kvalseth, T. O. (1985) Cautionary Note about R2. <em>The American
-Statistician</em>, <strong>39</strong>(4), 279-285. <a href='https://doi.org/b8b782'>https://doi.org/b8b782</a></p>
+Statistician</em>, <strong>39</strong>(4), 279-285. doi: <a href='https://doi.org/10/b8b782'>10/b8b782</a></p>
 <p>Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
 determination R2 and intra-class correlation coefficient from generalized
-linear mixed-effects models revisited and expanded. <em>Journal of the
-Royal Society Interface</em> <strong>14</strong>(134). <a href='https://doi.org/gddpnq'>https://doi.org/gddpnq</a></p>
-<p>Yin, P. and Fan, X. (2001) Estimating R2 Shrinkage in Multiple Regression:
-A Comparison of Different Analytical Methods. <em>The Journal of
-Experimental Education</em> <strong>69</strong>(2), 203-224.
-<a href='https://doi.org/fbdq5g'>https://doi.org/fbdq5g</a></p>
+linear mixed-effects models revisited and expanded. <em>Journal of the Royal
+Society Interface</em>, <strong>14</strong>(134). doi: <a href='https://doi.org/10/gddpnq'>10/gddpnq</a></p>
+<p>Shieh, G. (2008). Improved Shrinkage Estimation of Squared Multiple
+Correlation Coefficient and Squared Cross-Validity Coefficient.
+<em>Organizational Research Methods</em>, <strong>11</strong>(2), 387–407. doi: <a href='https://doi.org/10/bcwqf3'>10/bcwqf3</a></p>
 <p>Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
-generalized linear model. <em>Statistics in Medicine</em> <strong>19</strong>(13),
-1771-1781. <a href='https://doi.org/db7rfv'>https://doi.org/db7rfv</a></p>
+generalized linear model. <em>Statistics in Medicine</em>, <strong>19</strong>(13), 1771-1781.
+doi: <a href='https://doi.org/10/db7rfv'>10/db7rfv</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Pseudo R-squared for mixed models</span>
-<span class='fu'>R2</span><span class='op'>(</span><span class='va'>Shipley.SEM</span><span class='op'>)</span>  <span class='co'># fixed + random ('conditional')</span>
-</div><div class='output co'>#&gt; $DD
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.7080083        0.7074789        0.6835636 
-#&gt; 
-#&gt; $Date
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.9855557        0.9855351        0.9820241 
-#&gt; 
-#&gt; $Growth
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.7938367        0.7934878        0.7552854 
-#&gt; 
-#&gt; $Live
-#&gt;     (r.squared) (adj.r.squared) 
-#&gt;       0.2668652       0.2655969 
-#&gt; </div><div class='input'><span class='fu'>R2</span><span class='op'>(</span><span class='va'>Shipley.SEM</span>, re.form <span class='op'>=</span> <span class='op'>~</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>|</span> <span class='va'>tree</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># fixed + 'tree'</span>
-</div><div class='output co'>#&gt; $DD
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.5305163        0.5295480        0.4898536 
-#&gt; 
-#&gt; $Date
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.8491536        0.8489101        0.6831439 
-#&gt; 
-#&gt; $Growth
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.6068561        0.6060875        0.5012969 
-#&gt; 
-#&gt; $Live
-#&gt;     (r.squared) (adj.r.squared) 
-#&gt;       0.2453019       0.2439735 
-#&gt; </div><div class='input'><span class='fu'>R2</span><span class='op'>(</span><span class='va'>Shipley.SEM</span>, re.form <span class='op'>=</span> <span class='op'>~</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>|</span> <span class='va'>site</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># fixed + 'site'</span>
-</div><div class='output co'>#&gt; $DD
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.6839237        0.6833400        0.6567506 
-#&gt; 
-#&gt; $Date
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.6925661        0.6920020        0.2541820 
-#&gt; 
-#&gt; $Growth
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.3081469        0.3065037        0.1153087 
-#&gt; 
-#&gt; $Live
-#&gt;     (r.squared) (adj.r.squared) 
-#&gt;       0.2016339       0.2001796 
-#&gt; </div><div class='input'><span class='fu'>R2</span><span class='op'>(</span><span class='va'>Shipley.SEM</span>, re.form <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span>  <span class='co'># fixed only ('marginal')</span>
-</div><div class='output co'>#&gt; $DD
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.5012513        0.5002021        0.4578167 
-#&gt; 
-#&gt; $Date
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.4250445        0.4237734        0.0801710 
-#&gt; 
-#&gt; $Growth
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;       0.04814953       0.04554088       0.00000000 
-#&gt; 
-#&gt; $Live
-#&gt;     (r.squared) (adj.r.squared) 
-#&gt;       0.1834597       0.1819515 
-#&gt; </div><div class='input'><span class='fu'>R2</span><span class='op'>(</span><span class='va'>Shipley.SEM</span>, re.form <span class='op'>=</span> <span class='cn'>NA</span>, type <span class='op'>=</span> <span class='st'>"spearman"</span><span class='op'>)</span>  <span class='co'># using Spearman's rho</span>
-</div><div class='output co'>#&gt; $DD
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.4043303        0.4029960        0.3008997 
-#&gt; 
-#&gt; $Date
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;        0.3919543        0.3905817        0.2992427 
-#&gt; 
-#&gt; $Growth
-#&gt;      (r.squared)  (adj.r.squared) (pred.r.squared) 
-#&gt;      0.048572025      0.045965097      0.001204466 
-#&gt; 
-#&gt; $Live
-#&gt;     (r.squared) (adj.r.squared) 
-#&gt;      0.04724129      0.04529932 
-#&gt; </div><div class='input'>
+<span class='fu'>R2</span><span class='op'>(</span><span class='va'>shipley.sem</span><span class='op'>)</span>  <span class='co'># fixed + random ('conditional')</span>
+</div><div class='output co'>#&gt;                       DD      Date    Growth      Live
+#&gt; R.squared      0.7080083 0.9855557 0.7938367 0.2668652
+#&gt; R.squared.adj  0.7074791 0.9855351 0.7934879 0.2655971
+#&gt; R.squared.pred 0.6835636 0.9820241 0.7552854        NA</div><div class='input'><span class='fu'>R2</span><span class='op'>(</span><span class='va'>shipley.sem</span>, re.form <span class='op'>=</span> <span class='op'>~</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>|</span> <span class='va'>tree</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># fixed + 'tree'</span>
+</div><div class='output co'>#&gt;                       DD      Date    Growth      Live
+#&gt; R.squared      0.5305163 0.8491536 0.6068561 0.2453019
+#&gt; R.squared.adj  0.5295483 0.8489101 0.6060877 0.2439737
+#&gt; R.squared.pred 0.4898536 0.6831439 0.5012969        NA</div><div class='input'><span class='fu'>R2</span><span class='op'>(</span><span class='va'>shipley.sem</span>, re.form <span class='op'>=</span> <span class='op'>~</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>|</span> <span class='va'>site</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># fixed + 'site'</span>
+</div><div class='output co'>#&gt;                       DD      Date    Growth      Live
+#&gt; R.squared      0.6839237 0.6925661 0.3081469 0.2016339
+#&gt; R.squared.adj  0.6833402 0.6920022 0.3065040 0.2001797
+#&gt; R.squared.pred 0.6567506 0.2541820 0.1153087        NA</div><div class='input'><span class='fu'>R2</span><span class='op'>(</span><span class='va'>shipley.sem</span>, re.form <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span>  <span class='co'># fixed only ('marginal')</span>
+</div><div class='output co'>#&gt;                       DD      Date     Growth      Live
+#&gt; R.squared      0.5012513 0.4250445 0.04814953 0.1834597
+#&gt; R.squared.adj  0.5002024 0.4237737 0.04554043 0.1819516
+#&gt; R.squared.pred 0.4578167 0.0801710 0.00000000        NA</div><div class='input'><span class='fu'>R2</span><span class='op'>(</span><span class='va'>shipley.sem</span>, re.form <span class='op'>=</span> <span class='cn'>NA</span>, type <span class='op'>=</span> <span class='st'>"spearman"</span><span class='op'>)</span>  <span class='co'># using Spearman's Rho</span>
+</div><div class='output co'>#&gt;                       DD      Date      Growth       Live
+#&gt; R.squared      0.4043303 0.3919543 0.048572025 0.04724129
+#&gt; R.squared.adj  0.4029963 0.3905821 0.045964645 0.04529886
+#&gt; R.squared.pred 0.3008997 0.2992427 0.001204466         NA</div><div class='input'>
 <span class='co'># Predicted R-squared: compare cross-validated predictions calculated/</span>
 <span class='co'># approximated via the hat matrix to standard method (leave-one-out)</span>
 
-<span class='co'># Fit test models using Shipley data - compare lm vs glm</span>
-<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Shipley</span><span class='op'>)</span>
+<span class='co'># Fit test models using Shipley data — compare lm vs glm</span>
+<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>shipley</span><span class='op'>)</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>Live</span> <span class='op'>~</span> <span class='va'>Date</span> <span class='op'>+</span> <span class='va'>DD</span> <span class='op'>+</span> <span class='va'>lat</span>, <span class='va'>d</span><span class='op'>)</span>
 <span class='co'># m &lt;- glm(Live ~ Date + DD + lat, binomial, d)</span>
 

@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -91,6 +91,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -117,7 +129,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Bootstrap Confidence Intervals</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/bootEff-fun.R'><code>R/bootEff-fun.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/bootEff-fun.R'><code>R/bootEff-fun.R</code></a></small>
     <div class="hidden name"><code>bootCI.Rd</code></div>
     </div>
 
@@ -133,8 +145,8 @@
     <tr>
       <th>mod</th>
       <td><p>A fitted model object. Alternatively, a boot object (class
-<code>"boot"</code>), containing bootstrapped model effects. Can also be a list
-or nested list of such objects.</p></td>
+<code>"boot"</code>), containing bootstrapped model effects. Can also be a list or
+nested list of such objects.</p></td>
     </tr>
     <tr>
       <th>conf</th>
@@ -143,9 +155,8 @@ intervals.</p></td>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>The type of confidence interval to return (defaults to
-<code>"bca"</code> - see Details). See <code><a href='https://rdrr.io/pkg/boot/man/boot.ci.html'>boot.ci</a></code> for further
-specification details.</p></td>
+      <td><p>The type of confidence interval to return (defaults to <code>"bca"</code> —
+see Details). See <code>boot.ci()</code> for further options.</p></td>
     </tr>
     <tr>
       <th>digits</th>
@@ -153,34 +164,37 @@ specification details.</p></td>
     </tr>
     <tr>
       <th>bci.arg</th>
-      <td><p>A named list of any additional arguments to <code>boot.ci</code>,
+      <td><p>A named list of any additional arguments to <code>boot.ci()</code>,
 excepting argument <code>index</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments to <code><a href='bootEff.html'>bootEff</a></code>.</p></td>
+      <td><p>Arguments to <code><a href='bootEff.html'>bootEff()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame of the effects and bootstrapped confidence intervals, or
-a list or nested list of same.</p>
+    <p>A summary table of the effects and bootstrapped confidence intervals
+(data frame), or a list or nested list of same.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This is essentially a wrapper for <code>boot.ci</code> from the <span class="pkg">boot</span>
-package, returning confidence intervals of the specified type and level
-calculated from bootstrapped model effects. If a model or models is
-supplied, bootstrapping will first be performed via <code>bootEff</code>. Effects
-for which the confidence intervals do not contain zero are highlighted with
-an asterix.</p>
-<p>Nonparametric bias-corrected and accelerated confidence intervals
-(BC<em>a</em>, Efron 1987) are calculated by default, which should provide
-the most accurate coverage across a range of bootstrap sampling
-distributions (Puth <em>et al.</em> 2015). They will, however, be
+    <p><code>bootCI()</code> uses <code><a href='https://rdrr.io/pkg/boot/man/boot.ci.html'>boot::boot.ci()</a></code> to calculate confidence intervals
+of the specified type and level calculated from bootstrapped model effects.
+If a model or models is supplied, bootstrapping will first be performed via
+<code><a href='bootEff.html'>bootEff()</a></code>.</p>
+<p>Nonparametric bias-corrected and accelerated confidence intervals (BC<em>a</em>,
+Efron 1987) are calculated by default, which should provide the most
+accurate coverage across a range of bootstrap sampling distributions (Puth
+<em>et al.</em> 2015). They will, however, be
 <a href='https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot'>inappropriate</a>
-for parametric resampling - in which case the default will be set to the
+for parametric resampling — in which case the default will be set to the
 bootstrap percentile method instead (<code>"perc"</code>).</p>
+<p>Effects and confidence intervals are returned in a summary table, along
+with the bootstrap standard errors (standard deviations of the samples) and
+the bootstrap biases (sample means minus original estimates). Effects for
+which the confidence intervals do not contain zero are highlighted with a
+star (i.e. 'significant' at the <code>conf</code> level).</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>All bootstrapped confidence intervals will tend to underestimate the
@@ -189,60 +203,53 @@ Labudde 2009), so the appropriate caution should be exercised in
 interpretation in such cases. Comparison of different interval types may be
 informative. For example, normal-theory based intervals may outperform
 bootstrap percentile methods when n &lt; 34 (Hesterberg 2015). Ultimately
-however, the bootstrap is
-<a href='https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size'>not
-a solution to small sample size</a>.</p>
+however, the bootstrap is <a href='https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size'>not a solution to small sample size</a>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Chernick, M. R., &amp; Labudde, R. A. (2009). Revisiting Qualms about
 Bootstrap Confidence Intervals. <em>American Journal of Mathematical and
-Management Sciences</em>, <strong>29</strong>(3–4), 437–456. <a href='https://doi.org/c8zv'>https://doi.org/c8zv</a></p>
-<p>Efron, B. (1987). Better Bootstrap Confidence Intervals. <em>Journal of
-the American Statistical Association</em>, <strong>82</strong>(397), 171–185.
-<a href='https://doi.org/gfww2z'>https://doi.org/gfww2z</a></p>
+Management Sciences</em>, <strong>29</strong>(3–4), 437–456. doi: <a href='https://doi.org/10/c8zv'>10/c8zv</a></p>
+<p>Efron, B. (1987). Better Bootstrap Confidence Intervals. <em>Journal of the
+American Statistical Association</em>, <strong>82</strong>(397), 171–185. doi: <a href='https://doi.org/10/gfww2z'>10/gfww2z</a></p>
 <p>Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
 Resampling in the Undergraduate Statistics Curriculum. <em>The American
-Statistician</em>, <strong>69</strong>(4), 371–386. <a href='https://doi.org/gd85v5'>https://doi.org/gd85v5</a></p>
+Statistician</em>, <strong>69</strong>(4), 371–386. doi: <a href='https://doi.org/10/gd85v5'>10/gd85v5</a></p>
 <p>Puth, M.-T., Neuhäuser, M., &amp; Ruxton, G. D. (2015). On the variety of
-methods for calculating confidence intervals by bootstrapping.
-<em>Journal of Animal Ecology</em>, <strong>84</strong>(4), 892–897.
-<a href='https://doi.org/f8n9rq'>https://doi.org/f8n9rq</a></p>
+methods for calculating confidence intervals by bootstrapping. <em>Journal of
+Animal Ecology</em>, <strong>84</strong>(4), 892–897. doi: <a href='https://doi.org/10/f8n9rq'>10/f8n9rq</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># CIs from bootstrapped SEM</span>
-<span class='op'>(</span><span class='va'>Shipley.SEM.CI</span> <span class='op'>&lt;-</span> <span class='fu'>bootCI</span><span class='op'>(</span><span class='va'>Shipley.SEM.Boot</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; <span class='warning'>Warning: extreme order statistics used as endpoints</span></div><div class='output co'>#&gt; $DD
-#&gt;          (Intercept)    lat
-#&gt; Estimate      -0.056 -0.688
-#&gt; Lower CI      -0.167 -0.823
-#&gt; Upper CI       0.096 -0.476
-#&gt;                           *
+    <pre class="examples"><div class='input'><span class='co'># CIs calculated from bootstrapped SEM</span>
+<span class='op'>(</span><span class='va'>shipley.sem.ci</span> <span class='op'>&lt;-</span> <span class='fu'>bootCI</span><span class='op'>(</span><span class='va'>shipley.sem.boot</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $DD
+#&gt;                Effect     Bias   Std. Err.   Lower CI Upper CI    
+#&gt;                ------   ------   ---------   -------- --------    
+#&gt;  (Intercept) | -0.056 | -0.026 |     0.069 |   -0.167    0.085 |  
+#&gt;  lat         | -0.688 |  0.026 |     0.101 |   -0.828   -0.459 | *
 #&gt; 
 #&gt; $Date
-#&gt;          (Intercept)     DD
-#&gt; Estimate      -0.015 -0.628
-#&gt; Lower CI      -0.156 -0.754
-#&gt; Upper CI       0.180 -0.523
-#&gt;                           *
+#&gt;                Effect     Bias   Std. Err.   Lower CI Upper CI    
+#&gt;                ------   ------   ---------   -------- --------    
+#&gt;  (Intercept) | -0.015 | -0.005 |     0.082 |   -0.167    0.179 |  
+#&gt;  DD          | -0.628 |  0.000 |     0.057 |   -0.741   -0.519 | *
 #&gt; 
 #&gt; $Growth
-#&gt;          (Intercept)  Date
-#&gt; Estimate      -0.292 0.382
-#&gt; Lower CI      -0.494 0.289
-#&gt; Upper CI      -0.127 0.513
-#&gt;                    *     *
+#&gt;                Effect     Bias   Std. Err.   Lower CI Upper CI    
+#&gt;                ------   ------   ---------   -------- --------    
+#&gt;  (Intercept) | -0.292 | -0.006 |     0.090 |   -0.497   -0.141 | *
+#&gt;  Date        |  0.382 |  0.011 |     0.058 |    0.293    0.515 | *
 #&gt; 
 #&gt; $Live
-#&gt;          (Intercept) Growth
-#&gt; Estimate       0.311  0.368
-#&gt; Lower CI       0.155  0.230
-#&gt; Upper CI       0.344  0.406
-#&gt;                    *      *
+#&gt;                Effect    Bias   Std. Err.   Lower CI Upper CI    
+#&gt;                ------   -----   ---------   -------- --------    
+#&gt;  (Intercept) |  0.311 | 0.255 |     0.213 |    0.170    0.354 | *
+#&gt;  Growth      |  0.368 | 0.151 |     0.130 |    0.246    0.411 | *
 #&gt; </div><div class='input'>
 <span class='co'># From original SEM (models)</span>
-<span class='co'># (not typically recommended - better to use saved boot objects)</span>
+<span class='co'># (not typically recommended — better to use saved boot objects)</span>
 <span class='co'># system.time(</span>
-<span class='co'>#   Shipley.SEM.CI &lt;- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)</span>
+<span class='co'>#   shipley.sem.ci &lt;- bootCI(shipley.sem, R = 1000, seed = 13,</span>
+<span class='co'>#                            ran.eff = "site")</span>
 <span class='co'># )</span>
 </div></pre>
   </div>

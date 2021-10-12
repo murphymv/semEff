@@ -43,7 +43,7 @@
 
 <meta property="og:title" content="Standardised Effects — stdEff" />
 <meta property="og:description" content="Calculate fully standardised effects (model coefficients) in
-standard deviation units, adjusted for multicollinearity by default." />
+standard deviation units, adjusted for multicollinearity." />
 
 
 
@@ -75,7 +75,7 @@ standard deviation units, adjusted for multicollinearity by default." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -92,6 +92,18 @@ standard deviation units, adjusted for multicollinearity by default." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -118,13 +130,13 @@ standard deviation units, adjusted for multicollinearity by default." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Standardised Effects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/stdEff-fun.R'><code>R/stdEff-fun.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/stdEff-fun.R'><code>R/stdEff-fun.R</code></a></small>
     <div class="hidden name"><code>stdEff.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Calculate fully standardised effects (model coefficients) in
-standard deviation units, adjusted for multicollinearity by default.</p>
+standard deviation units, adjusted for multicollinearity.</p>
     </div>
 
     <pre class="usage"><span class='fu'>stdEff</span><span class='op'>(</span>
@@ -133,16 +145,15 @@ standard deviation units, adjusted for multicollinearity by default.</p>
   data <span class='op'>=</span> <span class='cn'>NULL</span>,
   term.names <span class='op'>=</span> <span class='cn'>NULL</span>,
   unique.eff <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  unique.x <span class='op'>=</span> <span class='cn'>TRUE</span>,
   cen.x <span class='op'>=</span> <span class='cn'>TRUE</span>,
   cen.y <span class='op'>=</span> <span class='cn'>TRUE</span>,
   std.x <span class='op'>=</span> <span class='cn'>TRUE</span>,
   std.y <span class='op'>=</span> <span class='cn'>TRUE</span>,
   refit.x <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  r.squared <span class='op'>=</span> <span class='cn'>FALSE</span>,
   incl.raw <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
-  <span class='va'>...</span>
+  R.squared <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  R2.arg <span class='op'>=</span> <span class='cn'>NULL</span>,
+  env <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -157,8 +168,8 @@ standard deviation units, adjusted for multicollinearity by default.</p>
       <td><p>An optional numeric vector of weights to use for model
 averaging, or a named list of such vectors. The former should be supplied
 when <code>mod</code> is a list, and the latter when it is a nested list (with
-matching list names). If set to <code>"equal"</code>, a simple average is
-calculated instead.</p></td>
+matching list names). If set to <code>"equal"</code>, a simple average is calculated
+instead.</p></td>
     </tr>
     <tr>
       <th>data</th>
@@ -171,13 +182,8 @@ effects from the output.</p></td>
     </tr>
     <tr>
       <th>unique.eff</th>
-      <td><p>Logical, whether unique effects should be
-calculated (adjusted for multicollinearity among predictors).</p></td>
-    </tr>
-    <tr>
-      <th>unique.x</th>
-      <td><p>Deprecated but allowed temporarily. Use <code>unique.eff</code>
-instead.</p></td>
+      <td><p>Logical, whether unique effects should be calculated
+(adjusted for multicollinearity among predictors).</p></td>
     </tr>
     <tr>
       <th>cen.x, cen.y</th>
@@ -195,21 +201,24 @@ deviations of variables.</p></td>
 predictor variables (see Details).</p></td>
     </tr>
     <tr>
-      <th>r.squared</th>
-      <td><p>Logical, whether R-squared values should also be calculated.</p></td>
-    </tr>
-    <tr>
       <th>incl.raw</th>
       <td><p>Logical, whether to append the raw (unstandardised) effects
 to the output.</p></td>
     </tr>
     <tr>
-      <th>env</th>
-      <td><p>Environment in which to look for model data (if none supplied).</p></td>
+      <th>R.squared</th>
+      <td><p>Logical, whether R-squared values should also be calculated
+(via <code><a href='R2.html'>R2()</a></code>).</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>Arguments to <code>R2</code>.</p></td>
+      <th>R2.arg</th>
+      <td><p>A named list of additional arguments to <code><a href='R2.html'>R2()</a></code> (where
+applicable), excepting argument <code>env</code>. Ignored if <code>R.squared = FALSE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>env</th>
+      <td><p>Environment in which to look for model data (if none supplied).
+Defaults to the <code><a href='https://rdrr.io/r/stats/formula.html'>formula()</a></code> environment.</p></td>
     </tr>
     </table>
 
@@ -219,9 +228,9 @@ to the output.</p></td>
 list of such vectors.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>stdEff</code> will calculate fully standardised effects
-(coefficients) in standard deviation units for a fitted model or list of
-models. It achieves this via adjusting the 'raw' model coefficients, so no
+    <p><code>stdEff()</code> will calculate fully standardised effects (coefficients)
+in standard deviation units for a fitted model or list of models. It
+achieves this via adjusting the 'raw' model coefficients, so no
 standardisation of input variables is required beforehand. Users can simply
 specify the model with all variables in their original units and the
 function will do the rest. However, the user is free to scale and/or centre
@@ -229,93 +238,92 @@ any input variables should they choose, which should not affect the outcome
 of standardisation (provided any scaling is by standard deviations). This
 may be desirable in some cases, such as to increase numerical stability
 during model fitting when variables are on widely different scales.</p>
-<p>If arguments <code>cen.x</code> or <code>cen.y</code> are <code>TRUE</code>, effects will be
-calculated as if all predictors (x) and/or the response variable (y) were
-mean-centred prior to model-fitting (including any dummy variables arising
-from categorical predictors). Thus, for an ordinary linear model where
-centring of x and y is specified, the intercept will be zero - the mean (or
-weighted mean) of y. In addition, if <code>cen.x = TRUE</code> and there are
-interacting terms in the model, all effects for lower order terms of the
-interaction are adjusted using an expression which ensures that each main
-effect or lower order term is estimated at the mean values of the terms
-they interact with (zero in a 'centred' model) - typically improving the
-interpretation of effects. The expression used comprises a weighted sum of
-all the effects that contain the lower order term, with the weight for the
-term itself being zero and those for 'containing' terms being the product
-of the means of the other variables involved in that term (i.e. those not
-in the lower order term itself). For example, for a three-way interaction
-(x1 * x2 * x3), the expression for main effect \(\beta1\) would be:</p>
-<p>$$\beta_{1} + \beta_{12} \bar{x}_{2} + \beta_{13} \bar{x}_{3} +
-  \beta_{123} \bar{x}_{2} \bar{x}_{3}$$ (adapted from
+<p>If arguments <code>cen.x</code> or <code>cen.y</code> are <code>TRUE</code>, effects will be calculated as
+if all predictors (x) and/or the response variable (y) were mean-centred
+prior to model-fitting (including any dummy variables arising from
+categorical predictors). Thus, for an ordinary linear model where centring
+of x and y is specified, the intercept will be zero — the mean (or weighted
+mean) of y. In addition, if <code>cen.x = TRUE</code> and there are interacting terms
+in the model, all effects for lower order terms of the interaction are
+adjusted using an expression which ensures that each main effect or lower
+order term is estimated at the mean values of the terms they interact with
+(zero in a 'centred' model) — typically improving the interpretation of
+effects. The expression used comprises a weighted sum of all the effects
+that contain the lower order term, with the weight for the term itself
+being zero and those for 'containing' terms being the product of the means
+of the other variables involved in that term (i.e. those not in the lower
+order term itself). For example, for a three-way interaction (x1 * x2 *
+x3), the expression for main effect \(\beta1\) would be:</p>
+<p>$$\beta_{1} + \beta_{12}\bar{x}_{2} + \beta_{13}\bar{x}_{3} +
+  \beta_{123}\bar{x}_{2}\bar{x}_{3}$$ (adapted from
 <a href='https://stats.stackexchange.com/questions/65898/why-could-centering-independent-variables-change-the-main-effects-with-moderatio'>here</a>)</p>
-<p>In addition, if <code>std.x = TRUE</code> or <code>unique.eff = TRUE</code> (see
-below), product terms for interactive effects will be recalculated using
-mean-centred variables, to ensure that standard deviations and variance
-inflation factors (VIF) for predictors are calculated correctly (the model
-must be refit for this latter purpose, to recalculate the
-variance-covariance matrix).</p>
+<p>In addition, if <code>std.x = TRUE</code> or <code>unique.eff = TRUE</code> (see below), product
+terms for interactive effects will be recalculated using mean-centred
+variables, to ensure that standard deviations and variance inflation
+factors (VIF) for predictors are calculated correctly (the model must be
+refit for this latter purpose, to recalculate the variance-covariance
+matrix).</p>
 <p>If <code>std.x = TRUE</code>, effects are scaled by multiplying by the standard
-deviations of predictor variables (or terms), while if <code>std.y = TRUE</code>
-they are divided by the standard deviation of the response variable (minus
-any offsets). If the model is a GLM, this latter is calculated using the
+deviations of predictor variables (or terms), while if <code>std.y = TRUE</code> they
+are divided by the standard deviation of the response variable (minus any
+offsets). If the model is a GLM, this latter is calculated using the
 link-transformed response (or an estimate of same) generated using the
-function <code><a href='glt.html'>glt</a></code>. If both arguments are true, the effects
-are regarded as 'fully' standardised in the traditional sense, often
-referred to as 'betas'.</p>
+function <code><a href='glt.html'>glt()</a></code>. If both arguments are true, the effects are regarded as
+'fully' standardised in the traditional sense, often referred to as
+'betas'.</p>
 <p>If <code>unique.eff = TRUE</code> (default), effects are adjusted for
 multicollinearity among predictors by dividing by the square root of the
-VIFs (Dudgeon 2016, Thompson <em>et al.</em> 2017;
-<code><a href='RVIF.html'>RVIF</a></code>). If they have also been scaled by the standard
-deviations of x and y, this converts them to semipartial correlations, i.e.
-the correlation between the unique components of predictors (residualised
-on other predictors) and the response variable. This measure of effect size
-is arguably much more interpretable and useful than the traditional
-standardised coefficient, as it always represents the unique effects of
-predictors and so can more readily be compared both within and across
-models. Values range from zero to +/- one rather than +/- infinity (as in
-the case of betas) - putting them on the same scale as the bivariate
-correlation between predictor and response. In the case of GLMs however,
-the measure is analogous but not exactly equal to the semipartial
-correlation, so its values may not always be bound between +/- one (such
-cases are likely rare). Importantly, for ordinary linear models, the square
-of the semipartial correlation equals the increase in R-squared when that
-variable is included last in the model - directly linking the measure to
-unique variance explained. See
+VIFs (Dudgeon 2016, Thompson <em>et al.</em> 2017; <code><a href='RVIF.html'>RVIF()</a></code>). If they have also
+been scaled by the standard deviations of x and y, this converts them to
+semipartial correlations, i.e. the correlation between the unique
+components of predictors (residualised on other predictors) and the
+response variable. This measure of effect size is arguably much more
+interpretable and useful than the traditional standardised coefficient, as
+it always represents the unique effects of predictors and so can more
+readily be compared both within and across models. Values range from zero
+to +/- one rather than +/- infinity (as in the case of betas) — putting
+them on the same scale as the bivariate correlation between predictor and
+response. In the case of GLMs however, the measure is analogous but not
+exactly equal to the semipartial correlation, so its values may not always
+be bound between +/- one (such cases are likely rare). Importantly, for
+ordinary linear models, the square of the semipartial correlation equals
+the increase in R-squared when that variable is included last in the model
+— directly linking the measure to unique variance explained. See
 <a href='https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression'>here</a>
 for additional arguments in favour of the use of semipartial correlations.</p>
-<p>If <code>refit.x</code>, <code>cen.x</code>, and <code>unique.eff</code> are <code>TRUE</code> and
-there are interaction terms in the model, the model will be refit with any
+<p>If <code>refit.x</code>, <code>cen.x</code>, and <code>unique.eff</code> are <code>TRUE</code> and there are
+interaction terms in the model, the model will be refit with any
 (newly-)centred continuous predictors, in order to calculate correct VIFs
 from the variance-covariance matrix. However, refitting may not be
 necessary in some circumstances, for example where predictors have already
 been mean-centred, and whose values will not subsequently be resampled
-(e.g. parametric bootstrap). Setting <code>refit.x = FALSE</code> in such cases
-will save time, especially with larger/more complex models and/or bootstrap
+(e.g. parametric bootstrap). Setting <code>refit.x = FALSE</code> in such cases will
+save time, especially with larger/more complex models and/or bootstrap
 runs.</p>
-<p>If <code>r.squared = TRUE</code>, model R-squared values are appended to effects
-via the <code><a href='R2.html'>R2</a></code> function, with any additional arguments
-being passed via <code>...</code>.</p>
-<p>If <code>incl.raw = TRUE</code>, raw (unstandardised) effects can also be
-appended, i.e. those with all centring and scaling options set to
-<code>FALSE</code> (though still adjusted for multicollinearity, where
-applicable). These may be of interest in some cases, for example to compare
-their bootstrapped distributions with those of standardised effects.</p>
-<p>Finally, if <code>weights</code> are specified, the function calculates a
-weighted average of the standardised effects across models (Burnham &amp;
-Anderson 2002) via <code><a href='avgEst.html'>avgEst</a></code>.</p>
+<p>If <code>incl.raw = TRUE</code>, raw (unstandardised) effects can also be appended,
+i.e. those with all centring and scaling options set to <code>FALSE</code> (though
+still adjusted for multicollinearity, where applicable). These may be of
+interest in some cases, for example to compare their bootstrapped
+distributions with those of standardised effects.</p>
+<p>If <code>R.squared = TRUE</code>, model R-squared values are appended to effects via
+the <code><a href='R2.html'>R2()</a></code> function, with any additional arguments passed via <code>R2.arg</code>.</p>
+<p>Finally, if <code>weights</code> are specified, the function calculates a weighted
+average of standardised effects across a set (or sets) of different
+candidate models for a particular response variable(s) (Burnham &amp; Anderson
+2002), via the <code><a href='avgEst.html'>avgEst()</a></code> function.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Burnham, K. P., &amp; Anderson, D. R. (2002). <em>Model Selection
-and Multimodel Inference: A Practical Information-Theoretic Approach</em> (2nd
+    <p>Burnham, K. P., &amp; Anderson, D. R. (2002). <em>Model Selection and
+Multimodel Inference: A Practical Information-Theoretic Approach</em> (2nd
 ed.). New York: Springer-Verlag. Retrieved from
 <a href='https://www.springer.com/gb/book/9780387953649'>https://www.springer.com/gb/book/9780387953649</a></p>
 <p>Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 Independent Variables in Linear Regression. <em>Multivariate Behavioral
-Research</em>, <strong>51</strong>(2-3), 139-153. <a href='https://doi.org/gfww3f'>https://doi.org/gfww3f</a></p>
+Research</em>, <strong>51</strong>(2-3), 139-153. doi: <a href='https://doi.org/10/gfww3f'>10/gfww3f</a></p>
 <p>Thompson, C. G., Kim, R. S., Aloe, A. M., &amp; Becker, B. J. (2017).
 Extracting the Variance Inflation Factor and Other Multicollinearity
 Diagnostics from Typical Regression Results. <em>Basic and Applied Social
-Psychology</em>, <strong>39</strong>(2), 81-90. <a href='https://doi.org/gfww2w'>https://doi.org/gfww2w</a></p>
+Psychology</em>, <strong>39</strong>(2), 81-90. doi: <a href='https://doi.org/10/gfww2w'>10/gfww2w</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/lme4/lme4/'>lme4</a></span><span class='op'>)</span>
@@ -324,7 +332,7 @@ Psychology</em>, <strong>39</strong>(2), 81-90. <a href='https://doi.org/gfww2w'
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    getData</span></div><div class='input'>
 <span class='co'># Standardised (direct) effects for SEM</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>Shipley.SEM</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>shipley.sem</span>
 <span class='fu'>stdEff</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $DD
 #&gt; (Intercept)         lat 
@@ -405,28 +413,30 @@ Psychology</em>, <strong>39</strong>(2), 81-90. <a href='https://doi.org/gfww2w'
 #&gt; $Live
 #&gt; (Intercept)      Growth 
 #&gt;   0.3105220   0.3681961 
-#&gt; </div><div class='input'><span class='fu'>stdEff</span><span class='op'>(</span><span class='va'>m</span>, r.squared <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'># add R-squared</span>
+#&gt; </div><div class='input'><span class='fu'>stdEff</span><span class='op'>(</span><span class='va'>m</span>, R.squared <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'># add R-squared</span>
 </div><div class='output co'>#&gt; $DD
-#&gt;      (Intercept)              lat      (r.squared)  (adj.r.squared) 
-#&gt;      -0.05600661      -0.68772025       0.70800826       0.70747888 
-#&gt; (pred.r.squared) 
+#&gt;      (Intercept)              lat      (R.squared)  (R.squared.adj) 
+#&gt;      -0.05600661      -0.68772025       0.70800826       0.70747906 
+#&gt; (R.squared.pred) 
 #&gt;       0.68356361 
 #&gt; 
 #&gt; $Date
-#&gt;      (Intercept)               DD      (r.squared)  (adj.r.squared) 
+#&gt;      (Intercept)               DD      (R.squared)  (R.squared.adj) 
 #&gt;      -0.01493651      -0.62813666       0.98555565       0.98553510 
-#&gt; (pred.r.squared) 
+#&gt; (R.squared.pred) 
 #&gt;       0.98202414 
 #&gt; 
 #&gt; $Growth
-#&gt;      (Intercept)             Date      (r.squared)  (adj.r.squared) 
-#&gt;       -0.2917507        0.3824224        0.7938367        0.7934878 
-#&gt; (pred.r.squared) 
+#&gt;      (Intercept)             Date      (R.squared)  (R.squared.adj) 
+#&gt;       -0.2917507        0.3824224        0.7938367        0.7934879 
+#&gt; (R.squared.pred) 
 #&gt;        0.7552854 
 #&gt; 
 #&gt; $Live
-#&gt;     (Intercept)          Growth     (r.squared) (adj.r.squared) 
-#&gt;       0.3105220       0.3681961       0.2668652       0.2655969 
+#&gt;      (Intercept)           Growth      (R.squared)  (R.squared.adj) 
+#&gt;        0.3105220        0.3681961        0.2668652        0.2655971 
+#&gt; (R.squared.pred) 
+#&gt;               NA 
 #&gt; </div><div class='input'><span class='fu'>stdEff</span><span class='op'>(</span><span class='va'>m</span>, incl.raw <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>  <span class='co'># add unstandardised</span>
 </div><div class='output co'>#&gt; $DD
 #&gt;       (Intercept)               lat (raw)_(Intercept)         (raw)_lat 
@@ -446,15 +456,15 @@ Psychology</em>, <strong>39</strong>(2), 81-90. <a href='https://doi.org/gfww2w'
 #&gt; </div><div class='input'>
 <span class='co'># Demonstrate equality with effects from manually-standardised variables</span>
 <span class='co'># (gaussian models only)</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>Shipley.Growth</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/scale.html'>scale</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Shipley</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>shipley.growth</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span>
+<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/scale.html'>scale</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>shipley</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>e1</span> <span class='op'>&lt;-</span> <span class='fu'>stdEff</span><span class='op'>(</span><span class='va'>m</span>, unique.eff <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='va'>e2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>m</span>, data <span class='op'>=</span> <span class='va'>d</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>]</span>
 <span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>e1</span>, <span class='va'>e2</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Demonstrate equality with square root of increment in R-squared</span>
 <span class='co'># (ordinary linear models only)</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>Growth</span> <span class='op'>~</span> <span class='va'>Date</span> <span class='op'>+</span> <span class='va'>DD</span> <span class='op'>+</span> <span class='va'>lat</span>, data <span class='op'>=</span> <span class='va'>Shipley</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>Growth</span> <span class='op'>~</span> <span class='va'>Date</span> <span class='op'>+</span> <span class='va'>DD</span> <span class='op'>+</span> <span class='va'>lat</span>, data <span class='op'>=</span> <span class='va'>shipley</span><span class='op'>)</span>
 <span class='va'>r2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span><span class='op'>$</span><span class='va'>r.squared</span>
 <span class='va'>e1</span> <span class='op'>&lt;-</span> <span class='fu'>stdEff</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span>
 <span class='va'>en</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>e1</span><span class='op'>)</span>
@@ -466,11 +476,11 @@ Psychology</em>, <strong>39</strong>(2), 81-90. <a href='https://doi.org/gfww2w'
 <span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>e1</span>, <span class='va'>e2</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Model-averaged standardised effects</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>Shipley.Growth</span>  <span class='co'># candidate models</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>shipley.growth</span>  <span class='co'># candidate models</span>
 <span class='va'>w</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># weights</span>
 <span class='fu'>stdEff</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>w</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  (Intercept)         Date           DD          lat 
-#&gt; -0.293606353  0.277259885 -0.002849852 -0.028982072 </div></pre>
+#&gt; -0.294231350  0.248803366 -0.003638724 -0.039021926 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

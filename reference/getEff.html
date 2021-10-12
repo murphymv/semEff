@@ -42,8 +42,7 @@
   
 
 <meta property="og:title" content="Get SEM Effects — getEff" />
-<meta property="og:description" content="Extract SEM direct, indirect, and/or total effects from an
-object of class &quot;semEff&quot;." />
+<meta property="og:description" content="Extract SEM effects from an object of class &quot;semEff&quot;." />
 
 
 
@@ -75,7 +74,7 @@ object of class &quot;semEff&quot;." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -92,6 +91,18 @@ object of class &quot;semEff&quot;." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -118,22 +129,25 @@ object of class &quot;semEff&quot;." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get SEM Effects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/semEff-fun.R'><code>R/semEff-fun.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/semEff-fun.R'><code>R/semEff-fun.R</code></a></small>
     <div class="hidden name"><code>getEff.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Extract SEM direct, indirect, and/or total effects from an
-object of class <code>"semEff"</code>.</p>
+    <p>Extract SEM effects from an object of class <code>"semEff"</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getEff</span><span class='op'>(</span><span class='va'>eff</span>, type <span class='op'>=</span> <span class='st'>"orig"</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>getEff</span><span class='op'>(</span><span class='va'>eff</span>, responses <span class='op'>=</span> <span class='cn'>NULL</span>, type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"orig"</span>, <span class='st'>"boot"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>dirEff</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>getDirEff</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>indEff</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>getIndEff</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>totEff</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>getTotEff</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>getMedEff</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>getAllInd</span><span class='op'>(</span><span class='va'>eff</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,14 +157,20 @@ object of class <code>"semEff"</code>.</p>
       <td><p>An object of class <code>"semEff"</code>.</p></td>
     </tr>
     <tr>
+      <th>responses</th>
+      <td><p>An optional character vector, the names of one or more SEM
+response variables for which to return effects. Can also be a numeric
+vector of indices of <code>eff</code>. If <code>NULL</code> (default), all effects are returned.</p></td>
+    </tr>
+    <tr>
       <th>type</th>
-      <td><p>The type of effects to return. Must be either <code>"orig"</code>
-(default) or <code>"boot"</code>.</p></td>
+      <td><p>The type of effects to return. Can be <code>"orig"</code> (default) or
+<code>"boot"</code> (for bootstrapped).</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments (above) to be passed to <code>getEff</code> from other
-extractor functions.</p></td>
+      <td><p>Arguments (above) to be passed to <code>getEff()</code> from the other
+extractor functions (<code>type = "boot"</code> is not available for <code>getAllInd()</code>).</p></td>
     </tr>
     </table>
 
@@ -161,15 +181,17 @@ response variable, as numeric vectors or matrices (respectively).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>These are simple extractor functions for effects calculated using
-<code>semEff</code>, intended for convenience (e.g. for use with <code>predEff</code>).</p>
+<code><a href='semEff.html'>semEff()</a></code>, intended for convenience (e.g. for use with <code><a href='predEff.html'>predEff()</a></code>).</p>
     <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
     
 <ul>
-<li><p><code>getEff</code>: Extract all effects.</p></li>
-<li><p><code>dirEff</code>: Extract direct effects.</p></li>
-<li><p><code>indEff</code>: Extract indirect effects.</p></li>
-<li><p><code>totEff</code>: Extract total effects.</p></li>
+<li><p><code>getEff</code>: Extract effects.</p></li>
+<li><p><code>getDirEff</code>: Extract direct effects.</p></li>
+<li><p><code>getIndEff</code>: Extract indirect effects.</p></li>
+<li><p><code>getTotEff</code>: Extract total effects.</p></li>
+<li><p><code>getMedEff</code>: Extract mediator effects.</p></li>
+<li><p><code>getAllInd</code>: Extract all indirect effects.</p></li>
 </ul>
 
   </div>

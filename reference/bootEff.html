@@ -75,7 +75,7 @@ SEM correlated errors." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -92,6 +92,18 @@ SEM correlated errors." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -118,7 +130,7 @@ SEM correlated errors." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Bootstrap Effects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/bootEff-fun.R'><code>R/bootEff-fun.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/bootEff-fun.R'><code>R/bootEff-fun.R</code></a></small>
     <div class="hidden name"><code>bootEff.Rd</code></div>
     </div>
 
@@ -131,11 +143,11 @@ SEM correlated errors.</p>
   <span class='va'>mod</span>,
   <span class='va'>R</span>,
   seed <span class='op'>=</span> <span class='cn'>NULL</span>,
-  type <span class='op'>=</span> <span class='st'>"nonparametric"</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"nonparametric"</span>, <span class='st'>"parametric"</span>, <span class='st'>"semiparametric"</span><span class='op'>)</span>,
   ran.eff <span class='op'>=</span> <span class='cn'>NULL</span>,
   cor.err <span class='op'>=</span> <span class='cn'>NULL</span>,
   catch.err <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  parallel <span class='op'>=</span> <span class='st'>"snow"</span>,
+  parallel <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"snow"</span>, <span class='st'>"multicore"</span>, <span class='st'>"no"</span><span class='op'>)</span>,
   ncpus <span class='op'>=</span> <span class='cn'>NULL</span>,
   cl <span class='op'>=</span> <span class='cn'>NULL</span>,
   bM.arg <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -147,7 +159,10 @@ SEM correlated errors.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mod</th>
-      <td><p>A fitted model object, or a list or nested list of such objects.</p></td>
+      <td><p>A fitted model object, or a list or nested list of such objects.
+Alternatively, a <code>"psem"</code> object from
+<a href='https://rdrr.io/cran/piecewiseSEM/man/psem.html'><code><a href='https://rdrr.io/pkg/piecewiseSEM/man/psem.html'>piecewiseSEM::psem()</a></code></a>.
+If model lists are unnamed, response variable names will be used.</p></td>
     </tr>
     <tr>
       <th>R</th>
@@ -160,10 +175,9 @@ five-digit integer is used (see Details).</p></td>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>The type of bootstrapping to perform. Can be
-<code>"nonparametric"</code> (default), <code>"parametric"</code>, or
-<code>"semiparametric"</code> (the last two currently only for mixed models, via
-<code>bootMer</code>).</p></td>
+      <td><p>The type of bootstrapping to perform. Can be <code>"nonparametric"</code>
+(default), <code>"parametric"</code>, or <code>"semiparametric"</code> (the last two currently
+only for mixed models, via <code>bootMer()</code>).</p></td>
     </tr>
     <tr>
       <th>ran.eff</th>
@@ -172,15 +186,15 @@ the (highest-level) random effect to resample (see Details).</p></td>
     </tr>
     <tr>
       <th>cor.err</th>
-      <td><p>Optional, names of SEM correlated errors to be bootstrapped.
-Should be of the form: <code><a href='https://rdrr.io/r/base/c.html'>c("mod1 ~~ mod2", "mod3 ~~ mod4", ...)</a></code>
-(spaces optional), with names matching model names.</p></td>
+      <td><p>Optional, names of SEM correlated errors to be bootstrapped
+(ignored if <code>mod</code> is a <code>"psem"</code> object). Should be of the form: <code><a href='https://rdrr.io/r/base/c.html'>c("var1 ~~ var2", "var3 ~~ var4", ...)</a></code> (spaces optional), using model/response
+variable names.</p></td>
     </tr>
     <tr>
       <th>catch.err</th>
       <td><p>Logical, should errors generated during model fitting or
-estimation be caught and <code>NA</code> returned for estimates? If <code>FALSE</code>,
-any such errors will cause the function to exit.</p></td>
+estimation be caught and <code>NA</code> returned for estimates? If <code>FALSE</code>, any such
+errors will cause the function to exit.</p></td>
     </tr>
     <tr>
       <th>parallel</th>
@@ -189,8 +203,8 @@ any such errors will cause the function to exit.</p></td>
     </tr>
     <tr>
       <th>ncpus</th>
-      <td><p>Number of system cores to use for parallel processing. If
-<code>NULL</code> (default), all available cores are used.</p></td>
+      <td><p>Number of system cores to use for parallel processing. If <code>NULL</code>
+(default), all available cores are used.</p></td>
     </tr>
     <tr>
       <th>cl</th>
@@ -199,127 +213,124 @@ any such errors will cause the function to exit.</p></td>
     </tr>
     <tr>
       <th>bM.arg</th>
-      <td><p>A named list of any additional arguments to <code>bootMer</code>.</p></td>
+      <td><p>A named list of any additional arguments to <code>bootMer()</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments to <code><a href='stdEff.html'>stdEff</a></code>.</p></td>
+      <td><p>Arguments to <code><a href='stdEff.html'>stdEff()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code>"boot"</code> containing the bootstrapped effects,
-or a list/nested list of such objects.</p>
+    <p>An object of class <code>"boot"</code> containing the bootstrapped effects, or a
+(named) list/nested list of such objects.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>bootEff</code> uses the <code><a href='https://rdrr.io/pkg/boot/man/boot.html'>boot</a></code> function
-(primarily) to bootstrap standardised effects from a fitted model or list
-of models (calculated using <code>stdEff</code>). Bootstrapping is typically
-nonparametric, i.e. model effects are calculated from data where the rows
-have been randomly sampled with replacement. 10,000 such resamples should
-provide accurate coverage for confidence intervals in most situations, with
-fewer sufficing in some cases. To ensure that data is resampled in the same
-way across individual bootstrap operations within the same run (e.g. models
-in a list), the same seed is set per operation, with the value saved as an
-attribute to the matrix of bootstrapped values (for reproducibility). The
-seed can either be user-supplied or a randomly-generated five-digit number
-(default), and is always re-initialised on exit (i.e.
-<code><a href='https://rdrr.io/r/base/Random.html'>set.seed(NULL)</a></code>).</p>
+    <p><code>bootEff()</code> uses <code><a href='https://rdrr.io/pkg/boot/man/boot.html'>boot::boot()</a></code> (primarily) to bootstrap
+standardised effects from a fitted model or list of models (calculated
+using <code><a href='stdEff.html'>stdEff()</a></code>). Bootstrapping is typically nonparametric, i.e. model
+effects are calculated from data where the rows have been randomly sampled
+with replacement. 10,000 such resamples should provide accurate coverage
+for confidence intervals in most situations, with fewer sufficing in some
+cases. To ensure that data is resampled in the same way across individual
+bootstrap operations within the same run (e.g. models in a list), the same
+seed is set per operation, with the value saved as an attribute to the
+matrix of bootstrapped values (for reproducibility). The seed can either be
+user-supplied or a randomly-generated five-digit number (default), and is
+always re-initialised on exit (i.e. <code><a href='https://rdrr.io/r/base/Random.html'>set.seed(NULL)</a></code>).</p>
 <p>Where <code>weights</code> are specified, bootstrapped effects will be a weighted
 average across the set of candidate models for each response variable,
 calculated after each model is first refit to the resampled dataset
-(specifying <code>weights = "equal"</code> will use a simple average instead -
-see <code><a href='avgEst.html'>avgEst</a></code>). If no weights are specified and
-<code>mod</code> is a nested list of models, the function will throw an error, as
-it will be expecting weights for a presumed model averaging scenario. If
-instead the user wishes to bootstrap each individual model, they should
-recursively apply the function using <code>rMapply</code> (remember to set a
-seed).</p>
-<p>Where names of models with correlated errors are specified to
-<code>cor.err</code>, the function will also return bootstrapped Pearson
-correlated errors (weighted residuals) for those models. If <code>weights</code>
-are supplied and <code>mod</code> is a nested list, residuals will first be
-averaged across candidate models. If any two models (or candidate sets)
-with correlated errors were fit to different subsets of data observations,
-both models/sets are first refit to data containing only the observations
-in common.</p>
+(specifying <code>weights = "equal"</code> will use a simple average instead - see
+<code><a href='avgEst.html'>avgEst()</a></code>). If no weights are specified and <code>mod</code> is a nested list of
+models, the function will throw an error, as it will be expecting weights
+for a presumed model averaging scenario. If instead the user wishes to
+bootstrap each individual model, they should recursively apply the function
+using <code><a href='rMapply.html'>rMapply()</a></code> (remember to set a seed).</p>
+<p>Where names of response variables with correlated errors are specified to
+<code>cor.err</code>, the function will also return bootstrapped Pearson correlated
+errors (weighted residuals) for those models. If <code>weights</code> are supplied and
+<code>mod</code> is a nested list, residuals will first be averaged across candidate
+models. If any two models (or candidate sets) with correlated errors were
+fit to different subsets of data observations, both models/sets are first
+refit to data containing only the observations in common.</p>
 <p>For nonparametric bootstrapping of mixed models, resampling should occur at
 the group-level, as individual observations are not independent. The name
-of the random effect to resample must be supplied to <code>ran.eff</code>. For
-nested random effects, this should be the highest-level group (Davison &amp;
-Hinkley 1997, Ren <em>et al.</em> 2010). This form of resampling will result
-in differently-sized datasets if observations are unbalanced across groups;
-however this should not generally be an issue, as the number of independent
-units (groups), and hence the 'degrees of freedom', remains
+of the random effect to resample must be supplied to <code>ran.eff</code>. For nested
+random effects, this should be the highest-level group (Davison &amp; Hinkley
+1997, Ren <em>et al.</em> 2010). This form of resampling will result in datasets
+of different sizes if observations are unbalanced across groups; however
+this should not generally be an issue, as the number of independent units
+(groups), and hence the 'degrees of freedom', remains
 <a href='https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap'>unchanged</a>.</p>
-<p>For mixed models with
-<a href='https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified'>non-nested
-random effects</a>, nonparametric resampling will not be appropriate. In these
-cases, (semi-)parametric bootstrapping can be performed instead via
-<code><a href='https://rdrr.io/pkg/lme4/man/bootMer.html'>bootMer</a></code> in the <span class="pkg">lme4</span> package (with additional
-arguments passed to that function as necessary). NOTE: As <code>bootMer</code>
-takes only a fitted model as its first argument, any model averaging is
-calculated 'post-hoc' using the estimates in boot objects for each
-candidate model, rather than during the bootstrapping process itself (i.e.
-the default procedure via <code>boot</code>). Results are then returned in a new
-boot object for each response variable or correlated error estimate.</p>
-<p>If supplied a list containing both mixed and non-mixed models,
-<code>bootEff</code> with nonparametric bootstrapping will still work and will
-treat all models as mixed for resampling (with a warning). This is probably
-a relatively rare scenario, but may occur where the user decides that
-non-mixed models perform similarly and/or cause less issues than their
-mixed counterparts for at least some response variables (e.g. where random
-effect variance estimates are at or near zero). If nonparametric
-bootstrapping is not used however, an error will occur, as <code>bootMer</code>
-will only accept mixed models.</p>
-<p>Parallel processing is used by default via the <span class="pkg">parallel</span> package and
-option <code>parallel = "snow"</code> (and is generally recommended), but users
-can specify the type of parallel processing to use, or none. If
-<code>"snow"</code>, a cluster of workers is created using <code>makeCluster</code>,
-and the user can specify the number of system cores to incorporate in the
-cluster (defaults to all available). <code>bootEff</code> then exports all
-required objects and functions to this cluster using <code>clusterExport</code>,
-after performing a (rough) match of all objects and functions in the
-current global environment to those referenced in the model call(s). Users
-should load any required external packages prior to calling the function.</p>
+<p>For mixed models with <a href='https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified'>non-nested random effects</a>,
+nonparametric resampling will not be appropriate. In these cases,
+parametric or semiparametric bootstrapping can be performed instead via
+<code><a href='https://rdrr.io/pkg/lme4/man/bootMer.html'>lme4::bootMer()</a></code> (with additional arguments passed to that function as
+necessary). NOTE: As <code>bootMer()</code> takes only a fitted model as its first
+argument (i.e. no lists), any model averaging is calculated 'post-hoc'
+using the estimates in boot objects for each candidate model, rather than
+during the bootstrapping process itself (i.e. the default procedure via
+<code>boot()</code>). Results are then returned in a new boot object for each response
+variable or correlated error estimate.</p>
+<p>If supplied a list containing both mixed and non-mixed models, <code>bootEff()</code>
+with nonparametric bootstrapping will still work and will treat all models
+as mixed models for resampling (with a warning). This is likely a
+relatively rare scenario, but may occur where the user decides that
+non-mixed models perform similarly and/or cause less fitting issues than
+their mixed counterparts for at least some response variables (e.g. where
+random effect variance estimates are at or near zero). The data will be
+resampled on the supplied random effect for all models. If nonparametric
+bootstrapping is not used in this scenario however, an error will occur, as
+<code>bootMer()</code> will only accept mixed models.</p>
+<p>Parallel processing is used by default via the parallel package and
+option <code>parallel = "snow"</code> (and is generally recommended), but users can
+specify the type of parallel processing to use, or none. If <code>"snow"</code>, a
+cluster of workers is created using <code>makeCluster()</code>, and the user can
+specify the number of system cores to incorporate in the cluster (defaults
+to all available). <code>bootEff()</code> then exports all required objects and
+functions to this cluster using <code>clusterExport()</code>, after performing a
+(rough) match of all objects and functions in the current global
+environment to those referenced in the model call(s). Users should load any
+required external packages prior to calling the function.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>Bootstrapping mixed (or indeed any other) models may take a very long
 time when the number of replicates, observations, parameters, and/or models
 is high. To decrease processing time, it may be worth trying different
-optimizers and/or other options to generate faster estimates (always check
+optimisers and/or other options to generate faster estimates (always check
 results).</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Burnham, K. P., &amp; Anderson, D. R. (2002). <em>Model Selection
-and Multimodel Inference: A Practical Information-Theoretic Approach</em> (2nd
+    <p>Burnham, K. P., &amp; Anderson, D. R. (2002). <em>Model Selection and
+Multimodel Inference: A Practical Information-Theoretic Approach</em> (2nd
 ed.). New York: Springer-Verlag. Retrieved from
 <a href='https://www.springer.com/gb/book/9780387953649'>https://www.springer.com/gb/book/9780387953649</a></p>
 <p>Davison, A. C., &amp; Hinkley, D. V. (1997). <em>Bootstrap Methods and their
 Application</em>. Cambridge University Press.</p>
 <p>Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., &amp; Lai, S. (2010).
 Nonparametric bootstrapping for hierarchical data. <em>Journal of Applied
-Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/dvfzcn'>https://doi.org/dvfzcn</a></p>
+Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.org/10/dvfzcn'>10/dvfzcn</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Bootstrap Shipley SEM (test)</span>
-<span class='co'># (set 'site' as group for resampling - highest-level random effect)</span>
-<span class='fu'>bootEff</span><span class='op'>(</span><span class='va'>Shipley.SEM</span>, ran.eff <span class='op'>=</span> <span class='st'>"site"</span>, R <span class='op'>=</span> <span class='fl'>1</span>, parallel <span class='op'>=</span> <span class='st'>"no"</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># Bootstrap Shipley SEM (test — 1 rep)</span>
+<span class='co'># (set 'site' as group for resampling — highest-level random effect)</span>
+<span class='fu'>bootEff</span><span class='op'>(</span><span class='va'>shipley.sem</span>, R <span class='op'>=</span> <span class='fl'>1</span>, ran.eff <span class='op'>=</span> <span class='st'>"site"</span>, parallel <span class='op'>=</span> <span class='st'>"no"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>boundary (singular) fit: see ?isSingular</span></div><div class='output co'>#&gt; $DD
 #&gt; 
 #&gt; ORDINARY NONPARAMETRIC BOOTSTRAP
 #&gt; 
 #&gt; 
 #&gt; Call:
-#&gt; boot::boot(data = x, statistic = s, R = R, parallel = p, ncpus = nc, 
-#&gt;     cl = cl)
+#&gt; boot::boot(data = x, statistic = s, R = R, parallel = parallel, 
+#&gt;     ncpus = nc, cl = cl)
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original      bias    std. error
-#&gt; t1* -0.05600661 -0.03965640          NA
-#&gt; t2* -0.68772025 -0.08086404          NA
+#&gt;        original     bias    std. error
+#&gt; t1* -0.05600661 0.00255136          NA
+#&gt; t2* -0.68772025 0.13617140          NA
 #&gt; 
 #&gt; $Date
 #&gt; 
@@ -327,14 +338,14 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Call:
-#&gt; boot::boot(data = x, statistic = s, R = R, parallel = p, ncpus = nc, 
-#&gt;     cl = cl)
+#&gt; boot::boot(data = x, statistic = s, R = R, parallel = parallel, 
+#&gt;     ncpus = nc, cl = cl)
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;        original      bias    std. error
-#&gt; t1* -0.01493651 -0.06575834          NA
-#&gt; t2* -0.62813666 -0.04905215          NA
+#&gt; t1* -0.01493651 -0.06897384          NA
+#&gt; t2* -0.62813666  0.04276223          NA
 #&gt; 
 #&gt; $Growth
 #&gt; 
@@ -342,14 +353,14 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Call:
-#&gt; boot::boot(data = x, statistic = s, R = R, parallel = p, ncpus = nc, 
-#&gt;     cl = cl)
+#&gt; boot::boot(data = x, statistic = s, R = R, parallel = parallel, 
+#&gt;     ncpus = nc, cl = cl)
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;       original      bias    std. error
-#&gt; t1* -0.2917507 -0.28399201          NA
-#&gt; t2*  0.3824224 -0.05842604          NA
+#&gt;       original       bias    std. error
+#&gt; t1* -0.2917507  0.022756987          NA
+#&gt; t2*  0.3824224 -0.003617325          NA
 #&gt; 
 #&gt; $Live
 #&gt; 
@@ -357,17 +368,17 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; 
 #&gt; 
 #&gt; Call:
-#&gt; boot::boot(data = x, statistic = s, R = R, parallel = p, ncpus = nc, 
-#&gt;     cl = cl)
+#&gt; boot::boot(data = x, statistic = s, R = R, parallel = parallel, 
+#&gt;     ncpus = nc, cl = cl)
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;      original    bias    std. error
-#&gt; t1* 0.3105220 0.2454892          NA
-#&gt; t2* 0.3681961 0.1289405          NA
+#&gt;      original     bias    std. error
+#&gt; t1* 0.3105220 0.12264625          NA
+#&gt; t2* 0.3681961 0.05114575          NA
 #&gt; </div><div class='input'>
-<span class='co'># Estimates (use saved boot object, 10000 resamples)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>Shipley.SEM.Boot</span>, <span class='st'>"[["</span>, <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># original</span>
+<span class='co'># Check estimates (use saved boot object — 1000 reps)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>shipley.sem.boot</span>, <span class='st'>"[["</span>, <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># original</span>
 </div><div class='output co'>#&gt; $DD
 #&gt; (Intercept)         lat 
 #&gt; -0.05600661 -0.68772025 
@@ -383,42 +394,42 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. <a href='https://doi.org/d
 #&gt; $Live
 #&gt; (Intercept)      Growth 
 #&gt;   0.3105220   0.3681961 
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>Shipley.SEM.Boot</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>$</span><span class='va'>t</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># bootstrapped</span>
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>shipley.sem.boot</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>$</span><span class='va'>t</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># bootstrapped</span>
 </div><div class='output co'>#&gt; $DD
 #&gt;      (Intercept)        lat
-#&gt; [1,] -0.17021879 -0.5054090
-#&gt; [2,] -0.01103324 -0.7609901
-#&gt; [3,] -0.10033566 -0.4928980
-#&gt; [4,] -0.15312629 -0.7296608
-#&gt; [5,] -0.11097619 -0.6053109
-#&gt; [6,] -0.10156478 -0.7990547
+#&gt; [1,]  0.07884187 -0.5481916
+#&gt; [2,] -0.09289124 -0.6231252
+#&gt; [3,] -0.20894499 -0.6936512
+#&gt; [4,] -0.13368868 -0.4139394
+#&gt; [5,] -0.10229480 -0.7023361
+#&gt; [6,] -0.01969415 -0.6358960
 #&gt; 
 #&gt; $Date
 #&gt;      (Intercept)         DD
-#&gt; [1,] -0.02737978 -0.5661798
-#&gt; [2,] -0.03161189 -0.6893927
-#&gt; [3,] -0.05836160 -0.5543232
-#&gt; [4,]  0.10072154 -0.6399231
-#&gt; [5,] -0.01505325 -0.6170210
-#&gt; [6,]  0.03482753 -0.6373668
+#&gt; [1,] -0.11082251 -0.6196655
+#&gt; [2,] -0.12908598 -0.6238294
+#&gt; [3,]  0.01454823 -0.6291431
+#&gt; [4,] -0.03500544 -0.5212996
+#&gt; [5,] -0.04554961 -0.5774458
+#&gt; [6,] -0.02636631 -0.5555745
 #&gt; 
 #&gt; $Growth
 #&gt;      (Intercept)      Date
-#&gt; [1,]  -0.2382040 0.4057726
-#&gt; [2,]  -0.4081317 0.3880245
-#&gt; [3,]  -0.1970780 0.3199524
-#&gt; [4,]  -0.2171214 0.4645324
-#&gt; [5,]  -0.1899416 0.3404280
-#&gt; [6,]  -0.4492782 0.4561816
+#&gt; [1,]  -0.2900700 0.3256320
+#&gt; [2,]  -0.2223630 0.3988001
+#&gt; [3,]  -0.3721685 0.4173523
+#&gt; [4,]  -0.2221964 0.3551045
+#&gt; [5,]  -0.1850172 0.4199339
+#&gt; [6,]  -0.3353260 0.3531018
 #&gt; 
 #&gt; $Live
 #&gt;      (Intercept)    Growth
-#&gt; [1,]   0.5461418 0.5188558
-#&gt; [2,]   0.6408434 0.5677783
-#&gt; [3,]   0.4097068 0.4474758
-#&gt; [4,]   0.2654245 0.2996560
-#&gt; [5,]   0.2541603 0.3150650
-#&gt; [6,]   0.4736550 0.4279492
+#&gt; [1,]   1.0030671 0.8118620
+#&gt; [2,]   0.3839991 0.3822085
+#&gt; [3,]   0.4223174 0.4173702
+#&gt; [4,]   0.3149438 0.3793002
+#&gt; [5,]   0.6149997 0.5659556
+#&gt; [6,]   0.6737008 0.5710483
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

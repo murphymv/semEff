@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Print SEM Effects — print.semEff • semEff</title>
+<title>Print "semEff" Objects — print.semEff • semEff</title>
 
 
 <!-- jquery -->
@@ -41,9 +41,8 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Print SEM Effects — print.semEff" />
-<meta property="og:description" content="A print method for an object of class &quot;semEff&quot;, returning
-summary tables of effects and confidence intervals for all responses." />
+<meta property="og:title" content="Print "semEff" Objects — print.semEff" />
+<meta property="og:description" content="A print() method for an object of class &quot;semEff&quot;." />
 
 
 
@@ -75,7 +74,7 @@ summary tables of effects and confidence intervals for all responses." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -92,6 +91,18 @@ summary tables of effects and confidence intervals for all responses." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -117,14 +128,13 @@ summary tables of effects and confidence intervals for all responses." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Print SEM Effects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/semEff-fun.R'><code>R/semEff-fun.R</code></a></small>
+    <h1>Print <code>"semEff"</code> Objects</h1>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/semEff-fun.R'><code>R/semEff-fun.R</code></a></small>
     <div class="hidden name"><code>print.semEff.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A print method for an object of class <code>"semEff"</code>, returning
-summary tables of effects and confidence intervals for all responses.</p>
+    <p>A <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code> method for an object of class <code>"semEff"</code>.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for semEff</span>
@@ -139,10 +149,27 @@ summary tables of effects and confidence intervals for all responses.</p>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Further arguments passed to or from other methods.</p></td>
+      <td><p>Further arguments passed to or from other methods. Not currently
+used.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A summary table for the SEM variables (data frame).</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This print method returns a summary table for the SEM variables,
+giving their status as exogenous or endogenous and as predictor, mediator
+and/or response. It also gives the number of direct vs. indirect paths
+leading to each variable, and the number of correlated errors (if
+applicable).</p>
+<p>Printing of summary tables uses a custom version of <code><a href='https://rdrr.io/r/base/print.dataframe.html'>print.data.frame()</a></code>,
+facilitating correct rendering of unicode characters by bypassing
+<code><a href='https://rdrr.io/r/base/format.html'>format.data.frame()</a></code> (<a href='https://stat.ethz.ch/pipermail/r-devel/2015-May/071252.html'>bug details</a>,
+workaround adapted from
+<a href='https://stat.ethz.ch/pipermail/r-devel/2015-May/071259.html'>here</a>). Row
+names (numbers) are also suppressed by default.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

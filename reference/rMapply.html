@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Recursive mapply — rMapply • semEff</title>
+<title>Recursive mapply() — rMapply • semEff</title>
 
 
 <!-- jquery -->
@@ -41,7 +41,7 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Recursive mapply — rMapply" />
+<meta property="og:title" content="Recursive mapply() — rMapply" />
 <meta property="og:description" content="Recursively apply a function to a list or lists." />
 
 
@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -91,6 +91,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -116,8 +128,8 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Recursive <code>mapply</code></h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/helper-fun.R'><code>R/helper-fun.R</code></a></small>
+    <h1>Recursive <code><a href='https://rdrr.io/r/base/mapply.html'>mapply()</a></code></h1>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/helper-fun.R'><code>R/helper-fun.R</code></a></small>
     <div class="hidden name"><code>rMapply.Rd</code></div>
     </div>
 
@@ -136,8 +148,8 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Object(s) to which <code>FUN</code> can be applied, or lists of such
-objects to iterate over (defined narrowly, as of class <code>"list"</code>).</p></td>
+      <td><p>Object(s) to which <code>FUN</code> can be applied, or lists of such objects
+to iterate over (defined narrowly, as of class <code>"list"</code>).</p></td>
     </tr>
     <tr>
       <th>MoreArgs</th>
@@ -161,18 +173,17 @@ in <code>...</code> for the output.</p></td>
 vector or array (or list of arrays).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>rMapply</code> recursively applies <code>FUN</code> to the elements of the
-lists in <code>...</code> via <code><a href='https://rdrr.io/r/base/mapply.html'>mapply</a></code>. If only a single list
-is supplied, the function acts like a recursive version of
-<code><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></code>. The particular condition that determines if the
-function should stop recursing is if either the first or second objects in
-<code>...</code> are not of class <code>"list"</code>. Thus, unlike <code>mapply</code>, it
-will not iterate over non-list elements in these objects, but instead
+    <p><code>rMapply()</code> recursively applies <code>FUN</code> to the elements of the lists
+in <code>...</code> via <code><a href='https://rdrr.io/r/base/mapply.html'>mapply()</a></code>. If only a single list is supplied, the function
+acts like a recursive version of <code><a href='https://rdrr.io/r/base/lapply.html'>sapply()</a></code>. The particular condition that
+determines if the function should stop recursing is if either the first or
+second objects in <code>...</code> are not of class <code>"list"</code>. Thus, unlike <code><a href='https://rdrr.io/r/base/mapply.html'>mapply()</a></code>,
+it will not iterate over non-list elements in these objects, but instead
 returns the output of <code>FUN(...)</code>.</p>
 <p>This is primarily a convenience function used internally to enable
 recursive application of functions to lists or nested lists. Its particular
-stop condition for recursing is also designed to either a) act as a wrapper
-for <code>FUN</code> if the first object in <code>...</code> is not a list, or b) apply
+stop condition for recursing is also designed to either <em>a)</em> act as a
+wrapper for <code>FUN</code> if the first object in <code>...</code> is not a list, or <em>b)</em> apply
 a weighted averaging operation if the first object is a list and the second
 object is a numeric vector of weights.</p>
 

@@ -75,7 +75,7 @@ fitted model(s) via the variance-covariance matrix of coefficients." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -92,6 +92,18 @@ fitted model(s) via the variance-covariance matrix of coefficients." />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/predicting-effects.html">Predicting Effects</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -118,7 +130,7 @@ fitted model(s) via the variance-covariance matrix of coefficients." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generalised Variance Inflation Factors</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/main/R/stdEff-fun.R'><code>R/stdEff-fun.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/stdEff-fun.R'><code>R/stdEff-fun.R</code></a></small>
     <div class="hidden name"><code>VIF.Rd</code></div>
     </div>
 
@@ -127,7 +139,7 @@ fitted model(s) via the variance-covariance matrix of coefficients." />
 fitted model(s) via the variance-covariance matrix of coefficients.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>VIF</span><span class='op'>(</span><span class='va'>mod</span>, data <span class='op'>=</span> <span class='cn'>NULL</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>VIF</span><span class='op'>(</span><span class='va'>mod</span>, data <span class='op'>=</span> <span class='cn'>NULL</span>, env <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -142,38 +154,38 @@ fitted model(s) via the variance-covariance matrix of coefficients.</p>
     </tr>
     <tr>
       <th>env</th>
-      <td><p>Environment in which to look for model data (if none supplied).</p></td>
+      <td><p>Environment in which to look for model data (if none supplied).
+Defaults to the <code><a href='https://rdrr.io/r/stats/formula.html'>formula()</a></code> environment.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A numeric vector of the VIFs, or an array, list of vectors/arrays,
-or nested list.</p>
+    <p>A numeric vector of the VIFs, or an array, list of vectors/arrays, or
+nested list.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>VIF</code> calculates generalised variance inflation factors (GVIF)
-as described in Fox &amp; Monette (1992), and also implemented in the
-<a href='https://www.rdocumentation.org/packages/car/versions/3.0-3/topics/vif'>
-vif</a> function in the <span class="pkg">car</span> package. However, whereas <code>vif</code>
-returns both GVIF and GVIF^(1/(2*Df)) values, <code>VIF</code> simply returns the
-squared result of the latter measure, which equals the standard VIF for
-single-coefficient terms and is the equivalent measure for
+    <p><code>VIF()</code> calculates generalised variance inflation factors (GVIF) as
+described in Fox &amp; Monette (1992), and also implemented in
+<a href='https://rdrr.io/cran/car/man/vif.html'><code><a href='https://rdrr.io/pkg/car/man/vif.html'>car::vif()</a></code></a>. However, whereas
+<code>vif()</code> returns both GVIF and GVIF^(1/(2*Df)) values, <code>VIF()</code> simply
+returns the squared result of the latter measure, which equals the standard
+VIF for single-coefficient terms and is the equivalent measure for
 multi-coefficient terms (e.g. categorical or polynomial). Also, while
-<code>vif</code> returns values per model term (i.e. predictor variable),
-<code>VIF</code> returns values per coefficient, meaning that the same value will
-be returned per coefficient for multi-coefficient terms. Finally, <code>NA</code>
-is returned for any terms which could not be estimated in the model (e.g.
+<code>vif()</code> returns values per model term (i.e. predictor variable), <code>VIF()</code>
+returns values per coefficient, meaning that the same value will be
+returned per coefficient for multi-coefficient terms. Finally, <code>NA</code> is
+returned for any terms which could not be estimated in the model (e.g.
 aliased).</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Fox, J. and Monette, G. (1992) Generalized Collinearity
-Diagnostics. <em>Journal of the American Statistical Association</em>
-<strong>87</strong>, 178-183. <a href='https://doi.org/dm9wbw'>https://doi.org/dm9wbw</a></p>
+Diagnostics. <em>Journal of the American Statistical Association</em>, <strong>87</strong>,
+178-183. doi: <a href='https://doi.org/10/dm9wbw'>10/dm9wbw</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Model with two correlated terms</span>
-<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>Shipley.Growth</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>shipley.growth</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span>
 <span class='fu'>VIF</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>  <span class='co'># Date &amp; DD somewhat correlated</span>
 </div><div class='output co'>#&gt;     Date       DD      lat 
 #&gt; 6.062838 6.077410 1.012151 </div><div class='input'><span class='fu'>VIF</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>.</span> <span class='op'>~</span> <span class='va'>.</span> <span class='op'>-</span> <span class='va'>DD</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># drop DD</span>

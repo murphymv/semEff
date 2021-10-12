@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Hypothesised SEM from Shipley (2009) — shipley.sem • semEff</title>
+<title>Summarise SEM Effects — summary.semEff • semEff</title>
 
 
 <!-- jquery -->
@@ -41,8 +41,8 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Hypothesised SEM from Shipley (2009) — shipley.sem" />
-<meta property="og:description" content="Hypothesised SEM from Shipley (2009)" />
+<meta property="og:title" content="Summarise SEM Effects — summary.semEff" />
+<meta property="og:description" content="A summary() method for an object of class &quot;semEff&quot;." />
 
 
 
@@ -128,38 +128,47 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Hypothesised SEM from Shipley (2009)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>Shipley.SEM.Rd</code></div>
+    <h1>Summarise SEM Effects</h1>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/semEff-fun.R'><code>R/semEff-fun.R</code></a></small>
+    <div class="hidden name"><code>summary.semEff.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Hypothesised SEM from Shipley (2009)</p>
+    <p>A <code><a href='https://rdrr.io/r/base/summary.html'>summary()</a></code> method for an object of class <code>"semEff"</code>.</p>
     </div>
 
-    <pre class="usage"><span class='va'>shipley.sem</span></pre>
+    <pre class="usage"><span class='co'># S3 method for semEff</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>object</span>, responses <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>object</th>
+      <td><p>An object of class <code>"semEff"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>responses</th>
+      <td><p>An optional character vector, the names of one or more SEM
+response variables for which to return summaries (and/or <code>"Correlated Errors"</code>, where applicable). Can also be a numeric vector of indices of
+<code>object</code>. If <code>NULL</code> (default), all summaries are returned.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further arguments passed to or from other methods. Not currently
+used.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of fitted mixed models of class <code>"lmer"</code> and <code>"glmer"</code>,
-representing structured equations.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+    <p>A summary table or tables of effects for the endogenous variables
+(data frames).</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Shipley, B. (2009). Confirmatory path analysis in a generalized
-multilevel context. <em>Ecology</em>, <strong>90</strong>(2), 363-368. doi: <a href='https://doi.org/10/bqd43d'>10/bqd43d</a></p>
+    <p>This summary method prints tables of effects and confidence
+intervals for SEM endogenous (response) variables.</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Specification</span>
-<span class='co'># shipley.sem &lt;- list(</span>
-<span class='co'>#   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = shipley),</span>
-<span class='co'>#   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = shipley),</span>
-<span class='co'>#   Growth = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree),</span>
-<span class='co'>#                       data = shipley),</span>
-<span class='co'>#   Live = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), binomial,</span>
-<span class='co'>#                      data = shipley)</span>
-<span class='co'># )</span>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

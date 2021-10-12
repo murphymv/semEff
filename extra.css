@@ -1,4 +1,5 @@
-/* rscodeio Theme for pkgdown Sites */
+/* rscodeio Package Theme for pkgdown Sites */
+/* (https://github.com/murphymv/rscodeio, forked from: https://github.com/anthonynorth/rscodeio)
 
 /* Menus, Links, Body, Code Chunks */
 
@@ -33,6 +34,8 @@ pre {
   background-color: rgb(34, 34, 34);
   border-color: rgb(62, 64, 66);
   color: rgb(156, 220, 254);
+  font-family: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-feature-settings: "ss01", "ss02", "ss03", "ss05", "ss06", "ss07";
 }
 
 .navbar-default,
@@ -75,8 +78,10 @@ pre {
   color: rgb(86, 156, 214);
 }
 /* Comment */
-.co {
+.co,
+.message {
   color: rgb(106, 153, 85);
+  font-weight: normal;
 }
 /* DecVal, Float */
 .dv,
