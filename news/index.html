@@ -138,9 +138,9 @@
 <h3 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New features:</h3>
 <ul>
-<li>New formatted table output for effect summaries for <code><a href="../reference/semEff.html">semEff()</a></code> and <code><a href="../reference/bootCI.html">bootCI()</a></code>, accessed via new <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> methods.</li>
-<li>Bootstrap standard errors and bias (mean minus original estimate) now included with effect summaries and fitted values from <code><a href="../reference/predEff.html">predEff()</a></code>.</li>
-<li>Support for <code>"psem"</code> objects (<code><a href="https://rdrr.io/pkg/piecewiseSEM/man/psem.html">piecewiseSEM::psem()</a></code>) in <code><a href="../reference/bootEff.html">bootEff()</a></code>/<code><a href="../reference/semEff.html">semEff()</a></code>.</li>
+<li>New formatted table output for effect summaries for <code>semEff()</code> and <code>bootCI()</code>, accessed via new <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> methods.</li>
+<li>Bootstrap standard errors and bias (mean minus original estimate) now included with effect summaries and fitted values from <code>predEff()</code>.</li>
+<li>Support for <code>"psem"</code> objects (<code><a href="https://rdrr.io/pkg/piecewiseSEM/man/psem.html">piecewiseSEM::psem()</a></code>) in <code>bootEff()</code>/<code>semEff()</code>.</li>
 <li>New package vignettes demonstrating some examples.</li>
 </ul>
 </div>
@@ -148,12 +148,12 @@
 <h3 class="hasAnchor">
 <a href="#other-changes" class="anchor"></a>Other changes:</h3>
 <ul>
-<li>All calculated indirect effects (individual, not summed) now also returned as part of <code>"semEff"</code> object (for reference; does not include bootstrapped effects). Extract using <code><a href="../reference/getEff.html">getAllInd()</a></code>.</li>
-<li>Unnamed model lists can now be supplied to <code><a href="../reference/bootEff.html">bootEff()</a></code>/<code><a href="../reference/semEff.html">semEff()</a></code> (names are generated automatically).</li>
-<li>Updates to <code><a href="../reference/R2.html">R2()</a></code> (control of negative values, new improved default method for adjusted R-squared — Olkin-Pratt exact estimator).</li>
-<li>New function <code><a href="../reference/getX.html">getX()</a></code>, for more flexible construction of model design matrices (mostly for internal use).</li>
-<li>Removed <code>…</code> argument of <code><a href="../reference/stdEff.html">stdEff()</a></code> — arguments to <code><a href="../reference/R2.html">R2()</a></code> are now passed as named list to <code>R2.arg</code>.</li>
-<li>Renamed extractor functions for effects (e.g. <code>dirEff()</code> -&gt; <code><a href="../reference/getEff.html">getDirEff()</a></code>) and added some new ones.</li>
+<li>All calculated indirect effects (individual, not summed) now also returned as part of <code>"semEff"</code> object (for reference; does not include bootstrapped effects). Extract using <code>getAllInd()</code>.</li>
+<li>Unnamed model lists can now be supplied to <code>bootEff()</code>/<code>semEff()</code> (names are generated automatically).</li>
+<li>Updates to <code>R2()</code> (control of negative values, new improved default method for adjusted R-squared — Olkin-Pratt exact estimator).</li>
+<li>New function <code>getX()</code>, for more flexible construction of model design matrices (mostly for internal use).</li>
+<li>Removed <code>…</code> argument of <code>stdEff()</code> — arguments to <code>R2()</code> are now passed as named list to <code>R2.arg</code>.</li>
+<li>Renamed extractor functions for effects (e.g. <code>dirEff()</code> -&gt; <code>getDirEff()</code>) and added some new ones.</li>
 <li>Various other code and documentation updates.</li>
 </ul>
 </div>
@@ -161,9 +161,9 @@
 <h3 class="hasAnchor">
 <a href="#bugs-fixed" class="anchor"></a>Bugs fixed:</h3>
 <ul>
-<li>Amendment to previous incomplete fix for issue where <code><a href="../reference/xNam.html">xNam()</a></code> was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary. It also has improved handling of factor contrasts when evaluating names.</li>
+<li>Amendment to previous incomplete fix for issue where <code>xNam()</code> was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary. It also has improved handling of factor contrasts when evaluating names.</li>
 <li>
-<code><a href="../reference/pSapply.html">pSapply()</a></code> did not work with <code>parallel = "multicore"</code>, due to relying completely on <code><a href="https://rdrr.io/r/parallel/clusterApply.html">parallel::parSapply()</a></code> for parallel processing (which is <code>"snow"</code> only). The function now wraps <code><a href="https://rdrr.io/r/parallel/mclapply.html">parallel::mcmapply()</a></code> for <code>"multicore"</code> (not available on Windows systems).</li>
+<code>pSapply()</code> did not work with <code>parallel = "multicore"</code>, due to relying completely on <code><a href="https://rdrr.io/r/parallel/clusterApply.html">parallel::parSapply()</a></code> for parallel processing (which is <code>"snow"</code> only). The function now wraps <code><a href="https://rdrr.io/r/parallel/mclapply.html">parallel::mcmapply()</a></code> for <code>"multicore"</code> (not available on Windows systems).</li>
 </ul>
 </div>
 </div>
@@ -176,19 +176,19 @@
 <a href="#new-features-1" class="anchor"></a>New features:</h3>
 <ul>
 <li>
-<code><a href="../reference/R2.html">R2()</a></code> can now calculate R-squared based on Spearman’s Rho.</li>
-<li>New function <code><a href="../reference/RVIF.html">RVIF()</a></code>, to calculate ‘root variance inflation factors’ (square root of VIFs).</li>
+<code>R2()</code> can now calculate R-squared based on Spearman’s Rho.</li>
+<li>New function <code>RVIF()</code>, to calculate ‘root variance inflation factors’ (square root of VIFs).</li>
 </ul>
 </div>
 <div id="other-changes-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#other-changes-1" class="anchor"></a>Other changes:</h3>
 <ul>
-<li>Renamed <code>unique.x</code> argument of <code><a href="../reference/stdEff.html">stdEff()</a></code> to <code>unique.eff</code> (old name temporarily allowed).</li>
-<li>Removed default value of <code>R</code> argument of <code><a href="../reference/bootEff.html">bootEff()</a></code>. The number of bootstrap resamples must now be explicitly specified, which is probably better practice (10,000 is often recommended for confidence intervals).</li>
-<li>Added <code>type</code> argument to <code><a href="../reference/bootEff.html">bootEff()</a></code>, to specify the type of bootstrapping to perform (for mixed models). This replaces <code>ran.eff = "crossed"</code>, previously used to indicate parametric bootstrapping (although it’s temporarily allowed).</li>
+<li>Renamed <code>unique.x</code> argument of <code>stdEff()</code> to <code>unique.eff</code> (old name temporarily allowed).</li>
+<li>Removed default value of <code>R</code> argument of <code>bootEff()</code>. The number of bootstrap resamples must now be explicitly specified, which is probably better practice (10,000 is often recommended for confidence intervals).</li>
+<li>Added <code>type</code> argument to <code>bootEff()</code>, to specify the type of bootstrapping to perform (for mixed models). This replaces <code>ran.eff = "crossed"</code>, previously used to indicate parametric bootstrapping (although it’s temporarily allowed).</li>
 <li>
-<code><a href="../reference/bootEff.html">bootEff()</a></code> will now treat a list containing both mixed and non-mixed models as all mixed (with a warning). Previously all such models were treated as non-mixed (unintentionally). This is presumably a relatively rare scenario.</li>
+<code>bootEff()</code> will now treat a list containing both mixed and non-mixed models as all mixed (with a warning). Previously all such models were treated as non-mixed (unintentionally). This is presumably a relatively rare scenario.</li>
 </ul>
 </div>
 <div id="bugs-fixed-1" class="section level3">
@@ -196,9 +196,9 @@
 <a href="#bugs-fixed-1" class="anchor"></a>Bugs fixed:</h3>
 <ul>
 <li>
-<code><a href="../reference/R2.html">R2()</a></code> did not calculate adjusted R-squared correctly for beta regression models (i.e. did not incorporate the ‘phi’ parameter in degrees of freedom calculations).</li>
+<code>R2()</code> did not calculate adjusted R-squared correctly for beta regression models (i.e. did not incorporate the ‘phi’ parameter in degrees of freedom calculations).</li>
 <li>
-<code><a href="../reference/xNam.html">xNam()</a></code> produced an error when attempting to evaluate factor contrasts in data, expecting that character vectors were factors (related to the change to <code>stringsAsFactors = FALSE</code> as default in <code>R 4.0.0</code>, but would have occurred in some cases regardless).</li>
+<code>xNam()</code> produced an error when attempting to evaluate factor contrasts in data, expecting that character vectors were factors (related to the change to <code>stringsAsFactors = FALSE</code> as default in <code>R 4.0.0</code>, but would have occurred in some cases regardless).</li>
 </ul>
 </div>
 </div>
@@ -210,20 +210,20 @@
 <h3 class="hasAnchor">
 <a href="#new-features-2" class="anchor"></a>New features:</h3>
 <ul>
-<li>Standardised vs raw effects: added <code>incl.raw</code> argument to <code><a href="../reference/stdEff.html">stdEff()</a></code> (<code>stdCoeff()</code>), to append raw effects (unstandardised coefficients) to the output. This facilitates simultaneous bootstrapping of both sets of effects, allowing raw effects to be used alternatively for calculating (<code><a href="../reference/semEff.html">semEff(..., use.raw = TRUE)</a></code>) or predicting (<code><a href="../reference/predEff.html">predEff(..., use.raw = TRUE)</a></code>) effects/CIs.</li>
+<li>Standardised vs raw effects: added <code>incl.raw</code> argument to <code>stdEff()</code> (<code>stdCoeff()</code>), to append raw effects (unstandardised coefficients) to the output. This facilitates simultaneous bootstrapping of both sets of effects, allowing raw effects to be used alternatively for calculating (<code>semEff(..., use.raw = TRUE)</code>) or predicting (<code>predEff(..., use.raw = TRUE)</code>) effects/CIs.</li>
 </ul>
 </div>
 <div id="other-changes-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#other-changes-2" class="anchor"></a>Other changes:</h3>
 <ul>
-<li>Renamed function <code>stdCoeff()</code> to <code><a href="../reference/stdEff.html">stdEff()</a></code>, to better reflect the concept of standardised model coefficients as ‘effects’ (calling <code>stdCoeff()</code> will still work - with a warning - until the next version at least).</li>
-<li>Added <code>offset</code> argument to <code><a href="../reference/getY.html">getY()</a></code> and <code><a href="../reference/R2.html">R2()</a></code>, to explicitly retain/remove an offset (where present) in/from the response variable or fitted values. Offsets are removed by default, which ensures, for example, that standardised effects are scaled appropriately.</li>
-<li>Added <code>env</code> argument to multiple functions, for explicitly specifying the location of data used to fit models (not necessary in most circumstances). This replaces the <code>...</code> argument in many instances, which was previously used to pass an environment to <code><a href="https://rdrr.io/r/base/eval.html">eval()</a></code> (via <code><a href="../reference/getData.html">getData()</a></code>). <code>env</code> (and <code>data</code>) can also now be passed (<code>...</code>) to <code><a href="../reference/bootEff.html">bootEff()</a></code> and <code><a href="../reference/predEff.html">predEff()</a></code>.</li>
-<li>Added confidence interval attributes to <code><a href="../reference/bootCI.html">bootCI()</a></code>/<code><a href="../reference/semEff.html">semEff()</a></code> output (i.e. confidence level, type).</li>
+<li>Renamed function <code>stdCoeff()</code> to <code>stdEff()</code>, to better reflect the concept of standardised model coefficients as ‘effects’ (calling <code>stdCoeff()</code> will still work - with a warning - until the next version at least).</li>
+<li>Added <code>offset</code> argument to <code>getY()</code> and <code>R2()</code>, to explicitly retain/remove an offset (where present) in/from the response variable or fitted values. Offsets are removed by default, which ensures, for example, that standardised effects are scaled appropriately.</li>
+<li>Added <code>env</code> argument to multiple functions, for explicitly specifying the location of data used to fit models (not necessary in most circumstances). This replaces the <code>...</code> argument in many instances, which was previously used to pass an environment to <code><a href="https://rdrr.io/r/base/eval.html">eval()</a></code> (via <code>getData()</code>). <code>env</code> (and <code>data</code>) can also now be passed (<code>...</code>) to <code>bootEff()</code> and <code>predEff()</code>.</li>
+<li>Added confidence interval attributes to <code>bootCI()</code>/<code>semEff()</code> output (i.e. confidence level, type).</li>
 <li>
-<code><a href="../reference/R2.html">R2()</a></code> no longer calculates predictive R-squared for GLMMs, as the interpretation of the hat matrix used in calculations is not reliable (see <a href="https://rdrr.io/cran/lme4/man/hatvalues.merMod.html" class="uri">https://rdrr.io/cran/lme4/man/hatvalues.merMod.html</a>).</li>
-<li>Removed ability to pass arguments from <code><a href="../reference/getY.html">getY()</a></code> to <code><a href="../reference/glt.html">glt()</a></code>, allowing more controlled output of <code><a href="../reference/getY.html">getY(..., link = TRUE)</a></code>.</li>
+<code>R2()</code> no longer calculates predictive R-squared for GLMMs, as the interpretation of the hat matrix used in calculations is not reliable (see <a href="https://rdrr.io/cran/lme4/man/hatvalues.merMod.html" class="uri">https://rdrr.io/cran/lme4/man/hatvalues.merMod.html</a>).</li>
+<li>Removed ability to pass arguments from <code>getY()</code> to <code>glt()</code>, allowing more controlled output of <code>getY(..., link = TRUE)</code>.</li>
 <li>Various minor updates to function code and documentation, improvement and addition of some new internal helper functions.</li>
 </ul>
 </div>
@@ -232,19 +232,19 @@
 <a href="#bugs-fixed-2" class="anchor"></a>Bugs fixed:</h3>
 <ul>
 <li>
-<code><a href="../reference/bootEff.html">bootEff()</a></code> specified with correlated errors failed for mixed models of class <code>"lmerModLmerTest"</code> (issue with re-fitting models using <code><a href="https://rdrr.io/r/stats/update.html">update()</a></code>).</li>
+<code>bootEff()</code> specified with correlated errors failed for mixed models of class <code>"lmerModLmerTest"</code> (issue with re-fitting models using <code><a href="https://rdrr.io/r/stats/update.html">update()</a></code>).</li>
 <li>
-<code><a href="../reference/predEff.html">predEff()</a></code> failed to evaluate some complex model terms (e.g. polynomials).</li>
+<code>predEff()</code> failed to evaluate some complex model terms (e.g. polynomials).</li>
 <li>
-<code><a href="../reference/stdEff.html">stdEff()</a></code> (<code>stdCoeff()</code>) did not re-fit model properly to calculate correct VIFs for a fully ‘centred’ model (i.e. did not account sufficiently for complex terms such as polynomials or transformations, where mean-centring should occur as the final step).</li>
+<code>stdEff()</code> (<code>stdCoeff()</code>) did not re-fit model properly to calculate correct VIFs for a fully ‘centred’ model (i.e. did not account sufficiently for complex terms such as polynomials or transformations, where mean-centring should occur as the final step).</li>
 <li>
-<code><a href="../reference/xNam.html">xNam()</a></code> generated incorrect term names for categorical predictors under certain circumstances (different contrast types, interactive effects with no ‘main’ effects).</li>
+<code>xNam()</code> generated incorrect term names for categorical predictors under certain circumstances (different contrast types, interactive effects with no ‘main’ effects).</li>
 <li>
-<code><a href="../reference/stdEff.html">stdEff()</a></code> (<code>stdCoeff()</code>) incorrectly calculated ‘centred’ intercept for models with an offset specified.</li>
+<code>stdEff()</code> (<code>stdCoeff()</code>) incorrectly calculated ‘centred’ intercept for models with an offset specified.</li>
 <li>
-<code><a href="../reference/predEff.html">predEff()</a></code> failed when a nested list of models and list of numeric weights were supplied (i.e. a model averaging scenario).</li>
+<code>predEff()</code> failed when a nested list of models and list of numeric weights were supplied (i.e. a model averaging scenario).</li>
 <li>
-<code><a href="../reference/stdEff.html">stdEff()</a></code> (<code>stdCoeff()</code>) did not return the ‘phi’ parameter(s) for beta regression models.</li>
+<code>stdEff()</code> (<code>stdCoeff()</code>) did not return the ‘phi’ parameter(s) for beta regression models.</li>
 </ul>
 </div>
 </div>
@@ -257,17 +257,17 @@
 <a href="#new-features-3" class="anchor"></a>New features:</h3>
 <ul>
 <li>Support for mixed models of class <code>"lmerModLmerTest"</code>.</li>
-<li>New function <code><a href="../reference/glt.html">glt()</a></code>, for calculating ‘generalised’ link transformations for non-gaussian variables.</li>
+<li>New function <code>glt()</code>, for calculating ‘generalised’ link transformations for non-gaussian variables.</li>
 </ul>
 </div>
 <div id="other-changes-3" class="section level3">
 <h3 class="hasAnchor">
 <a href="#other-changes-3" class="anchor"></a>Other changes:</h3>
 <ul>
-<li>Transfer of some functionality from <code><a href="../reference/getY.html">getY()</a></code> to <code><a href="../reference/glt.html">glt()</a></code>.</li>
-<li>Minor changes to arguments in <code><a href="../reference/bootEff.html">bootEff()</a></code> and <code><a href="../reference/getY.html">getY()</a></code>.</li>
+<li>Transfer of some functionality from <code>getY()</code> to <code>glt()</code>.</li>
+<li>Minor changes to arguments in <code>bootEff()</code> and <code>getY()</code>.</li>
 <li>Added ability in <code>stdCoeff()</code> to use variables not present in the model design matrix (e.g. a ‘missing’ main effect for an interaction).</li>
-<li>Added ability to pass a boot object (from <code><a href="../reference/bootEff.html">bootEff()</a></code>) to the <code>effects</code> argument of <code><a href="../reference/predEff.html">predEff()</a></code>.</li>
+<li>Added ability to pass a boot object (from <code>bootEff()</code>) to the <code>effects</code> argument of <code>predEff()</code>.</li>
 <li>Added a <code>refit.x</code> argument to <code>stdCoeff()</code>, allowing control over whether to refit the model with centred predictors (for correct VIFs).</li>
 <li>Various updates to documentation.</li>
 </ul>
@@ -277,13 +277,13 @@
 <a href="#bugs-fixed-3" class="anchor"></a>Bugs fixed:</h3>
 <ul>
 <li>
-<code><a href="../reference/xNam.html">xNam()</a></code> did not generate correct term names for categorical variables with contrast types other than <code><a href="https://rdrr.io/r/stats/contrast.html">contr.treatment()</a></code>.</li>
+<code>xNam()</code> did not generate correct term names for categorical variables with contrast types other than <code><a href="https://rdrr.io/r/stats/contrast.html">contr.treatment()</a></code>.</li>
 <li>
 <code>stdCoeff()</code> did not correctly adjust for multicollinearity for a model containing categorical variables when centring was specified (<code>cen.x = TRUE</code>).</li>
 <li>
-<code><a href="../reference/getY.html">getY()</a></code> failed to generate an estimated working response when a variable with missing values (<code>NA</code>) was supplied (this functionality now in <code><a href="../reference/glt.html">glt()</a></code>).</li>
+<code>getY()</code> failed to generate an estimated working response when a variable with missing values (<code>NA</code>) was supplied (this functionality now in <code>glt()</code>).</li>
 <li>
-<code><a href="../reference/predEff.html">predEff()</a></code> failed for models with categorical variables (did not access dummy variables in model matrix).</li>
+<code>predEff()</code> failed for models with categorical variables (did not access dummy variables in model matrix).</li>
 </ul>
 </div>
 </div>
@@ -295,7 +295,7 @@
 <h3 class="hasAnchor">
 <a href="#bugs-fixed-4" class="anchor"></a>Bugs fixed:</h3>
 <ul>
-<li>Function <code><a href="../reference/semEff.html">semEff()</a></code> did not output effects properly.</li>
+<li>Function <code>semEff()</code> did not output effects properly.</li>
 </ul>
 </div>
 </div>
@@ -315,9 +315,9 @@
 <h3 class="hasAnchor">
 <a href="#bugs-fixed-5" class="anchor"></a>Bugs fixed:</h3>
 <ul>
-<li>Function <code><a href="../reference/xNam.html">xNam()</a></code> did not generate correct term names for interactions involving multi-coefficient terms (e.g. factors).</li>
-<li>Function <code><a href="../reference/xNam.html">xNam()</a></code> did not generate correct term names for factors when the model intercept is suppressed.</li>
-<li>Function <code><a href="../reference/R2.html">R2()</a></code> with argument <code>pred = TRUE</code> threw an error for models where any weights = 0.</li>
+<li>Function <code>xNam()</code> did not generate correct term names for interactions involving multi-coefficient terms (e.g. factors).</li>
+<li>Function <code>xNam()</code> did not generate correct term names for factors when the model intercept is suppressed.</li>
+<li>Function <code>R2()</code> with argument <code>pred = TRUE</code> threw an error for models where any weights = 0.</li>
 </ul>
 </div>
 </div>
