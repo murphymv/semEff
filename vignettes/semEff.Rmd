@@ -1,4 +1,4 @@
- ---
+---
 title: "semEff"
 author: "Mark V. Murphy"
 date: "`r Sys.Date()`"
@@ -10,7 +10,7 @@ vignette: >
 bibliography: references.bib
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
