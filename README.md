@@ -70,7 +70,7 @@ demonstrations:
 
 -   [Predicting and plotting indirect effects of degree days to bud
     burst on tree
-    growth](https://murphymv.github.io/semEff/articles/prediction.html)
+    growth](https://murphymv.github.io/semEff/articles/predicting-effects.html)
 
 ## References
 

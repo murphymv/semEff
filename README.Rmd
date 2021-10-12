@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -53,7 +53,7 @@ Package functions are well-documented and most include some short examples. In a
 
 -   [Analysing direct vs. indirect effects of landscape location on plant species richness](https://murphymv.github.io/semEff/articles/semEff.html)
 
--   [Predicting and plotting indirect effects of degree days to bud burst on tree growth](https://murphymv.github.io/semEff/articles/prediction.html)
+-   [Predicting and plotting indirect effects of degree days to bud burst on tree growth](https://murphymv.github.io/semEff/articles/predicting-effects.html)
 
 ## References
 
