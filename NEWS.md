@@ -1,4 +1,30 @@
+## semEff 0.6.0
+
+### New features:
+
+-   New formatted table output for effect summaries for `semEff()` and `bootCI()`, accessed via new `print()` and `summary()` methods.
+-   Bootstrap standard errors and bias (mean minus original estimate) now included with effect summaries and fitted values from `predEff()`.
+-   Support for `"psem"` objects (`piecewiseSEM::psem()`) in `bootEff()`/`semEff()`.
+-   New package vignettes demonstrating some examples.
+
+### Other changes:
+
+-   All calculated indirect effects (individual, not summed) now also returned as part of `"semEff"` object (for reference; does not include bootstrapped effects). Extract using `getAllInd()`.
+-   Unnamed model lists can now be supplied to `bootEff()`/`semEff()` (names are generated automatically).
+-   Updates to `R2()` (control of negative values, new improved default method for adjusted R-squared --- Olkin-Pratt exact estimator).
+-   New function `getX()`, for more flexible construction of model design matrices (mostly for internal use).
+-   Removed `…` argument of `stdEff()` --- arguments to `R2()` are now passed as named list to `R2.arg`.
+-   Renamed extractor functions for effects (e.g. `dirEff()` -> `getDirEff()`) and added some new ones.
+-   Various other code and documentation updates.
+
+### Bugs fixed:
+
+-   Amendment to previous incomplete fix for issue where `xNam()` was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary. It also has improved handling of factor contrasts when evaluating names.
+-   `pSapply()` did not work with `parallel = "multicore"`, due to relying completely on `parallel::parSapply()` for parallel processing (which is `"snow"` only). The function now wraps `parallel::mcmapply()` for `"multicore"` (not available on Windows systems).
+
 ## semEff 0.5.0
+
+09/04/2021 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.5.0)
 
 ### New features:
 
@@ -18,6 +44,8 @@
 -   `xNam()` produced an error when attempting to evaluate factor contrasts in data, expecting that character vectors were factors (related to the change to `stringsAsFactors = FALSE` as default in `R 4.0.0`, but would have occurred in some cases regardless).
 
 ## semEff 0.4.0
+
+01/10/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.4.0)
 
 ### New features:
 
@@ -45,6 +73,8 @@
 
 ## semEff 0.3.0
 
+25/03/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.3.0)
+
 ### New features:
 
 -   Support for mixed models of class `"lmerModLmerTest"`.
@@ -68,11 +98,15 @@
 
 ## semEff 0.2.1
 
+15/01/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.2.1)
+
 ### Bugs fixed:
 
 -   Function `semEff()` did not output effects properly.
 
 ## semEff 0.2.0
+
+08/01/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.2.0)
 
 ### New features:
 
@@ -86,5 +120,7 @@
 -   Function `R2()` with argument `pred = TRUE` threw an error for models where any weights = 0.
 
 ## semEff 0.1.0
+
+04/11/2019 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.1.0)
 
 New package `semEff`, allowing the automatic calculation of effects for 'piecewise' structural equation models.

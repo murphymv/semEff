@@ -15,77 +15,72 @@
 #' \item{Live}{a binary value (1 = tree lived the following winter, 0 = tree
 #' died the following winter)}
 #' }
-#' @source \url{https://doi.org/c886}
+#' @source \doi{10/c886}
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/bqd43d}
-"Shipley"
+#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
+"shipley"
 
 
 #' @title Hypothesised SEM from Shipley (2009)
-#' @format A list of fitted mixed models of class \code{"lmer"} and
-#'   \code{"glmer"}, representing structured equations.
+#' @format A list of fitted mixed models of class `"lmer"` and `"glmer"`,
+#'   representing structured equations.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/bqd43d}
+#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # Specification
-#' # Shipley.SEM <- list(
-#' #   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = Shipley),
-#' #   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = Shipley),
+#' # shipley.sem <- list(
+#' #   DD = lme4::lmer(DD ~ lat + (1 | site) + (1 | tree), data = shipley),
+#' #   Date = lme4::lmer(Date ~ DD + (1 | site) + (1 | tree), data = shipley),
 #' #   Growth = lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree),
-#' #                       data = Shipley),
+#' #                       data = shipley),
 #' #   Live = lme4::glmer(Live ~ Growth + (1 | site) + (1 | tree), binomial,
-#' #                      data = Shipley)
+#' #                      data = shipley)
 #' # )
-"Shipley.SEM"
+"shipley.sem"
 
 
 #' @title Candidate Model Set from Shipley 'Growth' Model
 #' @description A set of hypothetical competing models fit to the same response
 #'   variable ('Growth') using the simulated data in Shipley (2009), for which
 #'   model estimates can be compared and/or averaged.
-#' @format A list of mixed models of class \code{"lmer"} and \code{"glmer"}, fit
-#'   to the same response variable.
+#' @format A list of mixed models of class `"lmer"` and `"glmer"`, fit to the
+#'   same response variable.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/bqd43d}
+#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # Specification
-#' # Shipley.Growth <- list(
-#' #   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = Shipley),
-#' #   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = Shipley),
+#' # shipley.growth <- list(
+#' #   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = shipley),
+#' #   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = shipley),
 #' #   lme4::lmer(Growth ~ Date + DD + lat + (1 | site) + (1 | tree),
-#' #              data = Shipley)
+#' #              data = shipley)
 #' # )
-"Shipley.Growth"
+"shipley.growth"
 
 
 #' @title Bootstrapped Estimates for Shipley SEM
 #' @description Bootstrapped estimates generated from the hypothesised SEM from
-#'   Shipley (2009), using \code{bootEff}.
-#' @format A list of objects of class \code{"boot"}, representing bootstrapped
+#'   Shipley (2009), using [bootEff()].
+#' @format A list of objects of class `"boot"`, representing bootstrapped
 #'   estimates from fitted mixed models.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/bqd43d}
+#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # Specification
-#' # Shipley.SEM.Boot <- bootEff(Shipley.SEM, R = 10000, seed = 53908,
+#' # shipley.sem.boot <- bootEff(shipley.sem, R = 1000, seed = 13,
 #' #                             ran.eff = "site")
-"Shipley.SEM.Boot"
+"shipley.sem.boot"
 
 
 #' @title Effects for Shipley SEM
 #' @description SEM effects calculated from bootstrapped estimates of the
-#'   hypothesised SEM from Shipley (2009), using \code{semEff}.
-#' @format A list object of class \code{"semEff"}, containing SEM effects and
-#'   summary tables.
+#'   hypothesised SEM from Shipley (2009), using [semEff()].
+#' @format A list object of class `"semEff"`, containing SEM effects and summary
+#'   tables.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. \emph{Ecology}, \strong{90}(2), 363-368.
-#'   \url{https://doi.org/bqd43d}
+#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # Specification
-#' # Shipley.SEM.Eff <- semEff(Shipley.SEM.Boot)
-"Shipley.SEM.Eff"
+#' # shipley.sem.eff <- semEff(shipley.sem.boot)
+"shipley.sem.eff"
 

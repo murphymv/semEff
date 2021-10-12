@@ -2,37 +2,22 @@
 
 ### Release
 
-This is a fifth minor release (0.5.0).
+This is a sixth minor release (0.6.0).
 
 ### Test environments
 
--   Windows 10 Home 20H2, R 4.0.5 (local)
--   Mac OS X 10.15.7, R 4.0.5 (GitHub Actions)
--   Windows Server 2008 R2 SP1, R-devel, 32/64 bit (R-hub builder)
--   Ubuntu Linux 20.04.1 LTS, R-release, GCC (R-hub builder)
--   Fedora Linux, R-devel, clang, gfortran (R-hub builder)
+| System                                    | Source                  | R version  |
+|-------------------------------------------|-------------------------|------------|
+| Windows 10 Home 21H1                      | Local                   | R 4.1.1    |
+| Windows Server 2019 10.0.17763 Datacenter | Remote (GitHub Actions) | R-release  |
+| Mac OS X 10.15.7 19H1417                  | Remote (GitHub Actions) | R-release  |
+| Ubuntu 20.04.3 LTS                        | Remote (GitHub Actions) | R-devel    |
+| Ubuntu 20.04.3 LTS                        | Remote (GitHub Actions) | R-release  |
+| Ubuntu 20.04.3 LTS                        | Remote (GitHub Actions) | R-oldrel-1 |
 
 ### R CMD check results
 
-#### NOTES:
-
-    Found the following (possibly) invalid URLs:
-      URL: https://doi.org/b8b782
-        From: man/R2.Rd
-        Status: 403
-        Message: Forbidden
-      URL: https://doi.org/bvxb6s
-        From: man/glt.Rd
-        Status: 403
-        Message: Forbidden
-
-URLs open fine when tested locally.
-
-    Examples with CPU (user + system) or elapsed time > 5s
-             user system elapsed
-      semEff 5.12   0.08    5.33
-
-Running of examples sometimes exceeds time limits (barely) on remote tests, never locally.
+There were no ERRORs, WARNINGs or NOTEs.
 
 ### Downstream dependencies
 

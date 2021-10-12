@@ -4,9 +4,20 @@
 # semEff
 
 <!-- badges: start -->
-<!-- [![Travis build status](https://travis-ci.com/murphymv/semEff.svg?branch=main)](https://travis-ci.com/murphymv/semEff) -->
 
+[![Repo
+Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
+[![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg?label=Lifecycle)](https://lifecycle.r-lib.org/articles/stages.html)
+[![Licence](https://img.shields.io/badge/License-GPL3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+![GitHub language
+count](https://img.shields.io/github/languages/count/murphymv/semEff?label=Languages)
 [![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions)
+
+[![CRAN](https://www.r-pkg.org/badges/version/semEff?color=blue)](https://CRAN.R-project.org/package=semEff)
+![Downloads: Total](http://cranlogs.r-pkg.org/badges/grand-total/semEff)
+![Downloads: Monthly](https://cranlogs.r-pkg.org/badges/semEff)
+
+[![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-yellow.svg)](https://paypal.me/murphymv1)
 
 <!-- badges: end -->
 
@@ -34,122 +45,32 @@ And the development version from [GitHub](https://github.com/) with:
 devtools::install_github("murphymv/semEff@dev")
 ```
 
-## Example
+## Usage
 
-``` r
-# install.packages(c("semEff", "ggplot2"))
-library(semEff)
-library(ggplot2)
+The primary function is
+[`semEff()`](https://murphymv.github.io/semEff/reference/semEff.html),
+which returns an object of class `"semEff"` with associated `print()`
+and `summary()` methods. Everything can technically be accomplished in a
+single call to `semEff()`; however, since bootstrapping is employed to
+generate resamples for confidence intervals (via
+[`bootEff()`](https://murphymv.github.io/semEff/reference/bootEff.html)),
+it is usually preferable to save these estimates separately prior to
+calling `semEff()` — allowing more flexibility and saving time if/when
+recalling the function.
 
-# Simulated data from Shipley (2009) on tree growth and survival (see ?Shipley)
-head(Shipley)
-#>   site tree      lat year     Date       DD   Growth  Survival Live
-#> 1    1    1 40.38063 1970 115.4956 160.5703 61.36852 0.9996238    1
-#> 2    1    2 40.38063 1970 118.4959 158.9896 43.77182 0.8433521    1
-#> 3    1    3 40.38063 1970 115.8836 159.9262 44.74663 0.9441110    1
-#> 4    1    4 40.38063 1970 110.9889 161.1282 48.20004 0.9568525    1
-#> 5    1    5 40.38063 1970 120.9946 157.3778 50.02237 0.9759584    1
-#> 6    1    1 40.38063 1972 114.2315 160.6120 56.29615 0.9983398    1
+## Examples
 
-# Hypothesised SEM: latitude -> degree days to bud burst -> date of burst -> growth -> survival
-lapply(Shipley.SEM, formula)
-#> $DD
-#> DD ~ lat + (1 | site) + (1 | tree)
-#> 
-#> $Date
-#> Date ~ DD + (1 | site) + (1 | tree)
-#> 
-#> $Growth
-#> Growth ~ Date + (1 | site) + (1 | tree)
-#> 
-#> $Live
-#> Live ~ Growth + (1 | site) + (1 | tree)
+Package functions are well-documented and most include some short
+examples. In addition, see the following vignettes for some longer
+demonstrations:
 
-# Bootstrap model effects (10000 reps... can take a while)
-# system.time(
-#   Shipley.SEM.Boot <- bootEff(Shipley.SEM, R = 10000, seed = 53908, ran.eff = "site")
-# )
+-   [Analysing direct vs. indirect effects of landscape location on
+    plant species
+    richness](https://murphymv.github.io/semEff/articles/semEff.html)
 
-# Calculate SEM effects and CIs (use saved bootstrapped SEM)
-eff <- suppressWarnings(semEff(Shipley.SEM.Boot))
-
-# Summary of effects for response "Growth"
-eff$Summary$Growth
-#> $Direct
-#>           Date
-#> Estimate 0.382
-#> Lower CI 0.289
-#> Upper CI 0.513
-#>              *
-#> 
-#> $Indirect
-#>            lat     DD
-#> Estimate 0.165 -0.240
-#> Lower CI 0.088 -0.351
-#> Upper CI 0.290 -0.180
-#>              *      *
-#> 
-#> $Total
-#>            lat     DD  Date
-#> Estimate 0.165 -0.240 0.382
-#> Lower CI 0.088 -0.351 0.289
-#> Upper CI 0.290 -0.180 0.513
-#>              *      *     *
-#> 
-#> $Mediators
-#>             DD   Date
-#> Estimate 0.165 -0.075
-#> Lower CI 0.088 -0.105
-#> Upper CI 0.290 -0.048
-#>              *      *
-
-# Extract total effects for Growth
-tot <- totEff(eff)[["Growth"]]
-tot.b <- totEff(eff, type = "boot")[["Growth"]]
-
-# Predict effects for "Date" (direct) and "DD" (indirect) on Growth
-mod <- Shipley.SEM$Growth
-dat <- na.omit(Shipley)
-fit <- sapply(c("Date", "DD"), function(i) {
-  x <- seq(min(dat[i]), max(dat[i]), length = 100)
-  x <- data.frame(x); names(x) <- i
-  c(x, predEff(mod, newdata = x, effects = tot[i], eff.boot = tot.b))
-}, simplify = FALSE)
-
-# Function to plot predictions
-plotFit <- function(x, y, fit, x.lab = NULL, y.lab = NULL) {
-  x2 <- fit[[1]]; f <- fit[[2]]; ci.l <- fit[[3]]; ci.u <- fit[[4]]
-  ggplot () + 
-    geom_point(aes(x, y)) +
-    geom_ribbon(aes(x2, ymin = ci.l, ymax = ci.u, alpha = "0.15"), fill = "blue") +
-    geom_line(aes(x2, f), color = "blue", size = 1) +
-    xlab(x.lab) + ylab(y.lab) +
-    theme_bw() + theme(legend.position = "none")
-}
-
-# Direct effects of Date
-plotFit(x = dat$Date, y = dat$Growth, fit = fit$Date, x.lab = "Date of Bud Burst", y.lab = "Stem Growth")
-#> Warning: Using alpha for a discrete variable is not advised.
-```
-
-<img src="man/figures/README-example-1.png" width="100%" />
-
-``` r
-# Indirect effects of DD (operating via Date)
-plotFit(x = dat$DD, y = dat$Growth, fit = fit$DD, x.lab = "Degree Days to Bud Burst", y.lab = "Stem Growth")
-#> Warning: Using alpha for a discrete variable is not advised.
-```
-
-<img src="man/figures/README-example-2.png" width="100%" />
-
-``` r
-# Huge amount of scatter around each fit as random effects explain most variation in stem growth! 
-# Compare conditional vs. marginal R-squared:
-r2 <- c(R2_cond = R2(mod)[[1]], R2_marg = R2(mod, re.form = NA)[[1]])
-round(r2, 3)
-#> R2_cond R2_marg 
-#>   0.794   0.048
-```
+-   [Predicting and plotting indirect effects of degree days to bud
+    burst on tree
+    growth](https://murphymv.github.io/semEff/articles/prediction.html)
 
 ## References
 

@@ -20,10 +20,9 @@ A numeric value, the weighted variance of \code{x}.
 Calculate the weighted variance of \code{x}.
 }
 \details{
-Calculate the weighted variance of \code{x} via the weighted
-covariance matrix (\code{\link[stats]{cov.wt}}). If no weights are
-supplied, the simple variance is returned instead. As in
-\code{\link[stats]{weighted.mean}}, \code{NA}s in \code{w} are not handled
+Calculate the weighted variance of \code{x} via the weighted covariance
+matrix (\code{\link[=cov.wt]{cov.wt()}}). If no weights are supplied, the simple variance is
+returned instead. As in \code{\link[=weighted.mean]{weighted.mean()}}, \code{NA}s in \code{w} are not handled
 specially and will return \code{NA} as result.
 }
 \examples{
@@ -42,5 +41,5 @@ varW(c(x[1:29], NA), w, na.rm = FALSE)  # NA in x (NA returned)
 varW(x[1:29], w = c(w[1:29], NA))  # NA in w (NA returned)
 }
 \seealso{
-\code{\link[stats]{var}}
+\code{\link[=var]{var()}}
 }

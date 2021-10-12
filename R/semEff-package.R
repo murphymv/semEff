@@ -1,8 +1,8 @@
 
 
-#' @aliases semEff-package
 #' @keywords internal
+#' @aliases semEff-package
 "_PACKAGE"
-#' @import boot lme4 parallel stats utils
+#' @import boot gsl lme4 parallel stats utils
 NULL
 

@@ -1,7 +1,7 @@
 development:
   mode: auto
 repo:
-  branch: main
+  branches: main
 template:
   params:
     bootswatch: darkly

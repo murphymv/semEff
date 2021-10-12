@@ -21,7 +21,7 @@ isRaw(x)
 }
 \arguments{
 \item{x}{A character vector of parameter names (e.g. names of coefficients
-from \code{coef} or \code{stdEff}).}
+from \code{\link[=coef]{coef()}} or \code{\link[=stdEff]{stdEff()}}).}
 }
 \value{
 A logical vector of the same length as \code{x}.

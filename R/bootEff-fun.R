@@ -4,142 +4,161 @@
 #' @description Bootstrap model effects (standardised coefficients) and optional
 #'   SEM correlated errors.
 #' @param mod A fitted model object, or a list or nested list of such objects.
+#'   Alternatively, a `"psem"` object from
+#'   [`piecewiseSEM::psem()`](https://rdrr.io/cran/piecewiseSEM/man/psem.html).
+#'   If model lists are unnamed, response variable names will be used.
 #' @param R Number of bootstrap resamples to generate.
 #' @param seed Seed for the random number generator. If not provided, a random
 #'   five-digit integer is used (see Details).
-#' @param type The type of bootstrapping to perform. Can be
-#'   \code{"nonparametric"} (default), \code{"parametric"}, or
-#'   \code{"semiparametric"} (the last two currently only for mixed models, via
-#'   \code{bootMer}).
+#' @param type The type of bootstrapping to perform. Can be `"nonparametric"`
+#'   (default), `"parametric"`, or `"semiparametric"` (the last two currently
+#'   only for mixed models, via [bootMer()]).
 #' @param ran.eff For nonparametric bootstrapping of mixed models, the name of
 #'   the (highest-level) random effect to resample (see Details).
-#' @param cor.err Optional, names of SEM correlated errors to be bootstrapped.
-#'   Should be of the form: \code{c("mod1 ~~ mod2", "mod3 ~~ mod4", ...)}
-#'   (spaces optional), with names matching model names.
+#' @param cor.err Optional, names of SEM correlated errors to be bootstrapped
+#'   (ignored if `mod` is a `"psem"` object). Should be of the form: `c("var1 ~~
+#'   var2", "var3 ~~ var4", ...)` (spaces optional), using model/response
+#'   variable names.
 #' @param catch.err Logical, should errors generated during model fitting or
-#'   estimation be caught and \code{NA} returned for estimates? If \code{FALSE},
-#'   any such errors will cause the function to exit.
+#'   estimation be caught and `NA` returned for estimates? If `FALSE`, any such
+#'   errors will cause the function to exit.
 #' @param parallel The type of parallel processing to use. Can be one of
-#'   \code{"snow"}, \code{"multicore"}, or \code{"no"} (for none).
-#' @param ncpus Number of system cores to use for parallel processing. If
-#'   \code{NULL} (default), all available cores are used.
-#' @param cl Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
+#'   `"snow"`, `"multicore"`, or `"no"` (for none).
+#' @param ncpus Number of system cores to use for parallel processing. If `NULL`
+#'   (default), all available cores are used.
+#' @param cl Optional cluster to use if `parallel = "snow"`. If `NULL`
 #'   (default), a local cluster is created using the specified number of cores.
-#' @param bM.arg A named list of any additional arguments to \code{bootMer}.
-#' @param ... Arguments to \code{\link[semEff]{stdEff}}.
-#' @details \code{bootEff} uses the \code{\link[boot]{boot}} function
-#'   (primarily) to bootstrap standardised effects from a fitted model or list
-#'   of models (calculated using \code{stdEff}). Bootstrapping is typically
-#'   nonparametric, i.e. model effects are calculated from data where the rows
-#'   have been randomly sampled with replacement. 10,000 such resamples should
-#'   provide accurate coverage for confidence intervals in most situations, with
-#'   fewer sufficing in some cases. To ensure that data is resampled in the same
-#'   way across individual bootstrap operations within the same run (e.g. models
-#'   in a list), the same seed is set per operation, with the value saved as an
-#'   attribute to the matrix of bootstrapped values (for reproducibility). The
-#'   seed can either be user-supplied or a randomly-generated five-digit number
-#'   (default), and is always re-initialised on exit (i.e.
-#'   \code{set.seed(NULL)}).
+#' @param bM.arg A named list of any additional arguments to [bootMer()].
+#' @param ... Arguments to [stdEff()].
+#' @details `bootEff()` uses [boot::boot()] (primarily) to bootstrap
+#'   standardised effects from a fitted model or list of models (calculated
+#'   using [stdEff()]). Bootstrapping is typically nonparametric, i.e. model
+#'   effects are calculated from data where the rows have been randomly sampled
+#'   with replacement. 10,000 such resamples should provide accurate coverage
+#'   for confidence intervals in most situations, with fewer sufficing in some
+#'   cases. To ensure that data is resampled in the same way across individual
+#'   bootstrap operations within the same run (e.g. models in a list), the same
+#'   seed is set per operation, with the value saved as an attribute to the
+#'   matrix of bootstrapped values (for reproducibility). The seed can either be
+#'   user-supplied or a randomly-generated five-digit number (default), and is
+#'   always re-initialised on exit (i.e. `set.seed(NULL)`).
 #'
-#'   Where \code{weights} are specified, bootstrapped effects will be a weighted
+#'   Where `weights` are specified, bootstrapped effects will be a weighted
 #'   average across the set of candidate models for each response variable,
 #'   calculated after each model is first refit to the resampled dataset
-#'   (specifying \code{weights = "equal"} will use a simple average instead -
-#'   see \code{\link[semEff]{avgEst}}). If no weights are specified and
-#'   \code{mod} is a nested list of models, the function will throw an error, as
-#'   it will be expecting weights for a presumed model averaging scenario. If
-#'   instead the user wishes to bootstrap each individual model, they should
-#'   recursively apply the function using \code{rMapply} (remember to set a
-#'   seed).
+#'   (specifying `weights = "equal"` will use a simple average instead - see
+#'   [avgEst()]). If no weights are specified and `mod` is a nested list of
+#'   models, the function will throw an error, as it will be expecting weights
+#'   for a presumed model averaging scenario. If instead the user wishes to
+#'   bootstrap each individual model, they should recursively apply the function
+#'   using [rMapply()] (remember to set a seed).
 #'
-#'   Where names of models with correlated errors are specified to
-#'   \code{cor.err}, the function will also return bootstrapped Pearson
-#'   correlated errors (weighted residuals) for those models. If \code{weights}
-#'   are supplied and \code{mod} is a nested list, residuals will first be
-#'   averaged across candidate models. If any two models (or candidate sets)
-#'   with correlated errors were fit to different subsets of data observations,
-#'   both models/sets are first refit to data containing only the observations
-#'   in common.
+#'   Where names of response variables with correlated errors are specified to
+#'   `cor.err`, the function will also return bootstrapped Pearson correlated
+#'   errors (weighted residuals) for those models. If `weights` are supplied and
+#'   `mod` is a nested list, residuals will first be averaged across candidate
+#'   models. If any two models (or candidate sets) with correlated errors were
+#'   fit to different subsets of data observations, both models/sets are first
+#'   refit to data containing only the observations in common.
 #'
 #'   For nonparametric bootstrapping of mixed models, resampling should occur at
 #'   the group-level, as individual observations are not independent. The name
-#'   of the random effect to resample must be supplied to \code{ran.eff}. For
-#'   nested random effects, this should be the highest-level group (Davison &
-#'   Hinkley 1997, Ren \emph{et al.} 2010). This form of resampling will result
-#'   in differently-sized datasets if observations are unbalanced across groups;
-#'   however this should not generally be an issue, as the number of independent
-#'   units (groups), and hence the 'degrees of freedom', remains
-#'   \href{https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap}{unchanged}.
+#'   of the random effect to resample must be supplied to `ran.eff`. For nested
+#'   random effects, this should be the highest-level group (Davison & Hinkley
+#'   1997, Ren *et al.* 2010). This form of resampling will result in datasets
+#'   of different sizes if observations are unbalanced across groups; however
+#'   this should not generally be an issue, as the number of independent units
+#'   (groups), and hence the 'degrees of freedom', remains
+#'   [unchanged](https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap).
 #'
-#'   For mixed models with
-#'   \href{https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified}{non-nested
-#'   random effects}, nonparametric resampling will not be appropriate. In these
-#'   cases, (semi-)parametric bootstrapping can be performed instead via
-#'   \code{\link[lme4]{bootMer}} in the \pkg{lme4} package (with additional
-#'   arguments passed to that function as necessary). NOTE: As \code{bootMer}
-#'   takes only a fitted model as its first argument, any model averaging is
-#'   calculated 'post-hoc' using the estimates in boot objects for each
-#'   candidate model, rather than during the bootstrapping process itself (i.e.
-#'   the default procedure via \code{boot}). Results are then returned in a new
-#'   boot object for each response variable or correlated error estimate.
+#'   For mixed models with [non-nested random
+#'   effects](https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified),
+#'   nonparametric resampling will not be appropriate. In these cases,
+#'   parametric or semiparametric bootstrapping can be performed instead via
+#'   [lme4::bootMer()] (with additional arguments passed to that function as
+#'   necessary). NOTE: As [bootMer()] takes only a fitted model as its first
+#'   argument (i.e. no lists), any model averaging is calculated 'post-hoc'
+#'   using the estimates in boot objects for each candidate model, rather than
+#'   during the bootstrapping process itself (i.e. the default procedure via
+#'   [boot()]). Results are then returned in a new boot object for each response
+#'   variable or correlated error estimate.
 #'
-#'   If supplied a list containing both mixed and non-mixed models,
-#'   \code{bootEff} with nonparametric bootstrapping will still work and will
-#'   treat all models as mixed for resampling (with a warning). This is probably
-#'   a relatively rare scenario, but may occur where the user decides that
-#'   non-mixed models perform similarly and/or cause less issues than their
-#'   mixed counterparts for at least some response variables (e.g. where random
-#'   effect variance estimates are at or near zero). If nonparametric
-#'   bootstrapping is not used however, an error will occur, as \code{bootMer}
-#'   will only accept mixed models.
+#'   If supplied a list containing both mixed and non-mixed models, [bootEff()]
+#'   with nonparametric bootstrapping will still work and will treat all models
+#'   as mixed models for resampling (with a warning). This is likely a
+#'   relatively rare scenario, but may occur where the user decides that
+#'   non-mixed models perform similarly and/or cause less fitting issues than
+#'   their mixed counterparts for at least some response variables (e.g. where
+#'   random effect variance estimates are at or near zero). The data will be
+#'   resampled on the supplied random effect for all models. If nonparametric
+#'   bootstrapping is not used in this scenario however, an error will occur, as
+#'   [bootMer()] will only accept mixed models.
 #'
-#'   Parallel processing is used by default via the \pkg{parallel} package and
-#'   option \code{parallel = "snow"} (and is generally recommended), but users
-#'   can specify the type of parallel processing to use, or none. If
-#'   \code{"snow"}, a cluster of workers is created using \code{makeCluster},
-#'   and the user can specify the number of system cores to incorporate in the
-#'   cluster (defaults to all available). \code{bootEff} then exports all
-#'   required objects and functions to this cluster using \code{clusterExport},
-#'   after performing a (rough) match of all objects and functions in the
-#'   current global environment to those referenced in the model call(s). Users
-#'   should load any required external packages prior to calling the function.
+#'   Parallel processing is used by default via the [parallel] package and
+#'   option `parallel = "snow"` (and is generally recommended), but users can
+#'   specify the type of parallel processing to use, or none. If `"snow"`, a
+#'   cluster of workers is created using [makeCluster()], and the user can
+#'   specify the number of system cores to incorporate in the cluster (defaults
+#'   to all available). [bootEff()] then exports all required objects and
+#'   functions to this cluster using [clusterExport()], after performing a
+#'   (rough) match of all objects and functions in the current global
+#'   environment to those referenced in the model call(s). Users should load any
+#'   required external packages prior to calling the function.
 #'
 #' @note Bootstrapping mixed (or indeed any other) models may take a very long
 #'   time when the number of replicates, observations, parameters, and/or models
 #'   is high. To decrease processing time, it may be worth trying different
-#'   optimizers and/or other options to generate faster estimates (always check
+#'   optimisers and/or other options to generate faster estimates (always check
 #'   results).
-#' @return An object of class \code{"boot"} containing the bootstrapped effects,
-#'   or a list/nested list of such objects.
-#' @references Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection
-#'   and Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
+#' @return An object of class `"boot"` containing the bootstrapped effects, or a
+#'   (named) list/nested list of such objects.
+#' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
+#'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
 #'   ed.). New York: Springer-Verlag. Retrieved from
-#'   \url{https://www.springer.com/gb/book/9780387953649}
+#'   <https://www.springer.com/gb/book/9780387953649>
 #'
-#'   Davison, A. C., & Hinkley, D. V. (1997). \emph{Bootstrap Methods and their
-#'   Application}. Cambridge University Press.
+#'   Davison, A. C., & Hinkley, D. V. (1997). *Bootstrap Methods and their
+#'   Application*. Cambridge University Press.
 #'
 #'   Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
-#'   Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
-#'   Statistics}, \strong{37}(9), 1487–1498. \url{https://doi.org/dvfzcn}
+#'   Nonparametric bootstrapping for hierarchical data. *Journal of Applied
+#'   Statistics*, **37**(9), 1487–1498. \doi{10/dvfzcn}
 #' @examples
-#' # Bootstrap Shipley SEM (test)
-#' # (set 'site' as group for resampling - highest-level random effect)
-#' bootEff(Shipley.SEM, ran.eff = "site", R = 1, parallel = "no")
+#' # Bootstrap Shipley SEM (test — 1 rep)
+#' # (set 'site' as group for resampling — highest-level random effect)
+#' bootEff(shipley.sem, R = 1, ran.eff = "site", parallel = "no")
 #'
-#' # Estimates (use saved boot object, 10000 resamples)
-#' lapply(Shipley.SEM.Boot, "[[", 1)  # original
-#' lapply(Shipley.SEM.Boot, function(i) head(i$t))  # bootstrapped
+#' # Check estimates (use saved boot object — 1000 reps)
+#' lapply(shipley.sem.boot, "[[", 1)  # original
+#' lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 #' @export
-bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
-                    cor.err = NULL, catch.err = TRUE, parallel = "snow",
-                    ncpus = NULL, cl = NULL, bM.arg = NULL, ...) {
+bootEff <- function(mod, R, seed = NULL,
+                    type = c("nonparametric", "parametric", "semiparametric"),
+                    ran.eff = NULL, cor.err = NULL, catch.err = TRUE,
+                    parallel = c("snow", "multicore", "no"), ncpus = NULL,
+                    cl = NULL, bM.arg = NULL, ...) {
 
-  m <- mod; re <- ran.eff; ce <- cor.err; p <- parallel; nc <- ncpus
   if (missing(R))
     stop("Number of bootstrap resamples (R) must be specified.")
 
-  # Arguments to stdEff
+  m <- mod; type <- match.arg(type); re <- ran.eff; ce <- cor.err;
+  parallel <- match.arg(parallel); nc <- ncpus;
+
+  # Convert psem object to list of models
+  if (class(m)[1] == "psem") {
+    m <- m[sapply(m, isMod)]
+    ce <- do.call(c, m[sapply(m, class) == "formula.cerror"])
+  }
+
+  # Set model names if none present (response names)
+  if (isList(m) && is.null(names(m))) {
+    names(m) <- sapply(m, function(i) {
+      if (isList(i)) i <- i[[1]]
+      names(model.frame(i, data = getData(i)))[1]
+    })
+  }
+
+  # Arguments to stdEff()
   a <- list(...)
 
   # Weights (for model averaging)
@@ -152,7 +171,9 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
 
   # Refit model(s) with any supplied data
   upd <- function(m, d) {
-    upd <- function(m) eval(update(m, data = d, evaluate = FALSE))
+    upd <- function(m) {
+      eval(update(m, data = d, evaluate = FALSE))
+    }
     rMapply(upd, m, SIMPLIFY = FALSE)
   }
   d <- a$data; a$data <- NULL
@@ -170,10 +191,6 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
     warning("Mixed and non-mixed models together in list. Resampling will treat all models as mixed.")
   mer <- any(mer)
   mer2 <- isTRUE(if (mer) {
-    if (isTRUE(if (!is.null(re)) re == "crossed")) {
-      warning("Use of 'ran.eff = 'crossed'' to indicated parametric bootstrapping is deprecated; specify the 'type' argument in future.")
-      if (type == "nonparametric") type <- "parametric"
-    }
     pb <- type %in% c("parametric", "semiparametric")
     if (!pb && is.null(re))
       stop("Name of random effect to resample must be specified to 'ran.eff' (or use parametric bootstrapping).")
@@ -187,8 +204,8 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
       # Set up function call with specified arguments
       C <- match.call()
       n <- length(C)
-      a <- c(list(FUN = s, nsim = R, seed = NULL, type = type, parallel = p,
-                  ncpus = nc, cl = cl), bM.arg)
+      a <- c(list(FUN = s, nsim = R, seed = NULL, type = type,
+                  parallel = parallel, ncpus = nc, cl = cl), bM.arg)
       for (i in 1:length(a)) {
         C[n + i] <- a[i]
         names(C)[n + i] <- names(a)[i]
@@ -202,7 +219,6 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
     }
 
     # Create boot statistic object for later assignment
-    # (avoids package check note: "no visible binding for global variable 's'")
     s <- NULL
 
   }
@@ -221,12 +237,12 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
   }
 
   # Set up parallel processing
-  if (p != "no") {
+  if (parallel != "no") {
 
     # No. cores to use
     if (is.null(nc)) nc <- parallel::detectCores()
 
-    if (p == "snow") {
+    if (parallel == "snow") {
 
       # Create local cluster using system cores
       if (is.null(cl)) {
@@ -234,8 +250,10 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
       }
 
       # Export required objects/functions to cluster
-      # (search global env for objects in model call(s))
-      P <- function(...) paste(..., collapse = " ")
+      # (search global env. for objects in model call(s))
+      P <- function(...) {
+        paste(..., collapse = " ")
+      }
       mc <- P(unlist(rMapply(function(i) P(getCall(i)), m)))
       o <- unlist(lapply(search(), ls))
       o <- o[sapply(o, function(i) grepl(i, mc, fixed = TRUE))]
@@ -261,27 +279,29 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
     if (!mer2) x <- if (mer) unique(d[re]) else d
 
     # Bootstrap statistic (s)
-    stat <- if (!mer2) {
-      function(x, i) {
-        xi <- if (mer) {
-          do.call(rbind, lapply(x[i, ], function(j) {
-            d[d[, re] == j, ]
-          }))
-        } else x[i, ]
-        do.call(stdEff, c(list(m, w, xi), a))
-      }
-    } else {
-      function(x) do.call(stdEff, c(list(x), a))
+    stat <- function(x, i) {
+      xi <- if (mer) {
+        do.call(rbind, lapply(x[i, ], function(j) {
+          d[d[, re] == j, ]
+        }))
+      } else x[i, ]
+      do.call(stdEff, c(list(m, w, xi), a))
     }
-    s <- if (catch.err) {
-      function(...) tryCatch(stat(...), error = function(e) NA)
-    } else stat
+    stat2 <- function(x) {
+      do.call(stdEff, c(list(x), a))
+    }
+    s <- if (mer2) stat <- stat2 else stat
+    if (catch.err) {
+      s <- function(...) {
+        tryCatch(stat(...), error = function(e) NA)
+      }
+    }
     if (mer2) assign("s", s, main.env)
 
     # Perform bootstrap
     B <- if (!mer2) {
       set.seed(seed)
-      boot::boot(x, s, R, parallel = p, ncpus = nc, cl = cl)
+      boot::boot(x, s, R, parallel = parallel, ncpus = nc, cl = cl)
     } else {
       if (isList(m)) {
 
@@ -331,10 +351,12 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
     if (is.null(d)) d <- getData(m, merge = TRUE, env = env)
     obs <- rownames(d)
 
-    # Function to get (weighted) resids/avg. resids from model/boot obj./list
+    # Function to get (weighted) (avg.) resids from model/boot obj./list
     res <- function(x, w = NULL) {
       f <- function(m) {
-        if (!isGls(m) && !isGlm(m)) resid(m, "deviance") else resid(m)
+        if (!isGls(m) && !isGlm(m)) {
+          resid(m, type = "deviance")
+        } else resid(m)
       }
       if (isList(x)) {
         if (all(sapply(x, isBoot))) {
@@ -376,28 +398,29 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
       }
 
       # Bootstrap statistic (s)
-      stat <- if (!mer2) {
-        function(x, i) {
-          xi <- if (mer) {
-            do.call(rbind, lapply(x[i, ], function(j) {
-              d[d[, re] == j, ]
-            }))
-          } else x[i, ]
-          r1 <- res(upd(m1, xi), w1)
-          r2 <- res(upd(m2, xi), w2)
-          cor(r1, r2)
+      stat <- function(x, i) {
+        xi <- if (mer) {
+          do.call(rbind, lapply(x[i, ], function(j) {
+            d[d[, re] == j, ]
+          }))
+        } else x[i, ]
+        r1 <- res(upd(m1, xi), w1)
+        r2 <- res(upd(m2, xi), w2)
+        cor(r1, r2)
+      }
+      s <- if (mer2) stat <- res else stat
+      if (catch.err) {
+        na <- if (mer2) rep(NA, nrow(d)) else NA
+        s <- function(...) {
+          tryCatch(stat(...), error = function(e) na)
         }
-      } else res
-      s <- if (catch.err) {
-        e <- function(e) if (mer2) rep(NA, nrow(d)) else NA
-        function(...) tryCatch(stat(...), error = e)
-      } else stat
+      }
       if (mer2) assign("s", s, main.env)
 
       # Perform bootstrap
       B <- if (!mer2) {
         set.seed(seed)
-        boot::boot(x, s, R, parallel = p, ncpus = nc, cl = cl)
+        boot::boot(x, s, R, parallel = parallel, ncpus = nc, cl = cl)
       } else {
 
         # Bootstrapped resids for model 1
@@ -438,7 +461,7 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
   }
 
   # Output results
-  if (p == "snow") parallel::stopCluster(cl)
+  if (parallel == "snow") parallel::stopCluster(cl)
   set.seed(NULL)
   BE
 
@@ -448,31 +471,34 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
 #' @title Bootstrap Confidence Intervals
 #' @description Calculate confidence intervals from bootstrapped model effects.
 #' @param mod A fitted model object. Alternatively, a boot object (class
-#'   \code{"boot"}), containing bootstrapped model effects. Can also be a list
-#'   or nested list of such objects.
+#'   `"boot"`), containing bootstrapped model effects. Can also be a list or
+#'   nested list of such objects.
 #' @param conf A numeric value specifying the confidence level for the
 #'   intervals.
-#' @param type The type of confidence interval to return (defaults to
-#'   \code{"bca"} - see Details). See \code{\link[boot]{boot.ci}} for further
-#'   specification details.
+#' @param type The type of confidence interval to return (defaults to `"bca"` —
+#'   see Details). See [boot.ci()] for further options.
 #' @param digits The number of significant digits to return for numeric values.
-#' @param bci.arg A named list of any additional arguments to \code{boot.ci},
-#'   excepting argument \code{index}.
-#' @param ... Arguments to \code{\link[semEff]{bootEff}}.
-#' @details This is essentially a wrapper for \code{boot.ci} from the \pkg{boot}
-#'   package, returning confidence intervals of the specified type and level
-#'   calculated from bootstrapped model effects. If a model or models is
-#'   supplied, bootstrapping will first be performed via \code{bootEff}. Effects
-#'   for which the confidence intervals do not contain zero are highlighted with
-#'   an asterix.
+#' @param bci.arg A named list of any additional arguments to [boot.ci()],
+#'   excepting argument `index`.
+#' @param ... Arguments to [bootEff()].
+#' @details `bootCI()` uses [boot::boot.ci()] to calculate confidence intervals
+#'   of the specified type and level calculated from bootstrapped model effects.
+#'   If a model or models is supplied, bootstrapping will first be performed via
+#'   [bootEff()].
 #'
-#'   Nonparametric bias-corrected and accelerated confidence intervals
-#'   (BC\emph{a}, Efron 1987) are calculated by default, which should provide
-#'   the most accurate coverage across a range of bootstrap sampling
-#'   distributions (Puth \emph{et al.} 2015). They will, however, be
-#'   \href{https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot}{inappropriate}
-#'   for parametric resampling - in which case the default will be set to the
-#'   bootstrap percentile method instead (\code{"perc"}).
+#'   Nonparametric bias-corrected and accelerated confidence intervals (BC*a*,
+#'   Efron 1987) are calculated by default, which should provide the most
+#'   accurate coverage across a range of bootstrap sampling distributions (Puth
+#'   *et al.* 2015). They will, however, be
+#'   [inappropriate](https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot)
+#'   for parametric resampling — in which case the default will be set to the
+#'   bootstrap percentile method instead (`"perc"`).
+#'
+#'   Effects and confidence intervals are returned in a summary table, along
+#'   with the bootstrap standard errors (standard deviations of the samples) and
+#'   the bootstrap biases (sample means minus original estimates). Effects for
+#'   which the confidence intervals do not contain zero are highlighted with a
+#'   star (i.e. 'significant' at the `conf` level).
 #'
 #' @note All bootstrapped confidence intervals will tend to underestimate the
 #'   true nominal coverage to some extent when sample size is small (Chernick &
@@ -480,35 +506,34 @@ bootEff <- function(mod, R, seed = NULL, type = "nonparametric", ran.eff = NULL,
 #'   interpretation in such cases. Comparison of different interval types may be
 #'   informative. For example, normal-theory based intervals may outperform
 #'   bootstrap percentile methods when n < 34 (Hesterberg 2015). Ultimately
-#'   however, the bootstrap is
-#'   \href{https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size}{not
-#'    a solution to small sample size}.
-#' @return A data frame of the effects and bootstrapped confidence intervals, or
-#'   a list or nested list of same.
-#' @references Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
-#'   Bootstrap Confidence Intervals. \emph{American Journal of Mathematical and
-#'   Management Sciences}, \strong{29}(3–4), 437–456. \url{https://doi.org/c8zv}
+#'   however, the bootstrap is [not a solution to small sample
+#'   size](https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size).
 #'
-#'   Efron, B. (1987). Better Bootstrap Confidence Intervals. \emph{Journal of
-#'   the American Statistical Association}, \strong{82}(397), 171–185.
-#'   \url{https://doi.org/gfww2z}
+#' @return A summary table of the effects and bootstrapped confidence intervals
+#'   (data frame), or a list or nested list of same.
+#' @references Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
+#'   Bootstrap Confidence Intervals. *American Journal of Mathematical and
+#'   Management Sciences*, **29**(3–4), 437–456. \doi{10/c8zv}
+#'
+#'   Efron, B. (1987). Better Bootstrap Confidence Intervals. *Journal of the
+#'   American Statistical Association*, **82**(397), 171–185. \doi{10/gfww2z}
 #'
 #'   Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
-#'   Resampling in the Undergraduate Statistics Curriculum. \emph{The American
-#'   Statistician}, \strong{69}(4), 371–386. \url{https://doi.org/gd85v5}
+#'   Resampling in the Undergraduate Statistics Curriculum. *The American
+#'   Statistician*, **69**(4), 371–386. \doi{10/gd85v5}
 #'
 #'   Puth, M.-T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of
-#'   methods for calculating confidence intervals by bootstrapping.
-#'   \emph{Journal of Animal Ecology}, \strong{84}(4), 892–897.
-#'   \url{https://doi.org/f8n9rq}
+#'   methods for calculating confidence intervals by bootstrapping. *Journal of
+#'   Animal Ecology*, **84**(4), 892–897. \doi{10/f8n9rq}
 #' @examples
-#' # CIs from bootstrapped SEM
-#' (Shipley.SEM.CI <- bootCI(Shipley.SEM.Boot))
+#' # CIs calculated from bootstrapped SEM
+#' (shipley.sem.ci <- bootCI(shipley.sem.boot))
 #'
 #' # From original SEM (models)
-#' # (not typically recommended - better to use saved boot objects)
+#' # (not typically recommended — better to use saved boot objects)
 #' # system.time(
-#' #   Shipley.SEM.CI <- bootCI(Shipley.SEM, ran.eff = "site", seed = 53908)
+#' #   shipley.sem.ci <- bootCI(shipley.sem, R = 1000, seed = 13,
+#' #                            ran.eff = "site")
 #' # )
 #' @export
 bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
@@ -524,36 +549,64 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   bootCI <- function(B) {
 
     # Change default CI type for parametric bootstrapping
-    if (B$sim == "parametric" && type == "bca") {
+    if (B$sim == "parametric" && type[1] == "bca") {
       message("Percentile confidence intervals used for parametric bootstrap samples.")
       type <- "perc"
     }
 
-    # Calculate confidence intervals
+    # Effects/bias/standard errors
     e <- B$t0
+    bi <- colMeans(B$t, na.rm = TRUE) - e
+    se <- apply(B$t, 2, sd, na.rm = TRUE)
+    se[is.na(e)] <- NA
+
+    # Confidence intervals
     ci <- sapply(1:length(e), function(i) {
       if (!is.na(e[i])) {
         if (e[i] != 0) {
-          ci <- do.call(boot::boot.ci, c(list(B, conf, type, i), bci.arg))
+          ci <- suppressWarnings(
+            do.call(
+              boot::boot.ci,
+              c(list(B, conf, type, i), bci.arg)
+            )
+          )
           tail(as.vector(ci[[4]]), 2)
-        } else c(0, 0)
-      } else c(NA, NA)
+        } else rep(0, 2)
+      } else rep(NA, 2)
     })
 
-    # Combine effects and CIs into table (add significance stars)
-    e <- data.frame(
-      rbind(e, ci),
-      row.names = c("Estimate", "Lower CI", "Upper CI"),
-      check.names = FALSE
-    )
+    # Combine into table
+    e <- data.frame("Effect" = e, "Bias" = bi, "Std. Err." = se,
+                    "Lower CI" = ci[1, ], "Upper CI" = ci[2, ],
+                    check.names = FALSE)
     e <- round(e, digits)
-    stars <- t(data.frame(sapply(e, function(i) {
+
+    # Add significance stars
+    stars <- apply(e, 1, function(i) {
       if (!any(is.na(i))) {
+        i <- c(i[1], tail(i, 2))
         if (all(i > 0) || all(i < 0)) "*" else ""
       } else ""
-    })))
+    })
+    e <- cbind(e, " " = stars)
+
+    # Format table (columns, borders, spaces, etc.)
     e <- format(e, nsmall = digits)
-    e <- rbind(e, " " = stars)
+    e <- cbind(" " = rownames(e), "|",
+               e[1], "|", e[2], "|", e[3], "|", e[4:5], "|", e[6],
+               fix.empty.names = FALSE)
+    b <- mapply(function(i, j) {
+      n1 <- nchar(j)
+      n2 <- max(sapply(i, nchar), n1, 3)
+      b <- if (n1 > 1) rep("-", n2) else ""
+      paste(b, collapse = "")
+    }, e, names(e))
+    e <- rbind(b, e)
+    e[1] <- format(e[1], justify = "left")
+    rownames(e) <- 1:nrow(e)
+
+    # Set attributes and output
+    class(e) <- c("bootCI", class(e))
     attr(e, "ci.conf") <- conf
     attr(e, "ci.type") <- type
     e
@@ -563,5 +616,19 @@ bootCI <- function(mod, conf = 0.95, type = "bca", digits = 3, bci.arg = NULL,
   # Apply recursively
   rMapply(bootCI, B, SIMPLIFY = FALSE)
 
+}
+
+
+#' @title Print `"bootCI"` Objects
+#' @description A [print()] method for an object of class `"bootCI"`.
+#' @param x An object of class `"bootCI"`.
+#' @param ... Further arguments passed to or from other methods. Not currently
+#'   used.
+#' @return A summary table of the effects and bootstrapped confidence intervals
+#'   (data frame).
+# S3 method for class 'bootCI'
+#' @export
+print.bootCI <- function(x, ...) {
+  print.data.frame(x, row.names = FALSE)
 }
 
