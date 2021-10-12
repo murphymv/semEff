@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • semEff</title>
+<title>Candidate Model Set from Shipley 'Growth' Model — shipley.growth • semEff</title>
 
 
 <!-- jquery -->
@@ -41,7 +41,10 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Candidate Model Set from Shipley 'Growth' Model — shipley.growth" />
+<meta property="og:description" content="A set of hypothetical competing models fit to the same response
+variable ('Growth') using the simulated data in Shipley (2009), for which
+model estimates can be compared and/or averaged." />
 
 
 
@@ -60,7 +63,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -127,20 +130,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Candidate Model Set from Shipley 'Growth' Model</h1>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>shipley.growth.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="predicting-effects.html">Predicting Effects</a></dt>
-        <dd></dt>
-        <dt><a href="semEff.html">semEff</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>A set of hypothetical competing models fit to the same response
+variable ('Growth') using the simulated data in Shipley (2009), for which
+model estimates can be compared and/or averaged.</p>
     </div>
+
+    <pre class="usage"><span class='va'>shipley.growth</span></pre>
+
+
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>A list of mixed models of class <code>"lmer"</code> and <code>"glmer"</code>, fit to the
+same response variable.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Shipley, B. (2009). Confirmatory path analysis in a generalized
+multilevel context. <em>Ecology</em>, <strong>90</strong>(2), 363-368. doi: <a href='https://doi.org/10/bqd43d'>10/bqd43d</a></p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># Specification</span>
+<span class='co'># shipley.growth &lt;- list(</span>
+<span class='co'>#   lme4::lmer(Growth ~ Date + (1 | site) + (1 | tree), data = shipley),</span>
+<span class='co'>#   lme4::lmer(Growth ~ Date + DD + (1 | site) + (1 | tree), data = shipley),</span>
+<span class='co'>#   lme4::lmer(Growth ~ Date + DD + lat + (1 | site) + (1 | tree),</span>
+<span class='co'>#              data = shipley)</span>
+<span class='co'># )</span>
+</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

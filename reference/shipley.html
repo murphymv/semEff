@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • semEff</title>
+<title>Simulated Data from Shipley (2009) — shipley • semEff</title>
 
 
 <!-- jquery -->
@@ -41,7 +41,8 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Simulated Data from Shipley (2009) — shipley" />
+<meta property="og:description" content="Simulated Data from Shipley (2009)" />
 
 
 
@@ -60,7 +61,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -127,20 +128,48 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Simulated Data from Shipley (2009)</h1>
+    <small class="dont-index">Source: <a href='https://github.com/murphymv/semEff/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>shipley.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="predicting-effects.html">Predicting Effects</a></dt>
-        <dd></dt>
-        <dt><a href="semEff.html">semEff</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Simulated Data from Shipley (2009)</p>
     </div>
+
+    <pre class="usage"><span class='va'>shipley</span></pre>
+
+
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>A data frame with 1900 observations and 9 variables:</p><dl>
+<dt>site</dt><dd><p>a numeric code giving the site from which the observation comes</p></dd>
+<dt>tree</dt><dd><p>a numeric code giving the tree from which the observation comes</p></dd>
+<dt>lat</dt><dd><p>the latitude of the site</p></dd>
+<dt>year</dt><dd><p>the year in which the observation was taken</p></dd>
+<dt>Date</dt><dd><p>the Julian date when the bud burst occurs</p></dd>
+<dt>DD</dt><dd><p>the number of degree days when bud burst occurs</p></dd>
+<dt>Growth</dt><dd><p>the increase in diameter growth of the tree</p></dd>
+<dt>Survival</dt><dd><p>the probability of survival until the next year (used only
+for the simulation)</p></dd>
+<dt>Live</dt><dd><p>a binary value (1 = tree lived the following winter, 0 = tree
+died the following winter)</p></dd>
+
+</dl>
+
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p>doi: <a href='https://doi.org/10/c886'>10/c886</a></p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Shipley, B. (2009). Confirmatory path analysis in a generalized
+multilevel context. <em>Ecology</em>, <strong>90</strong>(2), 363-368. doi: <a href='https://doi.org/10/bqd43d'>10/bqd43d</a></p>
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
