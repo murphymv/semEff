@@ -54,12 +54,12 @@ response will often produce undefined values. Although methods for
 circumventing this issue by indirectly estimating the variance of the
 response on the link scale have been proposed – including a
 latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
-a more general variance-based method using pseudo R-squared (Menard 2011) —
+a more general variance-based method using pseudo R-squared (Menard 2011) –
 here an alternative approach is used. Where transformed values are
 undefined, the function will instead return the synthetic 'working'
 response from the iteratively reweighted least squares (IRLS) algorithm of
 the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
-linear predictor and the working residuals — with the latter comprising the
+linear predictor and the working residuals – with the latter comprising the
 error of the model on the link scale. The advantage of this approach is
 that a relatively straightforward 'transformation' of any non-gaussian
 response is readily attainable in all cases. The standard deviation (or
@@ -83,7 +83,7 @@ variable as both predictor and response, and using a single IRLS iteration.
 response (tested using \code{\link[=all.equal]{all.equal()}} with the default tolerance of
 \code{1.5e-8}), the working response is returned; otherwise, the GLM is refit
 with the working response now as the predictor, and steps 2-4 are repeated
-— each time with an additional IRLS iteration.
+– each time with an additional IRLS iteration.
 }
 
 This approach will generate a very reasonable transformation of the
@@ -91,7 +91,7 @@ response variable, which will also be practically indistinguishable from
 the direct transformation, where this can be compared (see Examples). It
 also ensures that the transformed values, and hence the standard deviation,
 are the same for any GLM fitting the same response (provided it uses the
-same link function) — facilitating model comparisons, selection, and
+same link function) – facilitating model comparisons, selection, and
 averaging.
 }
 \note{
