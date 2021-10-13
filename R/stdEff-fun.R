@@ -67,7 +67,7 @@ sdW <- function(...) {
 #'   a model, by evaluating the 'data' slot of the model call object. If the
 #'   'data' argument of the model call was not specified, or is not a data frame
 #'   (or coercible to such) containing all variables referenced in the model
-#'   formula, an error will be thrown — this restriction is largely to ensure
+#'   formula, an error will be thrown – this restriction is largely to ensure
 #'   that a single coherent dataset of all model variables can be made available
 #'   for resampling purposes.
 #'
@@ -464,12 +464,12 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   circumventing this issue by indirectly estimating the variance of the
 #'   response on the link scale have been proposed – including a
 #'   latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
-#'   a more general variance-based method using pseudo R-squared (Menard 2011) —
+#'   a more general variance-based method using pseudo R-squared (Menard 2011) –
 #'   here an alternative approach is used. Where transformed values are
 #'   undefined, the function will instead return the synthetic 'working'
 #'   response from the iteratively reweighted least squares (IRLS) algorithm of
 #'   the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
-#'   linear predictor and the working residuals — with the latter comprising the
+#'   linear predictor and the working residuals – with the latter comprising the
 #'   error of the model on the link scale. The advantage of this approach is
 #'   that a relatively straightforward 'transformation' of any non-gaussian
 #'   response is readily attainable in all cases. The standard deviation (or
@@ -496,14 +496,14 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   response (tested using [all.equal()] with the default tolerance of
 #'   `1.5e-8`), the working response is returned; otherwise, the GLM is refit
 #'   with the working response now as the predictor, and steps 2-4 are repeated
-#'   — each time with an additional IRLS iteration.
+#'   – each time with an additional IRLS iteration.
 #'
 #'   This approach will generate a very reasonable transformation of the
 #'   response variable, which will also be practically indistinguishable from
 #'   the direct transformation, where this can be compared (see Examples). It
 #'   also ensures that the transformed values, and hence the standard deviation,
 #'   are the same for any GLM fitting the same response (provided it uses the
-#'   same link function) — facilitating model comparisons, selection, and
+#'   same link function) – facilitating model comparisons, selection, and
 #'   averaging.
 #'
 #' @note As we often cannot directly observe the GLM response variable on the
@@ -837,7 +837,7 @@ RVIF <- function(...) {
 #'   squares.
 #'
 #'   If `adj = TRUE` (default), the 'adjusted' R-squared value is also returned,
-#'   which provides an estimate of the population — as opposed to sample —
+#'   which provides an estimate of the population – as opposed to sample –
 #'   R-squared. This is achieved via an analytical formula which adjusts
 #'   R-squared using the 'degrees of freedom' of the model (i.e. the ratio of
 #'   observations to parameters), helping to counter multiple R-squared's
@@ -861,7 +861,7 @@ RVIF <- function(...) {
 #'   arising via a 'leave-one-out' cross-validation procedure (they are not
 #'   exactly equal for GLMs). The resulting R-squared is an estimate of the
 #'   R-squared that would result were the model fit to new data, and will be
-#'   lower than the original — and likely also the adjusted — R-squared,
+#'   lower than the original – and likely also the adjusted – R-squared,
 #'   highlighting the loss of explanatory power due to sample noise. Predicted
 #'   R-squared [may be a more powerful and general indicator of overfitting than
 #'   adjusted
@@ -973,7 +973,7 @@ RVIF <- function(...) {
 #' # Predicted R-squared: compare cross-validated predictions calculated/
 #' # approximated via the hat matrix to standard method (leave-one-out)
 #'
-#' # Fit test models using Shipley data — compare lm vs glm
+#' # Fit test models using Shipley data – compare lm vs glm
 #' d <- na.omit(shipley)
 #' m <- lm(Live ~ Date + DD + lat, d)
 #' # m <- glm(Live ~ Date + DD + lat, binomial, d)
@@ -1292,12 +1292,12 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   if all predictors (x) and/or the response variable (y) were mean-centred
 #'   prior to model-fitting (including any dummy variables arising from
 #'   categorical predictors). Thus, for an ordinary linear model where centring
-#'   of x and y is specified, the intercept will be zero — the mean (or weighted
+#'   of x and y is specified, the intercept will be zero – the mean (or weighted
 #'   mean) of y. In addition, if `cen.x = TRUE` and there are interacting terms
 #'   in the model, all effects for lower order terms of the interaction are
 #'   adjusted using an expression which ensures that each main effect or lower
 #'   order term is estimated at the mean values of the terms they interact with
-#'   (zero in a 'centred' model) — typically improving the interpretation of
+#'   (zero in a 'centred' model) – typically improving the interpretation of
 #'   effects. The expression used comprises a weighted sum of all the effects
 #'   that contain the lower order term, with the weight for the term itself
 #'   being zero and those for 'containing' terms being the product of the means
@@ -1336,14 +1336,14 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   interpretable and useful than the traditional standardised coefficient, as
 #'   it always represents the unique effects of predictors and so can more
 #'   readily be compared both within and across models. Values range from zero
-#'   to +/- one rather than +/- infinity (as in the case of betas) — putting
+#'   to +/- one rather than +/- infinity (as in the case of betas) – putting
 #'   them on the same scale as the bivariate correlation between predictor and
 #'   response. In the case of GLMs however, the measure is analogous but not
 #'   exactly equal to the semipartial correlation, so its values may not always
 #'   be bound between +/- one (such cases are likely rare). Importantly, for
 #'   ordinary linear models, the square of the semipartial correlation equals
 #'   the increase in R-squared when that variable is included last in the model
-#'   — directly linking the measure to unique variance explained. See
+#'   – directly linking the measure to unique variance explained. See
 #'   [here](https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression)
 #'    for additional arguments in favour of the use of semipartial correlations.
 #'

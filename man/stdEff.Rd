@@ -83,12 +83,12 @@ If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, effects will be calcu
 if all predictors (x) and/or the response variable (y) were mean-centred
 prior to model-fitting (including any dummy variables arising from
 categorical predictors). Thus, for an ordinary linear model where centring
-of x and y is specified, the intercept will be zero — the mean (or weighted
+of x and y is specified, the intercept will be zero – the mean (or weighted
 mean) of y. In addition, if \code{cen.x = TRUE} and there are interacting terms
 in the model, all effects for lower order terms of the interaction are
 adjusted using an expression which ensures that each main effect or lower
 order term is estimated at the mean values of the terms they interact with
-(zero in a 'centred' model) — typically improving the interpretation of
+(zero in a 'centred' model) – typically improving the interpretation of
 effects. The expression used comprises a weighted sum of all the effects
 that contain the lower order term, with the weight for the term itself
 being zero and those for 'containing' terms being the product of the means
@@ -127,14 +127,14 @@ response variable. This measure of effect size is arguably much more
 interpretable and useful than the traditional standardised coefficient, as
 it always represents the unique effects of predictors and so can more
 readily be compared both within and across models. Values range from zero
-to +/- one rather than +/- infinity (as in the case of betas) — putting
+to +/- one rather than +/- infinity (as in the case of betas) – putting
 them on the same scale as the bivariate correlation between predictor and
 response. In the case of GLMs however, the measure is analogous but not
 exactly equal to the semipartial correlation, so its values may not always
 be bound between +/- one (such cases are likely rare). Importantly, for
 ordinary linear models, the square of the semipartial correlation equals
 the increase in R-squared when that variable is included last in the model
-— directly linking the measure to unique variance explained. See
+– directly linking the measure to unique variance explained. See
 \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
 for additional arguments in favour of the use of semipartial correlations.
 

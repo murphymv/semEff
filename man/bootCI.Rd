@@ -14,7 +14,7 @@ nested list of such objects.}
 \item{conf}{A numeric value specifying the confidence level for the
 intervals.}
 
-\item{type}{The type of confidence interval to return (defaults to \code{"bca"} —
+\item{type}{The type of confidence interval to return (defaults to \code{"bca"} –
 see Details). See \code{\link[=boot.ci]{boot.ci()}} for further options.}
 
 \item{digits}{The number of significant digits to return for numeric values.}
@@ -42,7 +42,7 @@ Efron 1987) are calculated by default, which should provide the most
 accurate coverage across a range of bootstrap sampling distributions (Puth
 \emph{et al.} 2015). They will, however, be
 \href{https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot}{inappropriate}
-for parametric resampling — in which case the default will be set to the
+for parametric resampling – in which case the default will be set to the
 bootstrap percentile method instead (\code{"perc"}).
 
 Effects and confidence intervals are returned in a summary table, along
@@ -65,7 +65,7 @@ however, the bootstrap is \href{https://stats.stackexchange.com/questions/112147
 (shipley.sem.ci <- bootCI(shipley.sem.boot))
 
 # From original SEM (models)
-# (not typically recommended — better to use saved boot objects)
+# (not typically recommended – better to use saved boot objects)
 # system.time(
 #   shipley.sem.ci <- bootCI(shipley.sem, R = 1000, seed = 13,
 #                            ran.eff = "site")

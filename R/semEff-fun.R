@@ -17,7 +17,7 @@
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on effects.
 #' @param ci.type The type of confidence interval to return (defaults to `"bca"`
-#'   — see Details). See [boot.ci()] for further specification details.
+#'   – see Details). See [boot.ci()] for further specification details.
 #' @param digits The number of significant digits to return for numeric values
 #'   (for summary tables).
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
@@ -43,7 +43,7 @@
 #'   effects of any given predictor on a response are then the sum of its direct
 #'   and (all) its indirect effects. 'Mediator' effects are also calculated, as
 #'   the sum of all indirect paths which operate through each individual
-#'   mediator — useful to assess the relative importance of different mediators
+#'   mediator – useful to assess the relative importance of different mediators
 #'   in affecting the response. All of these effect types can be calculated
 #'   automatically for all (default) or for a specified subset of predictors
 #'   and/or mediators in the SEM. As indirect, total, and mediator effects are
@@ -68,7 +68,7 @@
 #'
 #'   All calculated effects and bootstrapped effects are also returned in lists
 #'   for each response variable, with all except mediator effects also including
-#'   the model intercept(s) — required for prediction (these will be zero for
+#'   the model intercept(s) – required for prediction (these will be zero for
 #'   ordinary linear models with fully standardised effects). Effects can be
 #'   conveniently extracted with [getEff()] and related functions.
 #' @return A list object of class `"semEff"` for which several methods and
@@ -111,7 +111,7 @@
 #' # summary(semEff(shipley.sem.boot, mediator = "DD"))
 #'
 #' # Effects calculated using original SEM (models)
-#' # (not typically recommended — better to use saved boot objects)
+#' # (not typically recommended – better to use saved boot objects)
 #' # system.time(
 #' #  shipley.sem.eff <- semEff(shipley.sem, R = 1000, seed = 13,
 #' #                            ran.eff = "site")
@@ -808,14 +808,14 @@ getAllInd <- function(eff, ...) {
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on predictions (and any interactive effects).
 #' @param ci.type The type of confidence interval to return (defaults to `"bca"`
-#'   — see Details). See [boot.ci()] for further specification details.
+#'   – see Details). See [boot.ci()] for further specification details.
 #' @param digits The number of significant digits to return for interactive
 #'   effects.
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
 #'   excepting argument `index`.
 #' @param parallel The type of parallel processing to use for calculating
 #'   confidence intervals on predictions. Can be one of `"snow"`, `"multicore"`,
-#'   or `"no"` (for none — the default).
+#'   or `"no"` (for none – the default).
 #' @param ncpus Number of system cores to use for parallel processing. If `NULL`
 #'   (default), all available cores are used.
 #' @param cl Optional cluster to use if `parallel = "snow"`. If `NULL`
@@ -828,7 +828,7 @@ getAllInd <- function(eff, ...) {
 #'   original model(s) (`mod`) or from `newdata`. It is assumed that effects are
 #'   fully standardised; however, if this is not the case, then the same
 #'   centring and scaling options originally specified to [stdEff()] should be
-#'   re-specified — which will then be used to standardise the data. If no
+#'   re-specified – which will then be used to standardise the data. If no
 #'   effects are supplied, standardised (direct) effects will be calculated from
 #'   the model and used to generate predictions. These predictions will equal
 #'   the model(s) fitted values if `newdata = NULL`, `unique.eff = FALSE`, and

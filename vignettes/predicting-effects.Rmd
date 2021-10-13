@@ -31,7 +31,7 @@ Let's preview the data (n = 1900):
 knitr::kable(head(shipley))
 ```
 
-Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970---2006 (repeated measures). The hypothesised SEM from @shipleyConfirmatoryPathAnalysis2009 tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the `lme4` package:
+Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970 to 2006 (repeated measures). The hypothesised SEM from @shipleyConfirmatoryPathAnalysis2009 tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the `lme4` package:
 
 ```{r eval = FALSE}
 shipley.sem <- list(

@@ -124,11 +124,11 @@
 #'   Nonparametric bootstrapping for hierarchical data. *Journal of Applied
 #'   Statistics*, **37**(9), 1487–1498. \doi{10/dvfzcn}
 #' @examples
-#' # Bootstrap Shipley SEM (test — 1 rep)
-#' # (set 'site' as group for resampling — highest-level random effect)
+#' # Bootstrap Shipley SEM (test – 1 rep)
+#' # (set 'site' as group for resampling – highest-level random effect)
 #' bootEff(shipley.sem, R = 1, ran.eff = "site", parallel = "no")
 #'
-#' # Check estimates (use saved boot object — 1000 reps)
+#' # Check estimates (use saved boot object – 1000 reps)
 #' lapply(shipley.sem.boot, "[[", 1)  # original
 #' lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 #' @export
@@ -475,7 +475,7 @@ bootEff <- function(mod, R, seed = NULL,
 #'   nested list of such objects.
 #' @param conf A numeric value specifying the confidence level for the
 #'   intervals.
-#' @param type The type of confidence interval to return (defaults to `"bca"` —
+#' @param type The type of confidence interval to return (defaults to `"bca"` –
 #'   see Details). See [boot.ci()] for further options.
 #' @param digits The number of significant digits to return for numeric values.
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
@@ -491,7 +491,7 @@ bootEff <- function(mod, R, seed = NULL,
 #'   accurate coverage across a range of bootstrap sampling distributions (Puth
 #'   *et al.* 2015). They will, however, be
 #'   [inappropriate](https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot)
-#'   for parametric resampling — in which case the default will be set to the
+#'   for parametric resampling – in which case the default will be set to the
 #'   bootstrap percentile method instead (`"perc"`).
 #'
 #'   Effects and confidence intervals are returned in a summary table, along
@@ -530,7 +530,7 @@ bootEff <- function(mod, R, seed = NULL,
 #' (shipley.sem.ci <- bootCI(shipley.sem.boot))
 #'
 #' # From original SEM (models)
-#' # (not typically recommended — better to use saved boot objects)
+#' # (not typically recommended – better to use saved boot objects)
 #' # system.time(
 #' #   shipley.sem.ci <- bootCI(shipley.sem, R = 1000, seed = 13,
 #' #                            ran.eff = "site")

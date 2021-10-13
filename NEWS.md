@@ -1,5 +1,7 @@
 ## semEff 0.6.0
 
+12/10/2021 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.6.0)
+
 ### New features:
 
 -   New formatted table output for effect summaries for `semEff()` and `bootCI()`, accessed via new `print()` and `summary()` methods.
@@ -11,9 +13,9 @@
 
 -   All calculated indirect effects (individual, not summed) now also returned as part of `"semEff"` object (for reference; does not include bootstrapped effects). Extract using `getAllInd()`.
 -   Unnamed model lists can now be supplied to `bootEff()`/`semEff()` (names are generated automatically).
--   Updates to `R2()` (control of negative values, new improved default method for adjusted R-squared --- Olkin-Pratt exact estimator).
+-   Updates to `R2()` (control of negative values, new improved default method for adjusted R-squared -- Olkin-Pratt exact estimator).
 -   New function `getX()`, for more flexible construction of model design matrices (mostly for internal use).
--   Removed `…` argument of `stdEff()` --- arguments to `R2()` are now passed as named list to `R2.arg`.
+-   Removed `…` argument of `stdEff()` -- arguments to `R2()` are now passed as named list to `R2.arg`.
 -   Renamed extractor functions for effects (e.g. `dirEff()` -> `getDirEff()`) and added some new ones.
 -   Various other code and documentation updates.
 
@@ -53,7 +55,7 @@
 
 ### Other changes:
 
--   Renamed function `stdCoeff()` to `stdEff()`, to better reflect the concept of standardised model coefficients as 'effects' (calling `stdCoeff()` will still work - with a warning - until the next version at least).
+-   Renamed function `stdCoeff()` to `stdEff()`, to better reflect the concept of standardised model coefficients as 'effects' (calling `stdCoeff()` will still work -- with a warning -- until the next version at least).
 -   Added `offset` argument to `getY()` and `R2()`, to explicitly retain/remove an offset (where present) in/from the response variable or fitted values. Offsets are removed by default, which ensures, for example, that standardised effects are scaled appropriately.
 -   Added `env` argument to multiple functions, for explicitly specifying the location of data used to fit models (not necessary in most circumstances). This replaces the `...` argument in many instances, which was previously used to pass an environment to `eval()` (via `getData()`). `env` (and `data`) can also now be passed (`...`) to `bootEff()` and `predEff()`.
 -   Added confidence interval attributes to `bootCI()`/`semEff()` output (i.e. confidence level, type).

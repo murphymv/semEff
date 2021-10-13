@@ -75,7 +75,7 @@ measure is exactly equal to the traditional R-squared based on sums of
 squares.
 
 If \code{adj = TRUE} (default), the 'adjusted' R-squared value is also returned,
-which provides an estimate of the population — as opposed to sample —
+which provides an estimate of the population – as opposed to sample –
 R-squared. This is achieved via an analytical formula which adjusts
 R-squared using the 'degrees of freedom' of the model (i.e. the ratio of
 observations to parameters), helping to counter multiple R-squared's
@@ -99,7 +99,7 @@ essentially a short cut to obtaining 'out-of-sample' predictions, normally
 arising via a 'leave-one-out' cross-validation procedure (they are not
 exactly equal for GLMs). The resulting R-squared is an estimate of the
 R-squared that would result were the model fit to new data, and will be
-lower than the original — and likely also the adjusted — R-squared,
+lower than the original – and likely also the adjusted – R-squared,
 highlighting the loss of explanatory power due to sample noise. Predicted
 R-squared \href{https://stats.stackexchange.com/questions/242770/difference-between-adjusted-r-squared-and-predicted-r-squared}{may be a more powerful and general indicator of overfitting than adjusted R-squared},
 as it provides a true out-of-sample test. This measure is a variant of an
@@ -180,7 +180,7 @@ R2(shipley.sem, re.form = NA, type = "spearman")  # using Spearman's Rho
 # Predicted R-squared: compare cross-validated predictions calculated/
 # approximated via the hat matrix to standard method (leave-one-out)
 
-# Fit test models using Shipley data — compare lm vs glm
+# Fit test models using Shipley data – compare lm vs glm
 d <- na.omit(shipley)
 m <- lm(Live ~ Date + DD + lat, d)
 # m <- glm(Live ~ Date + DD + lat, binomial, d)

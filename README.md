@@ -55,7 +55,7 @@ single call to `semEff()`; however, since bootstrapping is employed to
 generate resamples for confidence intervals (via
 [`bootEff()`](https://murphymv.github.io/semEff/reference/bootEff.html)),
 it is usually preferable to save these estimates separately prior to
-calling `semEff()` — allowing more flexibility and saving time if/when
+calling `semEff()` – allowing more flexibility and saving time if/when
 recalling the function.
 
 ## Examples
