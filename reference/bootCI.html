@@ -155,7 +155,7 @@ intervals.</p></td>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>The type of confidence interval to return (defaults to <code>"bca"</code> —
+      <td><p>The type of confidence interval to return (defaults to <code>"bca"</code> –
 see Details). See <code>boot.ci()</code> for further options.</p></td>
     </tr>
     <tr>
@@ -188,7 +188,7 @@ Efron 1987) are calculated by default, which should provide the most
 accurate coverage across a range of bootstrap sampling distributions (Puth
 <em>et al.</em> 2015). They will, however, be
 <a href='https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot'>inappropriate</a>
-for parametric resampling — in which case the default will be set to the
+for parametric resampling – in which case the default will be set to the
 bootstrap percentile method instead (<code>"perc"</code>).</p>
 <p>Effects and confidence intervals are returned in a summary table, along
 with the bootstrap standard errors (standard deviations of the samples) and
@@ -246,7 +246,7 @@ Animal Ecology</em>, <strong>84</strong>(4), 892–897. doi: <a href='https://do
 #&gt;  Growth      |  0.368 | 0.151 |     0.130 |    0.246    0.411 | *
 #&gt; </div><div class='input'>
 <span class='co'># From original SEM (models)</span>
-<span class='co'># (not typically recommended — better to use saved boot objects)</span>
+<span class='co'># (not typically recommended – better to use saved boot objects)</span>
 <span class='co'># system.time(</span>
 <span class='co'>#   shipley.sem.ci &lt;- bootCI(shipley.sem, R = 1000, seed = 13,</span>
 <span class='co'>#                            ran.eff = "site")</span>

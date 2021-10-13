@@ -89,7 +89,7 @@
       <h1 data-toc-skip>Predicting Effects</h1>
                         <h4 class="author">Mark V. Murphy</h4>
             
-            <h4 class="date">2021-10-12</h4>
+            <h4 class="date">2021-10-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/murphymv/semEff/blob/master/vignettes/predicting-effects.Rmd"><code>vignettes/predicting-effects.Rmd</code></a></small>
       <div class="hidden name"><code>predicting-effects.Rmd</code></div>
@@ -187,7 +187,7 @@
 </tr>
 </tbody>
 </table>
-<p>Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970—2006 (repeated measures). The hypothesised SEM from <span class="citation">Shipley (2009)</span> tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the <code>lme4</code> package:</p>
+<p>Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970 to 2006 (repeated measures). The hypothesised SEM from <span class="citation">Shipley (2009)</span> tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the <code>lme4</code> package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">shipley.sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
   DD <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html">lmer</a></span><span class="op">(</span><span class="va">DD</span> <span class="op">~</span> <span class="va">lat</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span><span class="op">)</span>,

@@ -134,6 +134,7 @@
     <div id="semeff-060" class="section level2">
 <h2 class="hasAnchor">
 <a href="#semeff-060" class="anchor"></a>semEff 0.6.0</h2>
+<p>12/10/2021 <a href="https://github.com/murphymv/semEff/releases/tag/v0.6.0">(binaries)</a></p>
 <div id="new-features" class="section level3">
 <h3 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New features:</h3>
@@ -150,9 +151,9 @@
 <ul>
 <li>All calculated indirect effects (individual, not summed) now also returned as part of <code>"semEff"</code> object (for reference; does not include bootstrapped effects). Extract using <code><a href="../reference/getEff.html">getAllInd()</a></code>.</li>
 <li>Unnamed model lists can now be supplied to <code><a href="../reference/bootEff.html">bootEff()</a></code>/<code><a href="../reference/semEff.html">semEff()</a></code> (names are generated automatically).</li>
-<li>Updates to <code><a href="../reference/R2.html">R2()</a></code> (control of negative values, new improved default method for adjusted R-squared — Olkin-Pratt exact estimator).</li>
+<li>Updates to <code><a href="../reference/R2.html">R2()</a></code> (control of negative values, new improved default method for adjusted R-squared – Olkin-Pratt exact estimator).</li>
 <li>New function <code><a href="../reference/getX.html">getX()</a></code>, for more flexible construction of model design matrices (mostly for internal use).</li>
-<li>Removed <code>…</code> argument of <code><a href="../reference/stdEff.html">stdEff()</a></code> — arguments to <code><a href="../reference/R2.html">R2()</a></code> are now passed as named list to <code>R2.arg</code>.</li>
+<li>Removed <code>…</code> argument of <code><a href="../reference/stdEff.html">stdEff()</a></code> – arguments to <code><a href="../reference/R2.html">R2()</a></code> are now passed as named list to <code>R2.arg</code>.</li>
 <li>Renamed extractor functions for effects (e.g. <code>dirEff()</code> -&gt; <code><a href="../reference/getEff.html">getDirEff()</a></code>) and added some new ones.</li>
 <li>Various other code and documentation updates.</li>
 </ul>
@@ -217,7 +218,7 @@
 <h3 class="hasAnchor">
 <a href="#other-changes-2" class="anchor"></a>Other changes:</h3>
 <ul>
-<li>Renamed function <code>stdCoeff()</code> to <code><a href="../reference/stdEff.html">stdEff()</a></code>, to better reflect the concept of standardised model coefficients as ‘effects’ (calling <code>stdCoeff()</code> will still work - with a warning - until the next version at least).</li>
+<li>Renamed function <code>stdCoeff()</code> to <code><a href="../reference/stdEff.html">stdEff()</a></code>, to better reflect the concept of standardised model coefficients as ‘effects’ (calling <code>stdCoeff()</code> will still work – with a warning – until the next version at least).</li>
 <li>Added <code>offset</code> argument to <code><a href="../reference/getY.html">getY()</a></code> and <code><a href="../reference/R2.html">R2()</a></code>, to explicitly retain/remove an offset (where present) in/from the response variable or fitted values. Offsets are removed by default, which ensures, for example, that standardised effects are scaled appropriately.</li>
 <li>Added <code>env</code> argument to multiple functions, for explicitly specifying the location of data used to fit models (not necessary in most circumstances). This replaces the <code>...</code> argument in many instances, which was previously used to pass an environment to <code><a href="https://rdrr.io/r/base/eval.html">eval()</a></code> (via <code><a href="../reference/getData.html">getData()</a></code>). <code>env</code> (and <code>data</code>) can also now be passed (<code>...</code>) to <code><a href="../reference/bootEff.html">bootEff()</a></code> and <code><a href="../reference/predEff.html">predEff()</a></code>.</li>
 <li>Added confidence interval attributes to <code><a href="../reference/bootCI.html">bootCI()</a></code>/<code><a href="../reference/semEff.html">semEff()</a></code> output (i.e. confidence level, type).</li>

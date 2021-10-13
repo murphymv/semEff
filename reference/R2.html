@@ -230,7 +230,7 @@ model (Kvalseth 1985). In the case of the ordinary linear model, the
 measure is exactly equal to the traditional R-squared based on sums of
 squares.</p>
 <p>If <code>adj = TRUE</code> (default), the 'adjusted' R-squared value is also returned,
-which provides an estimate of the population — as opposed to sample —
+which provides an estimate of the population – as opposed to sample –
 R-squared. This is achieved via an analytical formula which adjusts
 R-squared using the 'degrees of freedom' of the model (i.e. the ratio of
 observations to parameters), helping to counter multiple R-squared's
@@ -253,7 +253,7 @@ essentially a short cut to obtaining 'out-of-sample' predictions, normally
 arising via a 'leave-one-out' cross-validation procedure (they are not
 exactly equal for GLMs). The resulting R-squared is an estimate of the
 R-squared that would result were the model fit to new data, and will be
-lower than the original — and likely also the adjusted — R-squared,
+lower than the original – and likely also the adjusted – R-squared,
 highlighting the loss of explanatory power due to sample noise. Predicted
 R-squared <a href='https://stats.stackexchange.com/questions/242770/difference-between-adjusted-r-squared-and-predicted-r-squared'>may be a more powerful and general indicator of overfitting than adjusted R-squared</a>,
 as it provides a true out-of-sample test. This measure is a variant of an
@@ -368,7 +368,7 @@ doi: <a href='https://doi.org/10/db7rfv'>10/db7rfv</a></p>
 <span class='co'># Predicted R-squared: compare cross-validated predictions calculated/</span>
 <span class='co'># approximated via the hat matrix to standard method (leave-one-out)</span>
 
-<span class='co'># Fit test models using Shipley data — compare lm vs glm</span>
+<span class='co'># Fit test models using Shipley data – compare lm vs glm</span>
 <span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>shipley</span><span class='op'>)</span>
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>Live</span> <span class='op'>~</span> <span class='va'>Date</span> <span class='op'>+</span> <span class='va'>DD</span> <span class='op'>+</span> <span class='va'>lat</span>, <span class='va'>d</span><span class='op'>)</span>
 <span class='co'># m &lt;- glm(Live ~ Date + DD + lat, binomial, d)</span>
