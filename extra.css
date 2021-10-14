@@ -3,6 +3,7 @@
 
 /* Menus, Links, Body, Code Chunks */
 
+a code,
 a:focus,
 a:hover,
 code a,
@@ -11,11 +12,11 @@ pre a,
 .dropdown-menu > li > a:hover,
 .dropdown-menu > .active > a:focus,
 .dropdown-menu > .active > a:hover {
-  background-color: transparent;
   color: rgb(12, 227, 172) !important;
 }
 
 body,
+footer,
 .dropdown-menu > li > a,
 .dropdown-menu > .active > a,
 .label-default,
@@ -26,16 +27,32 @@ body,
 .navbar-default .navbar-nav > .open > a:focus,
 .navbar-default .navbar-nav > .open > a:hover {
   background-color: rgb(48, 48, 48);
-  color: rgb(204, 204, 204) !important;
+  color: rgb(204, 204, 204);
 }
 
 code,
 pre {
   background-color: rgb(34, 34, 34);
-  border-color: rgb(62, 64, 66);
-  color: rgb(156, 220, 254);
-  font-family: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+  border: 1px solid rgb(62, 64, 66);
+  color: rgb(204, 204, 204);
+  font-family: "Fira Code Light", Menlo, Monaco, Consolas, "Courier New",
+    monospace;
   font-feature-settings: "ss01", "ss02", "ss03", "ss05", "ss06", "ss07";
+}
+
+pre code {
+  border: none;
+}
+
+pre.examples,
+pre.sourceCode,
+pre.usage {
+  color: rgb(156, 220, 254);
+}
+
+pre:not([class]) {
+  background-color: rgb(30, 30, 30);
+  color: rgb(204, 204, 204);
 }
 
 .navbar-default,
