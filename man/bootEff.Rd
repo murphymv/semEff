@@ -83,7 +83,7 @@ always re-initialised on exit (i.e. \code{set.seed(NULL)}).
 Where \code{weights} are specified, bootstrapped effects will be a weighted
 average across the set of candidate models for each response variable,
 calculated after each model is first refit to the resampled dataset
-(specifying \code{weights = "equal"} will use a simple average instead - see
+(specifying \code{weights = "equal"} will use a simple average instead – see
 \code{\link[=avgEst]{avgEst()}}). If no weights are specified and \code{mod} is a nested list of
 models, the function will throw an error, as it will be expecting weights
 for a presumed model averaging scenario. If instead the user wishes to
