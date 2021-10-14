@@ -1,5 +1,3 @@
-## semEff 0.6.0.9000
-
 ## semEff 0.6.0
 
 12/10/2021 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.6.0)
