@@ -1,7 +1,5 @@
 ---
 title: "semEff"
-author: "Mark V. Murphy"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{semEff}
