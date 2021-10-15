@@ -1,10 +1,10 @@
-pandoc: 2.7.3
+pandoc: 2.14.0.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   predicting-effects: predicting-effects.html
   semEff: semEff.html
-last_built: 2021-10-15T22:29Z
+last_built: 2021-10-15T22:37Z
 urls:
   reference: https://murphymv.github.io/semEff//reference
   article: https://murphymv.github.io/semEff//articles

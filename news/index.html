@@ -164,7 +164,7 @@
 <ul>
 <li>Amendment to previous incomplete fix for issue where <code><a href="../reference/xNam.html">xNam()</a></code> was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary. It also has improved handling of factor contrasts when evaluating names.</li>
 <li>
-<code><a href="../reference/pSapply.html">pSapply()</a></code> did not work with <code>parallel = "multicore"</code>, due to relying completely on <code><a href="https://rdrr.io/r/parallel/clusterApply.html">parallel::parSapply()</a></code> for parallel processing (which is <code>"snow"</code> only). The function now wraps <code><a href="https://rdrr.io/r/parallel/mclapply.html">parallel::mcmapply()</a></code> for <code>"multicore"</code> (not available on Windows systems).</li>
+<code><a href="../reference/pSapply.html">pSapply()</a></code> did not work with <code>parallel = "multicore"</code>, due to relying completely on <code><a href="https://rdrr.io/r/parallel/clusterApply.html">parallel::parSapply()</a></code> for parallel processing (which is <code>"snow"</code> only). The function now wraps <code><a href="https://rdrr.io/r/parallel/mcdummies.html">parallel::mcmapply()</a></code> for <code>"multicore"</code> (not available on Windows systems).</li>
 </ul>
 </div>
 </div>

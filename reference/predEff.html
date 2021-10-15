@@ -351,9 +351,9 @@ values.</p>
 <span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'>predEff</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>nd</span>, type <span class='op'>=</span> <span class='st'>"response"</span>, interaction <span class='op'>=</span> <span class='st'>"Growth:DD"</span><span class='op'>)</span>
 <span class='va'>f</span><span class='op'>$</span><span class='va'>fit</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>
 </div><div class='output co'>#&gt;         1         2         3         4         5         6         7         8 
-#&gt; 0.2935548 0.3230365 0.3539953 0.3862284 0.4194906 0.4535009 0.4879507 0.5225155 
+#&gt; 0.2935517 0.3230333 0.3539921 0.3862251 0.4194874 0.4534976 0.4879475 0.5225124 
 #&gt;         9        10 
-#&gt; 0.5568659 0.5906810 </div><div class='input'><span class='va'>f</span><span class='op'>$</span><span class='va'>interaction</span>
+#&gt; 0.5568629 0.5906781 </div><div class='input'><span class='va'>f</span><span class='op'>$</span><span class='va'>interaction</span>
 </div><div class='output co'>#&gt; Growth:DD_1 Growth:DD_2 
 #&gt;       0.393       0.286 </div><div class='input'><span class='co'># Add CIs (need to bootstrap model...)</span>
 <span class='co'># system.time(B &lt;- bootEff(m, R = 1000, ran.eff = "site"))</span>
