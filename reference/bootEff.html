@@ -328,9 +328,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original      bias    std. error
-#&gt; t1* -0.05600661 -0.09230307          NA
-#&gt; t2* -0.68772025  0.09240438          NA
+#&gt;        original     bias    std. error
+#&gt; t1* -0.05600661 0.02678243          NA
+#&gt; t2* -0.68772025 0.06720850          NA
 #&gt; 
 #&gt; $Date
 #&gt; 
@@ -343,9 +343,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original      bias    std. error
-#&gt; t1* -0.01493651  0.07895165          NA
-#&gt; t2* -0.62813666 -0.01862508          NA
+#&gt;        original     bias    std. error
+#&gt; t1* -0.01493651 0.04486377          NA
+#&gt; t2* -0.62813666 0.02371642          NA
 #&gt; 
 #&gt; $Growth
 #&gt; 
@@ -359,8 +359,8 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;       original      bias    std. error
-#&gt; t1* -0.2917507 -0.09009448          NA
-#&gt; t2*  0.3824224 -0.03401240          NA
+#&gt; t1* -0.2917507 -0.07410131          NA
+#&gt; t2*  0.3824224  0.01187835          NA
 #&gt; 
 #&gt; $Live
 #&gt; 
@@ -373,9 +373,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;      original     bias    std. error
-#&gt; t1* 0.3105220 0.15384307          NA
-#&gt; t2* 0.3681961 0.08573239          NA
+#&gt;      original    bias    std. error
+#&gt; t1* 0.3105220 0.2409301          NA
+#&gt; t2* 0.3681961 0.1166763          NA
 #&gt; </div><div class='input'>
 <span class='co'># Check estimates (use saved boot object – 1000 reps)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>shipley.sem.boot</span>, <span class='st'>"[["</span>, <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># original</span>
