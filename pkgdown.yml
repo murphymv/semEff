@@ -3,7 +3,8 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   predicting-effects: predicting-effects.html
-last_built: 2021-10-15T13:28Z
+  semEff: semEff.html
+last_built: 2021-10-15T14:02Z
 urls:
   reference: https://murphymv.github.io/semEff//reference
   article: https://murphymv.github.io/semEff//articles
