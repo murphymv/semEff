@@ -177,7 +177,7 @@ five-digit integer is used (see Details).</p></td>
       <th>type</th>
       <td><p>The type of bootstrapping to perform. Can be <code>"nonparametric"</code>
 (default), <code>"parametric"</code>, or <code>"semiparametric"</code> (the last two currently
-only for mixed models, via <code><a href='https://rdrr.io/pkg/lme4/man/bootMer.html'>bootMer()</a></code>).</p></td>
+only for mixed models, via <code>bootMer()</code>).</p></td>
     </tr>
     <tr>
       <th>ran.eff</th>
@@ -213,7 +213,7 @@ errors will cause the function to exit.</p></td>
     </tr>
     <tr>
       <th>bM.arg</th>
-      <td><p>A named list of any additional arguments to <code><a href='https://rdrr.io/pkg/lme4/man/bootMer.html'>bootMer()</a></code>.</p></td>
+      <td><p>A named list of any additional arguments to <code>bootMer()</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -268,7 +268,7 @@ this should not generally be an issue, as the number of independent units
 nonparametric resampling will not be appropriate. In these cases,
 parametric or semiparametric bootstrapping can be performed instead via
 <code><a href='https://rdrr.io/pkg/lme4/man/bootMer.html'>lme4::bootMer()</a></code> (with additional arguments passed to that function as
-necessary). NOTE: As <code><a href='https://rdrr.io/pkg/lme4/man/bootMer.html'>bootMer()</a></code> takes only a fitted model as its first
+necessary). NOTE: As <code>bootMer()</code> takes only a fitted model as its first
 argument (i.e. no lists), any model averaging is calculated 'post-hoc'
 using the estimates in boot objects for each candidate model, rather than
 during the bootstrapping process itself (i.e. the default procedure via
@@ -283,7 +283,7 @@ their mixed counterparts for at least some response variables (e.g. where
 random effect variance estimates are at or near zero). The data will be
 resampled on the supplied random effect for all models. If nonparametric
 bootstrapping is not used in this scenario however, an error will occur, as
-<code><a href='https://rdrr.io/pkg/lme4/man/bootMer.html'>bootMer()</a></code> will only accept mixed models.</p>
+<code>bootMer()</code> will only accept mixed models.</p>
 <p>Parallel processing is used by default via the parallel package and
 option <code>parallel = "snow"</code> (and is generally recommended), but users can
 specify the type of parallel processing to use, or none. If <code>"snow"</code>, a
@@ -317,7 +317,7 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
     <pre class="examples"><div class='input'><span class='co'># Bootstrap Shipley SEM (test – 1 rep)</span>
 <span class='co'># (set 'site' as group for resampling – highest-level random effect)</span>
 <span class='fu'>bootEff</span><span class='op'>(</span><span class='va'>shipley.sem</span>, R <span class='op'>=</span> <span class='fl'>1</span>, ran.eff <span class='op'>=</span> <span class='st'>"site"</span>, parallel <span class='op'>=</span> <span class='st'>"no"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $DD
+</div><div class='output co'>#&gt; <span class='message'>boundary (singular) fit: see ?isSingular</span></div><div class='output co'>#&gt; $DD
 #&gt; 
 #&gt; ORDINARY NONPARAMETRIC BOOTSTRAP
 #&gt; 
@@ -328,9 +328,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original      bias    std. error
-#&gt; t1* -0.05600661 -0.03343482          NA
-#&gt; t2* -0.68772025 -0.03766575          NA
+#&gt;        original       bias    std. error
+#&gt; t1* -0.05600661  0.003019128          NA
+#&gt; t2* -0.68772025 -0.042977754          NA
 #&gt; 
 #&gt; $Date
 #&gt; 
@@ -343,9 +343,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original       bias    std. error
-#&gt; t1* -0.01493651 -0.006285472          NA
-#&gt; t2* -0.62813666 -0.033932411          NA
+#&gt;        original      bias    std. error
+#&gt; t1* -0.01493651  0.07134467          NA
+#&gt; t2* -0.62813666 -0.02082168          NA
 #&gt; 
 #&gt; $Growth
 #&gt; 
@@ -358,9 +358,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;       original     bias    std. error
-#&gt; t1* -0.2917507 0.10829376          NA
-#&gt; t2*  0.3824224 0.01749898          NA
+#&gt;       original       bias    std. error
+#&gt; t1* -0.2917507  0.084393941          NA
+#&gt; t2*  0.3824224 -0.008297222          NA
 #&gt; 
 #&gt; $Live
 #&gt; 
@@ -373,9 +373,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;      original    bias    std. error
-#&gt; t1* 0.3105220 0.3241643          NA
-#&gt; t2* 0.3681961 0.1895745          NA
+#&gt;      original      bias    std. error
+#&gt; t1* 0.3105220 0.022451013          NA
+#&gt; t2* 0.3681961 0.004154436          NA
 #&gt; </div><div class='input'>
 <span class='co'># Check estimates (use saved boot object – 1000 reps)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>shipley.sem.boot</span>, <span class='st'>"[["</span>, <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># original</span>
