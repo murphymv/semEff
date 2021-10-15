@@ -218,12 +218,12 @@ straightforward interpretation using causal conditioning. <em>BioRxiv</em>,
 <span class='va'>w</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>e</span><span class='op'>)</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>
 <span class='fu'>avgEst</span><span class='op'>(</span><span class='va'>e</span>, <span class='va'>w</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  (Intercept)         Date           DD          lat 
-#&gt; 16.491775527  0.288076307 -0.008215944 -0.045966647 </div><div class='input'>
+#&gt; 16.447523409  0.286388799 -0.009134853 -0.039825369 </div><div class='input'>
 <span class='co'># Model-averaged predictions</span>
 <span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>predict</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>avgEst</span><span class='op'>(</span><span class='va'>f</span>, <span class='va'>w</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;        1        2        3        4        5        6 
-#&gt; 56.13149 45.80461 42.12180 50.03650 53.71265 55.76698 </div></pre>
+#&gt; 56.13140 45.80203 42.12045 50.03747 53.70988 55.76898 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

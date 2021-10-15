@@ -4,21 +4,6 @@
     <loc>https://murphymv.github.io/semEff//index.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/Object.Type.html</loc>
-  </url>
-  <url>
-    <loc>https://murphymv.github.io/semEff//reference/Param.Type.html</loc>
-  </url>
-  <url>
-    <loc>https://murphymv.github.io/semEff//reference/R2.html</loc>
-  </url>
-  <url>
-    <loc>https://murphymv.github.io/semEff//reference/RVIF.html</loc>
-  </url>
-  <url>
-    <loc>https://murphymv.github.io/semEff//reference/VIF.html</loc>
-  </url>
-  <url>
     <loc>https://murphymv.github.io/semEff//reference/avgEst.html</loc>
   </url>
   <url>
@@ -43,7 +28,10 @@
     <loc>https://murphymv.github.io/semEff//reference/glt.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/pSapply.html</loc>
+    <loc>https://murphymv.github.io/semEff//reference/Object.Type.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff//reference/Param.Type.html</loc>
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/predEff.html</loc>
@@ -55,7 +43,16 @@
     <loc>https://murphymv.github.io/semEff//reference/print.semEff.html</loc>
   </url>
   <url>
+    <loc>https://murphymv.github.io/semEff//reference/pSapply.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff//reference/R2.html</loc>
+  </url>
+  <url>
     <loc>https://murphymv.github.io/semEff//reference/rMapply.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff//reference/RVIF.html</loc>
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/sdW.html</loc>
@@ -67,19 +64,19 @@
     <loc>https://murphymv.github.io/semEff//reference/semEff.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/shipley.html</loc>
-  </url>
-  <url>
     <loc>https://murphymv.github.io/semEff//reference/shipley.growth.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/shipley.sem.html</loc>
+    <loc>https://murphymv.github.io/semEff//reference/shipley.html</loc>
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/shipley.sem.boot.html</loc>
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/shipley.sem.eff.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff//reference/shipley.sem.html</loc>
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/stdEff.html</loc>
@@ -89,6 +86,9 @@
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/varW.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff//reference/VIF.html</loc>
   </url>
   <url>
     <loc>https://murphymv.github.io/semEff//reference/xNam.html</loc>
