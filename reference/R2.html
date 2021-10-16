@@ -183,7 +183,7 @@ types).</p></td>
       <td><p>For mixed models of class <code>"merMod"</code>, the formula for random
 effects to condition on when generating fitted values used in the
 calculation of R-squared. Defaults to <code>NULL</code>, meaning all random effects
-are included. See <code><a href='https://rdrr.io/pkg/lme4/man/predict.merMod.html'>predict.merMod()</a></code> for further specification details.</p></td>
+are included. See <code>predict.merMod()</code> for further specification details.</p></td>
     </tr>
     <tr>
       <th>type</th>
@@ -262,7 +262,7 @@ calculated by substituting the 'PRESS' statistic, i.e. the sum of squares
 of the predicted residuals (Allen 1974), for the residual sum of squares in
 the classic R-squared formula. It is not calculated here for GLMMs, as the
 interpretation of the hat matrix is not reliable (see
-<code><a href='https://rdrr.io/pkg/lme4/man/hatvalues.merMod.html'>hatvalues.merMod()</a></code>).</p>
+<code>hatvalues.merMod()</code>).</p>
 <p>For models fitted with one or more offsets, these will be removed by
 default from the response variable and fitted values prior to calculations.
 Thus R-squared will measure goodness of fit only for the predictors with
@@ -276,7 +276,7 @@ equivalent to the 'conditional' R-squared of Nakagawa <em>et al.</em> (2017)
 (though see that reference for a more advanced approach to R-squared for
 mixed models). To include only some or no random effects, simply set the
 appropriate formula using the argument <code>re.form</code>, which is passed directly
-to <code><a href='https://rdrr.io/pkg/lme4/man/predict.merMod.html'>predict.merMod()</a></code>. If <code>re.form = NA</code>, R-squared is calculated for the
+to <code>predict.merMod()</code>. If <code>re.form = NA</code>, R-squared is calculated for the
 fixed effects only, i.e. the 'marginal' R-squared of Nakagawa <em>et al.</em>
 (2017).</p>
 <p>As R-squared is calculated here as a squared correlation, the <code>type</code> of
