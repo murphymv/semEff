@@ -76,12 +76,12 @@ demonstrations:
 
 Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
 modelling in R for ecology, evolution, and systematics. *Methods in
-Ecology and Evolution*, **7**(5), 573–579. <https://doi.org/f8s8rb>
+Ecology and Evolution*, *7*(5), 573–579. <https://doi.org/f8s8rb>
 
 Shipley, B. (2000). A New Inferential Test for Path Models Based on
 Directed Acyclic Graphs. *Structural Equation Modeling: A
-Multidisciplinary Journal*, **7**(2), 206–218. <https://doi.org/cqm32d>
+Multidisciplinary Journal*, *7*(2), 206–218. <https://doi.org/cqm32d>
 
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-multilevel context. *Ecology*, **90**(2), 363–368.
+multilevel context. *Ecology*, *90*(2), 363–368.
 <https://doi.org/bqd43d>
