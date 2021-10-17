@@ -6,6 +6,8 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
+csl: apa.csl
+link-citations: true
 ---
 
 ```{r setup, include = FALSE}
@@ -15,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-`semEff` automates calculation of effects for structural equation models (SEM) which use local estimation ('piecewise'; see @lefcheckPiecewiseSEMPiecewiseStructural2016). Here's a short example using an SEM testing fire impacts on plant species richness (@graceStructuralEquationModel2006; data provided with the `piecewiseSEM` package).
+`semEff` automates calculation of effects for structural equation models (SEM) which use local estimation ('piecewise'; see @lefcheck2016). Here's a short example using an SEM testing fire impacts on plant species richness (@grace2006; data provided with the `piecewiseSEM` package).
 
 ```{r message = FALSE}
 # install.packages(c("semEff", "piecewiseSEM"))
@@ -29,7 +31,7 @@ Let's have a look at the data. Observations represent a range of [vegetation par
 knitr::kable(head(keeley))
 ```
 
-An SEM fit to these data in Grace and Keeley (2006) tests the influence of landscape vs. local factors in the response of plants to fire, or more specifically, the direct vs. indirect effects of landscape location (distance from coast) on plant species richness via other biotic and abiotic mediators (see the paper for further details). We can reproduce this SEM (roughly) in a piecewise fashion by fitting a separate linear model for each observed response variable:
+An SEM fit to these data in @grace2006 tests the influence of landscape vs. local factors in the response of plants to fire, or more specifically, the direct vs. indirect effects of landscape location (distance from coast) on plant species richness via other biotic and abiotic mediators (see the paper for further details). We can reproduce this SEM (roughly) in a piecewise fashion by fitting a separate linear model for each observed response variable:
 
 ```{r}
 keeley.sem <- list(
