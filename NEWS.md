@@ -1,6 +1,6 @@
 ## semEff 0.6.0
 
-12/10/2021 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.6.0)
+12/10/2021
 
 ### New features:
 
@@ -26,7 +26,7 @@
 
 ## semEff 0.5.0
 
-09/04/2021 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.5.0)
+09/04/2021
 
 ### New features:
 
@@ -47,7 +47,7 @@
 
 ## semEff 0.4.0
 
-01/10/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.4.0)
+01/10/2020
 
 ### New features:
 
@@ -75,7 +75,7 @@
 
 ## semEff 0.3.0
 
-25/03/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.3.0)
+25/03/2020
 
 ### New features:
 
@@ -100,7 +100,7 @@
 
 ## semEff 0.2.1
 
-15/01/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.2.1)
+15/01/2020
 
 ### Bugs fixed:
 
@@ -108,7 +108,7 @@
 
 ## semEff 0.2.0
 
-08/01/2020 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.2.0)
+08/01/2020
 
 ### New features:
 
@@ -123,6 +123,6 @@
 
 ## semEff 0.1.0
 
-04/11/2019 [(binaries)](https://github.com/murphymv/semEff/releases/tag/v0.1.0)
+04/11/2019
 
 New package `semEff`, allowing the automatic calculation of effects for 'piecewise' structural equation models.
