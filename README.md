@@ -24,7 +24,7 @@ count](https://img.shields.io/github/languages/count/murphymv/semEff?label=Langu
 `semEff` provides functionality to automatically calculate direct,
 indirect, and total effects for ‘piecewise’ structural equation models,
 comprising lists of fitted models representing structured equations
-(Shipley 2000, 2009; Lefcheck 2016). Confidence intervals are provided
+(Lefcheck 2016; Shipley 2009, 2000). Confidence intervals are provided
 via bootstrapping.
 
 Currently supported model classes are `"lm"`, `"glm"`, `"lmerMod"`,
