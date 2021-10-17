@@ -96,7 +96,7 @@
 
     
     
-<p><code>semEff</code> can be used to predict values for different types of effects in an SEM. For example, we may be interested in the predictions of an indirect effect of a variable vs. its direct effect, or we may simply wish to predict the total (combined) effect. Here we’ll use <a href="https://murphymv.github.io/semEff/reference/shipley.html">simulated data</a> from <span class="citation">Shipley (2009)</span> on tree growth and survival for a single tree species to predict and plot a direct vs. indirect effect.</p>
+<p><code>semEff</code> can be used to predict values for different types of effects in an SEM. For example, we may be interested in the predictions of an indirect effect of a variable vs. its direct effect, or we may simply wish to predict the total (combined) effect. Here we’ll use <a href="https://murphymv.github.io/semEff/reference/shipley.html">simulated data</a> from <span class="citation">Shipley (<a href="#ref-shipley2009" role="doc-biblioref">2009</a>)</span> on tree growth and survival for a single tree species to predict and plot a direct vs. indirect effect.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages(c("semEff", "ggplot2"))</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://murphymv.github.io/semEff/">semEff</a></span><span class="op">)</span>
@@ -185,7 +185,7 @@
 </tr>
 </tbody>
 </table>
-<p>Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970 to 2006 (repeated measures). The hypothesised SEM from <span class="citation">Shipley (2009)</span> tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the <code>lme4</code> package:</p>
+<p>Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970 to 2006 (repeated measures). The hypothesised SEM from <span class="citation">Shipley (<a href="#ref-shipley2009" role="doc-biblioref">2009</a>)</span> tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the <code>lme4</code> package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">shipley.sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
   DD <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html">lmer</a></span><span class="op">(</span><span class="va">DD</span> <span class="op">~</span> <span class="va">lat</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span><span class="op">)</span>,
@@ -291,8 +291,8 @@
 <h4 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h4>
 <div id="refs" class="references">
-<div id="ref-shipleyConfirmatoryPathAnalysis2009">
-<p>Shipley, Bill. 2009. “Confirmatory Path Analysis in a Generalized Multilevel Context.” <em>Ecology</em> 90 (2): 363–68. <a href="https://doi.org/10/bqd43d">https://doi.org/10/bqd43d</a>.</p>
+<div id="ref-shipley2009">
+<p>Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel context. <em>Ecology</em>, <em>90</em>(2), 363–368. <a href="https://doi.org/10/bqd43d">https://doi.org/10/bqd43d</a></p>
 </div>
 </div>
 </div>
