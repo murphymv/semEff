@@ -27,6 +27,6 @@ Hypothesised SEM from Shipley (2009)
 }
 \references{
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-multilevel context. \emph{Ecology}, \strong{90}(2), 363-368. \doi{10/bqd43d}
+multilevel context. \emph{Ecology}, \emph{90}(2), 363-368. \doi{10/bqd43d}
 }
 \keyword{datasets}

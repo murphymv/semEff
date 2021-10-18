@@ -119,7 +119,7 @@ function \code{\link[=glt]{glt()}}. If both arguments are true, the effects are 
 
 If \code{unique.eff = TRUE} (default), effects are adjusted for
 multicollinearity among predictors by dividing by the square root of the
-VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017; \code{\link[=RVIF]{RVIF()}}). If they have also
+VIFs (Dudgeon, 2016; Thompson et al., 2017; \code{\link[=RVIF]{RVIF()}}). If they have also
 been scaled by the standard deviations of x and y, this converts them to
 semipartial correlations, i.e. the correlation between the unique
 components of predictors (residualised on other predictors) and the
@@ -159,7 +159,7 @@ the \code{\link[=R2]{R2()}} function, with any additional arguments passed via \
 
 Finally, if \code{weights} are specified, the function calculates a weighted
 average of standardised effects across a set (or sets) of different
-candidate models for a particular response variable(s) (Burnham & Anderson
+candidate models for a particular response variable(s) (Burnham & Anderson,
 2002), via the \code{\link[=avgEst]{avgEst()}} function.
 }
 \examples{
@@ -204,15 +204,14 @@ stdEff(m, w)
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection and
 Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-ed.). New York: Springer-Verlag. Retrieved from
-\url{https://www.springer.com/gb/book/9780387953649}
+ed.). Springer-Verlag. \url{https://www.springer.com/gb/book/9780387953649}
 
 Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 Independent Variables in Linear Regression. \emph{Multivariate Behavioral
-Research}, \strong{51}(2-3), 139-153. \doi{10/gfww3f}
+Research}, \emph{51}(2-3), 139-153. \doi{10/gfww3f}
 
 Thompson, C. G., Kim, R. S., Aloe, A. M., & Becker, B. J. (2017).
 Extracting the Variance Inflation Factor and Other Multicollinearity
 Diagnostics from Typical Regression Results. \emph{Basic and Applied Social
-Psychology}, \strong{39}(2), 81-90. \doi{10/gfww2w}
+Psychology}, \emph{39}(2), 81-90. \doi{10/gfww2w}
 }

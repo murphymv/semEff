@@ -6,7 +6,7 @@ Authors@R: person(given = "Mark", family = "Murphy", role = c("aut", "cre"),
     email = "murphymv@gmail.com")
 Description: Automatically calculate direct, indirect, and total effects for 
     piecewise structural equation models, comprising lists of fitted models 
-    representing structured equations (Lefcheck 2016 <doi:10/f8s8rb>). 
+    representing structured equations (Lefcheck, 2016 <doi:10/f8s8rb>). 
     Confidence intervals are provided via bootstrapping.
 URL: https://murphymv.github.io/semEff/, https://github.com/murphymv/semEff
 BugReports: https://github.com/murphymv/semEff/issues

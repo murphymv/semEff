@@ -6,7 +6,7 @@
 \alias{_PACKAGE}
 \title{semEff: Automatic Calculation of Effects for Piecewise Structural Equation Models}
 \description{
-Automatically calculate direct, indirect, and total effects for piecewise structural equation models, comprising lists of fitted models representing structured equations (Lefcheck 2016 <doi:10/f8s8rb>). Confidence intervals are provided via bootstrapping.
+Automatically calculate direct, indirect, and total effects for piecewise structural equation models, comprising lists of fitted models representing structured equations (Lefcheck, 2016 <doi:10/f8s8rb>). Confidence intervals are provided via bootstrapping.
 }
 \seealso{
 Useful links:
