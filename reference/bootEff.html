@@ -258,10 +258,10 @@ refit to data containing only the observations in common.</p>
 <p>For nonparametric bootstrapping of mixed models, resampling should occur at
 the group-level, as individual observations are not independent. The name
 of the random effect to resample must be supplied to <code>ran.eff</code>. For nested
-random effects, this should be the highest-level group (Davison &amp; Hinkley
-1997, Ren <em>et al.</em> 2010). This form of resampling will result in datasets
-of different sizes if observations are unbalanced across groups; however
-this should not generally be an issue, as the number of independent units
+random effects, this should be the highest-level group (Davison &amp; Hinkley,
+1997; Ren et al., 2010). This form of resampling will result in datasets of
+different sizes if observations are unbalanced across groups; however this
+should not generally be an issue, as the number of independent units
 (groups), and hence the 'degrees of freedom', remains
 <a href='https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap'>unchanged</a>.</p>
 <p>For mixed models with <a href='https://stats.stackexchange.com/questions/228800/crossed-vs-nested-random-effects-how-do-they-differ-and-how-are-they-specified'>non-nested random effects</a>,
@@ -305,19 +305,18 @@ results).</p>
 
     <p>Burnham, K. P., &amp; Anderson, D. R. (2002). <em>Model Selection and
 Multimodel Inference: A Practical Information-Theoretic Approach</em> (2nd
-ed.). New York: Springer-Verlag. Retrieved from
-<a href='https://www.springer.com/gb/book/9780387953649'>https://www.springer.com/gb/book/9780387953649</a></p>
+ed.). Springer-Verlag. <a href='https://www.springer.com/gb/book/9780387953649'>https://www.springer.com/gb/book/9780387953649</a></p>
 <p>Davison, A. C., &amp; Hinkley, D. V. (1997). <em>Bootstrap Methods and their
 Application</em>. Cambridge University Press.</p>
 <p>Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., &amp; Lai, S. (2010).
 Nonparametric bootstrapping for hierarchical data. <em>Journal of Applied
-Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.org/10/dvfzcn'>10/dvfzcn</a></p>
+Statistics</em>, <em>37</em>(9), 1487–1498. doi: <a href='https://doi.org/10/dvfzcn'>10/dvfzcn</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Bootstrap Shipley SEM (test – 1 rep)</span>
 <span class='co'># (set 'site' as group for resampling – highest-level random effect)</span>
 <span class='fu'>bootEff</span><span class='op'>(</span><span class='va'>shipley.sem</span>, R <span class='op'>=</span> <span class='fl'>1</span>, ran.eff <span class='op'>=</span> <span class='st'>"site"</span>, parallel <span class='op'>=</span> <span class='st'>"no"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>boundary (singular) fit: see ?isSingular</span></div><div class='output co'>#&gt; $DD
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Model failed to converge with max|grad| = 0.00475537 (tol = 0.002, component 1)</span></div><div class='output co'>#&gt; $DD
 #&gt; 
 #&gt; ORDINARY NONPARAMETRIC BOOTSTRAP
 #&gt; 
@@ -328,9 +327,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;        original     bias    std. error
-#&gt; t1* -0.05600661 -0.0321551          NA
-#&gt; t2* -0.68772025 -0.0280421          NA
+#&gt;        original      bias    std. error
+#&gt; t1* -0.05600661  0.01150877          NA
+#&gt; t2* -0.68772025 -0.08480588          NA
 #&gt; 
 #&gt; $Date
 #&gt; 
@@ -344,8 +343,8 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;        original       bias    std. error
-#&gt; t1* -0.01493651 -0.090263153          NA
-#&gt; t2* -0.62813666 -0.004263525          NA
+#&gt; t1* -0.01493651  0.002680086          NA
+#&gt; t2* -0.62813666 -0.015181882          NA
 #&gt; 
 #&gt; $Growth
 #&gt; 
@@ -359,8 +358,8 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;       original      bias    std. error
-#&gt; t1* -0.2917507 -0.04282567          NA
-#&gt; t2*  0.3824224 -0.02616232          NA
+#&gt; t1* -0.2917507 -0.14076466          NA
+#&gt; t2*  0.3824224  0.01448792          NA
 #&gt; 
 #&gt; $Live
 #&gt; 
@@ -373,9 +372,9 @@ Statistics</em>, <strong>37</strong>(9), 1487–1498. doi: <a href='https://doi.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;      original     bias    std. error
-#&gt; t1* 0.3105220 0.15785437          NA
-#&gt; t2* 0.3681961 0.09556485          NA
+#&gt;      original    bias    std. error
+#&gt; t1* 0.3105220 0.2188220          NA
+#&gt; t2* 0.3681961 0.1213242          NA
 #&gt; </div><div class='input'>
 <span class='co'># Check estimates (use saved boot object – 1000 reps)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>shipley.sem.boot</span>, <span class='st'>"[["</span>, <span class='fl'>1</span><span class='op'>)</span>  <span class='co'># original</span>

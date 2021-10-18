@@ -183,10 +183,10 @@ excepting argument <code>index</code>.</p></td>
 of the specified type and level calculated from bootstrapped model effects.
 If a model or models is supplied, bootstrapping will first be performed via
 <code><a href='bootEff.html'>bootEff()</a></code>.</p>
-<p>Nonparametric bias-corrected and accelerated confidence intervals (BC<em>a</em>,
-Efron 1987) are calculated by default, which should provide the most
+<p>Nonparametric bias-corrected and accelerated confidence intervals (BC<em>a</em>;
+Efron, 1987) are calculated by default, which should provide the most
 accurate coverage across a range of bootstrap sampling distributions (Puth
-<em>et al.</em> 2015). They will, however, be
+et al., 2015). They will, however, be
 <a href='https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot'>inappropriate</a>
 for parametric resampling – in which case the default will be set to the
 bootstrap percentile method instead (<code>"perc"</code>).</p>
@@ -199,24 +199,24 @@ star (i.e. 'significant' at the <code>conf</code> level).</p>
 
     <p>All bootstrapped confidence intervals will tend to underestimate the
 true nominal coverage to some extent when sample size is small (Chernick &amp;
-Labudde 2009), so the appropriate caution should be exercised in
+Labudde, 2009), so the appropriate caution should be exercised in
 interpretation in such cases. Comparison of different interval types may be
 informative. For example, normal-theory based intervals may outperform
-bootstrap percentile methods when n &lt; 34 (Hesterberg 2015). Ultimately
+bootstrap percentile methods when n &lt; 34 (Hesterberg, 2015). Ultimately
 however, the bootstrap is <a href='https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size'>not a solution to small sample size</a>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Chernick, M. R., &amp; Labudde, R. A. (2009). Revisiting Qualms about
 Bootstrap Confidence Intervals. <em>American Journal of Mathematical and
-Management Sciences</em>, <strong>29</strong>(3–4), 437–456. doi: <a href='https://doi.org/10/c8zv'>10/c8zv</a></p>
+Management Sciences</em>, <em>29</em>(3–4), 437–456. doi: <a href='https://doi.org/10/c8zv'>10/c8zv</a></p>
 <p>Efron, B. (1987). Better Bootstrap Confidence Intervals. <em>Journal of the
-American Statistical Association</em>, <strong>82</strong>(397), 171–185. doi: <a href='https://doi.org/10/gfww2z'>10/gfww2z</a></p>
+American Statistical Association</em>, <em>82</em>(397), 171–185. doi: <a href='https://doi.org/10/gfww2z'>10/gfww2z</a></p>
 <p>Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
 Resampling in the Undergraduate Statistics Curriculum. <em>The American
-Statistician</em>, <strong>69</strong>(4), 371–386. doi: <a href='https://doi.org/10/gd85v5'>10/gd85v5</a></p>
+Statistician</em>, <em>69</em>(4), 371–386. doi: <a href='https://doi.org/10/gd85v5'>10/gd85v5</a></p>
 <p>Puth, M.-T., Neuhäuser, M., &amp; Ruxton, G. D. (2015). On the variety of
 methods for calculating confidence intervals by bootstrapping. <em>Journal of
-Animal Ecology</em>, <strong>84</strong>(4), 892–897. doi: <a href='https://doi.org/10/f8n9rq'>10/f8n9rq</a></p>
+Animal Ecology</em>, <em>84</em>(4), 892–897. doi: <a href='https://doi.org/10/f8n9rq'>10/f8n9rq</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># CIs calculated from bootstrapped SEM</span>

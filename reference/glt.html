@@ -193,12 +193,12 @@ variable in the link scale. This is because a direct transformation of the
 response will often produce undefined values. Although methods for
 circumventing this issue by indirectly estimating the variance of the
 response on the link scale have been proposed – including a
-latent-theoretic approach for binomial models (McKelvey &amp; Zavoina 1975) and
-a more general variance-based method using pseudo R-squared (Menard 2011) –
-here an alternative approach is used. Where transformed values are
+latent-theoretic approach for binomial models (McKelvey &amp; Zavoina, 1975)
+and a more general variance-based method using pseudo R-squared (Menard,
+2011) – here an alternative approach is used. Where transformed values are
 undefined, the function will instead return the synthetic 'working'
 response from the iteratively reweighted least squares (IRLS) algorithm of
-the GLM (McCullagh &amp; Nelder 1989). This is reconstructed as the sum of the
+the GLM (McCullagh &amp; Nelder, 1989). This is reconstructed as the sum of the
 linear predictor and the working residuals – with the latter comprising the
 error of the model on the link scale. The advantage of this approach is
 that a relatively straightforward 'transformation' of any non-gaussian
@@ -243,22 +243,22 @@ scale effects is a practical, but reasonable one, and one that takes
 advantage of modern computing power to minimise error through iterative
 model fitting. An added bonus is that the estimated variance is constant
 across models fit to the same response variable, which cannot be said of
-previous methods (Menard 2011). The overall approach would be classed as
-'observed-empirical' by Grace <em>et al.</em> (2018), as it utilises model error
+previous methods (Menard, 2011). The overall approach would be classed as
+'observed-empirical' by Grace et al. (2018), as it utilises model error
 variance (the estimated working residuals) rather than theoretical
 distribution-specific variance.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
-(2018) Quantifying relative importance: computing standardized effects in
-models with binary outcomes. <em>Ecosphere</em>, <strong>9</strong>, e02283. doi: <a href='https://doi.org/10/gdm5bj'>10/gdm5bj</a></p>
-<p>McCullagh P. and Nelder, J. A. (1989) <em>Generalized Linear Models</em> (2nd
-Edition). London: Chapman and Hall.</p>
+    <p>Grace, J. B., Johnson, D. J., Lefcheck, J. S., &amp; Byrnes, J. E. K.
+(2018). Quantifying relative importance: computing standardized effects in
+models with binary outcomes. <em>Ecosphere</em>, <em>9</em>, e02283. doi: <a href='https://doi.org/10/gdm5bj'>10/gdm5bj</a></p>
+<p>McCullagh P., &amp; Nelder, J. A. (1989). <em>Generalized Linear Models</em> (2nd
+Edition). Chapman and Hall.</p>
 <p>McKelvey, R. D., &amp; Zavoina, W. (1975). A statistical model for the analysis
 of ordinal level dependent variables. <em>The Journal of Mathematical
-Sociology</em>, <strong>4</strong>(1), 103-120. doi: <a href='https://doi.org/10/dqfhpp'>10/dqfhpp</a></p>
-<p>Menard, S. (2011) Standards for Standardized Logistic Regression
-Coefficients. <em>Social Forces</em>, <strong>89</strong>, 1409-1428. doi: <a href='https://doi.org/10/bvxb6s'>10/bvxb6s</a></p>
+Sociology</em>, <em>4</em>(1), 103-120. doi: <a href='https://doi.org/10/dqfhpp'>10/dqfhpp</a></p>
+<p>Menard, S. (2011). Standards for Standardized Logistic Regression
+Coefficients. <em>Social Forces</em>, <em>89</em>, 1409-1428. doi: <a href='https://doi.org/10/bvxb6s'>10/bvxb6s</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Compare estimate with a direct link transformation</span>

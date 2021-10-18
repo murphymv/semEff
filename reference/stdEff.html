@@ -273,7 +273,7 @@ function <code><a href='glt.html'>glt()</a></code>. If both arguments are true, 
 'betas'.</p>
 <p>If <code>unique.eff = TRUE</code> (default), effects are adjusted for
 multicollinearity among predictors by dividing by the square root of the
-VIFs (Dudgeon 2016, Thompson <em>et al.</em> 2017; <code><a href='RVIF.html'>RVIF()</a></code>). If they have also
+VIFs (Dudgeon, 2016; Thompson et al., 2017; <code><a href='RVIF.html'>RVIF()</a></code>). If they have also
 been scaled by the standard deviations of x and y, this converts them to
 semipartial correlations, i.e. the correlation between the unique
 components of predictors (residualised on other predictors) and the
@@ -309,21 +309,20 @@ distributions with those of standardised effects.</p>
 the <code><a href='R2.html'>R2()</a></code> function, with any additional arguments passed via <code>R2.arg</code>.</p>
 <p>Finally, if <code>weights</code> are specified, the function calculates a weighted
 average of standardised effects across a set (or sets) of different
-candidate models for a particular response variable(s) (Burnham &amp; Anderson
+candidate models for a particular response variable(s) (Burnham &amp; Anderson,
 2002), via the <code><a href='avgEst.html'>avgEst()</a></code> function.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Burnham, K. P., &amp; Anderson, D. R. (2002). <em>Model Selection and
 Multimodel Inference: A Practical Information-Theoretic Approach</em> (2nd
-ed.). New York: Springer-Verlag. Retrieved from
-<a href='https://www.springer.com/gb/book/9780387953649'>https://www.springer.com/gb/book/9780387953649</a></p>
+ed.). Springer-Verlag. <a href='https://www.springer.com/gb/book/9780387953649'>https://www.springer.com/gb/book/9780387953649</a></p>
 <p>Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 Independent Variables in Linear Regression. <em>Multivariate Behavioral
-Research</em>, <strong>51</strong>(2-3), 139-153. doi: <a href='https://doi.org/10/gfww3f'>10/gfww3f</a></p>
+Research</em>, <em>51</em>(2-3), 139-153. doi: <a href='https://doi.org/10/gfww3f'>10/gfww3f</a></p>
 <p>Thompson, C. G., Kim, R. S., Aloe, A. M., &amp; Becker, B. J. (2017).
 Extracting the Variance Inflation Factor and Other Multicollinearity
 Diagnostics from Typical Regression Results. <em>Basic and Applied Social
-Psychology</em>, <strong>39</strong>(2), 81-90. doi: <a href='https://doi.org/10/gfww2w'>10/gfww2w</a></p>
+Psychology</em>, <em>39</em>(2), 81-90. doi: <a href='https://doi.org/10/gfww2w'>10/gfww2w</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/lme4/lme4/'>lme4</a></span><span class='op'>)</span>
