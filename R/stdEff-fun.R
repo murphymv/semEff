@@ -463,12 +463,12 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   response will often produce undefined values. Although methods for
 #'   circumventing this issue by indirectly estimating the variance of the
 #'   response on the link scale have been proposed – including a
-#'   latent-theoretic approach for binomial models (McKelvey & Zavoina 1975) and
-#'   a more general variance-based method using pseudo R-squared (Menard 2011) –
-#'   here an alternative approach is used. Where transformed values are
+#'   latent-theoretic approach for binomial models (McKelvey & Zavoina, 1975)
+#'   and a more general variance-based method using pseudo R-squared (Menard,
+#'   2011) – here an alternative approach is used. Where transformed values are
 #'   undefined, the function will instead return the synthetic 'working'
 #'   response from the iteratively reweighted least squares (IRLS) algorithm of
-#'   the GLM (McCullagh & Nelder 1989). This is reconstructed as the sum of the
+#'   the GLM (McCullagh & Nelder, 1989). This is reconstructed as the sum of the
 #'   linear predictor and the working residuals – with the latter comprising the
 #'   error of the model on the link scale. The advantage of this approach is
 #'   that a relatively straightforward 'transformation' of any non-gaussian
@@ -516,25 +516,25 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
 #'   advantage of modern computing power to minimise error through iterative
 #'   model fitting. An added bonus is that the estimated variance is constant
 #'   across models fit to the same response variable, which cannot be said of
-#'   previous methods (Menard 2011). The overall approach would be classed as
-#'   'observed-empirical' by Grace *et al.* (2018), as it utilises model error
+#'   previous methods (Menard, 2011). The overall approach would be classed as
+#'   'observed-empirical' by Grace et al. (2018), as it utilises model error
 #'   variance (the estimated working residuals) rather than theoretical
 #'   distribution-specific variance.
 #' @return A numeric vector of the transformed values, or an array, list of
 #'   vectors/arrays, or nested list.
-#' @references Grace, J.B., Johnson, D.J., Lefcheck, J.S. and Byrnes, J.E.K.
-#'   (2018) Quantifying relative importance: computing standardized effects in
-#'   models with binary outcomes. *Ecosphere*, **9**, e02283. \doi{10/gdm5bj}
+#' @references Grace, J. B., Johnson, D. J., Lefcheck, J. S., & Byrnes, J. E. K.
+#'   (2018). Quantifying relative importance: computing standardized effects in
+#'   models with binary outcomes. *Ecosphere*, *9*, e02283. \doi{10/gdm5bj}
 #'
-#'   McCullagh P. and Nelder, J. A. (1989) *Generalized Linear Models* (2nd
-#'   Edition). London: Chapman and Hall.
+#'   McCullagh P., & Nelder, J. A. (1989). *Generalized Linear Models* (2nd
+#'   Edition). Chapman and Hall.
 #'
 #'   McKelvey, R. D., & Zavoina, W. (1975). A statistical model for the analysis
 #'   of ordinal level dependent variables. *The Journal of Mathematical
-#'   Sociology*, **4**(1), 103-120. \doi{10/dqfhpp}
+#'   Sociology*, *4*(1), 103-120. \doi{10/dqfhpp}
 #'
-#'   Menard, S. (2011) Standards for Standardized Logistic Regression
-#'   Coefficients. *Social Forces*, **89**, 1409-1428. \doi{10/bvxb6s}
+#'   Menard, S. (2011). Standards for Standardized Logistic Regression
+#'   Coefficients. *Social Forces*, *89*, 1409-1428. \doi{10/bvxb6s}
 #' @examples
 #' # Compare estimate with a direct link transformation
 #' # (test with a poisson variable, log link)
@@ -692,8 +692,8 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
 #'   aliased).
 #' @return A numeric vector of the VIFs, or an array, list of vectors/arrays, or
 #'   nested list.
-#' @references Fox, J. and Monette, G. (1992) Generalized Collinearity
-#'   Diagnostics. *Journal of the American Statistical Association*, **87**,
+#' @references Fox, J., & Monette, G. (1992). Generalized Collinearity
+#'   Diagnostics. *Journal of the American Statistical Association*, *87*,
 #'   178-183. \doi{10/dm9wbw}
 #' @examples
 #' # Model with two correlated terms
@@ -832,7 +832,7 @@ RVIF <- function(...) {
 #'   goodness of fit describing the predictive power of a model. As the measure
 #'   does not depend on any specific error distribution or model estimating
 #'   procedure, it is also generally comparable across many different types of
-#'   model (Kvalseth 1985). In the case of the ordinary linear model, the
+#'   model (Kvalseth, 1985). In the case of the ordinary linear model, the
 #'   measure is exactly equal to the traditional R-squared based on sums of
 #'   squares.
 #'
@@ -845,11 +845,12 @@ RVIF <- function(...) {
 #'   original sample. By default, this is calculated via the exact 'Olkin-Pratt'
 #'   estimator, shown in recent simulations to be the optimal unbiased
 #'   population R-squared estimator across a range of estimators and
-#'   specification scenarios (Karch 2020), and thus a good general first choice,
-#'   even for smaller sample sizes. Setting `adj.type = "ezekiel"` however will
-#'   use the simpler and more common 'Ezekiel' formula, which can be more
-#'   appropriate where minimising the mean squared error (MSE) of the estimate
-#'   is more important than strict unbiasedness (Hittner 2019, Karch 2020).
+#'   specification scenarios (Karch, 2020), and thus a good general first
+#'   choice, even for smaller sample sizes. Setting `adj.type = "ezekiel"`
+#'   however will use the simpler and more common 'Ezekiel' formula, which can
+#'   be more appropriate where minimising the mean squared error (MSE) of the
+#'   estimate is more important than strict unbiasedness (Hittner, 2019; Karch,
+#'   2020).
 #'
 #'   If `pred = TRUE` (default), a 'predicted' R-squared is also returned, which
 #'   is calculated via the same formula as for R-squared but using
@@ -870,9 +871,9 @@ RVIF <- function(...) {
 #'   [existing
 #'   one](https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/),
 #'   calculated by substituting the 'PRESS' statistic, i.e. the sum of squares
-#'   of the predicted residuals (Allen 1974), for the residual sum of squares in
-#'   the classic R-squared formula. It is not calculated here for GLMMs, as the
-#'   interpretation of the hat matrix is not reliable (see
+#'   of the predicted residuals (Allen, 1974), for the residual sum of squares
+#'   in the classic R-squared formula. It is not calculated here for GLMMs, as
+#'   the interpretation of the hat matrix is not reliable (see
 #'   [hatvalues.merMod()]).
 #'
 #'   For models fitted with one or more offsets, these will be removed by
@@ -885,12 +886,12 @@ RVIF <- function(...) {
 #'   For mixed models, the function will, by default, calculate all R-squared
 #'   measures using fitted values incorporating both the fixed and random
 #'   effects, thus encompassing all variation captured by the model. This is
-#'   equivalent to the 'conditional' R-squared of Nakagawa *et al.* (2017)
-#'   (though see that reference for a more advanced approach to R-squared for
-#'   mixed models). To include only some or no random effects, simply set the
+#'   equivalent to the 'conditional' R-squared of Nakagawa et al. (2017) (though
+#'   see that reference for a more advanced approach to R-squared for mixed
+#'   models). To include only some or no random effects, simply set the
 #'   appropriate formula using the argument `re.form`, which is passed directly
 #'   to [predict.merMod()]. If `re.form = NA`, R-squared is calculated for the
-#'   fixed effects only, i.e. the 'marginal' R-squared of Nakagawa *et al.*
+#'   fixed effects only, i.e. the 'marginal' R-squared of Nakagawa et al.
 #'   (2017).
 #'
 #'   As R-squared is calculated here as a squared correlation, the `type` of
@@ -937,30 +938,30 @@ RVIF <- function(...) {
 #'   vectors/arrays, or nested list.
 #' @references Allen, D. M. (1974). The Relationship Between Variable Selection
 #'   and Data Augmentation and a Method for Prediction. *Technometrics*,
-#'   **16**(1), 125-127. \doi{10/gfgv57}
+#'   *16*(1), 125-127. \doi{10/gfgv57}
 #'
 #'   Hittner, J. B. (2019). Ezekiel’s classic estimator of the population
 #'   squared multiple correlation coefficient: Monte Carlo-based extensions and
-#'   refinements. *The Journal of General Psychology*, **147**(3), 213–227.
+#'   refinements. *The Journal of General Psychology*, *147*(3), 213–227.
 #'   \doi{10/gk53wb}
 #'
 #'   Karch, J. (2020). Improving on Adjusted R-Squared. *Collabra: Psychology*,
-#'   **6**(1). \doi{10/gkgk2v}
+#'   *6*(1). \doi{10/gkgk2v}
 #'
-#'   Kvalseth, T. O. (1985) Cautionary Note about R2. *The American
-#'   Statistician*, **39**(4), 279-285. \doi{10/b8b782}
+#'   Kvalseth, T. O. (1985). Cautionary Note about R2. *The American
+#'   Statistician*, *39*(4), 279-285. \doi{10/b8b782}
 #'
-#'   Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
-#'   determination R2 and intra-class correlation coefficient from generalized
-#'   linear mixed-effects models revisited and expanded. *Journal of the Royal
-#'   Society Interface*, **14**(134). \doi{10/gddpnq}
+#'   Nakagawa, S., Johnson, P. C. D., & Schielzeth, H. (2017). The coefficient
+#'   of determination R2 and intra-class correlation coefficient from
+#'   generalized linear mixed-effects models revisited and expanded. *Journal of
+#'   the Royal Society Interface*, *14*(134). \doi{10/gddpnq}
 #'
 #'   Shieh, G. (2008). Improved Shrinkage Estimation of Squared Multiple
 #'   Correlation Coefficient and Squared Cross-Validity Coefficient.
-#'   *Organizational Research Methods*, **11**(2), 387–407. \doi{10/bcwqf3}
+#'   *Organizational Research Methods*, *11*(2), 387–407. \doi{10/bcwqf3}
 #'
-#'   Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
-#'   generalized linear model. *Statistics in Medicine*, **19**(13), 1771-1781.
+#'   Zheng, B., & Agresti, A. (2000). Summarizing the predictive power of a
+#'   generalized linear model. *Statistics in Medicine*, *19*(13), 1771-1781.
 #'   \doi{10/db7rfv}
 #' @examples
 #' # Pseudo R-squared for mixed models
@@ -1151,7 +1152,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   estimates such as effects, fitted values, or residuals, where models are
 #'   typically competing candidate models fit to the same response variable.
 #'   Weights are typically a 'weight of evidence' type metric such as Akaike
-#'   model weights (Burnham & Anderson 2002, Burnham *et al.* 2011), which can
+#'   model weights (Burnham & Anderson, 2002; Burnham et al., 2011), which can
 #'   be conveniently calculated in *R* using packages such as
 #'   [MuMIn](https://cran.r-project.org/package=MuMIn) or
 #'   [AICcmodavg](https://cran.r-project.org/package=AICcmodavg). However,
@@ -1163,27 +1164,29 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   for estimates for any 'missing' parameters (e.g. effects) prior to
 #'   calculations. This provides a form of shrinkage and thus reduces [estimate
 #'   bias](https://stackoverflow.com/questions/53055050/predicted-values-with-mumin-throwing-error-when-full-false)
-#'    (Burnham & Anderson 2002, Grueber *et al.* 2011).
+#'   (Burnham & Anderson, 2002; Grueber et al., 2011).
 #' @return A numeric vector of the model-averaged estimates, or a list of such
 #'   vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
-#'   ed.). New York: Springer-Verlag. Retrieved from
-#'   <https://www.springer.com/gb/book/9780387953649>
+#'   ed.). Springer-Verlag. <https://www.springer.com/gb/book/9780387953649>
 #'
 #'   Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
 #'   selection and multimodel inference in behavioral ecology: some background,
 #'   observations, and comparisons. *Behavioral Ecology and Sociobiology*,
-#'   **65**(1), 23-35. \doi{10/c4mrns}
+#'   *65*(1), 23-35. \doi{10/c4mrns}
 #'
-#'   Dormann, C. F., Calabrese, J. M., Guillera-Arroita, G., Matechou, E., Bahn,
-#'   V., Barton, K., ... Hartig, F. (2018). Model averaging in ecology: a review
-#'   of Bayesian, information-theoretic, and tactical approaches for predictive
-#'   inference. *Ecological Monographs*, **88**(4), 485-504. \doi{10/gfgwrv}
+#'   Dormann, C. F., Calabrese, J. M., Guillera‐Arroita, G., Matechou, E., Bahn,
+#'   V., Bartoń, K., Beale, C. M., Ciuti, S., Elith, J., Gerstner, K., Guelat,
+#'   J., Keil, P., Lahoz‐Monfort, J. J., Pollock, L. J., Reineking, B., Roberts,
+#'   D. R., Schröder, B., Thuiller, W., Warton, D. I., … Hartig, F. (2018).
+#'   Model averaging in ecology: A review of Bayesian, information-theoretic,
+#'   and tactical approaches for predictive inference. *Ecological Monographs*,
+#'   *88*(4), 485–504. \doi{10/gfgwrv}
 #'
 #'   Grueber, C. E., Nakagawa, S., Laws, R. J., & Jamieson, I. G. (2011).
 #'   Multimodel inference in ecology and evolution: challenges and solutions.
-#'   *Journal of Evolutionary Biology*, **24**(4), 699-711. \doi{10/b7b5d4}
+#'   *Journal of Evolutionary Biology*, *24*(4), 699-711. \doi{10/b7b5d4}
 #'
 #'   Walker, J. A. (2019). Model-averaged regression coefficients have a
 #'   straightforward interpretation using causal conditioning. *BioRxiv*,
@@ -1328,7 +1331,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'
 #'   If `unique.eff = TRUE` (default), effects are adjusted for
 #'   multicollinearity among predictors by dividing by the square root of the
-#'   VIFs (Dudgeon 2016, Thompson *et al.* 2017; [RVIF()]). If they have also
+#'   VIFs (Dudgeon, 2016; Thompson et al., 2017; [RVIF()]). If they have also
 #'   been scaled by the standard deviations of x and y, this converts them to
 #'   semipartial correlations, i.e. the correlation between the unique
 #'   components of predictors (residualised on other predictors) and the
@@ -1345,7 +1348,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   the increase in R-squared when that variable is included last in the model
 #'   – directly linking the measure to unique variance explained. See
 #'   [here](https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression)
-#'    for additional arguments in favour of the use of semipartial correlations.
+#'   for additional arguments in favour of the use of semipartial correlations.
 #'
 #'   If `refit.x`, `cen.x`, and `unique.eff` are `TRUE` and there are
 #'   interaction terms in the model, the model will be refit with any
@@ -1368,23 +1371,22 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'
 #'   Finally, if `weights` are specified, the function calculates a weighted
 #'   average of standardised effects across a set (or sets) of different
-#'   candidate models for a particular response variable(s) (Burnham & Anderson
+#'   candidate models for a particular response variable(s) (Burnham & Anderson,
 #'   2002), via the [avgEst()] function.
 #' @return A numeric vector of the standardised effects, or a list or nested
 #'   list of such vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
-#'   ed.). New York: Springer-Verlag. Retrieved from
-#'   <https://www.springer.com/gb/book/9780387953649>
+#'   ed.). Springer-Verlag. <https://www.springer.com/gb/book/9780387953649>
 #'
 #'   Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 #'   Independent Variables in Linear Regression. *Multivariate Behavioral
-#'   Research*, **51**(2-3), 139-153. \doi{10/gfww3f}
+#'   Research*, *51*(2-3), 139-153. \doi{10/gfww3f}
 #'
 #'   Thompson, C. G., Kim, R. S., Aloe, A. M., & Becker, B. J. (2017).
 #'   Extracting the Variance Inflation Factor and Other Multicollinearity
 #'   Diagnostics from Typical Regression Results. *Basic and Applied Social
-#'   Psychology*, **39**(2), 81-90. \doi{10/gfww2w}
+#'   Psychology*, *39*(2), 81-90. \doi{10/gfww2w}
 #' @examples
 #' library(lme4)
 #'

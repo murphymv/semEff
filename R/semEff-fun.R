@@ -26,7 +26,7 @@
 #' @details The eponymous function of this package calculates all direct,
 #'   indirect, total, and mediator effects for a 'piecewise' structural equation
 #'   model (SEM), that is, one where parameter estimation is local rather than
-#'   global (Shipley 2000, 2009; Lefcheck 2016). The SEM simply takes the form
+#'   global (Lefcheck, 2016; Shipley, 2000, 2009). The SEM simply takes the form
 #'   of a list of fitted models, or bootstrapped estimates from such models,
 #'   describing hypothesised causal pathways from predictors to response
 #'   ('endogenous') variables. These are either direct, or operate indirectly
@@ -53,8 +53,8 @@
 #'
 #'   Confidence intervals for all effects are returned in summary tables for
 #'   each response (see [bootCI()]), with BC*a* intervals calculated by default
-#'   using the bootstrapped estimates for each effect type (MacKinnon *et al.*
-#'   2004, Cheung 2009, Hayes & Scharkow 2013). Effects for which the confidence
+#'   using the bootstrapped estimates for each effect type (Cheung, 2009; Hayes
+#'   & Scharkow, 2013; MacKinnon et al., 2004). Effects for which the confidence
 #'   intervals do not contain zero are highlighted with a star (i.e.
 #'   'significant' at the `ci.conf` level). Bootstrap standard errors (standard
 #'   deviations of the samples) and biases (sample means minus original
@@ -79,27 +79,27 @@
 #'   4. All indirect effects (individual, not summed)
 #' @references Cheung, M. W. L. (2009). Comparison of methods for constructing
 #'   confidence intervals of standardized indirect effects. *Behavior Research
-#'   Methods*, **41**(2), 425-438. \doi{10/fnx7xk}
+#'   Methods*, *41*(2), 425-438. \doi{10/fnx7xk}
 #'
 #'   Hayes, A. F., & Scharkow, M. (2013). The Relative Trustworthiness of
 #'   Inferential Tests of the Indirect Effect in Statistical Mediation Analysis:
-#'   Does Method Really Matter? *Psychological Science*, **24**(10), 1918-1927.
+#'   Does Method Really Matter? *Psychological Science*, *24*(10), 1918-1927.
 #'   \doi{10/bbhr}
 #'
 #'   Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
 #'   modelling in `R` for ecology, evolution, and systematics. *Methods in
-#'   Ecology and Evolution*, **7**(5), 573-579. \doi{10/f8s8rb}
+#'   Ecology and Evolution*, *7*(5), 573-579. \doi{10/f8s8rb}
 #'
 #'   MacKinnon, D. P., Lockwood, C. M., & Williams, J. (2004). Confidence Limits
 #'   for the Indirect Effect: Distribution of the Product and Resampling
-#'   Methods. *Multivariate Behavioral Research*, **39**(1), 99. \doi{10/chqcnx}
+#'   Methods. *Multivariate Behavioral Research*, *39*(1), 99. \doi{10/chqcnx}
 #'
 #'   Shipley, B. (2000). A New Inferential Test for Path Models Based on
 #'   Directed Acyclic Graphs. *Structural Equation Modeling: A Multidisciplinary
-#'   Journal*, **7**(2), 206-218. \doi{10/cqm32d}
+#'   Journal*, *7*(2), 206-218. \doi{10/cqm32d}
 #'
 #'   Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
-#'   context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
+#'   context. *Ecology*, *90*(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # SEM effects
 #' (shipley.sem.eff <- semEff(shipley.sem.boot))

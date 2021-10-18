@@ -101,10 +101,10 @@ refit to data containing only the observations in common.
 For nonparametric bootstrapping of mixed models, resampling should occur at
 the group-level, as individual observations are not independent. The name
 of the random effect to resample must be supplied to \code{ran.eff}. For nested
-random effects, this should be the highest-level group (Davison & Hinkley
-1997, Ren \emph{et al.} 2010). This form of resampling will result in datasets
-of different sizes if observations are unbalanced across groups; however
-this should not generally be an issue, as the number of independent units
+random effects, this should be the highest-level group (Davison & Hinkley,
+1997; Ren et al., 2010). This form of resampling will result in datasets of
+different sizes if observations are unbalanced across groups; however this
+should not generally be an issue, as the number of independent units
 (groups), and hence the 'degrees of freedom', remains
 \href{https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap}{unchanged}.
 
@@ -160,13 +160,12 @@ lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection and
 Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-ed.). New York: Springer-Verlag. Retrieved from
-\url{https://www.springer.com/gb/book/9780387953649}
+ed.). Springer-Verlag. \url{https://www.springer.com/gb/book/9780387953649}
 
 Davison, A. C., & Hinkley, D. V. (1997). \emph{Bootstrap Methods and their
 Application}. Cambridge University Press.
 
 Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
 Nonparametric bootstrapping for hierarchical data. \emph{Journal of Applied
-Statistics}, \strong{37}(9), 1487–1498. \doi{10/dvfzcn}
+Statistics}, \emph{37}(9), 1487–1498. \doi{10/dvfzcn}
 }

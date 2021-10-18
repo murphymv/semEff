@@ -17,7 +17,7 @@
 #' }
 #' @source \doi{10/c886}
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
+#'   multilevel context. *Ecology*, *90*(2), 363-368. \doi{10/bqd43d}
 "shipley"
 
 
@@ -25,7 +25,7 @@
 #' @format A list of fitted mixed models of class `"lmer"` and `"glmer"`,
 #'   representing structured equations.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
+#'   multilevel context. *Ecology*, *90*(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # Specification
 #' # shipley.sem <- list(
@@ -46,7 +46,7 @@
 #' @format A list of mixed models of class `"lmer"` and `"glmer"`, fit to the
 #'   same response variable.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
+#'   multilevel context. *Ecology*, *90*(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # Specification
 #' # shipley.growth <- list(
@@ -64,7 +64,7 @@
 #' @format A list of objects of class `"boot"`, representing bootstrapped
 #'   estimates from fitted mixed models.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
+#'   multilevel context. *Ecology*, *90*(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # Specification
 #' # shipley.sem.boot <- bootEff(shipley.sem, R = 1000, seed = 13,
@@ -78,7 +78,7 @@
 #' @format A list object of class `"semEff"`, containing SEM effects and summary
 #'   tables.
 #' @references Shipley, B. (2009). Confirmatory path analysis in a generalized
-#'   multilevel context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
+#'   multilevel context. *Ecology*, *90*(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # Specification
 #' # shipley.sem.eff <- semEff(shipley.sem.boot)
