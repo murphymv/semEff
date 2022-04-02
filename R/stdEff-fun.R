@@ -247,7 +247,7 @@ getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
     # Add other variables from data (convert factors to dummy vars)
     d <- sapply(names(d), function(i) {
       di <- d[[i]]
-      if (!is.numeric(di)) {
+      if (!is.numeric(di) && length(unique(di)) > 1) {
         di <- as.factor(di)
         ci <- if (!is.null(ct)) list(di = ct[[i]])
         di <- cbind(
@@ -384,7 +384,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
         xi <- x[[i]]
         j <- colnames(xi)
         n <- ncol(xi)
-        if (!is.numeric(xi)) {
+        if (!is.numeric(xi) && length(unique(xi)) > 1) {
           xi <- as.factor(xi)
           ci <- list(xi = ct[[i]])
           xi <- model.matrix( ~ xi, contrasts.arg = ci)

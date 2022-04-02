@@ -151,7 +151,8 @@ bootEff <- function(mod, R, seed = NULL,
 
   # Set model names if absent (use response names)
   mn <- names(m)
-  if (isList(m) && (is.null(mn) || any(nchar(mn) == 0))) {
+  mnz <- !nzchar(mn) | is.na(mn)
+  if (isList(m) && (is.null(mn) || any(mnz))) {
     
     # Response variable names
     rn <- sapply(m, function(i) {
@@ -159,10 +160,8 @@ bootEff <- function(mod, R, seed = NULL,
       names(model.frame(i, data = getData(i)))[1]
     })
     
-    # Replace NULL/zero-length names
-    names(m) <- if (!is.null(mn)) {
-      ifelse(nchar(mn) == 0, rn, mn)
-    } else rn
+    # Replace NULL/zero-length/NA names
+    names(m) <- if (!is.null(mn)) ifelse(mnz, rn, mn) else rn
 
   }
 
