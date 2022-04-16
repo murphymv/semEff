@@ -173,7 +173,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
 #' # Using formula or term names (supply data)
 #' d <- shipley
 #' x1 <- getX(formula(m), data = d)
-#' x2 <- getX(labels(terms(m)), data = d)
+#' x2 <- getX(names(lme4::fixef(m)), data = d)
 #' stopifnot(all.equal(x1, x2))
 #'
 #' # Scaled terms
@@ -229,9 +229,9 @@ getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
       )
     }
 
-    # Formula(s)
-    i <- if (isMod(m)) attr(terms(m), "intercept") else any(isInt(m))
-    xn <- if (!is.character(m)) labels(terms(m, data = d)) else m
+    # Formulas
+    i <- if (!is.character(m)) attr(terms(m), "intercept") else any(isInt(m))
+    xn <- if (!is.character(m)) labels(terms(m)) else m
     xn <- xn[!isInt(xn) & !grepl("[|]", xn)]
     fd <- reformulate(c(xn, names(d)), intercept = i)
     fx <- reformulate(xn, intercept = i)
@@ -241,26 +241,31 @@ getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
     x <- suppressWarnings(
       dF(model.matrix(fx, data = d, contrasts.arg = ct))
     )
-    xn <- names(x)
     obs <- rownames(x)
-
+    
+    # Term names
+    xn <- names(x)
+    xn2 <- names(model.frame(fx, data = d))
+    
     # Add other variables from data (convert factors to dummy vars)
     d <- sapply(names(d), function(i) {
       di <- d[[i]]
-      if (!is.numeric(di) && length(unique(di)) > 1) {
-        di <- as.factor(di)
-        ci <- if (!is.null(ct)) list(di = ct[[i]])
-        di <- cbind(
-          model.matrix( ~ 0 + di),
-          model.matrix( ~ di, contrasts.arg = ci)
-        )
-        colnames(di) <- gsub("^di", i, colnames(di))
-      }
-      di
+      if (!is.numeric(di)) {
+        if (i %in% xn2) {
+          di <- as.factor(di)
+          ci <- if (!is.null(ct)) list(di = ct[[i]])
+          di <- cbind(
+            model.matrix( ~ 0 + di),
+            model.matrix( ~ di, contrasts.arg = ci)
+          )
+          colnames(di) <- gsub("^di", i, colnames(di))
+          di
+        } else 0
+      } else di
     }, simplify = FALSE)
     d <- dF(do.call(cbind, d))
     d <- d[unique(names(d))]
-    x <- dF(x, d[!names(d) %in% names(x)])
+    x <- dF(x, d[!names(d) %in% xn])
 
     # Means/SDs (for centring/scaling)
     xm <- sapply(names(x), function(i) {
@@ -274,7 +279,7 @@ getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
       } else 1
     })
 
-    # Names of terms to return
+    # Term names to return
     if (add.data) {
       rn <- if (isMer(m)) {
         unlist(lapply(lme4::VarCorr(m), rownames))
