@@ -243,7 +243,7 @@ getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
     )
     obs <- rownames(x)
     
-    # Term names
+    # Term/variable names
     xn <- names(x)
     xn2 <- names(model.frame(fx, data = d))
     
@@ -389,7 +389,7 @@ xNam <- function(mod, intercept = TRUE, aliased = TRUE, list = FALSE,
         xi <- x[[i]]
         j <- colnames(xi)
         n <- ncol(xi)
-        if (!is.numeric(xi) && length(unique(xi)) > 1) {
+        if (!is.numeric(xi)) {
           xi <- as.factor(xi)
           ci <- list(xi = ct[[i]])
           xi <- model.matrix( ~ xi, contrasts.arg = ci)
