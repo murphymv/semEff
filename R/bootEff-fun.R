@@ -114,7 +114,7 @@
 #'   (named) list/nested list of such objects.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
-#'   ed.). Springer-Verlag. <https://www.springer.com/gb/book/9780387953649>
+#'   ed.). Springer-Verlag. <https://link.springer.com/book/10.1007/b97636>
 #'
 #'   Davison, A. C., & Hinkley, D. V. (1997). *Bootstrap Methods and their
 #'   Application*. Cambridge University Press.

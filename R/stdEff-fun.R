@@ -1174,7 +1174,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
-#'   ed.). Springer-Verlag. <https://www.springer.com/gb/book/9780387953649>
+#'   ed.). Springer-Verlag. <https://link.springer.com/book/10.1007/b97636>
 #'
 #'   Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
 #'   selection and multimodel inference in behavioral ecology: some background,
@@ -1382,7 +1382,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   list of such vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
-#'   ed.). Springer-Verlag. <https://www.springer.com/gb/book/9780387953649>
+#'   ed.). Springer-Verlag. <https://link.springer.com/book/10.1007/b97636>
 #'
 #'   Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 #'   Independent Variables in Linear Regression. *Multivariate Behavioral

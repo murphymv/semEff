@@ -2,7 +2,7 @@
 
 ### Release
 
-This is a sixth minor release (0.6.0).
+This is a patch release (0.6.1).
 
 ### Test environments
 
