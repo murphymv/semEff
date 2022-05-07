@@ -8,12 +8,12 @@ This is a patch release (0.6.1).
 
 | System                                    | Source                  | R version  |
 |-------------------------------------------|-------------------------|------------|
-| Windows 10 Home 21H1                      | Local                   | R 4.1.1    |
-| Windows Server 2019 10.0.17763 Datacenter | Remote (GitHub Actions) | R-release  |
-| Mac OS X 10.15.7 19H1417                  | Remote (GitHub Actions) | R-release  |
-| Ubuntu 20.04.3 LTS                        | Remote (GitHub Actions) | R-devel    |
-| Ubuntu 20.04.3 LTS                        | Remote (GitHub Actions) | R-release  |
-| Ubuntu 20.04.3 LTS                        | Remote (GitHub Actions) | R-oldrel-1 |
+| Windows 10 Home 21H2                      | Local                   | R 4.2.0    |
+| Windows Server 2022 10.0.20348 Datacenter | Remote (GitHub Actions) | R-release  |
+| Mac OS 11.6.5 20G527                      | Remote (GitHub Actions) | R-release  |
+| Ubuntu 20.04.4 LTS                        | Remote (GitHub Actions) | R-devel    |
+| Ubuntu 20.04.4 LTS                        | Remote (GitHub Actions) | R-release  |
+| Ubuntu 20.04.4 LTS                        | Remote (GitHub Actions) | R-oldrel-1 |
 
 ### R CMD check results
 
