@@ -43,6 +43,8 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  color: rgb(204, 204, 204);
   border: none;
 }
 
