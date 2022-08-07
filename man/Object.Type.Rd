@@ -37,22 +37,22 @@ Intended largely for convenience and internal use.
 }
 \section{Functions}{
 \itemize{
-\item \code{isList}: Is object a list (class \code{"list"} only)?
+\item \code{isList()}: Is object a list (class \code{"list"} only)?
 
-\item \code{isBoot}: Is object a boot object (class \code{"boot"})?
+\item \code{isBoot()}: Is object a boot object (class \code{"boot"})?
 
-\item \code{isMod}: Is object a fitted model?
+\item \code{isMod()}: Is object a fitted model?
 
-\item \code{isGlm}: Is object a generalised linear model (i.e. uses a
+\item \code{isGlm()}: Is object a generalised linear model (i.e. uses a
 link function)?
 
-\item \code{isMer}: Is object a mixed model (class \code{"merMod"})?
+\item \code{isMer()}: Is object a mixed model (class \code{"merMod"})?
 
-\item \code{isGls}: Is object a generalised least squares model (class
+\item \code{isGls()}: Is object a generalised least squares model (class
 \code{"gls"})?
 
-\item \code{isBet}: Is object a beta regression model (class
+\item \code{isBet()}: Is object a beta regression model (class
 \code{"betareg"})?
-}}
 
+}}
 \keyword{internal}

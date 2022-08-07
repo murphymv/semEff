@@ -10,3 +10,4 @@
 ^pkgdown$
 ^tests$
 ^various$
+^CITATION\.cff$

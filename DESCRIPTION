@@ -2,8 +2,8 @@ Package: semEff
 Type: Package
 Title: Automatic Calculation of Effects for Piecewise Structural Equation Models
 Version: 0.6.1
-Authors@R: person(given = "Mark", family = "Murphy", role = c("aut", "cre"), 
-    email = "murphymv@gmail.com")
+Authors@R: person(given = c("Mark", "V."), family = "Murphy", role = c("aut", 
+    "cre"), email = "murphymv@gmail.com")
 Description: Automatically calculate direct, indirect, and total effects for 
     piecewise structural equation models, comprising lists of fitted models 
     representing structured equations (Lefcheck, 2016 <doi:10/f8s8rb>). 
@@ -30,5 +30,5 @@ Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Language: en-GB

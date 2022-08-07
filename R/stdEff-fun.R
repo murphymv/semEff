@@ -1060,7 +1060,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       obs <- names(y)
 
       # Fitted values
-      f <- predict(m, re.form = rf)[obs]
+      f <- predict(m, d, re.form = rf)[obs]
       f <- lI(f - o)
 
       # Correlation
