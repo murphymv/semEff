@@ -1059,7 +1059,8 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       y <- getY(m, offset = offset, env = env)
       obs <- names(y)
 
-      # Fitted values
+      # Fitted values 
+      # (need to supply data to predict() to avoid issues w/ re.form argument)
       f <- predict(m, d, re.form = rf)[obs]
       f <- lI(f - o)
 
@@ -1084,7 +1085,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
         # Variance unexplained (model 'error')
         e <- 1 - R2
 
-        # Estimator (some code from altR2:::OPExactEstimator)
+        # Estimator (some code from altR2:::OPExactEstimator())
         R2a <- if (adj.type == "olkin-pratt") {
           1 - e * (ndf - 2) / rdf * gsl::hyperg_2F1(1, 1, (rdf + 2) / 2, e)
         } else {

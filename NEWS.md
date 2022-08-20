@@ -1,5 +1,9 @@
 ## semEff 0.6.1
 
+### Changes:
+
+-   Minor updates to code and documentation (e.g. see [issue #41](https://github.com/murphymv/semEff/issues/41)).
+
 ### Bugs fixed:
 
 -   `getX()` threw an error when trying to construct model design matrices using factors with less than two levels (where contrasts can't be applied). Such an error might occur where e.g. the dataset called by a model contained at least one character/factor variable with only one unique value, which was incorrectly coerced to a factor by `getX()` (typically in order to gain access to individual dummy variables not in the original design matrix).
