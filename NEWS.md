@@ -2,7 +2,7 @@
 
 ### Changes:
 
--   Minor updates to code and documentation (e.g. see [issue #41](https://github.com/murphymv/semEff/issues/41)).
+-   Minor updates to code and documentation (e.g. see [#41](https://github.com/murphymv/semEff/issues/41)).
 
 ### Bugs fixed:
 

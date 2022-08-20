@@ -6,3 +6,5 @@ template:
   params:
     bootswatch: darkly
 url: https://murphymv.github.io/semEff/
+news:
+  cran_dates: false
