@@ -8,7 +8,7 @@
 [![Repo
 Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
 [![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg?label=Lifecycle)](https://lifecycle.r-lib.org/articles/stages.html)
-[![Licence](https://img.shields.io/badge/License-GPL3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Licence](https://img.shields.io/badge/License-GPL3-green.svg?label=Licence)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 ![GitHub language
 count](https://img.shields.io/github/languages/count/murphymv/semEff?label=Languages)
 [![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions)

@@ -114,7 +114,7 @@
 #'   (named) list/nested list of such objects.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
-#'   ed.). Springer-Verlag. <https://www.springer.com/gb/book/9780387953649>
+#'   ed.). Springer-Verlag. <https://link.springer.com/book/10.1007/b97636>
 #'
 #'   Davison, A. C., & Hinkley, D. V. (1997). *Bootstrap Methods and their
 #'   Application*. Cambridge University Press.
@@ -149,12 +149,20 @@ bootEff <- function(mod, R, seed = NULL,
     ce <- do.call(c, m[sapply(m, class) == "formula.cerror"])
   }
 
-  # Set model names if none present (response names)
-  if (isList(m) && is.null(names(m))) {
-    names(m) <- sapply(m, function(i) {
+  # Set model names if absent (use response names)
+  mn <- names(m)
+  mnz <- !nzchar(mn) | is.na(mn)
+  if (isList(m) && (is.null(mn) || any(mnz))) {
+    
+    # Response variable names
+    rn <- sapply(m, function(i) {
       if (isList(i)) i <- i[[1]]
       names(model.frame(i, data = getData(i)))[1]
     })
+    
+    # Replace NULL/zero-length/NA names
+    names(m) <- if (!is.null(mn)) ifelse(mnz, rn, mn) else rn
+
   }
 
   # Arguments to stdEff()

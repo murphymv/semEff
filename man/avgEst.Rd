@@ -63,7 +63,7 @@ head(avgEst(f, w))
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection and
 Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-ed.). Springer-Verlag. \url{https://www.springer.com/gb/book/9780387953649}
+ed.). Springer-Verlag. \url{https://link.springer.com/book/10.1007/b97636}
 
 Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
 selection and multimodel inference in behavioral ecology: some background,

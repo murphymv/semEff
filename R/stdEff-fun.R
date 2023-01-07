@@ -173,7 +173,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
 #' # Using formula or term names (supply data)
 #' d <- shipley
 #' x1 <- getX(formula(m), data = d)
-#' x2 <- getX(labels(terms(m)), data = d)
+#' x2 <- getX(names(lme4::fixef(m)), data = d)
 #' stopifnot(all.equal(x1, x2))
 #'
 #' # Scaled terms
@@ -229,9 +229,9 @@ getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
       )
     }
 
-    # Formula(s)
-    i <- if (isMod(m)) attr(terms(m), "intercept") else any(isInt(m))
-    xn <- if (!is.character(m)) labels(terms(m, data = d)) else m
+    # Formulas
+    i <- if (!is.character(m)) attr(terms(m), "intercept") else any(isInt(m))
+    xn <- if (!is.character(m)) labels(terms(m)) else m
     xn <- xn[!isInt(xn) & !grepl("[|]", xn)]
     fd <- reformulate(c(xn, names(d)), intercept = i)
     fx <- reformulate(xn, intercept = i)
@@ -241,26 +241,31 @@ getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
     x <- suppressWarnings(
       dF(model.matrix(fx, data = d, contrasts.arg = ct))
     )
-    xn <- names(x)
     obs <- rownames(x)
-
+    
+    # Term/variable names
+    xn <- names(x)
+    xn2 <- names(model.frame(fx, data = d))
+    
     # Add other variables from data (convert factors to dummy vars)
     d <- sapply(names(d), function(i) {
       di <- d[[i]]
       if (!is.numeric(di)) {
-        di <- as.factor(di)
-        ci <- if (!is.null(ct)) list(di = ct[[i]])
-        di <- cbind(
-          model.matrix( ~ 0 + di),
-          model.matrix( ~ di, contrasts.arg = ci)
-        )
-        colnames(di) <- gsub("^di", i, colnames(di))
-      }
-      di
+        if (i %in% xn2) {
+          di <- as.factor(di)
+          ci <- if (!is.null(ct)) list(di = ct[[i]])
+          di <- cbind(
+            model.matrix( ~ 0 + di),
+            model.matrix( ~ di, contrasts.arg = ci)
+          )
+          colnames(di) <- gsub("^di", i, colnames(di))
+          di
+        } else 0
+      } else di
     }, simplify = FALSE)
     d <- dF(do.call(cbind, d))
     d <- d[unique(names(d))]
-    x <- dF(x, d[!names(d) %in% names(x)])
+    x <- dF(x, d[!names(d) %in% xn])
 
     # Means/SDs (for centring/scaling)
     xm <- sapply(names(x), function(i) {
@@ -274,7 +279,7 @@ getX <- function(mod, data = NULL, contrasts = NULL, add.data = FALSE,
       } else 1
     })
 
-    # Names of terms to return
+    # Term names to return
     if (add.data) {
       rn <- if (isMer(m)) {
         unlist(lapply(lme4::VarCorr(m), rownames))
@@ -1054,8 +1059,9 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
       y <- getY(m, offset = offset, env = env)
       obs <- names(y)
 
-      # Fitted values
-      f <- predict(m, re.form = rf)[obs]
+      # Fitted values 
+      # (need to supply data to predict() to avoid issues w/ re.form argument)
+      f <- predict(m, d, re.form = rf)[obs]
       f <- lI(f - o)
 
       # Correlation
@@ -1079,7 +1085,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
         # Variance unexplained (model 'error')
         e <- 1 - R2
 
-        # Estimator (some code from altR2:::OPExactEstimator)
+        # Estimator (some code from altR2:::OPExactEstimator())
         R2a <- if (adj.type == "olkin-pratt") {
           1 - e * (ndf - 2) / rdf * gsl::hyperg_2F1(1, 1, (rdf + 2) / 2, e)
         } else {
@@ -1169,7 +1175,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
 #'   vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
-#'   ed.). Springer-Verlag. <https://www.springer.com/gb/book/9780387953649>
+#'   ed.). Springer-Verlag. <https://link.springer.com/book/10.1007/b97636>
 #'
 #'   Burnham, K. P., Anderson, D. R., & Huyvaert, K. P. (2011). AIC model
 #'   selection and multimodel inference in behavioral ecology: some background,
@@ -1377,7 +1383,7 @@ avgEst <-  function(est, weights = "equal", est.names = NULL) {
 #'   list of such vectors.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
-#'   ed.). Springer-Verlag. <https://www.springer.com/gb/book/9780387953649>
+#'   ed.). Springer-Verlag. <https://link.springer.com/book/10.1007/b97636>
 #'
 #'   Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 #'   Independent Variables in Linear Regression. *Multivariate Behavioral

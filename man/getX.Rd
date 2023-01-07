@@ -72,7 +72,7 @@ stopifnot(all.equal(x1, x2, check.attributes = FALSE))
 # Using formula or term names (supply data)
 d <- shipley
 x1 <- getX(formula(m), data = d)
-x2 <- getX(labels(terms(m)), data = d)
+x2 <- getX(names(lme4::fixef(m)), data = d)
 stopifnot(all.equal(x1, x2))
 
 # Scaled terms

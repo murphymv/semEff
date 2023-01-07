@@ -33,15 +33,15 @@ internal use.
 }
 \section{Functions}{
 \itemize{
-\item \code{isInt}: Is parameter an intercept?
+\item \code{isInt()}: Is parameter an intercept?
 
-\item \code{isInx}: Is parameter a variable interaction (product term)?
+\item \code{isInx()}: Is parameter a variable interaction (product term)?
 
-\item \code{isPhi}: Is parameter a beta regression precision coefficient?
+\item \code{isPhi()}: Is parameter a beta regression precision coefficient?
 
-\item \code{isR2}: Is parameter an R-squared value?
+\item \code{isR2()}: Is parameter an R-squared value?
 
-\item \code{isRaw}: Is parameter a raw (unstandardised) coefficient?
+\item \code{isRaw()}: Is parameter a raw (unstandardised) coefficient?
+
 }}
-
 \keyword{internal}

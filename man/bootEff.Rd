@@ -160,7 +160,7 @@ lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection and
 Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-ed.). Springer-Verlag. \url{https://www.springer.com/gb/book/9780387953649}
+ed.). Springer-Verlag. \url{https://link.springer.com/book/10.1007/b97636}
 
 Davison, A. C., & Hinkley, D. V. (1997). \emph{Bootstrap Methods and their
 Application}. Cambridge University Press.

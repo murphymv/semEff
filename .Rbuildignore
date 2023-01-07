@@ -5,6 +5,7 @@
 ^cran-comments\.md$
 ^CRAN-RELEASE$
 ^\.github$
+^CITATION\.cff$
 ^data-raw$
 ^docs$
 ^pkgdown$

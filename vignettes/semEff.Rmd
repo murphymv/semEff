@@ -85,11 +85,11 @@ summary(
 
 Now we can see that *hetero* and *abiotic* are the important mediators for distance, while the relative influence of *cover* is much lower -- weakened due to being part of a single longer chain of effect (involving *age* and *firesev*). The total indirect effect of 0.220 can thus be broken down into three individual paths:
 
-1.  *distance* -> *age* -> *firesev* -> *cover* -> *rich* (0.015)
+1.  *distance* -\> *age* -\> *firesev* -\> *cover* -\> *rich* (0.015)
 
-2.  *distance* -> *hetero* -> *rich* (0.104)
+2.  *distance* -\> *hetero* -\> *rich* (0.104)
 
-3.  *distance* -> *abiotic* -> *rich* (0.101)
+3.  *distance* -\> *abiotic* -\> *rich* (0.101)
 
 This is only one potential way of analysing paths in this SEM. Depending on the size of the system and the particular research questions, any number of predictors, mediators and/or response variables can be investigated separately or collectively for direct vs. indirect effects. If there are multiple hypotheses (competing or complementary), these can all be tested in a single SEM by comparing the relative importance of different variables and pathways of effect.
 

@@ -75,18 +75,18 @@ of fitted models, effects will first be bootstrapped using \code{\link[=bootEff]
 (this may take a while!).
 
 Direct effects are calculated as fully standardised model coefficients for
-each response variable, while indirect effects are the product of these
-direct effects operating along causal pathways in the SEM. The total
-effects of any given predictor on a response are then the sum of its direct
-and (all) its indirect effects. 'Mediator' effects are also calculated, as
-the sum of all indirect paths which operate through each individual
-mediator – useful to assess the relative importance of different mediators
-in affecting the response. All of these effect types can be calculated
-automatically for all (default) or for a specified subset of predictors
-and/or mediators in the SEM. As indirect, total, and mediator effects are
-not directly bootstrapped using the fitted models for response variables
-(i.e. via \code{\link[=bootEff]{bootEff()}}), their equivalent 'bootstrapped' estimates are
-calculated instead using each bootstrapped direct effect.
+each response variable (see \code{\link[=stdEff]{stdEff()}} for details), while indirect effects
+are the product of these direct effects operating along causal pathways in
+the SEM. The total effects of any given predictor on a response are then
+the sum of its direct and (all) its indirect effects. 'Mediator' effects
+are also calculated, as the sum of all indirect paths which operate through
+each individual mediator – useful to assess the relative importance of
+different mediators in affecting the response. All of these effect types
+can be calculated automatically for all (default) or for a specified subset
+of predictors and/or mediators in the SEM. As indirect, total, and mediator
+effects are not directly bootstrapped using the fitted models for response
+variables (i.e. via \code{\link[=bootEff]{bootEff()}}), their equivalent 'bootstrapped' estimates
+are calculated instead using each bootstrapped direct effect.
 
 Confidence intervals for all effects are returned in summary tables for
 each response (see \code{\link[=bootCI]{bootCI()}}), with BC\emph{a} intervals calculated by default

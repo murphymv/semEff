@@ -1,0 +1,261 @@
+# -----------------------------------------------------------
+# CITATION file created with {cffr} R package, v0.2.2
+# See also: https://docs.ropensci.org/cffr/
+# -----------------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "semEff" in publications use:'
+type: software
+license: GPL-3.0-or-later
+title: 'semEff: Automatic Calculation of Effects for Piecewise Structural Equation
+  Models'
+version: 0.6.1
+abstract: Automatically calculate direct, indirect, and total effects for piecewise
+  structural equation models, comprising lists of fitted models representing structured
+  equations (Lefcheck, 2016 <doi:10/f8s8rb>). Confidence intervals are provided via
+  bootstrapping.
+authors:
+- family-names: Murphy
+  given-names: Mark V.
+  email: murphymv@gmail.com
+preferred-citation:
+  type: manual
+  title: 'semEff: Automatic Calculation of Effects for Piecewise Structural Equation
+    Models'
+  authors:
+  - family-names: Murphy
+    given-names: Mark V.
+    email: murphymv@gmail.com
+  version: 0.6.1
+  abstract: Automatically calculate direct, indirect, and total effects for piecewise
+    structural equation models, comprising lists of fitted models representing structured
+    equations (Lefcheck, 2016 <doi:10/f8s8rb>). Confidence intervals are provided
+    via bootstrapping.
+  repository: https://CRAN.R-project.org/package=semEff
+  repository-code: https://github.com/murphymv/semEff
+  url: https://murphymv.github.io/semEff/
+  contact:
+  - family-names: Murphy
+    given-names: Mark V.
+    email: murphymv@gmail.com
+  license: GPL-3.0-or-later
+  year: '2022'
+repository: https://CRAN.R-project.org/package=semEff
+repository-code: https://github.com/murphymv/semEff
+url: https://murphymv.github.io/semEff/
+contact:
+- family-names: Murphy
+  given-names: Mark V.
+  email: murphymv@gmail.com
+references:
+- type: software
+  title: 'R: A Language and Environment for Statistical Computing'
+  notes: Depends
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2022'
+  url: https://www.R-project.org/
+  institution:
+    name: R Foundation for Statistical Computing
+  version: '>= 3.6.0'
+- type: software
+  title: boot
+  abstract: 'boot: Bootstrap Functions (Originally by Angelo Canty for S)'
+  notes: Imports
+  authors:
+  - family-names: Canty
+    given-names: Angelo
+    email: cantya@mcmaster.ca
+  - family-names: Ripley
+    given-names: Brian
+    email: ripley@stats.ox.ac.uk
+  year: '2022'
+  url: https://CRAN.R-project.org/package=boot
+- type: software
+  title: gsl
+  abstract: 'gsl: Wrapper for the Gnu Scientific Library'
+  notes: Imports
+  authors:
+  - family-names: Hankin
+    given-names: Robin K. S.
+    email: hankin.robin@gmail.com
+    orcid: https://orcid.org/0000-0001-5982-0415
+  year: '2022'
+  url: https://CRAN.R-project.org/package=gsl
+- type: software
+  title: lme4
+  abstract: 'lme4: Linear Mixed-Effects Models using ''Eigen'' and S4'
+  notes: Imports
+  authors:
+  - family-names: Bates
+    given-names: Douglas
+    orcid: https://orcid.org/0000-0001-8316-9503
+  - family-names: Maechler
+    given-names: Martin
+    orcid: https://orcid.org/0000-0002-8685-9910
+  - family-names: Bolker
+    given-names: Ben
+    email: bbolker+lme4@gmail.com
+    orcid: https://orcid.org/0000-0002-2127-0443
+  - family-names: Walker
+    given-names: Steven
+    orcid: https://orcid.org/0000-0002-4394-9078
+  year: '2022'
+  url: https://CRAN.R-project.org/package=lme4
+- type: software
+  title: parallel
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2022'
+  url: https://www.R-project.org/
+  institution:
+    name: R Foundation for Statistical Computing
+- type: software
+  title: stats
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2022'
+  url: https://www.R-project.org/
+  institution:
+    name: R Foundation for Statistical Computing
+- type: software
+  title: utils
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2022'
+  url: https://www.R-project.org/
+  institution:
+    name: R Foundation for Statistical Computing
+- type: software
+  title: ggplot2
+  abstract: 'ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics'
+  notes: Suggests
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: Chang
+    given-names: Winston
+    orcid: https://orcid.org/0000-0002-1576-2126
+  - family-names: Henry
+    given-names: Lionel
+  - family-names: Pedersen
+    given-names: Thomas Lin
+    email: thomas.pedersen@rstudio.com
+    orcid: https://orcid.org/0000-0002-5147-4711
+  - family-names: Takahashi
+    given-names: Kohske
+  - family-names: Wilke
+    given-names: Claus
+    orcid: https://orcid.org/0000-0002-7470-9261
+  - family-names: Woo
+    given-names: Kara
+    orcid: https://orcid.org/0000-0002-5125-4188
+  - family-names: Yutani
+    given-names: Hiroaki
+    orcid: https://orcid.org/0000-0002-3385-7233
+  - family-names: Dunnington
+    given-names: Dewey
+    orcid: https://orcid.org/0000-0002-9415-4582
+  year: '2022'
+  url: https://CRAN.R-project.org/package=ggplot2
+- type: software
+  title: knitr
+  abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
+  notes: Suggests
+  authors:
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  year: '2022'
+  url: https://CRAN.R-project.org/package=knitr
+- type: software
+  title: markdown
+  abstract: 'markdown: Render Markdown with the C Library ''Sundown'''
+  notes: Suggests
+  authors:
+  - family-names: Allaire
+    given-names: JJ
+  - family-names: Horner
+    given-names: Jeffrey
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  - family-names: Marti
+    given-names: Vicent
+  - family-names: Porte
+    given-names: Natacha
+  year: '2022'
+  url: https://CRAN.R-project.org/package=markdown
+- type: software
+  title: piecewiseSEM
+  abstract: 'piecewiseSEM: Piecewise Structural Equation Modeling'
+  notes: Suggests
+  authors:
+  - family-names: Lefcheck
+    given-names: Jon
+    email: lefcheckj@si.edu
+  - family-names: Byrnes
+    given-names: Jarrett
+    email: jarrett.byrnes@umb.edu
+  - family-names: Grace
+    given-names: James
+    email: gracej@usgs.gov
+  year: '2022'
+  url: https://CRAN.R-project.org/package=piecewiseSEM
+- type: software
+  title: rmarkdown
+  abstract: 'rmarkdown: Dynamic Documents for R'
+  notes: Suggests
+  authors:
+  - family-names: Allaire
+    given-names: JJ
+    email: jj@rstudio.com
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  - family-names: McPherson
+    given-names: Jonathan
+    email: jonathan@rstudio.com
+  - family-names: Luraschi
+    given-names: Javier
+    email: javier@rstudio.com
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevin@rstudio.com
+  - family-names: Atkins
+    given-names: Aron
+    email: aron@rstudio.com
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  - family-names: Cheng
+    given-names: Joe
+    email: joe@rstudio.com
+  - family-names: Chang
+    given-names: Winston
+    email: winston@rstudio.com
+  - family-names: Iannone
+    given-names: Richard
+    email: rich@rstudio.com
+    orcid: https://orcid.org/0000-0003-3925-190X
+  year: '2022'
+  url: https://CRAN.R-project.org/package=rmarkdown
