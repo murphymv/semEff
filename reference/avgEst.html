@@ -154,13 +154,13 @@ straightforward interpretation using causal conditioning. <em>BioRxiv</em>,
 <span class="r-in"><span><span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">avgEst</span><span class="op">(</span><span class="va">e</span>, <span class="va">w</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)           DD         Date          lat </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16.858418057 -0.008000544  0.288614982 -0.053299561 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12.884809577 -0.004476039  0.293423141 -0.008316218 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Model-averaged predictions</span></span></span>
 <span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">predict</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">avgEst</span><span class="op">(</span><span class="va">f</span>, <span class="va">w</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        1        2        3        4        5        6 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56.13279 45.80794 42.12363 50.03734 53.71582 55.76761 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56.11818 45.78626 42.11124 50.02115 53.69709 55.74706 </span>
 </code></pre></div>
     </div>
   </div>
