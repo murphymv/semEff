@@ -24,6 +24,9 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+# CRAN submission files
+CRAN-RELEASE
+CRAN-SUBMISSION
 # Other
 inst/doc
 docs

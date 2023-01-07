@@ -1,10 +1,14 @@
+## semEff 0.6.1.9000
+
 ## semEff 0.6.1
+
+22/08/2022
 
 ### Changes:
 
 -   Minor updates to code and documentation (e.g. see [#41](https://github.com/murphymv/semEff/issues/41)).
 
-### Bugs fixed:
+### Bugfixes:
 
 -   `getX()` threw an error when trying to construct model design matrices using factors with less than two levels (where contrasts can't be applied). Such an error might occur where e.g. the dataset called by a model contained at least one character/factor variable with only one unique value, which was incorrectly coerced to a factor by `getX()` (typically in order to gain access to individual dummy variables not in the original design matrix).
 
@@ -31,7 +35,7 @@
 -   Renamed extractor functions for effects (e.g. `dirEff()` -\> `getDirEff()`) and added some new ones.
 -   Various other code and documentation updates.
 
-### Bugs fixed:
+### Bugfixes:
 
 -   Amendment to previous incomplete fix for issue where `xNam()` was not evaluating factor/character terms correctly. The function now explicitly treats all non-numeric predictor variables as factors and coerces where necessary. It also has improved handling of factor contrasts when evaluating names.
 -   `pSapply()` did not work with `parallel = "multicore"`, due to relying completely on `parallel::parSapply()` for parallel processing (which is `"snow"` only). The function now wraps `parallel::mcmapply()` for `"multicore"` (not available on Windows systems).
@@ -52,7 +56,7 @@
 -   Added `type` argument to `bootEff()`, to specify the type of bootstrapping to perform (for mixed models). This replaces `ran.eff = "crossed"`, previously used to indicate parametric bootstrapping (although it's temporarily allowed).
 -   `bootEff()` will now treat a list containing both mixed and non-mixed models as all mixed (with a warning). Previously all such models were treated as non-mixed (unintentionally). This is presumably a relatively rare scenario.
 
-### Bugs fixed:
+### Bugfixes:
 
 -   `R2()` did not calculate adjusted R-squared correctly for beta regression models (i.e. did not incorporate the 'phi' parameter in degrees of freedom calculations).
 -   `xNam()` produced an error when attempting to evaluate factor contrasts in data, expecting that character vectors were factors (related to the change to `stringsAsFactors = FALSE` as default in `R 4.0.0`, but would have occurred in some cases regardless).
@@ -75,7 +79,7 @@
 -   Removed ability to pass arguments from `getY()` to `glt()`, allowing more controlled output of `getY(..., link = TRUE)`.
 -   Various minor updates to function code and documentation, improvement and addition of some new internal helper functions.
 
-### Bugs fixed:
+### Bugfixes:
 
 -   `bootEff()` specified with correlated errors failed for mixed models of class `"lmerModLmerTest"` (issue with re-fitting models using `update()`).
 -   `predEff()` failed to evaluate some complex model terms (e.g. polynomials).
@@ -103,7 +107,7 @@
 -   Added a `refit.x` argument to `stdCoeff()`, allowing control over whether to refit the model with centred predictors (for correct VIFs).
 -   Various updates to documentation.
 
-### Bugs fixed:
+### Bugfixes:
 
 -   `xNam()` did not generate correct term names for categorical variables with contrast types other than `contr.treatment()`.
 -   `stdCoeff()` did not correctly adjust for multicollinearity for a model containing categorical variables when centring was specified (`cen.x = TRUE`).
@@ -114,7 +118,7 @@
 
 15/01/2020
 
-### Bugs fixed:
+### Bugfixes:
 
 -   Function `semEff()` did not output effects properly.
 
@@ -127,7 +131,7 @@
 -   Added support for generalised least squares models (class `"gls"`).
 -   Added support for beta regression models (class `"betareg"`).
 
-### Bugs fixed:
+### Bugfixes:
 
 -   Function `xNam()` did not generate correct term names for interactions involving multi-coefficient terms (e.g. factors).
 -   Function `xNam()` did not generate correct term names for factors when the model intercept is suppressed.
