@@ -20,6 +20,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -32,18 +34,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/semEff.html">Get started</a>
 </li>
@@ -51,7 +47,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -68,7 +64,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/murphymv/semEff/">
+  <a href="https://github.com/murphymv/semEff/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -83,28 +79,46 @@
 
       
 
-      </header><script src="predicting-effects_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Predicting Effects</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/murphymv/semEff/blob/master/vignettes/predicting-effects.Rmd"><code>vignettes/predicting-effects.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/murphymv/semEff/blob/HEAD/vignettes/predicting-effects.Rmd" class="external-link"><code>vignettes/predicting-effects.Rmd</code></a></small>
       <div class="hidden name"><code>predicting-effects.Rmd</code></div>
 
     </div>
 
     
     
-<p><code>semEff</code> can be used to predict values for different types of effects in an SEM. For example, we may be interested in the predictions of an indirect effect of a variable vs. its direct effect, or we may simply wish to predict the total (combined) effect. Here we’ll use <a href="https://murphymv.github.io/semEff/reference/shipley.html">simulated data</a> from <span class="citation">Shipley (<a href="#ref-shipley2009" role="doc-biblioref">2009</a>)</span> on tree growth and survival for a single tree species to predict and plot a direct vs. indirect effect.</p>
+<p><code>semEff</code> can be used to predict values for different types
+of effects in an SEM. For example, we may be interested in the
+predictions of an indirect effect of a variable vs. its direct effect,
+or we may simply wish to predict the total (combined) effect. Here we’ll
+use <a href="https://murphymv.github.io/semEff/reference/shipley.html">simulated
+data</a> from <span class="citation">Shipley (<a href="#ref-shipley2009" role="doc-biblioref">2009</a>)</span> on tree growth and survival for a
+single tree species to predict and plot a direct vs. indirect
+effect.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages(c("semEff", "ggplot2"))</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://murphymv.github.io/semEff/">semEff</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages(c("semEff", "ggplot2"))</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://murphymv.github.io/semEff/">semEff</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <p>Let’s preview the data (n = 1900):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">shipley</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<table class="table">
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">shipley</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="7%">
+<col width="7%">
+<col width="13%">
+<col width="7%">
+<col width="13%">
+<col width="13%">
+<col width="13%">
+<col width="15%">
+<col width="7%">
+</colgroup>
 <thead><tr class="header">
 <th align="right">site</th>
 <th align="right">tree</th>
@@ -185,114 +199,144 @@
 </tr>
 </tbody>
 </table>
-<p>Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970 to 2006 (repeated measures). The hypothesised SEM from <span class="citation">Shipley (<a href="#ref-shipley2009" role="doc-biblioref">2009</a>)</span> tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the <code>lme4</code> package:</p>
+<p>Tree measurements are taken for five individuals of the same species
+at 20 different sites every two years from 1970 to 2006 (repeated
+measures). The hypothesised SEM from <span class="citation">Shipley (<a href="#ref-shipley2009" role="doc-biblioref">2009</a>)</span> tests the
+indirect effect of site latitude on tree survival (0/1), via degree days
+to bud burst, date of first bud burst, and tree growth. This can be fit
+as a series of linear and generalised linear mixed models using the
+<code>lme4</code> package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">shipley.sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-  DD <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html">lmer</a></span><span class="op">(</span><span class="va">DD</span> <span class="op">~</span> <span class="va">lat</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span><span class="op">)</span>,
-  Date <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html">lmer</a></span><span class="op">(</span><span class="va">Date</span> <span class="op">~</span> <span class="va">DD</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span><span class="op">)</span>,
-  Growth <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html">lmer</a></span><span class="op">(</span><span class="va">Growth</span> <span class="op">~</span> <span class="va">Date</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span><span class="op">)</span>,
-  Live <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/glmer.html">glmer</a></span><span class="op">(</span><span class="va">Live</span> <span class="op">~</span> <span class="va">Growth</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span>, 
-                     family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">shipley.sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  DD <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span><span class="va">DD</span> <span class="op">~</span> <span class="va">lat</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span><span class="op">)</span>,</span>
+<span>  Date <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span><span class="va">Date</span> <span class="op">~</span> <span class="va">DD</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span><span class="op">)</span>,</span>
+<span>  Growth <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span><span class="va">Growth</span> <span class="op">~</span> <span class="va">Date</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span><span class="op">)</span>,</span>
+<span>  Live <span class="op">=</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/glmer.html" class="external-link">glmer</a></span><span class="op">(</span><span class="va">Live</span> <span class="op">~</span> <span class="va">Growth</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">shipley</span>, </span>
+<span>                     family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>We can bootstrap estimates for these models:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">shipley.sem.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootEff.html">bootEff</a></span><span class="op">(</span><span class="va">shipley.sem</span>, R <span class="op">=</span> <span class="fl">1000</span>, seed <span class="op">=</span> <span class="fl">13</span>, ran.eff <span class="op">=</span> <span class="st">"site"</span><span class="op">)</span></code></pre></div>
-<p>And use the bootstrap samples to calculate effects and confidence intervals:</p>
+<code class="sourceCode R"><span><span class="va">shipley.sem.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootEff.html">bootEff</a></span><span class="op">(</span><span class="va">shipley.sem</span>, R <span class="op">=</span> <span class="fl">1000</span>, seed <span class="op">=</span> <span class="fl">13</span>, ran.eff <span class="op">=</span> <span class="st">"site"</span><span class="op">)</span></span></code></pre></div>
+<p>And use the bootstrap samples to calculate effects and confidence
+intervals:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">shipley.sem.eff</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semEff.html">semEff</a></span><span class="op">(</span><span class="va">shipley.sem.boot</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Piecewise SEM with:</span>
-<span class="co">#&gt;   * 1 exogenous vs. 4 endogenous variable(s)</span>
-<span class="co">#&gt;   * 4 direct vs. 6 indirect effect(s)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Variables:</span>
-<span class="co">#&gt;           Category   Predictor Mediator Response   Dir. Eff. Ind. Eff.  </span>
-<span class="co">#&gt;           --------   --------- -------- --------   --------- ---------  </span>
-<span class="co">#&gt;  lat    | Exog.    |     Y        N        N     |         -         - |</span>
-<span class="co">#&gt;  DD     | Endog.   |     Y        Y        Y     |         1         0 |</span>
-<span class="co">#&gt;  Date   | Endog.   |     Y        Y        Y     |         1         1 |</span>
-<span class="co">#&gt;  Growth | Endog.   |     Y        Y        Y     |         1         2 |</span>
-<span class="co">#&gt;  Live   | Endog.   |     N        N        Y     |         1         3 |</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Use summary() for effects and confidence intervals for endogenous variables.</span></code></pre></div>
-<p>For this example, let’s compare the direct effects of <em>Date</em> (Julian date of first bud burst) vs. the indirect effects of <em>DD</em> (cumulative degree days to first bud burst, °C) on tree <em>Growth</em> (increase in stem diameter, mm):</p>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">shipley.sem.eff</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semEff.html">semEff</a></span><span class="op">(</span><span class="va">shipley.sem.boot</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Piecewise SEM with:</span></span>
+<span><span class="co">#&gt;   * 1 exogenous vs. 4 endogenous variable(s)</span></span>
+<span><span class="co">#&gt;   * 4 direct vs. 6 indirect effect(s)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Variables:</span></span>
+<span><span class="co">#&gt;           Category   Predictor Mediator Response   Dir. Eff. Ind. Eff.  </span></span>
+<span><span class="co">#&gt;           --------   --------- -------- --------   --------- ---------  </span></span>
+<span><span class="co">#&gt;  lat    | Exog.    |     Y        N        N     |         -         - |</span></span>
+<span><span class="co">#&gt;  DD     | Endog.   |     Y        Y        Y     |         1         0 |</span></span>
+<span><span class="co">#&gt;  Date   | Endog.   |     Y        Y        Y     |         1         1 |</span></span>
+<span><span class="co">#&gt;  Growth | Endog.   |     Y        Y        Y     |         1         2 |</span></span>
+<span><span class="co">#&gt;  Live   | Endog.   |     N        N        Y     |         1         3 |</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Use summary() for effects and confidence intervals for endogenous variables.</span></span></code></pre></div>
+<p>For this example, let’s compare the direct effects of <em>Date</em>
+(Julian date of first bud burst) vs. the indirect effects of <em>DD</em>
+(cumulative degree days to first bud burst, °C) on tree <em>Growth</em>
+(increase in stem diameter, mm):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">shipley.sem.eff</span>, <span class="st">"Growth"</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; SEM direct, summed indirect, total, and mediator effects:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Growth (3/4):</span>
-<span class="co">#&gt;                   Effect     Bias   Std. Err.   Lower CI Upper CI    </span>
-<span class="co">#&gt;                   ------   ------   ---------   -------- --------    </span>
-<span class="co">#&gt;  DIRECT    Date |  0.382 |  0.011 |     0.058 |    0.293    0.515 | *</span>
-<span class="co">#&gt;                                                                      </span>
-<span class="co">#&gt;  INDIRECT  lat  |  0.165 |  0.001 |     0.048 |    0.086    0.281 | *</span>
-<span class="co">#&gt;            DD   | -0.240 | -0.007 |     0.042 |   -0.344   -0.181 | *</span>
-<span class="co">#&gt;                                                                      </span>
-<span class="co">#&gt;  TOTAL     lat  |  0.165 |  0.001 |     0.048 |    0.086    0.281 | *</span>
-<span class="co">#&gt;            DD   | -0.240 | -0.007 |     0.042 |   -0.344   -0.181 | *</span>
-<span class="co">#&gt;            Date |  0.382 |  0.011 |     0.058 |    0.293    0.515 | *</span>
-<span class="co">#&gt;                                                                      </span>
-<span class="co">#&gt;  MEDIATORS DD   |  0.165 |  0.001 |     0.048 |    0.086    0.281 | *</span>
-<span class="co">#&gt;            Date | -0.075 | -0.006 |     0.017 |   -0.109   -0.049 | *</span></code></pre></div>
-<p>We’ll extract the (total) effects of each variable to use for prediction:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">shipley.sem.eff</span>, <span class="st">"Growth"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SEM direct, summed indirect, total, and mediator effects:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Growth (3/4):</span></span>
+<span><span class="co">#&gt;                   Effect     Bias   Std. Err.   Lower CI Upper CI    </span></span>
+<span><span class="co">#&gt;                   ------   ------   ---------   -------- --------    </span></span>
+<span><span class="co">#&gt;  DIRECT    Date |  0.382 |  0.011 |     0.058 |    0.293    0.515 | *</span></span>
+<span><span class="co">#&gt;                                                                      </span></span>
+<span><span class="co">#&gt;  INDIRECT  lat  |  0.165 |  0.001 |     0.048 |    0.086    0.281 | *</span></span>
+<span><span class="co">#&gt;            DD   | -0.240 | -0.007 |     0.042 |   -0.344   -0.181 | *</span></span>
+<span><span class="co">#&gt;                                                                      </span></span>
+<span><span class="co">#&gt;  TOTAL     lat  |  0.165 |  0.001 |     0.048 |    0.086    0.281 | *</span></span>
+<span><span class="co">#&gt;            DD   | -0.240 | -0.007 |     0.042 |   -0.344   -0.181 | *</span></span>
+<span><span class="co">#&gt;            Date |  0.382 |  0.011 |     0.058 |    0.293    0.515 | *</span></span>
+<span><span class="co">#&gt;                                                                      </span></span>
+<span><span class="co">#&gt;  MEDIATORS DD   |  0.165 |  0.001 |     0.048 |    0.086    0.281 | *</span></span>
+<span><span class="co">#&gt;            Date | -0.075 | -0.006 |     0.017 |   -0.109   -0.049 | *</span></span></code></pre></div>
+<p>We’ll extract the (total) effects of each variable to use for
+prediction:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getEff.html">getTotEff</a></span><span class="op">(</span><span class="va">shipley.sem.eff</span>, <span class="st">"Growth"</span><span class="op">)</span>
-<span class="va">tot.b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getEff.html">getTotEff</a></span><span class="op">(</span><span class="va">shipley.sem.eff</span>, <span class="st">"Growth"</span>, type <span class="op">=</span> <span class="st">"boot"</span><span class="op">)</span></code></pre></div>
-<p>Now we can predict values for <em>Growth</em> using <a href="https://murphymv.github.io/semEff/reference/predEff.html"><code>predEff()</code></a>. We’ll need the model object, and we’ll generate 100 values of the predictors to predict from:</p>
+<code class="sourceCode R"><span><span class="va">tot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getEff.html">getTotEff</a></span><span class="op">(</span><span class="va">shipley.sem.eff</span>, <span class="st">"Growth"</span><span class="op">)</span></span>
+<span><span class="va">tot.b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getEff.html">getTotEff</a></span><span class="op">(</span><span class="va">shipley.sem.eff</span>, <span class="st">"Growth"</span>, type <span class="op">=</span> <span class="st">"boot"</span><span class="op">)</span></span></code></pre></div>
+<p>Now we can predict values for <em>Growth</em> using <a href="https://murphymv.github.io/semEff/reference/predEff.html"><code>predEff()</code></a>.
+We’ll need the model object, and we’ll generate 100 values of the
+predictors to predict from:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">shipley</span><span class="op">)</span>
-<span class="va">mod</span> <span class="op">&lt;-</span> <span class="va">shipley.sem</span><span class="op">$</span><span class="va">Growth</span>
-<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Date"</span>, <span class="st">"DD"</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>, length <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">i</span>
-  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predEff.html">predEff</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">x</span>, effects <span class="op">=</span> <span class="va">tot</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, eff.boot <span class="op">=</span> <span class="va">tot.b</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">f</span><span class="op">)</span>
-<span class="op">}</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p>OK let’s plot the predictions. We’ll use a custom plotting function which wraps <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot2::ggplot()</a></code>:</p>
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">shipley</span><span class="op">)</span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="va">shipley.sem</span><span class="op">$</span><span class="va">Growth</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date"</span>, <span class="st">"DD"</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>, length <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">i</span></span>
+<span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predEff.html">predEff</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">x</span>, effects <span class="op">=</span> <span class="va">tot</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, eff.boot <span class="op">=</span> <span class="va">tot.b</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">f</span><span class="op">)</span></span>
+<span><span class="op">}</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>OK let’s plot the predictions. We’ll use a custom plotting function
+which wraps <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot2::ggplot()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">plotFit</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">fit</span>, <span class="va">x.lab</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">y.lab</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">d</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
-  <span class="va">f</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">$</span><span class="va">fit</span>
-  <span class="va">ci.l</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">$</span><span class="va">ci.lower</span>
-  <span class="va">ci.u</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">$</span><span class="va">ci.upper</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span> <span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">d</span>, ymin <span class="op">=</span> <span class="va">ci.l</span>, ymax <span class="op">=</span> <span class="va">ci.u</span>, alpha <span class="op">=</span> <span class="st">"0.15"</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"blue"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="va">x.lab</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="va">y.lab</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">plotFit</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">fit</span>, <span class="va">x.lab</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">y.lab</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">d</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">$</span><span class="va">fit</span></span>
+<span>  <span class="va">ci.l</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">$</span><span class="va">ci.lower</span></span>
+<span>  <span class="va">ci.u</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">$</span><span class="va">ci.upper</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span> <span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">d</span>, ymin <span class="op">=</span> <span class="va">ci.l</span>, ymax <span class="op">=</span> <span class="va">ci.u</span>, alpha <span class="op">=</span> <span class="st">"0.15"</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"blue"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="va">x.lab</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="va">y.lab</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Effects of <em>Date</em> (direct):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">plotFit</span><span class="op">(</span>x <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Date</span>, y <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Growth</span>, fit <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">Date</span>, 
-        x.lab <span class="op">=</span> <span class="st">"Julian Date of Bud Burst (direct effect)"</span>, y.lab <span class="op">=</span> <span class="st">"Stem Growth (mm)"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">plotFit</span><span class="op">(</span>x <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Date</span>, y <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Growth</span>, fit <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">Date</span>, </span>
+<span>        x.lab <span class="op">=</span> <span class="st">"Julian Date of Bud Burst (direct effect)"</span>, y.lab <span class="op">=</span> <span class="st">"Stem Growth (mm)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="predicting-effects_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>Effects of <em>DD</em> (indirect, via <em>Date</em>):</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">plotFit</span><span class="op">(</span>x <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">DD</span>, y <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Growth</span>, fit <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">DD</span>, 
-        x.lab <span class="op">=</span> <span class="st">"Degree Days to Bud Burst (indirect effect)"</span>, y.lab <span class="op">=</span> <span class="st">"Stem Growth (mm)"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">plotFit</span><span class="op">(</span>x <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">DD</span>, y <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Growth</span>, fit <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">DD</span>, </span>
+<span>        x.lab <span class="op">=</span> <span class="st">"Degree Days to Bud Burst (indirect effect)"</span>, y.lab <span class="op">=</span> <span class="st">"Stem Growth (mm)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="predicting-effects_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<p>We can see that the effects are in opposite directions: positive for <em>Date</em> (direct) and negative for <em>DD</em> (indirect). This is because trees at higher latitudes require fewer degree days to break buds (cooler climate), break buds later, and grow more in the growing season than trees at lower latitudes. Thus <em>DD</em> negatively affects <em>Growth</em> by reducing the <em>Date</em> to first bud burst. This is just a toy example from the SEM to illustrate contrasting effects of similar magnitude. <em>DD</em> in this case is acting as a proxy for latitude (high <em>DD</em> = low latitude).</p>
-<p>It’s also evident from the plots that there is a huge amount of scatter around the fits. This is due to the random effects (‘site’ and ‘tree’) accounting for most variation in tree growth. We can get a rough breakdown of this using R-squared, here via <a href="https://murphymv.github.io/semEff/reference/R2.html"><code>R2()</code></a> (squared multiple correlation):</p>
+<p>We can see that the effects are in opposite directions: positive for
+<em>Date</em> (direct) and negative for <em>DD</em> (indirect). This is
+because trees at higher latitudes require fewer degree days to break
+buds (cooler climate), break buds later, and grow more in the growing
+season than trees at lower latitudes. Thus <em>DD</em> negatively
+affects <em>Growth</em> by reducing the <em>Date</em> to first bud
+burst. This is just a toy example from the SEM to illustrate contrasting
+effects of similar magnitude. <em>DD</em> in this case is acting as a
+proxy for latitude (high <em>DD</em> = low latitude).</p>
+<p>It’s also evident from the plots that there is a huge amount of
+scatter around the fits. This is due to the random effects (‘site’ and
+‘tree’) accounting for most variation in tree growth. We can get a rough
+breakdown of this using R-squared, here via <a href="https://murphymv.github.io/semEff/reference/R2.html"><code>R2()</code></a>
+(squared multiple correlation):</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>r2_marg <span class="op">=</span> <span class="fu"><a href="../reference/R2.html">R2</a></span><span class="op">(</span><span class="va">mod</span>, re.form <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,
-  r2_cond <span class="op">=</span> <span class="fu"><a href="../reference/R2.html">R2</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt;    r2_marg    r2_cond </span>
-<span class="co">#&gt; 0.04814953 0.79383672</span></code></pre></div>
-<p>Fixed (‘marginal’) effects account for only about 5% of variation, compared to almost 80% when adding all random effects (‘conditional’). We can also condition on individual random effects, showing that ‘tree’ accounts for most random variation:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>r2_marg <span class="op">=</span> <span class="fu"><a href="../reference/R2.html">R2</a></span><span class="op">(</span><span class="va">mod</span>, re.form <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  r2_cond <span class="op">=</span> <span class="fu"><a href="../reference/R2.html">R2</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    r2_marg    r2_cond </span></span>
+<span><span class="co">#&gt; 0.04814953 0.79383672</span></span></code></pre></div>
+<p>Fixed (‘marginal’) effects account for only about 5% of variation,
+compared to almost 80% when adding all random effects (‘conditional’).
+We can also condition on individual random effects, showing that ‘tree’
+accounts for most random variation:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>r2_site <span class="op">=</span> <span class="fu"><a href="../reference/R2.html">R2</a></span><span class="op">(</span><span class="va">mod</span>, re.form <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,
-  r2_tree <span class="op">=</span> <span class="fu"><a href="../reference/R2.html">R2</a></span><span class="op">(</span><span class="va">mod</span>, re.form <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt;   r2_site   r2_tree </span>
-<span class="co">#&gt; 0.3081469 0.6068561</span></code></pre></div>
-<div id="references" class="section level4 unnumbered">
-<h4 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h4>
-<div id="refs" class="references">
-<div id="ref-shipley2009">
-<p>Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel context. <em>Ecology</em>, <em>90</em>(2), 363–368. <a href="https://doi.org/10/bqd43d">https://doi.org/10/bqd43d</a></p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>r2_site <span class="op">=</span> <span class="fu"><a href="../reference/R2.html">R2</a></span><span class="op">(</span><span class="va">mod</span>, re.form <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">site</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  r2_tree <span class="op">=</span> <span class="fu"><a href="../reference/R2.html">R2</a></span><span class="op">(</span><span class="va">mod</span>, re.form <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">tree</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   r2_site   r2_tree </span></span>
+<span><span class="co">#&gt; 0.3081469 0.6068561</span></span></code></pre></div>
+<div class="section level4 unnumbered">
+<h4 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h4>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-shipley2009" class="csl-entry">
+Shipley, B. (2009). Confirmatory path analysis in a generalized
+multilevel context. <em>Ecology</em>, <em>90</em>(2), 363–368. <a href="https://doi.org/bqd43d" class="external-link">https://doi.org/bqd43d</a>
 </div>
 </div>
 </div>
@@ -307,11 +351,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Murphy.</p>
+  <p></p>
+<p>Developed by Mark V. Murphy.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -319,6 +365,8 @@
 
   
 
+
+  
 
   </body>
 </html>

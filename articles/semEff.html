@@ -20,6 +20,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -32,18 +34,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/semEff.html">Get started</a>
 </li>
@@ -51,7 +47,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -68,7 +64,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/murphymv/semEff/">
+  <a href="https://github.com/murphymv/semEff/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -83,28 +79,33 @@
 
       
 
-      </header><script src="semEff_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="semEff_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="semEff_files/viz-1.8.2/viz.js"></script><link href="semEff_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
-<script src="semEff_files/grViz-binding-1.0.6.1/grViz.js"></script><div class="row">
+      </header><script src="semEff_files/htmlwidgets-1.6.0/htmlwidgets.js"></script><script src="semEff_files/viz-1.8.2/viz.js"></script><link href="semEff_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="semEff_files/grViz-binding-1.0.9/grViz.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>semEff</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/murphymv/semEff/blob/master/vignettes/semEff.Rmd"><code>vignettes/semEff.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/murphymv/semEff/blob/HEAD/vignettes/semEff.Rmd" class="external-link"><code>vignettes/semEff.Rmd</code></a></small>
       <div class="hidden name"><code>semEff.Rmd</code></div>
 
     </div>
 
     
     
-<p><code>semEff</code> automates calculation of effects for structural equation models (SEM) which use local estimation (‘piecewise’; see <span class="citation">Lefcheck (<a href="#ref-lefcheck2016" role="doc-biblioref">2016</a>)</span>). Here’s a short example using an SEM testing fire impacts on plant species richness (<span class="citation">Grace &amp; Keeley (<a href="#ref-grace2006" role="doc-biblioref">2006</a>)</span>; data provided with the <code>piecewiseSEM</code> package).</p>
+<p><code>semEff</code> automates calculation of effects for structural
+equation models (SEM) which use local estimation (‘piecewise’; see <span class="citation">Lefcheck (<a href="#ref-lefcheck2016" role="doc-biblioref">2016</a>)</span>). Here’s a short example using an
+SEM testing fire impacts on plant species richness (<span class="citation">Grace &amp; Keeley (<a href="#ref-grace2006" role="doc-biblioref">2006</a>)</span>; data provided with the
+<code>piecewiseSEM</code> package).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages(c("semEff", "piecewiseSEM"))</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://murphymv.github.io/semEff/">semEff</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">keeley</span>, package <span class="op">=</span> <span class="st">"piecewiseSEM"</span><span class="op">)</span></code></pre></div>
-<p>Let’s have a look at the data. Observations represent a range of <a href="https://rdrr.io/cran/piecewiseSEM/man/keeley.html">vegetation parameters</a> measured in 90 post-fire study plots after wildfires in southern California in 1993:</p>
+<code class="sourceCode R"><span><span class="co"># install.packages(c("semEff", "piecewiseSEM"))</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://murphymv.github.io/semEff/">semEff</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">keeley</span>, package <span class="op">=</span> <span class="st">"piecewiseSEM"</span><span class="op">)</span></span></code></pre></div>
+<p>Let’s have a look at the data. Observations represent a range of <a href="https://rdrr.io/cran/piecewiseSEM/man/keeley.html" class="external-link">vegetation
+parameters</a> measured in 90 post-fire study plots after wildfires in
+southern California in 1993:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">keeley</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">keeley</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">distance</th>
@@ -179,126 +180,188 @@
 </tr>
 </tbody>
 </table>
-<p>An SEM fit to these data in <span class="citation">Grace &amp; Keeley (<a href="#ref-grace2006" role="doc-biblioref">2006</a>)</span> tests the influence of landscape vs. local factors in the response of plants to fire, or more specifically, the direct vs. indirect effects of landscape location (distance from coast) on plant species richness via other biotic and abiotic mediators (see the paper for further details). We can reproduce this SEM (roughly) in a piecewise fashion by fitting a separate linear model for each observed response variable:</p>
+<p>An SEM fit to these data in <span class="citation">Grace &amp; Keeley
+(<a href="#ref-grace2006" role="doc-biblioref">2006</a>)</span> tests
+the influence of landscape vs. local factors in the response of plants
+to fire, or more specifically, the direct vs. indirect effects of
+landscape location (distance from coast) on plant species richness via
+other biotic and abiotic mediators (see the paper for further details).
+We can reproduce this SEM (roughly) in a piecewise fashion by fitting a
+separate linear model for each observed response variable:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">keeley.sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">age</span> <span class="op">~</span> <span class="va">distance</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">hetero</span> <span class="op">~</span> <span class="va">distance</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">abiotic</span> <span class="op">~</span> <span class="va">distance</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">firesev</span> <span class="op">~</span> <span class="va">age</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">cover</span> <span class="op">~</span> <span class="va">firesev</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">rich</span> <span class="op">~</span> <span class="va">distance</span> <span class="op">+</span> <span class="va">hetero</span> <span class="op">+</span> <span class="va">abiotic</span> <span class="op">+</span> <span class="va">cover</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
-<p>And visualise it using <code>piecewiseSEM:::plot.psem()</code> (wrapper for <code><a href="https://rdrr.io/pkg/DiagrammeR/man/render_graph.html">DiagrammeR::render_graph()</a></code>), which helps to clarify the directions of causal pathways in the system:</p>
+<code class="sourceCode R"><span><span class="va">keeley.sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">age</span> <span class="op">~</span> <span class="va">distance</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">hetero</span> <span class="op">~</span> <span class="va">distance</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">abiotic</span> <span class="op">~</span> <span class="va">distance</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">firesev</span> <span class="op">~</span> <span class="va">age</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">cover</span> <span class="op">~</span> <span class="va">firesev</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">rich</span> <span class="op">~</span> <span class="va">distance</span> <span class="op">+</span> <span class="va">hetero</span> <span class="op">+</span> <span class="va">abiotic</span> <span class="op">+</span> <span class="va">cover</span>, data <span class="op">=</span> <span class="va">keeley</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>And visualise it using <code>piecewiseSEM:::plot.psem()</code>
+(wrapper for <code><a href="https://rdrr.io/pkg/DiagrammeR/man/render_graph.html" class="external-link">DiagrammeR::render_graph()</a></code>), which helps to
+clarify the directions of causal pathways in the system:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">piecewiseSEM</span><span class="fu">:::</span><span class="fu"><a href="https://rdrr.io/pkg/piecewiseSEM/man/plot.psem.html">plot.psem</a></span><span class="op">(</span>
-  <span class="fu">piecewiseSEM</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/piecewiseSEM/man/as.psem.html">as.psem</a></span><span class="op">(</span><span class="va">keeley.sem</span><span class="op">)</span>,
-  node_attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"rectangle"</span>, color <span class="op">=</span> <span class="st">"black"</span>, fillcolor <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span>,
-  layout <span class="op">=</span> <span class="st">"tree"</span>
-<span class="op">)</span></code></pre></div>
-<div id="htmlwidget-0c27133c605bd4636e23" style="width:700px;height:432.632880098888px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0c27133c605bd4636e23">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"age\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"0,4!\"] \n  \"2\" [label = \"hetero\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"1,4!\"] \n  \"3\" [label = \"abiotic\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"2,2!\"] \n  \"4\" [label = \"firesev\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"0,3!\"] \n  \"5\" [label = \"cover\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"0,2!\"] \n  \"6\" [label = \"rich\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"2,1!\"] \n  \"7\" [label = \"distance\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"1.5,5!\"] \n\"7\"->\"1\" [style = \"solid\", color = \"black\", label = \" -0.278 \"] \n\"7\"->\"2\" [style = \"solid\", color = \"black\", label = \" 0.346 \"] \n\"7\"->\"3\" [style = \"solid\", color = \"black\", label = \" 0.46 \"] \n\"1\"->\"4\" [style = \"solid\", color = \"black\", label = \" 0.454 \"] \n\"4\"->\"5\" [style = \"solid\", color = \"black\", label = \" -0.437 \"] \n\"7\"->\"6\" [style = \"solid\", color = \"black\", label = \" 0.283 \"] \n\"2\"->\"6\" [style = \"solid\", color = \"black\", label = \" 0.338 \"] \n\"3\"->\"6\" [style = \"solid\", color = \"black\", label = \" 0.25 \"] \n\"5\"->\"6\" [style = \"solid\", color = \"black\", label = \" 0.287 \"] \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Now, to calculate effects, we first bootstrap and save the standardised direct effects:</p>
+<code class="sourceCode R"><span><span class="fu">piecewiseSEM</span><span class="fu">:::</span><span class="fu"><a href="https://rdrr.io/pkg/piecewiseSEM/man/plot.psem.html" class="external-link">plot.psem</a></span><span class="op">(</span></span>
+<span>  <span class="fu">piecewiseSEM</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/piecewiseSEM/man/as.psem.html" class="external-link">as.psem</a></span><span class="op">(</span><span class="va">keeley.sem</span><span class="op">)</span>,</span>
+<span>  node_attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"rectangle"</span>, color <span class="op">=</span> <span class="st">"black"</span>, fillcolor <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span>,</span>
+<span>  layout <span class="op">=</span> <span class="st">"tree"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-15bf424168006557f720" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-15bf424168006557f720">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"age\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"0,4!\"] \n  \"2\" [label = \"hetero\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"1,4!\"] \n  \"3\" [label = \"abiotic\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"2,2!\"] \n  \"4\" [label = \"firesev\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"0,3!\"] \n  \"5\" [label = \"cover\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"0,2!\"] \n  \"6\" [label = \"rich\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"2,1!\"] \n  \"7\" [label = \"distance\", shape = \"rectangle\", color = \"black\", fillcolor = \"#C0C0C0\", fontcolor = \"#000000\", pos = \"1.5,5!\"] \n\"7\"->\"1\" [style = \"solid\", color = \"black\", label = \" -0.278 \"] \n\"7\"->\"2\" [style = \"solid\", color = \"black\", label = \" 0.346 \"] \n\"7\"->\"3\" [style = \"solid\", color = \"black\", label = \" 0.46 \"] \n\"1\"->\"4\" [style = \"solid\", color = \"black\", label = \" 0.454 \"] \n\"4\"->\"5\" [style = \"solid\", color = \"black\", label = \" -0.437 \"] \n\"7\"->\"6\" [style = \"solid\", color = \"black\", label = \" 0.283 \"] \n\"2\"->\"6\" [style = \"solid\", color = \"black\", label = \" 0.338 \"] \n\"3\"->\"6\" [style = \"solid\", color = \"black\", label = \" 0.25 \"] \n\"5\"->\"6\" [style = \"solid\", color = \"black\", label = \" 0.287 \"] \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Now, to calculate effects, we first bootstrap and save the
+standardised direct effects:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span>
-  <span class="va">keeley.sem.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootEff.html">bootEff</a></span><span class="op">(</span><span class="va">keeley.sem</span>, R <span class="op">=</span> <span class="fl">100</span>, seed <span class="op">=</span> <span class="fl">13</span>, parallel <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   7.627   0.060   7.687</span></code></pre></div>
-<p>Note that here we use only 100 reps to save time, where typically we should use a lot more for greater accuracy of confidence intervals (e.g. 1,000–10,000+). Using the bootstrapped estimates we can now calculate direct, indirect, and total effects:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
+<span>  <span class="va">keeley.sem.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootEff.html">bootEff</a></span><span class="op">(</span><span class="va">keeley.sem</span>, R <span class="op">=</span> <span class="fl">100</span>, seed <span class="op">=</span> <span class="fl">13</span>, parallel <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;    user  system elapsed </span></span>
+<span><span class="co">#&gt;   5.157   0.015   5.173</span></span></code></pre></div>
+<p>Note that here we use only 100 reps to save time, where typically we
+should use a lot more for greater accuracy of confidence intervals
+(e.g. 1,000–10,000+). Using the bootstrapped estimates we can now
+calculate direct, indirect, and total effects:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">keeley.sem.eff</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semEff.html">semEff</a></span><span class="op">(</span><span class="va">keeley.sem.boot</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Piecewise SEM with:</span>
-<span class="co">#&gt;   * 1 exogenous vs. 6 endogenous variable(s)</span>
-<span class="co">#&gt;   * 9 direct vs. 8 indirect effect(s)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Variables:</span>
-<span class="co">#&gt;             Category   Predictor Mediator Response   Dir. Eff. Ind. Eff.  </span>
-<span class="co">#&gt;             --------   --------- -------- --------   --------- ---------  </span>
-<span class="co">#&gt;  distance | Exog.    |     Y        N        N     |         -         - |</span>
-<span class="co">#&gt;  age      | Endog.   |     Y        Y        Y     |         1         0 |</span>
-<span class="co">#&gt;  hetero   | Endog.   |     Y        Y        Y     |         1         0 |</span>
-<span class="co">#&gt;  abiotic  | Endog.   |     Y        Y        Y     |         1         0 |</span>
-<span class="co">#&gt;  firesev  | Endog.   |     Y        Y        Y     |         1         1 |</span>
-<span class="co">#&gt;  cover    | Endog.   |     Y        Y        Y     |         1         2 |</span>
-<span class="co">#&gt;  rich     | Endog.   |     N        N        Y     |         4         5 |</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Use summary() for effects and confidence intervals for endogenous variables.</span></code></pre></div>
-<p>Let’s examine effects for the final response variable, plant species richness, which has four direct and five indirect paths leading to it:</p>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">keeley.sem.eff</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semEff.html">semEff</a></span><span class="op">(</span><span class="va">keeley.sem.boot</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Piecewise SEM with:</span></span>
+<span><span class="co">#&gt;   * 1 exogenous vs. 6 endogenous variable(s)</span></span>
+<span><span class="co">#&gt;   * 9 direct vs. 8 indirect effect(s)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Variables:</span></span>
+<span><span class="co">#&gt;             Category   Predictor Mediator Response   Dir. Eff. Ind. Eff.  </span></span>
+<span><span class="co">#&gt;             --------   --------- -------- --------   --------- ---------  </span></span>
+<span><span class="co">#&gt;  distance | Exog.    |     Y        N        N     |         -         - |</span></span>
+<span><span class="co">#&gt;  age      | Endog.   |     Y        Y        Y     |         1         0 |</span></span>
+<span><span class="co">#&gt;  hetero   | Endog.   |     Y        Y        Y     |         1         0 |</span></span>
+<span><span class="co">#&gt;  abiotic  | Endog.   |     Y        Y        Y     |         1         0 |</span></span>
+<span><span class="co">#&gt;  firesev  | Endog.   |     Y        Y        Y     |         1         1 |</span></span>
+<span><span class="co">#&gt;  cover    | Endog.   |     Y        Y        Y     |         1         2 |</span></span>
+<span><span class="co">#&gt;  rich     | Endog.   |     N        N        Y     |         4         5 |</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Use summary() for effects and confidence intervals for endogenous variables.</span></span></code></pre></div>
+<p>Let’s examine effects for the final response variable, plant species
+richness, which has four direct and five indirect paths leading to
+it:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">keeley.sem.eff</span>, response <span class="op">=</span> <span class="st">"rich"</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; SEM direct, summed indirect, total, and mediator effects:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; rich (6/6):</span>
-<span class="co">#&gt;                       Effect     Bias   Std. Err.   Lower CI Upper CI    </span>
-<span class="co">#&gt;                       ------   ------   ---------   -------- --------    </span>
-<span class="co">#&gt;  DIRECT    distance |  0.233 |  0.016 |     0.065 |    0.089    0.351 | *</span>
-<span class="co">#&gt;            hetero   |  0.301 | -0.009 |     0.072 |    0.168    0.447 | *</span>
-<span class="co">#&gt;            abiotic  |  0.219 | -0.014 |     0.078 |    0.080    0.401 | *</span>
-<span class="co">#&gt;            cover    |  0.267 | -0.015 |     0.082 |    0.085    0.446 | *</span>
-<span class="co">#&gt;                                                                          </span>
-<span class="co">#&gt;  INDIRECT  distance |  0.220 | -0.012 |     0.047 |    0.139    0.349 | *</span>
-<span class="co">#&gt;            age      | -0.053 |  0.002 |     0.025 |   -0.145   -0.012 | *</span>
-<span class="co">#&gt;            firesev  | -0.117 |  0.007 |     0.045 |   -0.224   -0.029 | *</span>
-<span class="co">#&gt;                                                                          </span>
-<span class="co">#&gt;  TOTAL     distance |  0.453 |  0.004 |     0.045 |    0.340    0.524 | *</span>
-<span class="co">#&gt;            age      | -0.053 |  0.002 |     0.025 |   -0.145   -0.012 | *</span>
-<span class="co">#&gt;            hetero   |  0.301 | -0.009 |     0.072 |    0.168    0.447 | *</span>
-<span class="co">#&gt;            abiotic  |  0.219 | -0.014 |     0.078 |    0.080    0.401 | *</span>
-<span class="co">#&gt;            firesev  | -0.117 |  0.007 |     0.045 |   -0.224   -0.029 | *</span>
-<span class="co">#&gt;            cover    |  0.267 | -0.015 |     0.082 |    0.085    0.446 | *</span>
-<span class="co">#&gt;                                                                          </span>
-<span class="co">#&gt;  MEDIATORS age      |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span>
-<span class="co">#&gt;            hetero   |  0.104 | -0.003 |     0.031 |    0.046    0.186 | *</span>
-<span class="co">#&gt;            abiotic  |  0.101 | -0.008 |     0.037 |    0.032    0.184 | *</span>
-<span class="co">#&gt;            firesev  | -0.038 |  0.001 |     0.017 |   -0.083   -0.008 | *</span>
-<span class="co">#&gt;            cover    | -0.155 |  0.008 |     0.061 |   -0.302   -0.037 | *</span></code></pre></div>
-<p>We can see that the standardised total effect of distance from coast on plant species richness is moderately high at 0.453 (CIs: 0.373, 0.526), and is split almost equally between direct (0.233) and indirect (0.220) effects (involving five mediators). The mediator effects listed here are the sum of all the indirect paths from all predictors which involve each mediator, and can be useful as a rough indicator of the overall importance and net direction of effect of each. <em>hetero</em>, <em>abiotic</em>, and <em>cover</em> appear to be relatively important, with <em>cover</em> having the strongest influence (-0.155). However, this considers all predictors in the system collectively – meaning that mediators are themselves counted as predictors. To focus only on the exogenous variable <em>distance</em>, let’s recalculate:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">keeley.sem.eff</span>, response <span class="op">=</span> <span class="st">"rich"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SEM direct, summed indirect, total, and mediator effects:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; rich (6/6):</span></span>
+<span><span class="co">#&gt;                       Effect     Bias   Std. Err.   Lower CI Upper CI    </span></span>
+<span><span class="co">#&gt;                       ------   ------   ---------   -------- --------    </span></span>
+<span><span class="co">#&gt;  DIRECT    distance |  0.233 |  0.016 |     0.065 |    0.089    0.351 | *</span></span>
+<span><span class="co">#&gt;            hetero   |  0.301 | -0.009 |     0.072 |    0.168    0.447 | *</span></span>
+<span><span class="co">#&gt;            abiotic  |  0.219 | -0.014 |     0.078 |    0.080    0.401 | *</span></span>
+<span><span class="co">#&gt;            cover    |  0.267 | -0.015 |     0.082 |    0.085    0.446 | *</span></span>
+<span><span class="co">#&gt;                                                                          </span></span>
+<span><span class="co">#&gt;  INDIRECT  distance |  0.220 | -0.012 |     0.047 |    0.139    0.349 | *</span></span>
+<span><span class="co">#&gt;            age      | -0.053 |  0.002 |     0.025 |   -0.145   -0.012 | *</span></span>
+<span><span class="co">#&gt;            firesev  | -0.117 |  0.007 |     0.045 |   -0.224   -0.029 | *</span></span>
+<span><span class="co">#&gt;                                                                          </span></span>
+<span><span class="co">#&gt;  TOTAL     distance |  0.453 |  0.004 |     0.045 |    0.340    0.524 | *</span></span>
+<span><span class="co">#&gt;            age      | -0.053 |  0.002 |     0.025 |   -0.145   -0.012 | *</span></span>
+<span><span class="co">#&gt;            hetero   |  0.301 | -0.009 |     0.072 |    0.168    0.447 | *</span></span>
+<span><span class="co">#&gt;            abiotic  |  0.219 | -0.014 |     0.078 |    0.080    0.401 | *</span></span>
+<span><span class="co">#&gt;            firesev  | -0.117 |  0.007 |     0.045 |   -0.224   -0.029 | *</span></span>
+<span><span class="co">#&gt;            cover    |  0.267 | -0.015 |     0.082 |    0.085    0.446 | *</span></span>
+<span><span class="co">#&gt;                                                                          </span></span>
+<span><span class="co">#&gt;  MEDIATORS age      |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span>
+<span><span class="co">#&gt;            hetero   |  0.104 | -0.003 |     0.031 |    0.046    0.186 | *</span></span>
+<span><span class="co">#&gt;            abiotic  |  0.101 | -0.008 |     0.037 |    0.032    0.184 | *</span></span>
+<span><span class="co">#&gt;            firesev  | -0.038 |  0.001 |     0.017 |   -0.083   -0.008 | *</span></span>
+<span><span class="co">#&gt;            cover    | -0.155 |  0.008 |     0.061 |   -0.302   -0.037 | *</span></span></code></pre></div>
+<p>We can see that the standardised total effect of distance from coast
+on plant species richness is moderately high at 0.453 (CIs: 0.373,
+0.526), and is split almost equally between direct (0.233) and indirect
+(0.220) effects (involving five mediators). The mediator effects listed
+here are the sum of all the indirect paths from all predictors which
+involve each mediator, and can be useful as a rough indicator of the
+overall importance and net direction of effect of each. <em>hetero</em>,
+<em>abiotic</em>, and <em>cover</em> appear to be relatively important,
+with <em>cover</em> having the strongest influence (-0.155). However,
+this considers all predictors in the system collectively – meaning that
+mediators are themselves counted as predictors. To focus only on the
+exogenous variable <em>distance</em>, let’s recalculate:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span>
-  <span class="fu"><a href="../reference/semEff.html">semEff</a></span><span class="op">(</span><span class="va">keeley.sem.boot</span>, predictor <span class="op">=</span> <span class="st">"distance"</span><span class="op">)</span>,
-  response <span class="op">=</span> <span class="st">"rich"</span>
-<span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; SEM direct, summed indirect, total, and mediator effects:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; rich (6/6):</span>
-<span class="co">#&gt;                       Effect     Bias   Std. Err.   Lower CI Upper CI    </span>
-<span class="co">#&gt;                       ------   ------   ---------   -------- --------    </span>
-<span class="co">#&gt;  DIRECT    distance |  0.233 |  0.016 |     0.065 |    0.089    0.351 | *</span>
-<span class="co">#&gt;                                                                          </span>
-<span class="co">#&gt;  INDIRECT  distance |  0.220 | -0.012 |     0.047 |    0.139    0.349 | *</span>
-<span class="co">#&gt;                                                                          </span>
-<span class="co">#&gt;  TOTAL     distance |  0.453 |  0.004 |     0.045 |    0.340    0.524 | *</span>
-<span class="co">#&gt;                                                                          </span>
-<span class="co">#&gt;  MEDIATORS age      |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span>
-<span class="co">#&gt;            hetero   |  0.104 | -0.003 |     0.031 |    0.046    0.186 | *</span>
-<span class="co">#&gt;            abiotic  |  0.101 | -0.008 |     0.037 |    0.032    0.184 | *</span>
-<span class="co">#&gt;            firesev  |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span>
-<span class="co">#&gt;            cover    |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></code></pre></div>
-<p>Now we can see that <em>hetero</em> and <em>abiotic</em> are the important mediators for distance, while the relative influence of <em>cover</em> is much lower – weakened due to being part of a single longer chain of effect (involving <em>age</em> and <em>firesev</em>). The total indirect effect of 0.220 can thus be broken down into three individual paths:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/semEff.html">semEff</a></span><span class="op">(</span><span class="va">keeley.sem.boot</span>, predictor <span class="op">=</span> <span class="st">"distance"</span><span class="op">)</span>,</span>
+<span>  response <span class="op">=</span> <span class="st">"rich"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SEM direct, summed indirect, total, and mediator effects:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; rich (6/6):</span></span>
+<span><span class="co">#&gt;                       Effect     Bias   Std. Err.   Lower CI Upper CI    </span></span>
+<span><span class="co">#&gt;                       ------   ------   ---------   -------- --------    </span></span>
+<span><span class="co">#&gt;  DIRECT    distance |  0.233 |  0.016 |     0.065 |    0.089    0.351 | *</span></span>
+<span><span class="co">#&gt;                                                                          </span></span>
+<span><span class="co">#&gt;  INDIRECT  distance |  0.220 | -0.012 |     0.047 |    0.139    0.349 | *</span></span>
+<span><span class="co">#&gt;                                                                          </span></span>
+<span><span class="co">#&gt;  TOTAL     distance |  0.453 |  0.004 |     0.045 |    0.340    0.524 | *</span></span>
+<span><span class="co">#&gt;                                                                          </span></span>
+<span><span class="co">#&gt;  MEDIATORS age      |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span>
+<span><span class="co">#&gt;            hetero   |  0.104 | -0.003 |     0.031 |    0.046    0.186 | *</span></span>
+<span><span class="co">#&gt;            abiotic  |  0.101 | -0.008 |     0.037 |    0.032    0.184 | *</span></span>
+<span><span class="co">#&gt;            firesev  |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span>
+<span><span class="co">#&gt;            cover    |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span></code></pre></div>
+<p>Now we can see that <em>hetero</em> and <em>abiotic</em> are the
+important mediators for distance, while the relative influence of
+<em>cover</em> is much lower – weakened due to being part of a single
+longer chain of effect (involving <em>age</em> and <em>firesev</em>).
+The total indirect effect of 0.220 can thus be broken down into three
+individual paths:</p>
 <ol style="list-style-type: decimal">
-<li><p><em>distance</em> -&gt; <em>age</em> -&gt; <em>firesev</em> -&gt; <em>cover</em> -&gt; <em>rich</em> (0.015)</p></li>
-<li><p><em>distance</em> -&gt; <em>hetero</em> -&gt; <em>rich</em> (0.104)</p></li>
-<li><p><em>distance</em> -&gt; <em>abiotic</em> -&gt; <em>rich</em> (0.101)</p></li>
+<li><p><em>distance</em> -&gt; <em>age</em> -&gt; <em>firesev</em> -&gt;
+<em>cover</em> -&gt; <em>rich</em> (0.015)</p></li>
+<li><p><em>distance</em> -&gt; <em>hetero</em> -&gt; <em>rich</em>
+(0.104)</p></li>
+<li><p><em>distance</em> -&gt; <em>abiotic</em> -&gt; <em>rich</em>
+(0.101)</p></li>
 </ol>
-<p>This is only one potential way of analysing paths in this SEM. Depending on the size of the system and the particular research questions, any number of predictors, mediators and/or response variables can be investigated separately or collectively for direct vs. indirect effects. If there are multiple hypotheses (competing or complementary), these can all be tested in a single SEM by comparing the relative importance of different variables and pathways of effect.</p>
-<p><strong>NOTE</strong>: All effects presented here are standardised unique effects (i.e. adjusted for multicollinearity, a.k.a. semipartial correlations), which is the only way to fully partition effects in the system. These will usually be a bit smaller than the unadjusted standardised coefficients, since most variables are correlated to some degree. If there are large differences between the two, consideration should be given to the impact (and relevance) of multicollinearity in the system. In this particular case, it’s minimal, with standard errors of coefficients less than twice as large as they should be (checked using <a href="https://murphymv.github.io/semEff/reference/RVIF.html"><code>RVIF()</code></a> for the species richness model):</p>
+<p>This is only one potential way of analysing paths in this SEM.
+Depending on the size of the system and the particular research
+questions, any number of predictors, mediators and/or response variables
+can be investigated separately or collectively for direct vs. indirect
+effects. If there are multiple hypotheses (competing or complementary),
+these can all be tested in a single SEM by comparing the relative
+importance of different variables and pathways of effect.</p>
+<p><strong>NOTE</strong>: All effects presented here are standardised
+unique effects (i.e. adjusted for multicollinearity, a.k.a. semipartial
+correlations), which is the only way to fully partition effects in the
+system. These will usually be a bit smaller than the unadjusted
+standardised coefficients, since most variables are correlated to some
+degree. If there are large differences between the two, consideration
+should be given to the impact (and relevance) of multicollinearity in
+the system. In this particular case, it’s minimal, with standard errors
+of coefficients less than twice as large as they should be (checked
+using <a href="https://murphymv.github.io/semEff/reference/RVIF.html"><code>RVIF()</code></a>
+for the species richness model):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/RVIF.html">RVIF</a></span><span class="op">(</span><span class="va">keeley.sem</span><span class="op">[[</span><span class="fl">6</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt; distance   hetero  abiotic    cover </span>
-<span class="co">#&gt; 1.214376 1.122211 1.139111 1.074784</span></code></pre></div>
-<p>To use original standardised coefficients instead, specify <code>unique.eff = FALSE</code>, which can be passed to <a href="https://murphymv.github.io/semEff/reference/stdEff.html"><code>stdEff()</code></a>, <a href="https://murphymv.github.io/semEff/reference/bootEff.html"><code>bootEff()</code></a>, and/or <a href="https://murphymv.github.io/semEff/reference/semEff.html"><code>semEff()</code></a>. These can be preferred if prediction is the primary goal rather than inference, for comparison with the unique effects or with other standardised coefficients, or for other reasons.</p>
-<div id="references" class="section level4 unnumbered">
-<h4 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h4>
-<div id="refs" class="references">
-<div id="ref-grace2006">
-<p>Grace, J. B., &amp; Keeley, J. E. (2006). A structural equation model analysis of postfire plant diversity in California shrublands. <em>Ecological Applications: A Publication of the Ecological Society of America</em>, <em>16</em>(2), 503–514. <a href="https://doi.org/10/d8gvwm">https://doi.org/10/d8gvwm</a></p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/RVIF.html">RVIF</a></span><span class="op">(</span><span class="va">keeley.sem</span><span class="op">[[</span><span class="fl">6</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; distance   hetero  abiotic    cover </span></span>
+<span><span class="co">#&gt; 1.214376 1.122211 1.139111 1.074784</span></span></code></pre></div>
+<p>To use original standardised coefficients instead, specify
+<code>unique.eff = FALSE</code>, which can be passed to <a href="https://murphymv.github.io/semEff/reference/stdEff.html"><code>stdEff()</code></a>,
+<a href="https://murphymv.github.io/semEff/reference/bootEff.html"><code>bootEff()</code></a>,
+and/or <a href="https://murphymv.github.io/semEff/reference/semEff.html"><code>semEff()</code></a>.
+These can be preferred if prediction is the primary goal rather than
+inference, for comparison with the unique effects or with other
+standardised coefficients, or for other reasons.</p>
+<div class="section level4 unnumbered">
+<h4 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h4>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-grace2006" class="csl-entry">
+Grace, J. B., &amp; Keeley, J. E. (2006). A structural equation model
+analysis of postfire plant diversity in <span>California</span>
+shrublands. <em>Ecological Applications: A Publication of the Ecological
+Society of America</em>, <em>16</em>(2), 503–514. <a href="https://doi.org/d8gvwm" class="external-link">https://doi.org/d8gvwm</a>
 </div>
-<div id="ref-lefcheck2016">
-<p>Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation modelling in R for ecology, evolution, and systematics. <em>Methods in Ecology and Evolution</em>, <em>7</em>(5), 573–579. <a href="https://doi.org/10/f8s8rb">https://doi.org/10/f8s8rb</a></p>
+<div id="ref-lefcheck2016" class="csl-entry">
+Lefcheck, J. S. (2016). <span class="nocase">piecewiseSEM</span>:
+Piecewise structural equation modelling in <span>R</span> for ecology,
+evolution, and systematics. <em>Methods in Ecology and Evolution</em>,
+<em>7</em>(5), 573–579. <a href="https://doi.org/f8s8rb" class="external-link">https://doi.org/f8s8rb</a>
 </div>
 </div>
 </div>
@@ -313,11 +376,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Murphy.</p>
+  <p></p>
+<p>Developed by Mark V. Murphy.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -325,6 +390,8 @@
 
   
 
+
+  
 
   </body>
 </html>

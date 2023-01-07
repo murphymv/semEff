@@ -1,102 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://murphymv.github.io/semEff//index.html</loc>
+    <loc>https://murphymv.github.io/semEff/404.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/Object.Type.html</loc>
+    <loc>https://murphymv.github.io/semEff/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/Param.Type.html</loc>
+    <loc>https://murphymv.github.io/semEff/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/R2.html</loc>
+    <loc>https://murphymv.github.io/semEff/articles/predicting-effects.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/RVIF.html</loc>
+    <loc>https://murphymv.github.io/semEff/articles/semEff.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/VIF.html</loc>
+    <loc>https://murphymv.github.io/semEff/authors.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/avgEst.html</loc>
+    <loc>https://murphymv.github.io/semEff/index.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/bootCI.html</loc>
+    <loc>https://murphymv.github.io/semEff/news/index.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/bootEff.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/Object.Type.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/getData.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/Param.Type.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/getEff.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/R2.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/getX.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/RVIF.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/getY.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/VIF.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/glt.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/avgEst.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/pSapply.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/bootCI.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/predEff.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/bootEff.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/print.bootCI.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/getData.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/print.semEff.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/getEff.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/rMapply.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/getX.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/sdW.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/getY.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/semEff-package.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/glt.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/semEff.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/shipley.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/pSapply.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/shipley.growth.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/predEff.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/shipley.sem.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/print.bootCI.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/shipley.sem.boot.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/print.semEff.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/shipley.sem.eff.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/rMapply.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/stdEff.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/sdW.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/summary.semEff.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/semEff-package.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/varW.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/semEff.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//reference/xNam.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/shipley.growth.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//articles/predicting-effects.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/shipley.html</loc>
   </url>
   <url>
-    <loc>https://murphymv.github.io/semEff//articles/semEff.html</loc>
+    <loc>https://murphymv.github.io/semEff/reference/shipley.sem.boot.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff/reference/shipley.sem.eff.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff/reference/shipley.sem.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff/reference/stdEff.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff/reference/summary.semEff.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff/reference/varW.html</loc>
+  </url>
+  <url>
+    <loc>https://murphymv.github.io/semEff/reference/xNam.html</loc>
   </url>
 </urlset>

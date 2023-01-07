@@ -43,18 +43,19 @@ pre {
 }
 
 pre code {
+  background-color: transparent;
+  color: rgb(204, 204, 204);
   border: none;
 }
 
-pre.examples,
+/* pre.examples,
 pre.sourceCode,
 pre.usage {
   color: rgb(156, 220, 254);
-}
+} */
 
 pre:not([class]) {
   background-color: rgb(30, 30, 30);
-  /* color: rgb(204, 204, 204); */
   color: rgb(106, 153, 85);
 }
 
@@ -88,6 +89,11 @@ pre:not([class]) {
     --inline-code: var(--string);
 } */
 
+/* Attribute, Variable */
+.at,
+.va {
+  color: rgb(156, 220, 254);
+}
 /* BuiltIn, Function */
 .bu,
 .fu {
@@ -99,11 +105,12 @@ pre:not([class]) {
 .kw {
   color: rgb(197, 134, 192);
 }
-/* Constant */
-.cn {
+/* Constant, SpecialChar */
+.cn,
+.sc {
   color: rgb(86, 156, 214);
 }
-/* Comment */
+/* Comment, Message */
 .co,
 .message {
   color: rgb(106, 153, 85);
@@ -114,10 +121,9 @@ pre:not([class]) {
 .fl {
   color: rgb(181, 206, 168);
 }
-/* Operator, Other, SpecialChar */
+/* Operator, Other */
 .op,
-.ot,
-.sc {
+.ot {
   color: rgb(204, 204, 204);
 }
 /* String */

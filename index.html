@@ -23,6 +23,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -35,18 +37,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="articles/semEff.html">Get started</a>
 </li>
@@ -54,7 +50,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -71,7 +67,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/murphymv/semEff/">
+  <a href="https://github.com/murphymv/semEff/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -88,9 +84,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="semeff" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#semeff" class="anchor"></a>semEff</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="semeff">semEff<a class="anchor" aria-label="anchor" href="#semeff"></a>
+</h1></div>
 <!-- badges: start -->
 
 
@@ -98,87 +94,87 @@
 <!-- badges: end -->
 <p><code>semEff</code> provides functionality to automatically calculate direct, indirect, and total effects for ‘piecewise’ structural equation models, comprising lists of fitted models representing structured equations (Lefcheck, 2016; Shipley, 2000, 2009). Confidence intervals are provided via bootstrapping.</p>
 <p>Currently supported model classes are <code>"lm"</code>, <code>"glm"</code>, <code>"lmerMod"</code>, <code>"glmerMod"</code>, <code>"lmerModLmerTest"</code>, <code>"gls"</code>, and <code>"betareg"</code>.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the released version of <code>semEff</code> from <a href="https://CRAN.R-project.org">CRAN</a> with:</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install the released version of <code>semEff</code> from <a href="https://CRAN.R-project.org" class="external-link">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"semEff"</span><span class="op">)</span></code></pre></div>
-<p>And the development version from <a href="https://github.com/">GitHub</a> with:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"semEff"</span><span class="op">)</span></span></code></pre></div>
+<p>And the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"murphymv/semEff@dev"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"murphymv/semEff@dev"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
-<p>The primary function is <a href="https://murphymv.github.io/semEff/reference/semEff.html"><code>semEff()</code></a>, which returns an object of class <code>"semEff"</code> with associated <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> methods. Everything can technically be accomplished in a single call to <code><a href="reference/semEff.html">semEff()</a></code>; however, since bootstrapping is employed to generate resamples for confidence intervals (via <a href="https://murphymv.github.io/semEff/reference/bootEff.html"><code>bootEff()</code></a>), it is usually preferable to save these estimates separately prior to calling <code><a href="reference/semEff.html">semEff()</a></code> – allowing more flexibility and saving time if/when recalling the function.</p>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<p>The primary function is <a href="https://murphymv.github.io/semEff/reference/semEff.html"><code>semEff()</code></a>, which returns an object of class <code>"semEff"</code> with associated <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> methods. Everything can technically be accomplished in a single call to <code><a href="reference/semEff.html">semEff()</a></code>; however, since bootstrapping is employed to generate resamples for confidence intervals (via <a href="https://murphymv.github.io/semEff/reference/bootEff.html"><code>bootEff()</code></a>), it is usually preferable to save these estimates separately prior to calling <code><a href="reference/semEff.html">semEff()</a></code> – allowing more flexibility and saving time if/when recalling the function.</p>
 </div>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
 <p>Package functions are well-documented and most include some short examples. In addition, see the following vignettes for some longer demonstrations:</p>
 <ul>
 <li><p><a href="https://murphymv.github.io/semEff/articles/semEff.html">Analysing direct vs. indirect effects of landscape location on plant species richness</a></p></li>
 <li><p><a href="https://murphymv.github.io/semEff/articles/predicting-effects.html">Predicting and plotting indirect effects of degree days to bud burst on tree growth</a></p></li>
 </ul>
 </div>
-<div id="references" class="section level2">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
-<p>Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation modelling in R for ecology, evolution, and systematics. <em>Methods in Ecology and Evolution</em>, <em>7</em>(5), 573–579. <a href="https://doi.org/10/f8s8rb" class="uri">https://doi.org/10/f8s8rb</a></p>
-<p>Shipley, B. (2000). A New Inferential Test for Path Models Based on Directed Acyclic Graphs. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, <em>7</em>(2), 206–218. <a href="https://doi.org/10/cqm32d" class="uri">https://doi.org/10/cqm32d</a></p>
-<p>Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel context. <em>Ecology</em>, <em>90</em>(2), 363–368. <a href="https://doi.org/10/bqd43d" class="uri">https://doi.org/10/bqd43d</a></p>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<p>Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation modelling in R for ecology, evolution, and systematics. <em>Methods in Ecology and Evolution</em>, <em>7</em>(5), 573–579. <a href="https://doi.org/10/f8s8rb" class="external-link uri">https://doi.org/10/f8s8rb</a></p>
+<p>Shipley, B. (2000). A New Inferential Test for Path Models Based on Directed Acyclic Graphs. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, <em>7</em>(2), 206–218. <a href="https://doi.org/10/cqm32d" class="external-link uri">https://doi.org/10/cqm32d</a></p>
+<p>Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel context. <em>Ecology</em>, <em>90</em>(2), 363–368. <a href="https://doi.org/10/bqd43d" class="external-link uri">https://doi.org/10/bqd43d</a></p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=semEff">https://​cloud.r-project.org/​package=semEff</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/murphymv/semEff/">https://​github.com/​murphymv/​semEff/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/murphymv/semEff/issues">https://​github.com/​murphymv/​semEff/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=semEff" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/murphymv/semEff/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/murphymv/semEff/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
 <li><small>GPL (&gt;= 3)</small></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Mark Murphy <br><small class="roles"> Author, maintainer </small>  </li>
+<li><a href="authors.html#citation">Citing semEff</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.repostatus.org/"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Repo Status"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg?label=Lifecycle" alt="Lifecycle"></a></li>
-<li><a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/License-GPL3-green.svg" alt="Licence"></a></li>
-<li><a href="https://github.com/murphymv/semEff/actions"><img src="https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://CRAN.R-project.org/package=semEff"><img src="https://www.r-pkg.org/badges/version/semEff?color=blue" alt="CRAN"></a></li>
-<li><a href="https://paypal.me/murphymv1"><img src="https://img.shields.io/badge/PayPal-Donate%20to%20Author-yellow.svg" alt="Donate"></a></li>
+<li>Mark V. Murphy <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
-</div>
+
+
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Murphy.</p>
+  <p></p>
+<p>Developed by Mark V. Murphy.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -186,6 +182,8 @@
 
   
 
+
+  
 
   </body>
 </html>
