@@ -28,11 +28,11 @@ If list is unnamed, response variable names will be used.}
 effects. If \code{NULL} (default), all predictors/mediators in the SEM will be
 used.}
 
-\item{excl.other.med}{Logical, ignored if \code{mediators = NULL}. Whether to
-exclude other SEM mediators from calculating indirect effects, i.e., those
-not specified in the \code{mediators} argument. Useful for examining individual
-effect pathways with only the specified mediators, rather than including
-all paths involving them (default).}
+\item{excl.other.med}{Logical, whether to exclude other SEM mediators from
+calculating indirect effects, i.e., those not specified in the \code{mediators}
+argument. Useful for examining individual effect pathways with only the
+specified mediators, rather than including all paths involving them
+(default). Ignored if \code{mediators = NULL}.}
 
 \item{use.raw}{Logical, whether to use 'raw' (unstandardised) effects for all
 calculations (if present in \code{sem}).}

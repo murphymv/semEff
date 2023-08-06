@@ -12,11 +12,11 @@
 #' @param predictors,mediators Names of variables for/through which to calculate
 #'   effects. If `NULL` (default), all predictors/mediators in the SEM will be
 #'   used.
-#' @param excl.other.med Logical, ignored if `mediators = NULL`. Whether to
-#'   exclude other SEM mediators from calculating indirect effects, i.e., those
-#'   not specified in the `mediators` argument. Useful for examining individual
-#'   effect pathways with only the specified mediators, rather than including
-#'   all paths involving them (default).
+#' @param excl.other.med Logical, whether to exclude other SEM mediators from
+#'   calculating indirect effects, i.e., those not specified in the `mediators`
+#'   argument. Useful for examining individual effect pathways with only the
+#'   specified mediators, rather than including all paths involving them
+#'   (default). Ignored if `mediators = NULL`.
 #' @param use.raw Logical, whether to use 'raw' (unstandardised) effects for all
 #'   calculations (if present in `sem`).
 #' @param ci.conf A numeric value specifying the confidence level for confidence
