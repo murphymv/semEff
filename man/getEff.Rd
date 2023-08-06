@@ -47,7 +47,7 @@ These are simple extractor functions for effects calculated using
 }
 \section{Functions}{
 \itemize{
-\item \code{getEff()}: Extract effects.
+\item \code{getEff()}: Extract all effects.
 
 \item \code{getDirEff()}: Extract direct effects.
 

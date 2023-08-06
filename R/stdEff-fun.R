@@ -743,7 +743,7 @@ VIF <- function(mod, data = NULL, env = NULL) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
       })
 
-      # Var-cov/cor matrix
+      # Var-cov & cor matrix
       V <- as.matrix(vcov(m))[xn, xn]
       R <- cov2cor(V)
       det.R <- det(R)
