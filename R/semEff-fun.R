@@ -299,9 +299,9 @@ semEff <- function(sem, predictors = NULL, mediators = NULL,
           sapply(m, function(j) {
             paste(
               paste0("^", j, "[.]", i, "$")
-              , paste0("^", j, "[.]*.[.]", i, "$")
+              , paste0("^", j, "[.].*[.]", i, "$")
               , paste0("[.]", j, "[.]", i, "$")
-              , paste0("[.]", j, "[.]*.[.]", i, "$")
+              , paste0("[.]", j, "[.].*[.]", i, "$")
               , sep = "|"
             )
           })
