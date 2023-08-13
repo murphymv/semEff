@@ -17,7 +17,7 @@ count](https://img.shields.io/github/languages/count/murphymv/semEff?label=Langu
 ![Downloads: Total](http://cranlogs.r-pkg.org/badges/grand-total/semEff)
 ![Downloads: Monthly](https://cranlogs.r-pkg.org/badges/semEff)
 
-[![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-yellow.svg)](https://paypal.me/murphymv1)
+<a href="https://www.buymeacoffee.com/murphymv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"/></a>
 
 <!-- badges: end -->
 
