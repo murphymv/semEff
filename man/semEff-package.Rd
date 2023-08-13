@@ -13,6 +13,7 @@ Useful links:
 \itemize{
   \item \url{https://murphymv.github.io/semEff/}
   \item \url{https://github.com/murphymv/semEff}
+  \item \url{https://www.buymeacoffee.com/murphymv}
   \item Report bugs at \url{https://github.com/murphymv/semEff/issues}
 }
 

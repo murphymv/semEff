@@ -3,8 +3,24 @@ development:
 repo:
   branches: main
 template:
-  params:
-    bootswatch: darkly
+  bootstrap: 5
+  bootswatch: darkly
+  theme: zenburn
+  bslib:
+    bg: '#222'
+    fg: '#CCCCCC'
+    # primary:
+  includes:
+    after_navbar: <a href="https://www.buymeacoffee.com/murphymv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"/></a>
 url: https://murphymv.github.io/semEff/
 news:
   cran_dates: false
+navbar:
+  bg: dark
+  structure:
+    right: [github, twitter]
+  components:
+    twitter:
+      icon: fa-twitter
+      href: https://twitter.com/murphy_mv
+      aria-label: Twitter/X
