@@ -3,6 +3,7 @@
 ### New features:
 
 -   New argument `excl.other.med` to `semEff()`, allowing calculation of indirect effects for specific SEM pathways, i.e. including only specified mediators.
+-   New function `getFamily()` to flexibly extract a `family()` object from different model classes (mostly for internal use).
 
 ### Other changes:
 

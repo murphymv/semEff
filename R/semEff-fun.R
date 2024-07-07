@@ -1016,7 +1016,7 @@ predEff <- function(mod, newdata = NULL, effects = NULL, eff.boot = NULL,
     m1 <- if (isList(m)) m[[1]] else m
 
     # Model error family/link functions
-    f <- if (isBet(m1)) m1$link$mean else family(m1)
+    f <- getFamily(m1)
     lF <- f$linkfun
     lI <- f$linkinv
 

@@ -102,7 +102,7 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
     # All var names from model call
     f <- c(f, mc$subset, mc$weights, mc$offset, mc$correlation)
     vn <- unlist(lapply(f, all.vars))
-    if (!all(vn %in% names(d)))
+    if (!all(vn %in% names(d)))  #  if (!all(!vn[grepl("tree.name",vn)] %in% names(d))) ??
       stop("'data' does not contain all variables used to fit model.")
 
     # Subset data for model observations?
@@ -605,6 +605,34 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 }
 
 
+#' @title Get Model Error Distribution Family
+#' @description Extract the error distribution family for a fitted model as a
+#'   [family()] object.
+#' @param mod A fitted model object, or a list or nested list of such objects.
+#' @details `getFamily()` will return a(n appropriate) family object for a range
+#'   of different model classes, even those without an existing family method.
+#' @return A model [family()] object, or a list or nested list of such objects.
+#' @examples
+#' # SEM model error distributions
+#' getFamily(shipley.sem)
+#' @export
+getFamily <- function(mod) {
+  
+  m <- mod
+  
+  # Function
+  getFamily <- function(m) {
+    if (isGls(m)) gaussian() else {
+      if (isBet(m)) m$link$mean else family(m)
+    }
+  }
+
+  # Apply recursively
+  rMapply(getFamily, m)
+  
+}
+
+
 #' @title Get Model Response Variable
 #' @description Extract the response variable from a fitted model on the
 #'   original or link scale.
@@ -647,7 +675,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
     }
 
     # Model error family
-    f <- if (isBet(m)) m$link$mean else family(m)
+    f <- getFamily(m)
 
     # Model weights and offset
     w <- weights(m)
@@ -1038,7 +1066,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     R2 <- if (k > 0) {
 
       # Model link function
-      f <- if (isBet(m)) m$link$mean else family(m)
+      f <- getFamily(m)
       lF <- f$linkfun
       lI <- f$linkinv
 
@@ -1590,7 +1618,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (cen.y && int) {
       ym <- weighted.mean(y, w)
       if (isGlm(m)) {
-        f <- if (isBet(m)) m$link$mean else family(m)
+        f <- getFamily(m)
         ym <- f$linkfun(ym)
       }
       e[1] <- e[1] - ym
