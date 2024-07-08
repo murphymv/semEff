@@ -9,6 +9,10 @@
 
 -   Minor improvements to code and documentation.
 
+### Bugfixes:
+
+-   `getData()` - incorrect evaluation of variable names in the model call for `gls()` models caused the check against the variables referenced in `data` to fail.
+
 ## semEff 0.6.1
 
 22/08/2022
