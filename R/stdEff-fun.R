@@ -101,8 +101,12 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
 
     # All var names from model call
     f <- c(f, mc$subset, mc$weights, mc$offset, mc$correlation)
-    vn <- unlist(lapply(f, all.vars))
-    if (!all(vn %in% names(d)))  #  if (!all(!vn[grepl("tree.name",vn)] %in% names(d))) ??
+    f <- lapply(f, function(i) {
+      i <- eval(i, env)
+      if (class(i)[2] %in% c("corStruct", "varFunc")) formula(i) else i
+    })
+    vn <- unique(unlist(lapply(f, all.vars)))
+    if (!all(vn %in% names(d)))
       stop("'data' does not contain all variables used to fit model.")
 
     # Subset data for model observations?
