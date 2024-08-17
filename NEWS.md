@@ -2,7 +2,7 @@
 
 ### New features:
 
--   New argument `excl.other.med` to `semEff()`, allowing calculation of indirect effects for specific SEM pathways, i.e. including only specified mediators.
+-   New argument `excl.other.med` to `semEff()`, allowing calculation of indirect effects for specific SEM pathways, i.e. those including only specified mediators.
 -   New function `getFamily()` to flexibly extract a `"family"` object from different model classes (mostly for internal use).
 
 ### Other changes:
@@ -11,7 +11,7 @@
 
 ### Bugfixes:
 
--   `getData()` incorrectly evaluated variable names for `gls()` models, causing the check against variables referenced in `data` to fail.
+-   `getData()` incorrectly evaluated variable names for `gls()` models, causing the check against variables referenced in the model `data` argument to fail.
 
 ## semEff 0.6.1
 

@@ -10,15 +10,16 @@ getFamily(mod)
 \item{mod}{A fitted model object, or a list or nested list of such objects.}
 }
 \value{
-A model \code{\link[=family]{family()}} object, or a list or nested list of such objects.
+A model \code{"family"} object, or a list or nested list of such objects.
 }
 \description{
-Extract the error distribution family for a fitted model as a
-\code{\link[=family]{family()}} object.
+Extract the error distribution family (and link function) for a
+fitted model as a \code{"family"} object.
 }
 \details{
-\code{getFamily()} will return a(n appropriate) family object for a range
-of different model classes, even those without an existing family method.
+\code{getFamily()} returns a family object for a range of different model
+classes, similar to \code{\link[=family]{family()}}. However, it can be also be used for some
+without an existing family method. Mostly for internal use.
 }
 \examples{
 # SEM model error distributions
