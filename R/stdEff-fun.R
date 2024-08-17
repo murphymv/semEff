@@ -610,12 +610,13 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 
 
 #' @title Get Model Error Distribution Family
-#' @description Extract the error distribution family for a fitted model as a
-#'   [family()] object.
+#' @description Extract the error distribution family (and link function) for a
+#'   fitted model as a `"family"` object.
 #' @param mod A fitted model object, or a list or nested list of such objects.
-#' @details `getFamily()` will return a(n appropriate) family object for a range
-#'   of different model classes, even those without an existing family method.
-#' @return A model [family()] object, or a list or nested list of such objects.
+#' @details `getFamily()` returns a family object for a range of different model
+#'   classes, similar to [family()]. However, it can be also be used for some
+#'   without an existing family method. Mostly for internal use.
+#' @return A model `"family"` object, or a list or nested list of such objects.
 #' @examples
 #' # SEM model error distributions
 #' getFamily(shipley.sem)
