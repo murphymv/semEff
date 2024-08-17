@@ -9,7 +9,11 @@ type: software
 license: GPL-3.0-or-later
 title: 'semEff: Automatic Calculation of Effects for Piecewise Structural Equation
   Models'
-version: 0.6.1.9000
+version: 0.7.0
+doi: 10.32614/CRAN.package.semEff
+identifiers:
+- type: url
+  value: https://www.buymeacoffee.com/murphymv
 abstract: Automatically calculate direct, indirect, and total effects for piecewise
   structural equation models, comprising lists of fitted models representing structured
   equations (Lefcheck, 2016 <https://doi.org/10/f8s8rb>). Confidence intervals are
@@ -50,6 +54,7 @@ references:
     given-names: Brian
     email: ripley@stats.ox.ac.uk
   year: '2024'
+  doi: 10.32614/CRAN.package.boot
 - type: software
   title: gsl
   abstract: 'gsl: Wrapper for the Gnu Scientific Library'
@@ -62,6 +67,7 @@ references:
     email: hankin.robin@gmail.com
     orcid: https://orcid.org/0000-0001-5982-0415
   year: '2024'
+  doi: 10.32614/CRAN.package.gsl
 - type: software
   title: lme4
   abstract: 'lme4: Linear Mixed-Effects Models using ''Eigen'' and S4'
@@ -83,6 +89,7 @@ references:
     given-names: Steven
     orcid: https://orcid.org/0000-0002-4394-9078
   year: '2024'
+  doi: 10.32614/CRAN.package.lme4
 - type: software
   title: parallel
   abstract: 'R: A Language and Environment for Statistical Computing'
@@ -152,6 +159,7 @@ references:
     name-particle: van den
     orcid: https://orcid.org/0000-0002-9335-7468
   year: '2024'
+  doi: 10.32614/CRAN.package.ggplot2
 - type: software
   title: knitr
   abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
@@ -164,6 +172,7 @@ references:
     email: xie@yihui.name
     orcid: https://orcid.org/0000-0003-0645-5666
   year: '2024'
+  doi: 10.32614/CRAN.package.knitr
 - type: software
   title: markdown
   abstract: 'markdown: Render Markdown with ''commonmark'''
@@ -180,6 +189,7 @@ references:
   - family-names: Horner
     given-names: Jeffrey
   year: '2024'
+  doi: 10.32614/CRAN.package.markdown
 - type: software
   title: piecewiseSEM
   abstract: 'piecewiseSEM: Piecewise Structural Equation Modeling'
@@ -197,6 +207,7 @@ references:
     given-names: James
     email: gracej@usgs.gov
   year: '2024'
+  doi: 10.32614/CRAN.package.piecewiseSEM
 - type: software
   title: rmarkdown
   abstract: 'rmarkdown: Dynamic Documents for R'
@@ -240,7 +251,5 @@ references:
     email: rich@posit.co
     orcid: https://orcid.org/0000-0003-3925-190X
   year: '2024'
-identifiers:
-- type: url
-  value: https://www.buymeacoffee.com/murphymv
+  doi: 10.32614/CRAN.package.rmarkdown
 
