@@ -4,13 +4,11 @@ repo:
   branches: main
 template:
   bootstrap: 5
-  bootswatch: darkly
   theme: zenburn
   bslib:
-    bg: '#1e1e1e' #'#222'
+    bg: '#222222'
     fg: '#cccccc'
-    primary: '#3c3c3c'
-    # secondary: '#3c3c3c' #'#0ce3ac'
+    primary: '#0ce3ac'
     code_font: {google: "Fira Code"}
   includes:
     after_navbar: <a href="https://www.buymeacoffee.com/murphymv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"/></a>
@@ -18,11 +16,10 @@ url: https://murphymv.github.io/semEff/
 news:
   cran_dates: false
 navbar:
-  # bg: dark
   structure:
     right: [github, twitter]
   components:
     twitter:
       icon: fa-twitter
-      href: https://twitter.com/murphy_mv
-      aria-label: Twitter/X
+      href: https://x.com/murphy_mv
+      aria-label: X
