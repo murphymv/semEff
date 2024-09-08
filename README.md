@@ -15,7 +15,8 @@ count](https://img.shields.io/github/languages/count/murphymv/semEff?label=Langu
 [![CRAN](https://www.r-pkg.org/badges/version/semEff?color=blue)](https://CRAN.R-project.org/package=semEff)
 ![Downloads:
 Total](https://cranlogs.r-pkg.org/badges/grand-total/semEff)
-![Downloads: Monthly](https://cranlogs.r-pkg.org/badges/semEff)
+![Downloads: Last
+Month](https://cranlogs.r-pkg.org/badges/last-month/semEff)
 
 <a href="https://www.buymeacoffee.com/murphymv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"/></a>
 
