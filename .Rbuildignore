@@ -10,5 +10,6 @@
 ^data-raw$
 ^docs$
 ^pkgdown$
+^revdep$
 ^tests$
 ^various$
