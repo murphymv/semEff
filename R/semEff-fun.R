@@ -646,7 +646,7 @@ print.semEff <- function(x, ...) {
             " endogenous variable(s)\n  * ", n3, " direct vs. ", n4,
             " indirect effect(s)\n", ce, "\nVariables:\n")
     print.data.frame(v, row.names = FALSE)
-    message("\nUse summary() for effects and confidence intervals for endogenous variables.\nSee ?getEff() for extracting effects.\n")
+    message("\nUse summary() for effects and confidence intervals for endogenous variables.\nSee ?getEff() for extracting (unformatted) effects.\n")
 
   }
   else print.data.frame(x, row.names = FALSE)
@@ -689,7 +689,7 @@ summary.semEff <- function(object, responses = NULL, ...) {
   for (i in r2) {
     n <- which(r == i)
     ii <- if (length(n) > 0) {
-      paste0(i, " (", n, "/", length(r), ")")
+      paste0("Response '", i, "' (", n, "/", length(r), ")")
     } else i
     message("\n", ii, ":\n")
     print(s[[i]])
