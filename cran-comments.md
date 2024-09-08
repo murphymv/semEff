@@ -4,21 +4,24 @@
 
 This is a seventh minor release (0.7.0).
 
-### Test environments
-
-| System                                    | Source                  | R version  |
-|-------------------------------------------|-------------------------|------------|
-| Windows 10 Home 22H2                      | Local                   | R 4.4.1    |
-| Windows Server 2022 10.0.20348 Datacenter | Remote (GitHub Actions) | R-release  |
-| Mac OS 14.6.1 23G93                       | Remote (GitHub Actions) | R-release  |
-| Ubuntu 22.04.4 LTS                        | Remote (GitHub Actions) | R-devel    |
-| Ubuntu 22.04.4 LTS                        | Remote (GitHub Actions) | R-release  |
-| Ubuntu 22.04.4 LTS                        | Remote (GitHub Actions) | R-oldrel-1 |
-
 ### R CMD check results
 
-There were no ERRORs, WARNINGs or NOTEs.
+0 errors \| 0 warnings \| 0 notes
 
-### Downstream dependencies
+### revdepcheck results
 
-There are currently no downstream dependencies.
+I checked 1 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+
+-   I saw 0 new problems
+-   I failed to check 0 packages
+
+### Test environments
+
+| System                                    | Source                           | R version  |
+|-------------------------------------------|----------------------------------|------------|
+| Windows 10 Home 22H2                      | Local                            | R 4.4.1    |
+| Windows Server 2022 10.0.20348 Datacenter | Remote (GitHub Actions workflow) | R-release  |
+| Mac OS 14.6.1 23G93                       | Remote (GitHub Actions workflow) | R-release  |
+| Ubuntu 22.04.4 LTS                        | Remote (GitHub Actions workflow) | R-devel    |
+| Ubuntu 22.04.4 LTS                        | Remote (GitHub Actions workflow) | R-release  |
+| Ubuntu 22.04.4 LTS                        | Remote (GitHub Actions workflow) | R-oldrel-1 |
