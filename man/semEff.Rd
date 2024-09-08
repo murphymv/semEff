@@ -43,8 +43,8 @@ intervals on effects.}
 \item{ci.type}{The type of confidence interval to return (defaults to \code{"bca"}
 – see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
 
-\item{digits}{The number of significant digits to return for numeric values
-(for summary tables).}
+\item{digits}{The number of decimal places to return for numeric values (for
+summary tables).}
 
 \item{bci.arg}{A named list of any additional arguments to \code{\link[=boot.ci]{boot.ci()}},
 excepting argument \code{index}.}

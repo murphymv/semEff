@@ -484,7 +484,7 @@ bootEff <- function(mod, R, seed = NULL,
 #'   intervals.
 #' @param type The type of confidence interval to return (defaults to `"bca"` –
 #'   see Details). See [boot.ci()] for further options.
-#' @param digits The number of significant digits to return for numeric values.
+#' @param digits The number of decimal places to return for numeric values.
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
 #'   excepting argument `index`.
 #' @param ... Arguments to [bootEff()].

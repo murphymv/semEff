@@ -7,6 +7,11 @@
 \alias{getTotEff}
 \alias{getMedEff}
 \alias{getAllInd}
+\alias{getEffTable}
+\alias{getDirEffTable}
+\alias{getIndEffTable}
+\alias{getTotEffTable}
+\alias{getMedEffTable}
 \title{Get SEM Effects}
 \usage{
 getEff(eff, responses = NULL, type = c("orig", "boot"))
@@ -20,6 +25,16 @@ getTotEff(...)
 getMedEff(...)
 
 getAllInd(eff, ...)
+
+getEffTable(eff, ...)
+
+getDirEffTable(...)
+
+getIndEffTable(...)
+
+getTotEffTable(...)
+
+getMedEffTable(...)
 }
 \arguments{
 \item{eff}{An object of class \code{"semEff"}.}
@@ -28,15 +43,17 @@ getAllInd(eff, ...)
 response variables for which to return effects. Can also be a numeric
 vector of indices of \code{eff}. If \code{NULL} (default), all effects are returned.}
 
-\item{type}{The type of effects to return. Can be \code{"orig"} (default) or
-\code{"boot"} (for bootstrapped).}
+\item{type}{The type of effects to return. Can be \code{"orig"} (original
+estimates - default) or \code{"boot"} (for bootstrapped).}
 
 \item{...}{Arguments (above) to be passed to \code{getEff()} from the other
-extractor functions (\code{type = "boot"} is not available for \code{getAllInd()}).}
+extractor functions. \code{type = "boot"} is not available for \code{getAllInd()} or
+\code{getEffTable()} (and derivatives).}
 }
 \value{
 A list containing the original or bootstrapped effects for each
-response variable, as numeric vectors or matrices (respectively).
+response variable as numeric vectors or matrices (respectively), or a table
+of (unformatted) effects and confidence intervals (for \code{getEffTable()}).
 }
 \description{
 Extract SEM effects from an object of class \code{"semEff"}.
@@ -47,16 +64,26 @@ These are simple extractor functions for effects calculated using
 }
 \section{Functions}{
 \itemize{
-\item \code{getEff()}: Extract all effects.
+\item \code{getEff()}: Get effects.
 
-\item \code{getDirEff()}: Extract direct effects.
+\item \code{getDirEff()}: Get direct effects.
 
-\item \code{getIndEff()}: Extract indirect effects.
+\item \code{getIndEff()}: Get indirect effects.
 
-\item \code{getTotEff()}: Extract total effects.
+\item \code{getTotEff()}: Get total effects.
 
-\item \code{getMedEff()}: Extract mediator effects.
+\item \code{getMedEff()}: Get mediator effects.
 
-\item \code{getAllInd()}: Extract all indirect effects.
+\item \code{getAllInd()}: Get all indirect effects.
+
+\item \code{getEffTable()}: Get effects table.
+
+\item \code{getDirEffTable()}: Get direct effects table.
+
+\item \code{getIndEffTable()}: Get indirect effects table.
+
+\item \code{getTotEffTable()}: Get total effects table.
+
+\item \code{getMedEffTable()}: Get mediator effects table.
 
 }}

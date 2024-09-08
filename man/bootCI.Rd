@@ -17,7 +17,7 @@ intervals.}
 \item{type}{The type of confidence interval to return (defaults to \code{"bca"} –
 see Details). See \code{\link[=boot.ci]{boot.ci()}} for further options.}
 
-\item{digits}{The number of significant digits to return for numeric values.}
+\item{digits}{The number of decimal places to return for numeric values.}
 
 \item{bci.arg}{A named list of any additional arguments to \code{\link[=boot.ci]{boot.ci()}},
 excepting argument \code{index}.}
