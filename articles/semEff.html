@@ -4,91 +4,64 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>semEff • semEff</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/darkly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="semEff">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Fira_Code-0.4.9/font.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="semEff">
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">semEff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../articles/semEff.html">Get started</a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
+    <a class="navbar-brand me-2" href="../index.html">semEff</a>
 
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/predicting-effects.html">Predicting Effects</a>
-    </li>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.2</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="active nav-item"><a class="nav-link" href="../articles/semEff.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/predicting-effects.html">Predicting Effects</a></li>
   </ul>
 </li>
-<li>
-  <a href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/murphymv/semEff/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/murphymv/semEff/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://x.com/murphy_mv" aria-label="X"><span class="fa fa-twitter"></span></a></li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+    <a href="https://www.buymeacoffee.com/murphymv" target="_blank" class="external-link"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
 
 
-      </header><link href="semEff_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<link href="semEff_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
 <script src="semEff_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="semEff_files/viz-1.8.2/viz.js"></script><link href="semEff_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="semEff_files/grViz-binding-1.0.11/grViz.js"></script><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>semEff</h1>
+  <main id="main" class="col-md-9"><div class="page-header">
+
+      <h1>semEff</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/murphymv/semEff/blob/main/vignettes/semEff.Rmd" class="external-link"><code>vignettes/semEff.Rmd</code></a></small>
-      <div class="hidden name"><code>semEff.Rmd</code></div>
-
+      <small class="dont-index">Source: <a href="https://github.com/murphymv/semEff/blob/dev/vignettes/semEff.Rmd" class="external-link"><code>vignettes/semEff.Rmd</code></a></small>
+      <div class="d-none name"><code>semEff.Rmd</code></div>
     </div>
 
     
@@ -214,7 +187,7 @@ standardised direct effects:</p>
 <span>  <span class="va">keeley.sem.boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootEff.html">bootEff</a></span><span class="op">(</span><span class="va">keeley.sem</span>, R <span class="op">=</span> <span class="fl">100</span>, seed <span class="op">=</span> <span class="fl">13</span>, parallel <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   4.290   0.069   4.360</span></span></code></pre></div>
+<span><span class="co">#&gt;   4.331   0.033   4.364</span></span></code></pre></div>
 <p>Note that here we use only 100 reps to save time, where typically we
 should use a lot more for greater accuracy of confidence intervals
 (e.g. 1,000–10,000+). Using the bootstrapped estimates we can now
@@ -229,15 +202,16 @@ calculate direct, indirect, and total effects:</p>
 <span><span class="co">#&gt; Variables:</span></span>
 <span><span class="co">#&gt;             Category   Predictor Mediator Response   Dir. Eff. Ind. Eff.  </span></span>
 <span><span class="co">#&gt;             --------   --------- -------- --------   --------- ---------  </span></span>
-<span><span class="co">#&gt;  distance | Exog.    |     Y        N        N     |         -         - |</span></span>
-<span><span class="co">#&gt;  age      | Endog.   |     Y        Y        Y     |         1         0 |</span></span>
-<span><span class="co">#&gt;  hetero   | Endog.   |     Y        Y        Y     |         1         0 |</span></span>
-<span><span class="co">#&gt;  abiotic  | Endog.   |     Y        Y        Y     |         1         0 |</span></span>
-<span><span class="co">#&gt;  firesev  | Endog.   |     Y        Y        Y     |         1         1 |</span></span>
-<span><span class="co">#&gt;  cover    | Endog.   |     Y        Y        Y     |         1         2 |</span></span>
-<span><span class="co">#&gt;  rich     | Endog.   |     N        N        Y     |         4         5 |</span></span>
+<span><span class="co">#&gt;  distance | Exog.    |     x        -        -     |         -         - |</span></span>
+<span><span class="co">#&gt;  age      | Endog.   |     x        x        x     |         1         0 |</span></span>
+<span><span class="co">#&gt;  hetero   | Endog.   |     x        x        x     |         1         0 |</span></span>
+<span><span class="co">#&gt;  abiotic  | Endog.   |     x        x        x     |         1         0 |</span></span>
+<span><span class="co">#&gt;  firesev  | Endog.   |     x        x        x     |         1         1 |</span></span>
+<span><span class="co">#&gt;  cover    | Endog.   |     x        x        x     |         1         2 |</span></span>
+<span><span class="co">#&gt;  rich     | Endog.   |     -        -        x     |         4         5 |</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Use summary() for effects and confidence intervals for endogenous variables.</span></span></code></pre></div>
+<span><span class="co">#&gt; Use summary() for effects and confidence intervals for endogenous variables.</span></span>
+<span><span class="co">#&gt; See ?getEff() for extracting (unformatted) effects.</span></span></code></pre></div>
 <p>Let’s examine effects for the final response variable, plant species
 richness, which has four direct and five indirect paths leading to
 it:</p>
@@ -246,30 +220,30 @@ it:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SEM direct, summed indirect, total, and mediator effects:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; rich (6/6):</span></span>
-<span><span class="co">#&gt;                       Effect     Bias   Std. Err.   Lower CI Upper CI    </span></span>
-<span><span class="co">#&gt;                       ------   ------   ---------   -------- --------    </span></span>
-<span><span class="co">#&gt;  DIRECT    distance |  0.233 |  0.016 |     0.065 |    0.089    0.351 | *</span></span>
-<span><span class="co">#&gt;            hetero   |  0.301 | -0.009 |     0.072 |    0.168    0.447 | *</span></span>
-<span><span class="co">#&gt;            abiotic  |  0.219 | -0.014 |     0.078 |    0.080    0.401 | *</span></span>
-<span><span class="co">#&gt;            cover    |  0.267 | -0.015 |     0.082 |    0.085    0.446 | *</span></span>
-<span><span class="co">#&gt;                                                                          </span></span>
-<span><span class="co">#&gt;  INDIRECT  distance |  0.220 | -0.012 |     0.047 |    0.139    0.349 | *</span></span>
-<span><span class="co">#&gt;            age      | -0.053 |  0.002 |     0.025 |   -0.145   -0.012 | *</span></span>
-<span><span class="co">#&gt;            firesev  | -0.117 |  0.007 |     0.045 |   -0.224   -0.029 | *</span></span>
-<span><span class="co">#&gt;                                                                          </span></span>
-<span><span class="co">#&gt;  TOTAL     distance |  0.453 |  0.004 |     0.045 |    0.340    0.524 | *</span></span>
-<span><span class="co">#&gt;            age      | -0.053 |  0.002 |     0.025 |   -0.145   -0.012 | *</span></span>
-<span><span class="co">#&gt;            hetero   |  0.301 | -0.009 |     0.072 |    0.168    0.447 | *</span></span>
-<span><span class="co">#&gt;            abiotic  |  0.219 | -0.014 |     0.078 |    0.080    0.401 | *</span></span>
-<span><span class="co">#&gt;            firesev  | -0.117 |  0.007 |     0.045 |   -0.224   -0.029 | *</span></span>
-<span><span class="co">#&gt;            cover    |  0.267 | -0.015 |     0.082 |    0.085    0.446 | *</span></span>
-<span><span class="co">#&gt;                                                                          </span></span>
-<span><span class="co">#&gt;  MEDIATORS age      |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span>
-<span><span class="co">#&gt;            hetero   |  0.104 | -0.003 |     0.031 |    0.046    0.186 | *</span></span>
-<span><span class="co">#&gt;            abiotic  |  0.101 | -0.008 |     0.037 |    0.032    0.184 | *</span></span>
-<span><span class="co">#&gt;            firesev  | -0.038 |  0.001 |     0.017 |   -0.083   -0.008 | *</span></span>
-<span><span class="co">#&gt;            cover    | -0.155 |  0.008 |     0.061 |   -0.302   -0.037 | *</span></span></code></pre></div>
+<span><span class="co">#&gt; Response 'rich' (6/6):</span></span>
+<span><span class="co">#&gt;                        Effect     Bias   Std. Err.   Lower CI Upper CI    </span></span>
+<span><span class="co">#&gt;                        ------   ------   ---------   -------- --------    </span></span>
+<span><span class="co">#&gt;  DIRECT:    distance |  0.233 |  0.016 |     0.065 |    0.089    0.351 | *</span></span>
+<span><span class="co">#&gt;             hetero   |  0.301 | -0.009 |     0.072 |    0.168    0.447 | *</span></span>
+<span><span class="co">#&gt;             abiotic  |  0.219 | -0.014 |     0.078 |    0.080    0.401 | *</span></span>
+<span><span class="co">#&gt;             cover    |  0.267 | -0.015 |     0.082 |    0.085    0.446 | *</span></span>
+<span><span class="co">#&gt;                      |        |        |           |                   |  </span></span>
+<span><span class="co">#&gt;  INDIRECT:  distance |  0.220 | -0.012 |     0.047 |    0.139    0.349 | *</span></span>
+<span><span class="co">#&gt;             age      | -0.053 |  0.002 |     0.025 |   -0.145   -0.012 | *</span></span>
+<span><span class="co">#&gt;             firesev  | -0.117 |  0.007 |     0.045 |   -0.224   -0.029 | *</span></span>
+<span><span class="co">#&gt;                      |        |        |           |                   |  </span></span>
+<span><span class="co">#&gt;  TOTAL:     distance |  0.453 |  0.004 |     0.045 |    0.340    0.524 | *</span></span>
+<span><span class="co">#&gt;             age      | -0.053 |  0.002 |     0.025 |   -0.145   -0.012 | *</span></span>
+<span><span class="co">#&gt;             hetero   |  0.301 | -0.009 |     0.072 |    0.168    0.447 | *</span></span>
+<span><span class="co">#&gt;             abiotic  |  0.219 | -0.014 |     0.078 |    0.080    0.401 | *</span></span>
+<span><span class="co">#&gt;             firesev  | -0.117 |  0.007 |     0.045 |   -0.224   -0.029 | *</span></span>
+<span><span class="co">#&gt;             cover    |  0.267 | -0.015 |     0.082 |    0.085    0.446 | *</span></span>
+<span><span class="co">#&gt;                      |        |        |           |                   |  </span></span>
+<span><span class="co">#&gt;  MEDIATORS: age      |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span>
+<span><span class="co">#&gt;             hetero   |  0.104 | -0.003 |     0.031 |    0.046    0.186 | *</span></span>
+<span><span class="co">#&gt;             abiotic  |  0.101 | -0.008 |     0.037 |    0.032    0.184 | *</span></span>
+<span><span class="co">#&gt;             firesev  | -0.038 |  0.001 |     0.017 |   -0.083   -0.008 | *</span></span>
+<span><span class="co">#&gt;             cover    | -0.155 |  0.008 |     0.061 |   -0.302   -0.037 | *</span></span></code></pre></div>
 <p>We can see that the standardised total effect of distance from coast
 on plant species richness is moderately high at 0.453 (CIs: 0.373,
 0.526), and is split almost equally between direct (0.233) and indirect
@@ -290,20 +264,20 @@ exogenous variable <em>distance</em>, let’s recalculate:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SEM direct, summed indirect, total, and mediator effects:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; rich (6/6):</span></span>
-<span><span class="co">#&gt;                       Effect     Bias   Std. Err.   Lower CI Upper CI    </span></span>
-<span><span class="co">#&gt;                       ------   ------   ---------   -------- --------    </span></span>
-<span><span class="co">#&gt;  DIRECT    distance |  0.233 |  0.016 |     0.065 |    0.089    0.351 | *</span></span>
-<span><span class="co">#&gt;                                                                          </span></span>
-<span><span class="co">#&gt;  INDIRECT  distance |  0.220 | -0.012 |     0.047 |    0.139    0.349 | *</span></span>
-<span><span class="co">#&gt;                                                                          </span></span>
-<span><span class="co">#&gt;  TOTAL     distance |  0.453 |  0.004 |     0.045 |    0.340    0.524 | *</span></span>
-<span><span class="co">#&gt;                                                                          </span></span>
-<span><span class="co">#&gt;  MEDIATORS age      |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span>
-<span><span class="co">#&gt;            hetero   |  0.104 | -0.003 |     0.031 |    0.046    0.186 | *</span></span>
-<span><span class="co">#&gt;            abiotic  |  0.101 | -0.008 |     0.037 |    0.032    0.184 | *</span></span>
-<span><span class="co">#&gt;            firesev  |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span>
-<span><span class="co">#&gt;            cover    |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span></code></pre></div>
+<span><span class="co">#&gt; Response 'rich' (6/6):</span></span>
+<span><span class="co">#&gt;                        Effect     Bias   Std. Err.   Lower CI Upper CI    </span></span>
+<span><span class="co">#&gt;                        ------   ------   ---------   -------- --------    </span></span>
+<span><span class="co">#&gt;  DIRECT:    distance |  0.233 |  0.016 |     0.065 |    0.089    0.351 | *</span></span>
+<span><span class="co">#&gt;                      |        |        |           |                   |  </span></span>
+<span><span class="co">#&gt;  INDIRECT:  distance |  0.220 | -0.012 |     0.047 |    0.139    0.349 | *</span></span>
+<span><span class="co">#&gt;                      |        |        |           |                   |  </span></span>
+<span><span class="co">#&gt;  TOTAL:     distance |  0.453 |  0.004 |     0.045 |    0.340    0.524 | *</span></span>
+<span><span class="co">#&gt;                      |        |        |           |                   |  </span></span>
+<span><span class="co">#&gt;  MEDIATORS: age      |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span>
+<span><span class="co">#&gt;             hetero   |  0.104 | -0.003 |     0.031 |    0.046    0.186 | *</span></span>
+<span><span class="co">#&gt;             abiotic  |  0.101 | -0.008 |     0.037 |    0.032    0.184 | *</span></span>
+<span><span class="co">#&gt;             firesev  |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span>
+<span><span class="co">#&gt;             cover    |  0.015 | -0.001 |     0.009 |    0.004    0.056 | *</span></span></code></pre></div>
 <p>Now we can see that <em>hetero</em> and <em>abiotic</em> are the
 important mediators for distance, while the relative influence of
 <em>cover</em> is much lower – weakened due to being part of a single
@@ -355,39 +329,31 @@ standardised coefficients, or for other reasons.</p>
 Grace, J. B., &amp; Keeley, J. E. (2006). A structural equation model
 analysis of postfire plant diversity in <span>California</span>
 shrublands. <em>Ecological Applications: A Publication of the Ecological
-Society of America</em>, <em>16</em>(2), 503–514. <a href="https://doi.org/d8gvwm" class="external-link">https://doi.org/d8gvwm</a>
+Society of America</em>, <em>16</em>(2), 503–514. <a href="https://doi.org/10.1890/1051-0761(2006)016%5B0503:ASEMAO%5D2.0.CO;2" class="external-link">https://doi.org/10.1890/1051-0761(2006)016%5B0503:ASEMAO%5D2.0.CO;2</a>
 </div>
 <div id="ref-lefcheck2016" class="csl-entry">
 Lefcheck, J. S. (2016). <span class="nocase">piecewiseSEM</span>:
 Piecewise structural equation modelling in <span>R</span> for ecology,
 evolution, and systematics. <em>Methods in Ecology and Evolution</em>,
-<em>7</em>(5), 573–579. <a href="https://doi.org/f8s8rb" class="external-link">https://doi.org/f8s8rb</a>
+<em>7</em>(5), 573–579. <a href="https://doi.org/10.1111/2041-210X.12512" class="external-link">https://doi.org/10.1111/2041-210X.12512</a>
 </div>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-      </div>
-
+  </main>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Mark V. Murphy.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Mark V. Murphy.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 
