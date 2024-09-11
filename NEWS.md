@@ -1,4 +1,4 @@
-## semEff 0.7.0
+## semEff 0.7.1
 
 ### New features:
 

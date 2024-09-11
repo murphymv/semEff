@@ -40,7 +40,9 @@ Found the following (possibly) invalid URLs:
     Status: 301
     Message: Moved Permanently
 
-Fix: The buymeacoffee.com link has been fixed. The DOI links are https://shortdoi.org/ shortcuts to the original DOIs and are all valid (checked), useful, and have been accepted in previous submissions. Is it possible to add these to a whitelist?
+FIX
+
+The buymeacoffee.com link has been fixed. The DOI links are https://shortdoi.org/ shortcuts to the original DOIs and are all valid (checked), useful, and have been accepted in previous submissions. Is it possible to add these to a whitelist?
 
 NOTE
 
@@ -52,7 +54,9 @@ anchors:
   predEff.Rd: predict.merMod, boot.ci
   semEff.Rd: boot.ci
 
-Fix: Package anchors have been added where appropriate.
+FIX
+
+Package anchors have been added where appropriate.
 
 ### R CMD check results
 
