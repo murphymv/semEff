@@ -13,15 +13,19 @@ getFamily(mod)
 A model \code{"family"} object, or a list or nested list of such objects.
 }
 \description{
-Extract the error distribution family (and link function) for a
-fitted model as a \code{"family"} object.
+Extract the error distribution family (and link function) from a
+fitted model.
 }
 \details{
-\code{getFamily()} returns a family object for a range of different model
-classes, similar to \code{\link[=family]{family()}}. However, it can be also be used for some
-without an existing family method. Mostly for internal use.
+\code{getFamily()} returns an appropriate family object for a range of
+different model classes, similarly to \code{\link[=family]{family()}}. However, it can be also
+be used for some classes without an existing family method. Mostly for
+internal use.
 }
 \examples{
 # SEM model error distributions
 getFamily(shipley.sem)
+}
+\seealso{
+\code{\link[=family]{family()}}
 }

@@ -2,7 +2,7 @@
 
 ### Release
 
-This is a resubmission (0.7.1).
+This is a resubmission (0.7.2).
 
 This version corrects the following issues:
 
@@ -36,27 +36,12 @@ Found the following (possibly) invalid URLs:
   URL: https://www.buymeacoffee.com/murphymv (moved to https://buymeacoffee.com/murphymv)
     From: DESCRIPTION
           man/semEff-package.Rd
-          README.md
     Status: 301
     Message: Moved Permanently
 
 FIX
 
-The buymeacoffee.com link has been fixed. The DOI links are https://shortdoi.org/ shortcuts to the original DOIs and are all valid (checked) and have been accepted in previous submissions. Is it possible to add these to a whitelist?
-
-NOTE
-
-Found the following Rd file(s) with Rd \link{} targets missing package
-anchors:
-  R2.Rd: predict.merMod, hatvalues.merMod
-  bootCI.Rd: boot.ci
-  bootEff.Rd: bootMer, boot
-  predEff.Rd: predict.merMod, boot.ci
-  semEff.Rd: boot.ci
-
-FIX
-
-Package anchors have been added where appropriate.
+All URLs have been corrected.
 
 ### R CMD check results
 

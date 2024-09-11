@@ -1,7 +1,7 @@
 Package: semEff
 Type: Package
 Title: Automatic Calculation of Effects for Piecewise Structural Equation Models
-Version: 0.7.1
+Version: 0.7.2
 Authors@R: person(given = c("Mark", "V."), family = "Murphy", role = c("aut", 
     "cre"), email = "murphymv@gmail.com")
 Description: Automatically calculate direct, indirect, and total effects for 
@@ -9,7 +9,7 @@ Description: Automatically calculate direct, indirect, and total effects for
     representing structured equations (Lefcheck, 2016 <doi:10/f8s8rb>). 
     Confidence intervals are provided via bootstrapping.
 URL: https://murphymv.github.io/semEff/, https://github.com/murphymv/semEff, 
-    https://www.buymeacoffee.com/murphymv
+    https://buymeacoffee.com/murphymv
 BugReports: https://github.com/murphymv/semEff/issues
 Depends: R (>= 3.6.0)
 Imports: 
