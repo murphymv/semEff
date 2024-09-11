@@ -45,7 +45,19 @@ jobs:
         with:
           # extra-packages: any::rcmdcheck
           # extra-packages: any::rcmdcheck, piecewiseSEM@2.3.0
-          packages: boot, gsl, lme4, parallel, stats, utils, ggplot2, knitr, markdown, piecewiseSEM@2.3.0, rmarkdown
+          # extra-packages: any::rcmdcheck, piecewiseSEM=?ignore-before-r=4.4.0
+          packages: |
+            boot
+            gsl
+            lme4
+            parallel
+            stats
+            utils
+            ggplot2
+            knitr
+            markdown
+            piecewiseSEM=?ignore-before-r=4.4.0
+            rmarkdown
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
