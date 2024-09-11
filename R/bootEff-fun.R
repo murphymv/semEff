@@ -12,7 +12,7 @@
 #'   five-digit integer is used (see Details).
 #' @param type The type of bootstrapping to perform. Can be `"nonparametric"`
 #'   (default), `"parametric"`, or `"semiparametric"` (the last two currently
-#'   only for mixed models, via [bootMer()]).
+#'   only for mixed models, via [lme4::bootMer()]).
 #' @param ran.eff For nonparametric bootstrapping of mixed models, the name of
 #'   the (highest-level) random effect to resample (see Details).
 #' @param cor.err Optional, names of SEM correlated errors to be bootstrapped
@@ -28,7 +28,7 @@
 #'   (default), all available cores are used.
 #' @param cl Optional cluster to use if `parallel = "snow"`. If `NULL`
 #'   (default), a local cluster is created using the specified number of cores.
-#' @param bM.arg A named list of any additional arguments to [bootMer()].
+#' @param bM.arg A named list of any additional arguments to [lme4::bootMer()].
 #' @param ... Arguments to [stdEff()].
 #' @details `bootEff()` uses [boot::boot()] (primarily) to bootstrap
 #'   standardised effects from a fitted model or list of models (calculated
@@ -76,12 +76,12 @@
 #'   nonparametric resampling will not be appropriate. In these cases,
 #'   parametric or semiparametric bootstrapping can be performed instead via
 #'   [lme4::bootMer()] (with additional arguments passed to that function as
-#'   necessary). NOTE: As [bootMer()] takes only a fitted model as its first
-#'   argument (i.e. no lists), any model averaging is calculated 'post-hoc'
-#'   using the estimates in boot objects for each candidate model, rather than
-#'   during the bootstrapping process itself (i.e. the default procedure via
-#'   [boot()]). Results are then returned in a new boot object for each response
-#'   variable or correlated error estimate.
+#'   necessary). NOTE: As [lme4::bootMer()] takes only a fitted model as its
+#'   first argument (i.e. no lists), any model averaging is calculated
+#'   'post-hoc' using the estimates in boot objects for each candidate model,
+#'   rather than during the bootstrapping process itself (i.e. the default
+#'   procedure via [boot::boot()]). Results are then returned in a new boot
+#'   object for each response variable or correlated error estimate.
 #'
 #'   If supplied a list containing both mixed and non-mixed models, [bootEff()]
 #'   with nonparametric bootstrapping will still work and will treat all models
@@ -92,7 +92,7 @@
 #'   random effect variance estimates are at or near zero). The data will be
 #'   resampled on the supplied random effect for all models. If nonparametric
 #'   bootstrapping is not used in this scenario however, an error will occur, as
-#'   [bootMer()] will only accept mixed models.
+#'   [lme4::bootMer()] will only accept mixed models.
 #'
 #'   Parallel processing is used by default via the [parallel] package and
 #'   option `parallel = "snow"` (and is generally recommended), but users can
@@ -205,7 +205,7 @@ bootEff <- function(mod, R, seed = NULL,
   })
   if (mer2) {
 
-    # Modified bootMer function
+    # Modified bootMer() function
     bootMer2 <- function(...) {
 
       # Set up function call with specified arguments
@@ -483,9 +483,9 @@ bootEff <- function(mod, R, seed = NULL,
 #' @param conf A numeric value specifying the confidence level for the
 #'   intervals.
 #' @param type The type of confidence interval to return (defaults to `"bca"` –
-#'   see Details). See [boot.ci()] for further options.
+#'   see Details). See [boot::boot.ci()] for further options.
 #' @param digits The number of decimal places to return for numeric values.
-#' @param bci.arg A named list of any additional arguments to [boot.ci()],
+#' @param bci.arg A named list of any additional arguments to [boot::boot.ci()],
 #'   excepting argument `index`.
 #' @param ... Arguments to [bootEff()].
 #' @details `bootCI()` uses [boot::boot.ci()] to calculate confidence intervals

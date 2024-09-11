@@ -22,10 +22,10 @@
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on effects.
 #' @param ci.type The type of confidence interval to return (defaults to `"bca"`
-#'   – see Details). See [boot.ci()] for further specification details.
+#'   – see Details). See [boot::boot.ci()] for further specification details.
 #' @param digits The number of decimal places to return for numeric values (for
 #'   summary tables).
-#' @param bci.arg A named list of any additional arguments to [boot.ci()],
+#' @param bci.arg A named list of any additional arguments to [boot::boot.ci()],
 #'   excepting argument `index`.
 #' @param ... Arguments to [bootEff()].
 #' @details The eponymous function of this package calculates all direct,
@@ -605,14 +605,6 @@ semEff <- function(sem, predictors = NULL, mediators = NULL,
 #'   and/or response. It also gives the number of direct vs. indirect paths
 #'   leading to each variable, and the number of correlated errors (if
 #'   applicable).
-#'
-#'   Printing of summary tables uses a custom version of `print.data.frame()`,
-#'   facilitating correct rendering of unicode characters by bypassing
-#'   [format.data.frame()] ([bug
-#'   details](https://stat.ethz.ch/pipermail/r-devel/2015-May/071252.html),
-#'   workaround adapted from
-#'   [here](https://stat.ethz.ch/pipermail/r-devel/2015-May/071259.html)). Row
-#'   names (numbers) are also suppressed by default.
 #' @return A summary table for the SEM variables (data frame).
 # S3 method for class 'semEff'
 #' @export
@@ -819,8 +811,9 @@ getMedEffTable <- function(...) {
 #'   will have been calculated using [semEff()] or [bootEff()].
 #' @param re.form For mixed models of class `"merMod"`, the formula for random
 #'   effects to condition on when predicting effects. Defaults to `NA`, meaning
-#'   random effects are averaged over. See [predict.merMod()] for further
-#'   specification details.
+#'   random effects are averaged over. See
+#'   [`lme4:::predict.merMod()`](https://rdrr.io/cran/lme4/man/predict.merMod.html)
+#'   for further specification details.
 #' @param type The type of prediction to return (for GLMs). Can be either
 #'   `"link"` (default) or `"response"`.
 #' @param interaction An optional name of an interactive effect, for which to
@@ -831,10 +824,10 @@ getMedEffTable <- function(...) {
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on predictions (and any interactive effects).
 #' @param ci.type The type of confidence interval to return (defaults to `"bca"`
-#'   – see Details). See [boot.ci()] for further specification details.
+#'   – see Details). See [boot::boot.ci()] for further specification details.
 #' @param digits The number of significant digits to return for interactive
 #'   effects.
-#' @param bci.arg A named list of any additional arguments to [boot.ci()],
+#' @param bci.arg A named list of any additional arguments to [boot::boot.ci()],
 #'   excepting argument `index`.
 #' @param parallel The type of parallel processing to use for calculating
 #'   confidence intervals on predictions. Can be one of `"snow"`, `"multicore"`,

@@ -32,7 +32,9 @@ types).}
 \item{re.form}{For mixed models of class \code{"merMod"}, the formula for random
 effects to condition on when generating fitted values used in the
 calculation of R-squared. Defaults to \code{NULL}, meaning all random effects
-are included. See \code{\link[=predict.merMod]{predict.merMod()}} for further specification details.}
+are included. See
+\href{https://rdrr.io/cran/lme4/man/predict.merMod.html}{\code{lme4:::predict.merMod()}}
+for further specification details.}
 
 \item{type}{The type of correlation coefficient to use. Can be \code{"pearson"}
 (default) or \code{"spearman"}.}
@@ -109,7 +111,7 @@ calculated by substituting the 'PRESS' statistic, i.e. the sum of squares
 of the predicted residuals (Allen, 1974), for the residual sum of squares
 in the classic R-squared formula. It is not calculated here for GLMMs, as
 the interpretation of the hat matrix is not reliable (see
-\code{\link[=hatvalues.merMod]{hatvalues.merMod()}}).
+\href{https://rdrr.io/cran/lme4/man/hatvalues.merMod.html}{\code{lme4:::hatvalues.merMod()}}).
 
 For models fitted with one or more offsets, these will be removed by
 default from the response variable and fitted values prior to calculations.
@@ -125,9 +127,9 @@ equivalent to the 'conditional' R-squared of Nakagawa et al. (2017) (though
 see that reference for a more advanced approach to R-squared for mixed
 models). To include only some or no random effects, simply set the
 appropriate formula using the argument \code{re.form}, which is passed directly
-to \code{\link[=predict.merMod]{predict.merMod()}}. If \code{re.form = NA}, R-squared is calculated for the
-fixed effects only, i.e. the 'marginal' R-squared of Nakagawa et al.
-(2017).
+to \code{lme4:::predict.merMod()}. If \code{re.form = NA}, R-squared is calculated
+for the fixed effects only, i.e. the 'marginal' R-squared of Nakagawa et
+al. (2017).
 
 As R-squared is calculated here as a squared correlation, the \code{type} of
 correlation coefficient can also be specified. Setting this to \code{"spearman"}

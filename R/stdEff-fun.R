@@ -719,12 +719,12 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
 #' @details `VIF()` calculates generalised variance inflation factors (GVIF) as
 #'   described in Fox & Monette (1992), and also implemented in
 #'   [`car::vif()`](https://rdrr.io/cran/car/man/vif.html). However, whereas
-#'   `vif()` returns both GVIF and GVIF^(1/(2*Df)) values, `VIF()` simply
+#'   `car::vif()` returns both GVIF and GVIF^(1/(2*Df)) values, `VIF()` simply
 #'   returns the squared result of the latter measure, which equals the standard
 #'   VIF for single-coefficient terms and is the equivalent measure for
 #'   multi-coefficient terms (e.g. categorical or polynomial). Also, while
-#'   `vif()` returns values per model term (i.e. predictor variable), `VIF()`
-#'   returns values per coefficient, meaning that the same value will be
+#'   `car::vif()` returns values per model term (i.e. predictor variable),
+#'   `VIF()` returns values per coefficient, meaning that the same value will be
 #'   returned per coefficient for multi-coefficient terms. Finally, `NA` is
 #'   returned for any terms which could not be estimated in the model (e.g.
 #'   aliased).
@@ -848,7 +848,9 @@ RVIF <- function(...) {
 #' @param re.form For mixed models of class `"merMod"`, the formula for random
 #'   effects to condition on when generating fitted values used in the
 #'   calculation of R-squared. Defaults to `NULL`, meaning all random effects
-#'   are included. See [predict.merMod()] for further specification details.
+#'   are included. See
+#'   [`lme4:::predict.merMod()`](https://rdrr.io/cran/lme4/man/predict.merMod.html)
+#'   for further specification details.
 #' @param type The type of correlation coefficient to use. Can be `"pearson"`
 #'   (default) or `"spearman"`.
 #' @param adj.type The type of adjusted R-squared estimator to use. Can be
@@ -912,7 +914,7 @@ RVIF <- function(...) {
 #'   of the predicted residuals (Allen, 1974), for the residual sum of squares
 #'   in the classic R-squared formula. It is not calculated here for GLMMs, as
 #'   the interpretation of the hat matrix is not reliable (see
-#'   [hatvalues.merMod()]).
+#'   [`lme4:::hatvalues.merMod()`](https://rdrr.io/cran/lme4/man/hatvalues.merMod.html)).
 #'
 #'   For models fitted with one or more offsets, these will be removed by
 #'   default from the response variable and fitted values prior to calculations.
@@ -928,9 +930,9 @@ RVIF <- function(...) {
 #'   see that reference for a more advanced approach to R-squared for mixed
 #'   models). To include only some or no random effects, simply set the
 #'   appropriate formula using the argument `re.form`, which is passed directly
-#'   to [predict.merMod()]. If `re.form = NA`, R-squared is calculated for the
-#'   fixed effects only, i.e. the 'marginal' R-squared of Nakagawa et al.
-#'   (2017).
+#'   to `lme4:::predict.merMod()`. If `re.form = NA`, R-squared is calculated
+#'   for the fixed effects only, i.e. the 'marginal' R-squared of Nakagawa et
+#'   al. (2017).
 #'
 #'   As R-squared is calculated here as a squared correlation, the `type` of
 #'   correlation coefficient can also be specified. Setting this to `"spearman"`

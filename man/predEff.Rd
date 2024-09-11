@@ -41,8 +41,9 @@ will have been calculated using \code{\link[=semEff]{semEff()}} or \code{\link[=
 
 \item{re.form}{For mixed models of class \code{"merMod"}, the formula for random
 effects to condition on when predicting effects. Defaults to \code{NA}, meaning
-random effects are averaged over. See \code{\link[=predict.merMod]{predict.merMod()}} for further
-specification details.}
+random effects are averaged over. See
+\href{https://rdrr.io/cran/lme4/man/predict.merMod.html}{\code{lme4:::predict.merMod()}}
+for further specification details.}
 
 \item{type}{The type of prediction to return (for GLMs). Can be either
 \code{"link"} (default) or \code{"response"}.}
@@ -58,12 +59,12 @@ calculations (if present).}
 intervals on predictions (and any interactive effects).}
 
 \item{ci.type}{The type of confidence interval to return (defaults to \code{"bca"}
-– see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
+– see Details). See \code{\link[boot:boot.ci]{boot::boot.ci()}} for further specification details.}
 
 \item{digits}{The number of significant digits to return for interactive
 effects.}
 
-\item{bci.arg}{A named list of any additional arguments to \code{\link[=boot.ci]{boot.ci()}},
+\item{bci.arg}{A named list of any additional arguments to \code{\link[boot:boot.ci]{boot::boot.ci()}},
 excepting argument \code{index}.}
 
 \item{parallel}{The type of parallel processing to use for calculating

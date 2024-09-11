@@ -18,7 +18,7 @@ Total](https://cranlogs.r-pkg.org/badges/grand-total/semEff)
 ![Downloads: Last
 Month](https://cranlogs.r-pkg.org/badges/last-month/semEff)
 
-<a href="https://www.buymeacoffee.com/murphymv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"/></a>
+<a href="https://buymeacoffee.com/murphymv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"/></a>
 
 <!-- badges: end -->
 
