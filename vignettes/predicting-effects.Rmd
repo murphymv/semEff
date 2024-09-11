@@ -1,13 +1,13 @@
 ---
 title: "Predicting Effects"
-author: "Mark V. Murphy"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Predicting Effects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
+csl: apa.csl
+link-citations: true
 ---
 
 ```{r setup, include = FALSE}
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-`semEff` can be used to predict values for different types of effects in an SEM. For example, we may be interested in the predictions of an indirect effect of a variable vs. its direct effect, or we may simply wish to predict the total (combined) effect. Here we'll use [simulated data](https://murphymv.github.io/semEff/reference/shipley.html) from @shipleyConfirmatoryPathAnalysis2009 on tree growth and survival for a single tree species to predict and plot a direct vs. indirect effect.
+`semEff` can be used to predict values for different types of effects in an SEM. For example, we may be interested in the predictions of an indirect effect of a variable vs. its direct effect, or we may simply wish to predict the total (combined) effect. Here we'll use [simulated data](https://murphymv.github.io/semEff/reference/shipley.html) from @shipley2009 on tree growth and survival for a single tree species to predict and plot a direct vs. indirect effect.
 
 ```{r message = FALSE}
 # install.packages(c("semEff", "ggplot2"))
@@ -31,7 +31,7 @@ Let's preview the data (n = 1900):
 knitr::kable(head(shipley))
 ```
 
-Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970---2006 (repeated measures). The hypothesised SEM from @shipleyConfirmatoryPathAnalysis2009 tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the `lme4` package:
+Tree measurements are taken for five individuals of the same species at 20 different sites every two years from 1970 to 2006 (repeated measures). The hypothesised SEM from @shipley2009 tests the indirect effect of site latitude on tree survival (0/1), via degree days to bud burst, date of first bud burst, and tree growth. This can be fit as a series of linear and generalised linear mixed models using the `lme4` package:
 
 ```{r eval = FALSE}
 shipley.sem <- list(

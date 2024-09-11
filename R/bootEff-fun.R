@@ -46,7 +46,7 @@
 #'   Where `weights` are specified, bootstrapped effects will be a weighted
 #'   average across the set of candidate models for each response variable,
 #'   calculated after each model is first refit to the resampled dataset
-#'   (specifying `weights = "equal"` will use a simple average instead - see
+#'   (specifying `weights = "equal"` will use a simple average instead – see
 #'   [avgEst()]). If no weights are specified and `mod` is a nested list of
 #'   models, the function will throw an error, as it will be expecting weights
 #'   for a presumed model averaging scenario. If instead the user wishes to
@@ -64,10 +64,10 @@
 #'   For nonparametric bootstrapping of mixed models, resampling should occur at
 #'   the group-level, as individual observations are not independent. The name
 #'   of the random effect to resample must be supplied to `ran.eff`. For nested
-#'   random effects, this should be the highest-level group (Davison & Hinkley
-#'   1997, Ren *et al.* 2010). This form of resampling will result in datasets
-#'   of different sizes if observations are unbalanced across groups; however
-#'   this should not generally be an issue, as the number of independent units
+#'   random effects, this should be the highest-level group (Davison & Hinkley,
+#'   1997; Ren et al., 2010). This form of resampling will result in datasets of
+#'   different sizes if observations are unbalanced across groups; however this
+#'   should not generally be an issue, as the number of independent units
 #'   (groups), and hence the 'degrees of freedom', remains
 #'   [unchanged](https://stats.stackexchange.com/questions/46965/bootstrapping-unbalanced-clustered-data-non-parametric-bootstrap).
 #'
@@ -114,21 +114,20 @@
 #'   (named) list/nested list of such objects.
 #' @references Burnham, K. P., & Anderson, D. R. (2002). *Model Selection and
 #'   Multimodel Inference: A Practical Information-Theoretic Approach* (2nd
-#'   ed.). New York: Springer-Verlag. Retrieved from
-#'   <https://www.springer.com/gb/book/9780387953649>
+#'   ed.). Springer-Verlag. <https://link.springer.com/book/10.1007/b97636>
 #'
 #'   Davison, A. C., & Hinkley, D. V. (1997). *Bootstrap Methods and their
 #'   Application*. Cambridge University Press.
 #'
 #'   Ren, S., Lai, H., Tong, W., Aminzadeh, M., Hou, X., & Lai, S. (2010).
 #'   Nonparametric bootstrapping for hierarchical data. *Journal of Applied
-#'   Statistics*, **37**(9), 1487–1498. \doi{10/dvfzcn}
+#'   Statistics*, *37*(9), 1487–1498. \doi{10/dvfzcn}
 #' @examples
-#' # Bootstrap Shipley SEM (test — 1 rep)
-#' # (set 'site' as group for resampling — highest-level random effect)
+#' # Bootstrap Shipley SEM (test – 1 rep)
+#' # (set 'site' as group for resampling – highest-level random effect)
 #' bootEff(shipley.sem, R = 1, ran.eff = "site", parallel = "no")
 #'
-#' # Check estimates (use saved boot object — 1000 reps)
+#' # Check estimates (use saved boot object – 1000 reps)
 #' lapply(shipley.sem.boot, "[[", 1)  # original
 #' lapply(shipley.sem.boot, function(i) head(i$t))  # bootstrapped
 #' @export
@@ -150,12 +149,20 @@ bootEff <- function(mod, R, seed = NULL,
     ce <- do.call(c, m[sapply(m, class) == "formula.cerror"])
   }
 
-  # Set model names if none present (response names)
-  if (isList(m) && is.null(names(m))) {
-    names(m) <- sapply(m, function(i) {
+  # Set model names if absent (use response names)
+  mn <- names(m)
+  mnz <- !nzchar(mn) | is.na(mn)
+  if (isList(m) && (is.null(mn) || any(mnz))) {
+    
+    # Response variable names
+    rn <- sapply(m, function(i) {
       if (isList(i)) i <- i[[1]]
       names(model.frame(i, data = getData(i)))[1]
     })
+    
+    # Replace NULL/zero-length/NA names
+    names(m) <- if (!is.null(mn)) ifelse(mnz, rn, mn) else rn
+
   }
 
   # Arguments to stdEff()
@@ -475,7 +482,7 @@ bootEff <- function(mod, R, seed = NULL,
 #'   nested list of such objects.
 #' @param conf A numeric value specifying the confidence level for the
 #'   intervals.
-#' @param type The type of confidence interval to return (defaults to `"bca"` —
+#' @param type The type of confidence interval to return (defaults to `"bca"` –
 #'   see Details). See [boot.ci()] for further options.
 #' @param digits The number of significant digits to return for numeric values.
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
@@ -486,12 +493,12 @@ bootEff <- function(mod, R, seed = NULL,
 #'   If a model or models is supplied, bootstrapping will first be performed via
 #'   [bootEff()].
 #'
-#'   Nonparametric bias-corrected and accelerated confidence intervals (BC*a*,
-#'   Efron 1987) are calculated by default, which should provide the most
+#'   Nonparametric bias-corrected and accelerated confidence intervals (BC*a*;
+#'   Efron, 1987) are calculated by default, which should provide the most
 #'   accurate coverage across a range of bootstrap sampling distributions (Puth
-#'   *et al.* 2015). They will, however, be
+#'   et al., 2015). They will, however, be
 #'   [inappropriate](https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot)
-#'   for parametric resampling — in which case the default will be set to the
+#'   for parametric resampling – in which case the default will be set to the
 #'   bootstrap percentile method instead (`"perc"`).
 #'
 #'   Effects and confidence intervals are returned in a summary table, along
@@ -502,35 +509,34 @@ bootEff <- function(mod, R, seed = NULL,
 #'
 #' @note All bootstrapped confidence intervals will tend to underestimate the
 #'   true nominal coverage to some extent when sample size is small (Chernick &
-#'   Labudde 2009), so the appropriate caution should be exercised in
+#'   Labudde, 2009), so the appropriate caution should be exercised in
 #'   interpretation in such cases. Comparison of different interval types may be
 #'   informative. For example, normal-theory based intervals may outperform
-#'   bootstrap percentile methods when n < 34 (Hesterberg 2015). Ultimately
+#'   bootstrap percentile methods when n < 34 (Hesterberg, 2015). Ultimately
 #'   however, the bootstrap is [not a solution to small sample
 #'   size](https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size).
-#'
 #' @return A summary table of the effects and bootstrapped confidence intervals
 #'   (data frame), or a list or nested list of same.
 #' @references Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
 #'   Bootstrap Confidence Intervals. *American Journal of Mathematical and
-#'   Management Sciences*, **29**(3–4), 437–456. \doi{10/c8zv}
+#'   Management Sciences*, *29*(3–4), 437–456. \doi{10/c8zv}
 #'
 #'   Efron, B. (1987). Better Bootstrap Confidence Intervals. *Journal of the
-#'   American Statistical Association*, **82**(397), 171–185. \doi{10/gfww2z}
+#'   American Statistical Association*, *82*(397), 171–185. \doi{10/gfww2z}
 #'
 #'   Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
 #'   Resampling in the Undergraduate Statistics Curriculum. *The American
-#'   Statistician*, **69**(4), 371–386. \doi{10/gd85v5}
+#'   Statistician*, *69*(4), 371–386. \doi{10/gd85v5}
 #'
 #'   Puth, M.-T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of
 #'   methods for calculating confidence intervals by bootstrapping. *Journal of
-#'   Animal Ecology*, **84**(4), 892–897. \doi{10/f8n9rq}
+#'   Animal Ecology*, *84*(4), 892–897. \doi{10/f8n9rq}
 #' @examples
 #' # CIs calculated from bootstrapped SEM
 #' (shipley.sem.ci <- bootCI(shipley.sem.boot))
 #'
 #' # From original SEM (models)
-#' # (not typically recommended — better to use saved boot objects)
+#' # (not typically recommended – better to use saved boot objects)
 #' # system.time(
 #' #   shipley.sem.ci <- bootCI(shipley.sem, R = 1000, seed = 13,
 #' #                            ran.eff = "site")

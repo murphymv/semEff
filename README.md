@@ -8,7 +8,7 @@
 [![Repo
 Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
 [![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg?label=Lifecycle)](https://lifecycle.r-lib.org/articles/stages.html)
-[![Licence](https://img.shields.io/badge/License-GPL3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Licence](https://img.shields.io/badge/License-GPL3-green.svg?label=Licence)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 ![GitHub language
 count](https://img.shields.io/github/languages/count/murphymv/semEff?label=Languages)
 [![R-CMD-check](https://github.com/murphymv/semEff/workflows/R-CMD-check/badge.svg)](https://github.com/murphymv/semEff/actions)
@@ -17,14 +17,14 @@ count](https://img.shields.io/github/languages/count/murphymv/semEff?label=Langu
 ![Downloads: Total](http://cranlogs.r-pkg.org/badges/grand-total/semEff)
 ![Downloads: Monthly](https://cranlogs.r-pkg.org/badges/semEff)
 
-[![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-yellow.svg)](https://paypal.me/murphymv1)
+<a href="https://www.buymeacoffee.com/murphymv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"/></a>
 
 <!-- badges: end -->
 
 `semEff` provides functionality to automatically calculate direct,
 indirect, and total effects for ‘piecewise’ structural equation models,
 comprising lists of fitted models representing structured equations
-(Shipley 2000, 2009; Lefcheck 2016). Confidence intervals are provided
+(Lefcheck, 2016; Shipley, 2000, 2009). Confidence intervals are provided
 via bootstrapping.
 
 Currently supported model classes are `"lm"`, `"glm"`, `"lmerMod"`,
@@ -55,7 +55,7 @@ single call to `semEff()`; however, since bootstrapping is employed to
 generate resamples for confidence intervals (via
 [`bootEff()`](https://murphymv.github.io/semEff/reference/bootEff.html)),
 it is usually preferable to save these estimates separately prior to
-calling `semEff()` — allowing more flexibility and saving time if/when
+calling `semEff()` – allowing more flexibility and saving time if/when
 recalling the function.
 
 ## Examples
@@ -76,12 +76,12 @@ demonstrations:
 
 Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
 modelling in R for ecology, evolution, and systematics. *Methods in
-Ecology and Evolution*, **7**(5), 573–579. <https://doi.org/f8s8rb>
+Ecology and Evolution*, *7*(5), 573–579. <https://doi.org/10/f8s8rb>
 
 Shipley, B. (2000). A New Inferential Test for Path Models Based on
 Directed Acyclic Graphs. *Structural Equation Modeling: A
-Multidisciplinary Journal*, **7**(2), 206–218. <https://doi.org/cqm32d>
+Multidisciplinary Journal*, *7*(2), 206–218. <https://doi.org/10/cqm32d>
 
 Shipley, B. (2009). Confirmatory path analysis in a generalized
-multilevel context. *Ecology*, **90**(2), 363–368.
-<https://doi.org/bqd43d>
+multilevel context. *Ecology*, *90*(2), 363–368.
+<https://doi.org/10/bqd43d>

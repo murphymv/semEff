@@ -70,12 +70,12 @@ advocated by Zheng & Agresti (2000), itself an intuitive measure of
 goodness of fit describing the predictive power of a model. As the measure
 does not depend on any specific error distribution or model estimating
 procedure, it is also generally comparable across many different types of
-model (Kvalseth 1985). In the case of the ordinary linear model, the
+model (Kvalseth, 1985). In the case of the ordinary linear model, the
 measure is exactly equal to the traditional R-squared based on sums of
 squares.
 
 If \code{adj = TRUE} (default), the 'adjusted' R-squared value is also returned,
-which provides an estimate of the population — as opposed to sample —
+which provides an estimate of the population – as opposed to sample –
 R-squared. This is achieved via an analytical formula which adjusts
 R-squared using the 'degrees of freedom' of the model (i.e. the ratio of
 observations to parameters), helping to counter multiple R-squared's
@@ -83,11 +83,12 @@ positive bias and guard against overfitting of the model to noise in the
 original sample. By default, this is calculated via the exact 'Olkin-Pratt'
 estimator, shown in recent simulations to be the optimal unbiased
 population R-squared estimator across a range of estimators and
-specification scenarios (Karch 2020), and thus a good general first choice,
-even for smaller sample sizes. Setting \code{adj.type = "ezekiel"} however will
-use the simpler and more common 'Ezekiel' formula, which can be more
-appropriate where minimising the mean squared error (MSE) of the estimate
-is more important than strict unbiasedness (Hittner 2019, Karch 2020).
+specification scenarios (Karch, 2020), and thus a good general first
+choice, even for smaller sample sizes. Setting \code{adj.type = "ezekiel"}
+however will use the simpler and more common 'Ezekiel' formula, which can
+be more appropriate where minimising the mean squared error (MSE) of the
+estimate is more important than strict unbiasedness (Hittner, 2019; Karch,
+2020).
 
 If \code{pred = TRUE} (default), a 'predicted' R-squared is also returned, which
 is calculated via the same formula as for R-squared but using
@@ -99,15 +100,15 @@ essentially a short cut to obtaining 'out-of-sample' predictions, normally
 arising via a 'leave-one-out' cross-validation procedure (they are not
 exactly equal for GLMs). The resulting R-squared is an estimate of the
 R-squared that would result were the model fit to new data, and will be
-lower than the original — and likely also the adjusted — R-squared,
+lower than the original – and likely also the adjusted – R-squared,
 highlighting the loss of explanatory power due to sample noise. Predicted
 R-squared \href{https://stats.stackexchange.com/questions/242770/difference-between-adjusted-r-squared-and-predicted-r-squared}{may be a more powerful and general indicator of overfitting than adjusted R-squared},
 as it provides a true out-of-sample test. This measure is a variant of an
 \href{https://www.r-bloggers.com/2014/05/can-we-do-better-than-r-squared/}{existing one},
 calculated by substituting the 'PRESS' statistic, i.e. the sum of squares
-of the predicted residuals (Allen 1974), for the residual sum of squares in
-the classic R-squared formula. It is not calculated here for GLMMs, as the
-interpretation of the hat matrix is not reliable (see
+of the predicted residuals (Allen, 1974), for the residual sum of squares
+in the classic R-squared formula. It is not calculated here for GLMMs, as
+the interpretation of the hat matrix is not reliable (see
 \code{\link[=hatvalues.merMod]{hatvalues.merMod()}}).
 
 For models fitted with one or more offsets, these will be removed by
@@ -120,12 +121,12 @@ variation due to the offset(s) they can set \code{offset = TRUE}.
 For mixed models, the function will, by default, calculate all R-squared
 measures using fitted values incorporating both the fixed and random
 effects, thus encompassing all variation captured by the model. This is
-equivalent to the 'conditional' R-squared of Nakagawa \emph{et al.} (2017)
-(though see that reference for a more advanced approach to R-squared for
-mixed models). To include only some or no random effects, simply set the
+equivalent to the 'conditional' R-squared of Nakagawa et al. (2017) (though
+see that reference for a more advanced approach to R-squared for mixed
+models). To include only some or no random effects, simply set the
 appropriate formula using the argument \code{re.form}, which is passed directly
 to \code{\link[=predict.merMod]{predict.merMod()}}. If \code{re.form = NA}, R-squared is calculated for the
-fixed effects only, i.e. the 'marginal' R-squared of Nakagawa \emph{et al.}
+fixed effects only, i.e. the 'marginal' R-squared of Nakagawa et al.
 (2017).
 
 As R-squared is calculated here as a squared correlation, the \code{type} of
@@ -180,7 +181,7 @@ R2(shipley.sem, re.form = NA, type = "spearman")  # using Spearman's Rho
 # Predicted R-squared: compare cross-validated predictions calculated/
 # approximated via the hat matrix to standard method (leave-one-out)
 
-# Fit test models using Shipley data — compare lm vs glm
+# Fit test models using Shipley data – compare lm vs glm
 d <- na.omit(shipley)
 m <- lm(Live ~ Date + DD + lat, d)
 # m <- glm(Live ~ Date + DD + lat, binomial, d)
@@ -212,29 +213,29 @@ cor(cvf1, cvf2)
 \references{
 Allen, D. M. (1974). The Relationship Between Variable Selection
 and Data Augmentation and a Method for Prediction. \emph{Technometrics},
-\strong{16}(1), 125-127. \doi{10/gfgv57}
+\emph{16}(1), 125-127. \doi{10/gfgv57}
 
 Hittner, J. B. (2019). Ezekiel’s classic estimator of the population
 squared multiple correlation coefficient: Monte Carlo-based extensions and
-refinements. \emph{The Journal of General Psychology}, \strong{147}(3), 213–227.
+refinements. \emph{The Journal of General Psychology}, \emph{147}(3), 213–227.
 \doi{10/gk53wb}
 
 Karch, J. (2020). Improving on Adjusted R-Squared. \emph{Collabra: Psychology},
-\strong{6}(1). \doi{10/gkgk2v}
+\emph{6}(1). \doi{10/gkgk2v}
 
-Kvalseth, T. O. (1985) Cautionary Note about R2. \emph{The American
-Statistician}, \strong{39}(4), 279-285. \doi{10/b8b782}
+Kvalseth, T. O. (1985). Cautionary Note about R2. \emph{The American
+Statistician}, \emph{39}(4), 279-285. \doi{10/b8b782}
 
-Nakagawa, S., Johnson, P.C.D. and Schielzeth, H. (2017) The coefficient of
-determination R2 and intra-class correlation coefficient from generalized
-linear mixed-effects models revisited and expanded. \emph{Journal of the Royal
-Society Interface}, \strong{14}(134). \doi{10/gddpnq}
+Nakagawa, S., Johnson, P. C. D., & Schielzeth, H. (2017). The coefficient
+of determination R2 and intra-class correlation coefficient from
+generalized linear mixed-effects models revisited and expanded. \emph{Journal of
+the Royal Society Interface}, \emph{14}(134). \doi{10/gddpnq}
 
 Shieh, G. (2008). Improved Shrinkage Estimation of Squared Multiple
 Correlation Coefficient and Squared Cross-Validity Coefficient.
-\emph{Organizational Research Methods}, \strong{11}(2), 387–407. \doi{10/bcwqf3}
+\emph{Organizational Research Methods}, \emph{11}(2), 387–407. \doi{10/bcwqf3}
 
-Zheng, B. and Agresti, A. (2000) Summarizing the predictive power of a
-generalized linear model. \emph{Statistics in Medicine}, \strong{19}(13), 1771-1781.
+Zheng, B., & Agresti, A. (2000). Summarizing the predictive power of a
+generalized linear model. \emph{Statistics in Medicine}, \emph{19}(13), 1771-1781.
 \doi{10/db7rfv}
 }

@@ -58,7 +58,7 @@ calculations (if present).}
 intervals on predictions (and any interactive effects).}
 
 \item{ci.type}{The type of confidence interval to return (defaults to \code{"bca"}
-— see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
+– see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
 
 \item{digits}{The number of significant digits to return for interactive
 effects.}
@@ -68,7 +68,7 @@ excepting argument \code{index}.}
 
 \item{parallel}{The type of parallel processing to use for calculating
 confidence intervals on predictions. Can be one of \code{"snow"}, \code{"multicore"},
-or \code{"no"} (for none — the default).}
+or \code{"no"} (for none – the default).}
 
 \item{ncpus}{Number of system cores to use for parallel processing. If \code{NULL}
 (default), all available cores are used.}
@@ -97,7 +97,7 @@ with values for predictors drawn either from the data used to fit the
 original model(s) (\code{mod}) or from \code{newdata}. It is assumed that effects are
 fully standardised; however, if this is not the case, then the same
 centring and scaling options originally specified to \code{\link[=stdEff]{stdEff()}} should be
-re-specified — which will then be used to standardise the data. If no
+re-specified – which will then be used to standardise the data. If no
 effects are supplied, standardised (direct) effects will be calculated from
 the model and used to generate predictions. These predictions will equal
 the model(s) fitted values if \code{newdata = NULL}, \code{unique.eff = FALSE}, and

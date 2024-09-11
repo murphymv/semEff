@@ -47,16 +47,16 @@ These are simple extractor functions for effects calculated using
 }
 \section{Functions}{
 \itemize{
-\item \code{getEff}: Extract effects.
+\item \code{getEff()}: Extract effects.
 
-\item \code{getDirEff}: Extract direct effects.
+\item \code{getDirEff()}: Extract direct effects.
 
-\item \code{getIndEff}: Extract indirect effects.
+\item \code{getIndEff()}: Extract indirect effects.
 
-\item \code{getTotEff}: Extract total effects.
+\item \code{getTotEff()}: Extract total effects.
 
-\item \code{getMedEff}: Extract mediator effects.
+\item \code{getMedEff()}: Extract mediator effects.
 
-\item \code{getAllInd}: Extract all indirect effects.
+\item \code{getAllInd()}: Extract all indirect effects.
+
 }}
-

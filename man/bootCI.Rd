@@ -14,7 +14,7 @@ nested list of such objects.}
 \item{conf}{A numeric value specifying the confidence level for the
 intervals.}
 
-\item{type}{The type of confidence interval to return (defaults to \code{"bca"} —
+\item{type}{The type of confidence interval to return (defaults to \code{"bca"} –
 see Details). See \code{\link[=boot.ci]{boot.ci()}} for further options.}
 
 \item{digits}{The number of significant digits to return for numeric values.}
@@ -37,12 +37,12 @@ of the specified type and level calculated from bootstrapped model effects.
 If a model or models is supplied, bootstrapping will first be performed via
 \code{\link[=bootEff]{bootEff()}}.
 
-Nonparametric bias-corrected and accelerated confidence intervals (BC\emph{a},
-Efron 1987) are calculated by default, which should provide the most
+Nonparametric bias-corrected and accelerated confidence intervals (BC\emph{a};
+Efron, 1987) are calculated by default, which should provide the most
 accurate coverage across a range of bootstrap sampling distributions (Puth
-\emph{et al.} 2015). They will, however, be
+et al., 2015). They will, however, be
 \href{https://stackoverflow.com/questions/7588388/adjusted-bootstrap-confidence-intervals-bca-with-parametric-bootstrap-in-boot}{inappropriate}
-for parametric resampling — in which case the default will be set to the
+for parametric resampling – in which case the default will be set to the
 bootstrap percentile method instead (\code{"perc"}).
 
 Effects and confidence intervals are returned in a summary table, along
@@ -54,10 +54,10 @@ star (i.e. 'significant' at the \code{conf} level).
 \note{
 All bootstrapped confidence intervals will tend to underestimate the
 true nominal coverage to some extent when sample size is small (Chernick &
-Labudde 2009), so the appropriate caution should be exercised in
+Labudde, 2009), so the appropriate caution should be exercised in
 interpretation in such cases. Comparison of different interval types may be
 informative. For example, normal-theory based intervals may outperform
-bootstrap percentile methods when n < 34 (Hesterberg 2015). Ultimately
+bootstrap percentile methods when n < 34 (Hesterberg, 2015). Ultimately
 however, the bootstrap is \href{https://stats.stackexchange.com/questions/112147/can-bootstrap-be-seen-as-a-cure-for-the-small-sample-size}{not a solution to small sample size}.
 }
 \examples{
@@ -65,7 +65,7 @@ however, the bootstrap is \href{https://stats.stackexchange.com/questions/112147
 (shipley.sem.ci <- bootCI(shipley.sem.boot))
 
 # From original SEM (models)
-# (not typically recommended — better to use saved boot objects)
+# (not typically recommended – better to use saved boot objects)
 # system.time(
 #   shipley.sem.ci <- bootCI(shipley.sem, R = 1000, seed = 13,
 #                            ran.eff = "site")
@@ -74,16 +74,16 @@ however, the bootstrap is \href{https://stats.stackexchange.com/questions/112147
 \references{
 Chernick, M. R., & Labudde, R. A. (2009). Revisiting Qualms about
 Bootstrap Confidence Intervals. \emph{American Journal of Mathematical and
-Management Sciences}, \strong{29}(3–4), 437–456. \doi{10/c8zv}
+Management Sciences}, \emph{29}(3–4), 437–456. \doi{10/c8zv}
 
 Efron, B. (1987). Better Bootstrap Confidence Intervals. \emph{Journal of the
-American Statistical Association}, \strong{82}(397), 171–185. \doi{10/gfww2z}
+American Statistical Association}, \emph{82}(397), 171–185. \doi{10/gfww2z}
 
 Hesterberg, T. C. (2015). What Teachers Should Know About the Bootstrap:
 Resampling in the Undergraduate Statistics Curriculum. \emph{The American
-Statistician}, \strong{69}(4), 371–386. \doi{10/gd85v5}
+Statistician}, \emph{69}(4), 371–386. \doi{10/gd85v5}
 
 Puth, M.-T., Neuhäuser, M., & Ruxton, G. D. (2015). On the variety of
 methods for calculating confidence intervals by bootstrapping. \emph{Journal of
-Animal Ecology}, \strong{84}(4), 892–897. \doi{10/f8n9rq}
+Animal Ecology}, \emph{84}(4), 892–897. \doi{10/f8n9rq}
 }

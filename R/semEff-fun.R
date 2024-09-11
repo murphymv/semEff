@@ -17,7 +17,7 @@
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on effects.
 #' @param ci.type The type of confidence interval to return (defaults to `"bca"`
-#'   — see Details). See [boot.ci()] for further specification details.
+#'   – see Details). See [boot.ci()] for further specification details.
 #' @param digits The number of significant digits to return for numeric values
 #'   (for summary tables).
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
@@ -26,7 +26,7 @@
 #' @details The eponymous function of this package calculates all direct,
 #'   indirect, total, and mediator effects for a 'piecewise' structural equation
 #'   model (SEM), that is, one where parameter estimation is local rather than
-#'   global (Shipley 2000, 2009; Lefcheck 2016). The SEM simply takes the form
+#'   global (Lefcheck, 2016; Shipley, 2000, 2009). The SEM simply takes the form
 #'   of a list of fitted models, or bootstrapped estimates from such models,
 #'   describing hypothesised causal pathways from predictors to response
 #'   ('endogenous') variables. These are either direct, or operate indirectly
@@ -38,23 +38,23 @@
 #'   (this may take a while!).
 #'
 #'   Direct effects are calculated as fully standardised model coefficients for
-#'   each response variable, while indirect effects are the product of these
-#'   direct effects operating along causal pathways in the SEM. The total
-#'   effects of any given predictor on a response are then the sum of its direct
-#'   and (all) its indirect effects. 'Mediator' effects are also calculated, as
-#'   the sum of all indirect paths which operate through each individual
-#'   mediator — useful to assess the relative importance of different mediators
-#'   in affecting the response. All of these effect types can be calculated
-#'   automatically for all (default) or for a specified subset of predictors
-#'   and/or mediators in the SEM. As indirect, total, and mediator effects are
-#'   not directly bootstrapped using the fitted models for response variables
-#'   (i.e. via [bootEff()]), their equivalent 'bootstrapped' estimates are
-#'   calculated instead using each bootstrapped direct effect.
+#'   each response variable (see [stdEff()] for details), while indirect effects
+#'   are the product of these direct effects operating along causal pathways in
+#'   the SEM. The total effects of any given predictor on a response are then
+#'   the sum of its direct and (all) its indirect effects. 'Mediator' effects
+#'   are also calculated, as the sum of all indirect paths which operate through
+#'   each individual mediator – useful to assess the relative importance of
+#'   different mediators in affecting the response. All of these effect types
+#'   can be calculated automatically for all (default) or for a specified subset
+#'   of predictors and/or mediators in the SEM. As indirect, total, and mediator
+#'   effects are not directly bootstrapped using the fitted models for response
+#'   variables (i.e. via [bootEff()]), their equivalent 'bootstrapped' estimates
+#'   are calculated instead using each bootstrapped direct effect.
 #'
 #'   Confidence intervals for all effects are returned in summary tables for
 #'   each response (see [bootCI()]), with BC*a* intervals calculated by default
-#'   using the bootstrapped estimates for each effect type (MacKinnon *et al.*
-#'   2004, Cheung 2009, Hayes & Scharkow 2013). Effects for which the confidence
+#'   using the bootstrapped estimates for each effect type (Cheung, 2009; Hayes
+#'   & Scharkow, 2013; MacKinnon et al., 2004). Effects for which the confidence
 #'   intervals do not contain zero are highlighted with a star (i.e.
 #'   'significant' at the `ci.conf` level). Bootstrap standard errors (standard
 #'   deviations of the samples) and biases (sample means minus original
@@ -68,7 +68,7 @@
 #'
 #'   All calculated effects and bootstrapped effects are also returned in lists
 #'   for each response variable, with all except mediator effects also including
-#'   the model intercept(s) — required for prediction (these will be zero for
+#'   the model intercept(s) – required for prediction (these will be zero for
 #'   ordinary linear models with fully standardised effects). Effects can be
 #'   conveniently extracted with [getEff()] and related functions.
 #' @return A list object of class `"semEff"` for which several methods and
@@ -79,27 +79,27 @@
 #'   4. All indirect effects (individual, not summed)
 #' @references Cheung, M. W. L. (2009). Comparison of methods for constructing
 #'   confidence intervals of standardized indirect effects. *Behavior Research
-#'   Methods*, **41**(2), 425-438. \doi{10/fnx7xk}
+#'   Methods*, *41*(2), 425-438. \doi{10/fnx7xk}
 #'
 #'   Hayes, A. F., & Scharkow, M. (2013). The Relative Trustworthiness of
 #'   Inferential Tests of the Indirect Effect in Statistical Mediation Analysis:
-#'   Does Method Really Matter? *Psychological Science*, **24**(10), 1918-1927.
+#'   Does Method Really Matter? *Psychological Science*, *24*(10), 1918-1927.
 #'   \doi{10/bbhr}
 #'
 #'   Lefcheck, J. S. (2016). piecewiseSEM: Piecewise structural equation
 #'   modelling in `R` for ecology, evolution, and systematics. *Methods in
-#'   Ecology and Evolution*, **7**(5), 573-579. \doi{10/f8s8rb}
+#'   Ecology and Evolution*, *7*(5), 573-579. \doi{10/f8s8rb}
 #'
 #'   MacKinnon, D. P., Lockwood, C. M., & Williams, J. (2004). Confidence Limits
 #'   for the Indirect Effect: Distribution of the Product and Resampling
-#'   Methods. *Multivariate Behavioral Research*, **39**(1), 99. \doi{10/chqcnx}
+#'   Methods. *Multivariate Behavioral Research*, *39*(1), 99. \doi{10/chqcnx}
 #'
 #'   Shipley, B. (2000). A New Inferential Test for Path Models Based on
 #'   Directed Acyclic Graphs. *Structural Equation Modeling: A Multidisciplinary
-#'   Journal*, **7**(2), 206-218. \doi{10/cqm32d}
+#'   Journal*, *7*(2), 206-218. \doi{10/cqm32d}
 #'
 #'   Shipley, B. (2009). Confirmatory path analysis in a generalized multilevel
-#'   context. *Ecology*, **90**(2), 363-368. \doi{10/bqd43d}
+#'   context. *Ecology*, *90*(2), 363-368. \doi{10/bqd43d}
 #' @examples
 #' # SEM effects
 #' (shipley.sem.eff <- semEff(shipley.sem.boot))
@@ -111,7 +111,7 @@
 #' # summary(semEff(shipley.sem.boot, mediator = "DD"))
 #'
 #' # Effects calculated using original SEM (models)
-#' # (not typically recommended — better to use saved boot objects)
+#' # (not typically recommended – better to use saved boot objects)
 #' # system.time(
 #' #  shipley.sem.eff <- semEff(shipley.sem, R = 1000, seed = 13,
 #' #                            ran.eff = "site")
@@ -808,14 +808,14 @@ getAllInd <- function(eff, ...) {
 #' @param ci.conf A numeric value specifying the confidence level for confidence
 #'   intervals on predictions (and any interactive effects).
 #' @param ci.type The type of confidence interval to return (defaults to `"bca"`
-#'   — see Details). See [boot.ci()] for further specification details.
+#'   – see Details). See [boot.ci()] for further specification details.
 #' @param digits The number of significant digits to return for interactive
 #'   effects.
 #' @param bci.arg A named list of any additional arguments to [boot.ci()],
 #'   excepting argument `index`.
 #' @param parallel The type of parallel processing to use for calculating
 #'   confidence intervals on predictions. Can be one of `"snow"`, `"multicore"`,
-#'   or `"no"` (for none — the default).
+#'   or `"no"` (for none – the default).
 #' @param ncpus Number of system cores to use for parallel processing. If `NULL`
 #'   (default), all available cores are used.
 #' @param cl Optional cluster to use if `parallel = "snow"`. If `NULL`
@@ -828,7 +828,7 @@ getAllInd <- function(eff, ...) {
 #'   original model(s) (`mod`) or from `newdata`. It is assumed that effects are
 #'   fully standardised; however, if this is not the case, then the same
 #'   centring and scaling options originally specified to [stdEff()] should be
-#'   re-specified — which will then be used to standardise the data. If no
+#'   re-specified – which will then be used to standardise the data. If no
 #'   effects are supplied, standardised (direct) effects will be calculated from
 #'   the model and used to generate predictions. These predictions will equal
 #'   the model(s) fitted values if `newdata = NULL`, `unique.eff = FALSE`, and

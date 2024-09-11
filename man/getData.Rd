@@ -32,7 +32,7 @@ This is a simple convenience function to return the data used to fit
 a model, by evaluating the 'data' slot of the model call object. If the
 'data' argument of the model call was not specified, or is not a data frame
 (or coercible to such) containing all variables referenced in the model
-formula, an error will be thrown — this restriction is largely to ensure
+formula, an error will be thrown – this restriction is largely to ensure
 that a single coherent dataset of all model variables can be made available
 for resampling purposes.
 

@@ -53,7 +53,7 @@ m <- lm(y ~ poly(x1, 2) + x2 + x3, data = d)
 VIF(m)
 }
 \references{
-Fox, J. and Monette, G. (1992) Generalized Collinearity
-Diagnostics. \emph{Journal of the American Statistical Association}, \strong{87},
+Fox, J., & Monette, G. (1992). Generalized Collinearity
+Diagnostics. \emph{Journal of the American Statistical Association}, \emph{87},
 178-183. \doi{10/dm9wbw}
 }

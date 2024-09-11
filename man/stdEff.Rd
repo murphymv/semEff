@@ -83,12 +83,12 @@ If arguments \code{cen.x} or \code{cen.y} are \code{TRUE}, effects will be calcu
 if all predictors (x) and/or the response variable (y) were mean-centred
 prior to model-fitting (including any dummy variables arising from
 categorical predictors). Thus, for an ordinary linear model where centring
-of x and y is specified, the intercept will be zero — the mean (or weighted
+of x and y is specified, the intercept will be zero – the mean (or weighted
 mean) of y. In addition, if \code{cen.x = TRUE} and there are interacting terms
 in the model, all effects for lower order terms of the interaction are
 adjusted using an expression which ensures that each main effect or lower
 order term is estimated at the mean values of the terms they interact with
-(zero in a 'centred' model) — typically improving the interpretation of
+(zero in a 'centred' model) – typically improving the interpretation of
 effects. The expression used comprises a weighted sum of all the effects
 that contain the lower order term, with the weight for the term itself
 being zero and those for 'containing' terms being the product of the means
@@ -119,7 +119,7 @@ function \code{\link[=glt]{glt()}}. If both arguments are true, the effects are 
 
 If \code{unique.eff = TRUE} (default), effects are adjusted for
 multicollinearity among predictors by dividing by the square root of the
-VIFs (Dudgeon 2016, Thompson \emph{et al.} 2017; \code{\link[=RVIF]{RVIF()}}). If they have also
+VIFs (Dudgeon, 2016; Thompson et al., 2017; \code{\link[=RVIF]{RVIF()}}). If they have also
 been scaled by the standard deviations of x and y, this converts them to
 semipartial correlations, i.e. the correlation between the unique
 components of predictors (residualised on other predictors) and the
@@ -127,14 +127,14 @@ response variable. This measure of effect size is arguably much more
 interpretable and useful than the traditional standardised coefficient, as
 it always represents the unique effects of predictors and so can more
 readily be compared both within and across models. Values range from zero
-to +/- one rather than +/- infinity (as in the case of betas) — putting
+to +/- one rather than +/- infinity (as in the case of betas) – putting
 them on the same scale as the bivariate correlation between predictor and
 response. In the case of GLMs however, the measure is analogous but not
 exactly equal to the semipartial correlation, so its values may not always
 be bound between +/- one (such cases are likely rare). Importantly, for
 ordinary linear models, the square of the semipartial correlation equals
 the increase in R-squared when that variable is included last in the model
-— directly linking the measure to unique variance explained. See
+– directly linking the measure to unique variance explained. See
 \href{https://www.daviddisabato.com/blog/2016/4/8/on-effect-sizes-in-multiple-regression}{here}
 for additional arguments in favour of the use of semipartial correlations.
 
@@ -159,7 +159,7 @@ the \code{\link[=R2]{R2()}} function, with any additional arguments passed via \
 
 Finally, if \code{weights} are specified, the function calculates a weighted
 average of standardised effects across a set (or sets) of different
-candidate models for a particular response variable(s) (Burnham & Anderson
+candidate models for a particular response variable(s) (Burnham & Anderson,
 2002), via the \code{\link[=avgEst]{avgEst()}} function.
 }
 \examples{
@@ -204,15 +204,14 @@ stdEff(m, w)
 \references{
 Burnham, K. P., & Anderson, D. R. (2002). \emph{Model Selection and
 Multimodel Inference: A Practical Information-Theoretic Approach} (2nd
-ed.). New York: Springer-Verlag. Retrieved from
-\url{https://www.springer.com/gb/book/9780387953649}
+ed.). Springer-Verlag. \url{https://link.springer.com/book/10.1007/b97636}
 
 Dudgeon, P. (2016). A Comparative Investigation of Confidence Intervals for
 Independent Variables in Linear Regression. \emph{Multivariate Behavioral
-Research}, \strong{51}(2-3), 139-153. \doi{10/gfww3f}
+Research}, \emph{51}(2-3), 139-153. \doi{10/gfww3f}
 
 Thompson, C. G., Kim, R. S., Aloe, A. M., & Becker, B. J. (2017).
 Extracting the Variance Inflation Factor and Other Multicollinearity
 Diagnostics from Typical Regression Results. \emph{Basic and Applied Social
-Psychology}, \strong{39}(2), 81-90. \doi{10/gfww2w}
+Psychology}, \emph{39}(2), 81-90. \doi{10/gfww2w}
 }
