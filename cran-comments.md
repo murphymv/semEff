@@ -2,7 +2,7 @@
 
 ### Release
 
-This is a resubmission release (0.7.1).
+This is a resubmission (0.7.1).
 
 This version corrects the following issues:
 
@@ -42,7 +42,7 @@ Found the following (possibly) invalid URLs:
 
 FIX
 
-The buymeacoffee.com link has been fixed. The DOI links are https://shortdoi.org/ shortcuts to the original DOIs and are all valid (checked), useful, and have been accepted in previous submissions. Is it possible to add these to a whitelist?
+The buymeacoffee.com link has been fixed. The DOI links are https://shortdoi.org/ shortcuts to the original DOIs and are all valid (checked) and have been accepted in previous submissions. Is it possible to add these to a whitelist?
 
 NOTE
 
