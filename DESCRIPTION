@@ -23,7 +23,7 @@ Suggests:
     ggplot2,
     knitr,
     markdown,
-    piecewiseSEM,
+    piecewiseSEM (<= 2.3.0),
     rmarkdown
 VignetteBuilder: knitr
 License: GPL (>= 3)

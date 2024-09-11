@@ -44,7 +44,8 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           # extra-packages: any::rcmdcheck
-          extra-packages: any::rcmdcheck, piecewiseSEM@2.3.0
+          # extra-packages: any::rcmdcheck, piecewiseSEM@2.3.0
+          packages: boot, gsl, lme4, parallel, stats, utils, ggplot2, knitr, markdown, piecewiseSEM@2.3.0, rmarkdown
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
