@@ -9,11 +9,11 @@ type: software
 license: GPL-3.0-or-later
 title: 'semEff: Automatic Calculation of Effects for Piecewise Structural Equation
   Models'
-version: 0.7.1
+version: 0.7.2
 doi: 10.32614/CRAN.package.semEff
 identifiers:
 - type: url
-  value: https://www.buymeacoffee.com/murphymv
+  value: https://buymeacoffee.com/murphymv
 abstract: Automatically calculate direct, indirect, and total effects for piecewise
   structural equation models, comprising lists of fitted models representing structured
   equations (Lefcheck, 2016 <https://doi.org/10/f8s8rb>). Confidence intervals are
@@ -199,7 +199,7 @@ references:
   authors:
   - family-names: Lefcheck
     given-names: Jon
-    email: jslefche@gmail.com
+    email: lefcheckj@si.edu
   - family-names: Byrnes
     given-names: Jarrett
     email: jarrett.byrnes@umb.edu
@@ -208,6 +208,7 @@ references:
     email: gracej@usgs.gov
   year: '2024'
   doi: 10.32614/CRAN.package.piecewiseSEM
+  version: <= 2.3.0
 - type: software
   title: rmarkdown
   abstract: 'rmarkdown: Dynamic Documents for R'
