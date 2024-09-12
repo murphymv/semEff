@@ -1,5 +1,7 @@
 ## semEff 0.7.2
 
+12/09/2024
+
 ### New features:
 
 -   New argument `excl.other.med` to `semEff()`, allowing calculation of indirect effects for specific SEM pathways, i.e. those comprising only user-specified mediators.
