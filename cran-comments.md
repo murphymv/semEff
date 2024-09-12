@@ -2,23 +2,65 @@
 
 ### Release
 
-This is a patch release (0.6.1).
+This is a resubmission (0.7.2).
 
-### Test environments
+This version corrects the following issues:
 
-| System                                    | Source                  | R version  |
-|-------------------------------------------|-------------------------|------------|
-| Windows 10 Home 21H2                      | Local                   | R 4.2.1    |
-| Windows Server 2022 10.0.20348 Datacenter | Remote (GitHub Actions) | R-release  |
-| Mac OS 11.6.8 20G730                      | Remote (GitHub Actions) | R-release  |
-| Ubuntu 20.04.4 LTS                        | Remote (GitHub Actions) | R-devel    |
-| Ubuntu 20.04.4 LTS                        | Remote (GitHub Actions) | R-release  |
-| Ubuntu 20.04.4 LTS                        | Remote (GitHub Actions) | R-oldrel-1 |
+NOTE
+
+Found the following (possibly) invalid URLs:
+  URL: https://doi.org/10/bqd43d (moved to https://doi.org/10.1890/08-1034.1)
+    From: README.md
+    Status: 301
+    Message: Moved Permanently
+  URL: https://doi.org/10/cqm32d (moved to https://doi.org/10.1207/S15328007SEM0702_4)
+    From: README.md
+    Status: 301
+    Message: Moved Permanently
+  URL: https://doi.org/10/f8s8rb (moved to https://doi.org/10.1111/2041-210X.12512)
+    From: README.md
+    Status: 301
+    Message: Moved Permanently
+  URL: https://doi.org/bqd43d (moved to https://doi.org/10.1890/08-1034.1)
+    From: inst/doc/predicting-effects.html
+    Status: 301
+    Message: Moved Permanently
+  URL: https://doi.org/d8gvwm (moved to https://doi.org/10.1890/1051-0761(2006)016%5B0503:ASEMAO%5D2.0.CO;2)
+    From: inst/doc/semEff.html
+    Status: 301
+    Message: Moved Permanently
+  URL: https://doi.org/f8s8rb (moved to https://doi.org/10.1111/2041-210X.12512)
+    From: inst/doc/semEff.html
+    Status: 301
+    Message: Moved Permanently
+  URL: https://www.buymeacoffee.com/murphymv (moved to https://buymeacoffee.com/murphymv)
+    From: DESCRIPTION
+          man/semEff-package.Rd
+    Status: 301
+    Message: Moved Permanently
+
+FIX
+
+All URLs have been corrected.
 
 ### R CMD check results
 
-There were no ERRORs, WARNINGs or NOTEs.
+0 errors | 0 warnings | 0 notes
 
-### Downstream dependencies
+### revdepcheck results
 
-There are currently no downstream dependencies.
+I checked 1 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+
+-   I saw 0 new problems
+-   I failed to check 0 packages
+
+### Test environments
+
+| System                                    | Source                           | R version  |
+|--------------------------------|-------------------------|----------------|
+| Windows 10 Home 22H2                      | Local                            | R 4.4.1    |
+| Windows Server 2022 10.0.20348 Datacenter | Remote (GitHub Actions workflow) | R-release  |
+| Mac OS 14.6.1 23G93                       | Remote (GitHub Actions workflow) | R-release  |
+| Ubuntu 22.04.4 LTS                        | Remote (GitHub Actions workflow) | R-devel    |
+| Ubuntu 22.04.4 LTS                        | Remote (GitHub Actions workflow) | R-release  |
+| Ubuntu 22.04.4 LTS                        | Remote (GitHub Actions workflow) | R-oldrel-1 |

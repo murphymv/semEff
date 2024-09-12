@@ -8,6 +8,7 @@ semEff(
   sem,
   predictors = NULL,
   mediators = NULL,
+  excl.other.med = FALSE,
   use.raw = FALSE,
   ci.conf = 0.95,
   ci.type = "bca",
@@ -27,6 +28,12 @@ If list is unnamed, response variable names will be used.}
 effects. If \code{NULL} (default), all predictors/mediators in the SEM will be
 used.}
 
+\item{excl.other.med}{Logical, whether to exclude other SEM mediators from
+calculating indirect effects, i.e., those not specified in the \code{mediators}
+argument. Useful for examining individual effect pathways with only the
+specified mediators, rather than including all paths involving them
+(default). Ignored if \code{mediators = NULL}.}
+
 \item{use.raw}{Logical, whether to use 'raw' (unstandardised) effects for all
 calculations (if present in \code{sem}).}
 
@@ -34,19 +41,19 @@ calculations (if present in \code{sem}).}
 intervals on effects.}
 
 \item{ci.type}{The type of confidence interval to return (defaults to \code{"bca"}
-– see Details). See \code{\link[=boot.ci]{boot.ci()}} for further specification details.}
+– see Details). See \code{\link[boot:boot.ci]{boot::boot.ci()}} for further specification details.}
 
-\item{digits}{The number of significant digits to return for numeric values
-(for summary tables).}
+\item{digits}{The number of decimal places to return for numeric values (for
+summary tables).}
 
-\item{bci.arg}{A named list of any additional arguments to \code{\link[=boot.ci]{boot.ci()}},
+\item{bci.arg}{A named list of any additional arguments to \code{\link[boot:boot.ci]{boot::boot.ci()}},
 excepting argument \code{index}.}
 
 \item{...}{Arguments to \code{\link[=bootEff]{bootEff()}}.}
 }
 \value{
 A list object of class \code{"semEff"} for which several methods and
-extractor functions exist. Contains:
+extractor functions are available. Contains:
 \enumerate{
 \item Summary tables of effects and confidence intervals
 \item All effects
@@ -78,7 +85,7 @@ Direct effects are calculated as fully standardised model coefficients for
 each response variable (see \code{\link[=stdEff]{stdEff()}} for details), while indirect effects
 are the product of these direct effects operating along causal pathways in
 the SEM. The total effects of any given predictor on a response are then
-the sum of its direct and (all) its indirect effects. 'Mediator' effects
+the sum of its direct and (all) its indirect effects. 'Mediator effects'
 are also calculated, as the sum of all indirect paths which operate through
 each individual mediator – useful to assess the relative importance of
 different mediators in affecting the response. All of these effect types

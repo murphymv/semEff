@@ -101,7 +101,11 @@ getData <- function(mod, subset = FALSE, merge = FALSE, env = NULL) {
 
     # All var names from model call
     f <- c(f, mc$subset, mc$weights, mc$offset, mc$correlation)
-    vn <- unlist(lapply(f, all.vars))
+    f <- lapply(f, function(i) {
+      i <- eval(i, env)
+      if (class(i)[2] %in% c("corStruct", "varFunc")) formula(i) else i
+    })
+    vn <- unique(unlist(lapply(f, all.vars)))
     if (!all(vn %in% names(d)))
       stop("'data' does not contain all variables used to fit model.")
 
@@ -605,6 +609,37 @@ glt <- function(x, family = NULL, force.est = FALSE) {
 }
 
 
+#' @title Get Model Error Distribution Family
+#' @description Extract the error distribution family (and link function) from a
+#'   fitted model.
+#' @param mod A fitted model object, or a list or nested list of such objects.
+#' @details `getFamily()` returns an appropriate family object for a range of
+#'   different model classes, similarly to [family()]. However, it can be also
+#'   be used for some classes without an existing family method. Mostly for
+#'   internal use.
+#' @return A model `"family"` object, or a list or nested list of such objects.
+#' @seealso [family()]
+#' @examples
+#' # SEM model error distributions
+#' getFamily(shipley.sem)
+#' @export
+getFamily <- function(mod) {
+  
+  m <- mod
+  
+  # Function
+  getFamily <- function(m) {
+    if (isGls(m)) gaussian() else {
+      if (isBet(m)) m$link$mean else family(m)
+    }
+  }
+
+  # Apply recursively
+  rMapply(getFamily, m)
+  
+}
+
+
 #' @title Get Model Response Variable
 #' @description Extract the response variable from a fitted model on the
 #'   original or link scale.
@@ -647,7 +682,7 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
     }
 
     # Model error family
-    f <- if (isBet(m)) m$link$mean else family(m)
+    f <- getFamily(m)
 
     # Model weights and offset
     w <- weights(m)
@@ -686,12 +721,12 @@ getY <- function(mod, data = NULL, link = FALSE, offset = FALSE, env = NULL) {
 #' @details `VIF()` calculates generalised variance inflation factors (GVIF) as
 #'   described in Fox & Monette (1992), and also implemented in
 #'   [`car::vif()`](https://rdrr.io/cran/car/man/vif.html). However, whereas
-#'   `vif()` returns both GVIF and GVIF^(1/(2*Df)) values, `VIF()` simply
+#'   `car::vif()` returns both GVIF and GVIF^(1/(2*Df)) values, `VIF()` simply
 #'   returns the squared result of the latter measure, which equals the standard
 #'   VIF for single-coefficient terms and is the equivalent measure for
 #'   multi-coefficient terms (e.g. categorical or polynomial). Also, while
-#'   `vif()` returns values per model term (i.e. predictor variable), `VIF()`
-#'   returns values per coefficient, meaning that the same value will be
+#'   `car::vif()` returns values per model term (i.e. predictor variable),
+#'   `VIF()` returns values per coefficient, meaning that the same value will be
 #'   returned per coefficient for multi-coefficient terms. Finally, `NA` is
 #'   returned for any terms which could not be estimated in the model (e.g.
 #'   aliased).
@@ -743,7 +778,7 @@ VIF <- function(mod, data = NULL, env = NULL) {
         if (i %in% names(mf)) class(mf[, i])[1] == "matrix" else FALSE
       })
 
-      # Var-cov/cor matrix
+      # Var-cov & cor matrix
       V <- as.matrix(vcov(m))[xn, xn]
       R <- cov2cor(V)
       det.R <- det(R)
@@ -815,7 +850,9 @@ RVIF <- function(...) {
 #' @param re.form For mixed models of class `"merMod"`, the formula for random
 #'   effects to condition on when generating fitted values used in the
 #'   calculation of R-squared. Defaults to `NULL`, meaning all random effects
-#'   are included. See [predict.merMod()] for further specification details.
+#'   are included. See
+#'   [`lme4:::predict.merMod()`](https://rdrr.io/cran/lme4/man/predict.merMod.html)
+#'   for further specification details.
 #' @param type The type of correlation coefficient to use. Can be `"pearson"`
 #'   (default) or `"spearman"`.
 #' @param adj.type The type of adjusted R-squared estimator to use. Can be
@@ -879,7 +916,7 @@ RVIF <- function(...) {
 #'   of the predicted residuals (Allen, 1974), for the residual sum of squares
 #'   in the classic R-squared formula. It is not calculated here for GLMMs, as
 #'   the interpretation of the hat matrix is not reliable (see
-#'   [hatvalues.merMod()]).
+#'   [`lme4:::hatvalues.merMod()`](https://rdrr.io/cran/lme4/man/hatvalues.merMod.html)).
 #'
 #'   For models fitted with one or more offsets, these will be removed by
 #'   default from the response variable and fitted values prior to calculations.
@@ -895,9 +932,9 @@ RVIF <- function(...) {
 #'   see that reference for a more advanced approach to R-squared for mixed
 #'   models). To include only some or no random effects, simply set the
 #'   appropriate formula using the argument `re.form`, which is passed directly
-#'   to [predict.merMod()]. If `re.form = NA`, R-squared is calculated for the
-#'   fixed effects only, i.e. the 'marginal' R-squared of Nakagawa et al.
-#'   (2017).
+#'   to `lme4:::predict.merMod()`. If `re.form = NA`, R-squared is calculated
+#'   for the fixed effects only, i.e. the 'marginal' R-squared of Nakagawa et
+#'   al. (2017).
 #'
 #'   As R-squared is calculated here as a squared correlation, the `type` of
 #'   correlation coefficient can also be specified. Setting this to `"spearman"`
@@ -1038,7 +1075,7 @@ R2 <- function(mod, data = NULL, adj = TRUE, pred = TRUE, offset = FALSE,
     R2 <- if (k > 0) {
 
       # Model link function
-      f <- if (isBet(m)) m$link$mean else family(m)
+      f <- getFamily(m)
       lF <- f$linkfun
       lI <- f$linkinv
 
@@ -1590,7 +1627,7 @@ stdEff <- function(mod, weights = NULL, data = NULL, term.names = NULL,
     if (cen.y && int) {
       ym <- weighted.mean(y, w)
       if (isGlm(m)) {
-        f <- if (isBet(m)) m$link$mean else family(m)
+        f <- getFamily(m)
         ym <- f$linkfun(ym)
       }
       e[1] <- e[1] - ym

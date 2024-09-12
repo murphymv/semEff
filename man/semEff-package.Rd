@@ -3,7 +3,6 @@
 \docType{package}
 \name{semEff-package}
 \alias{semEff-package}
-\alias{_PACKAGE}
 \title{semEff: Automatic Calculation of Effects for Piecewise Structural Equation Models}
 \description{
 Automatically calculate direct, indirect, and total effects for piecewise structural equation models, comprising lists of fitted models representing structured equations (Lefcheck, 2016 \doi{10/f8s8rb}). Confidence intervals are provided via bootstrapping.
@@ -13,6 +12,7 @@ Useful links:
 \itemize{
   \item \url{https://murphymv.github.io/semEff/}
   \item \url{https://github.com/murphymv/semEff}
+  \item \url{https://buymeacoffee.com/murphymv}
   \item Report bugs at \url{https://github.com/murphymv/semEff/issues}
 }
 

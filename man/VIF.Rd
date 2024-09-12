@@ -26,12 +26,12 @@ fitted model(s) via the variance-covariance matrix of coefficients.
 \code{VIF()} calculates generalised variance inflation factors (GVIF) as
 described in Fox & Monette (1992), and also implemented in
 \href{https://rdrr.io/cran/car/man/vif.html}{\code{car::vif()}}. However, whereas
-\code{vif()} returns both GVIF and GVIF^(1/(2*Df)) values, \code{VIF()} simply
+\code{car::vif()} returns both GVIF and GVIF^(1/(2*Df)) values, \code{VIF()} simply
 returns the squared result of the latter measure, which equals the standard
 VIF for single-coefficient terms and is the equivalent measure for
 multi-coefficient terms (e.g. categorical or polynomial). Also, while
-\code{vif()} returns values per model term (i.e. predictor variable), \code{VIF()}
-returns values per coefficient, meaning that the same value will be
+\code{car::vif()} returns values per model term (i.e. predictor variable),
+\code{VIF()} returns values per coefficient, meaning that the same value will be
 returned per coefficient for multi-coefficient terms. Finally, \code{NA} is
 returned for any terms which could not be estimated in the model (e.g.
 aliased).

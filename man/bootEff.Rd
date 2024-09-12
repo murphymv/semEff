@@ -32,7 +32,7 @@ five-digit integer is used (see Details).}
 
 \item{type}{The type of bootstrapping to perform. Can be \code{"nonparametric"}
 (default), \code{"parametric"}, or \code{"semiparametric"} (the last two currently
-only for mixed models, via \code{\link[=bootMer]{bootMer()}}).}
+only for mixed models, via \code{\link[lme4:bootMer]{lme4::bootMer()}}).}
 
 \item{ran.eff}{For nonparametric bootstrapping of mixed models, the name of
 the (highest-level) random effect to resample (see Details).}
@@ -54,7 +54,7 @@ errors will cause the function to exit.}
 \item{cl}{Optional cluster to use if \code{parallel = "snow"}. If \code{NULL}
 (default), a local cluster is created using the specified number of cores.}
 
-\item{bM.arg}{A named list of any additional arguments to \code{\link[=bootMer]{bootMer()}}.}
+\item{bM.arg}{A named list of any additional arguments to \code{\link[lme4:bootMer]{lme4::bootMer()}}.}
 
 \item{...}{Arguments to \code{\link[=stdEff]{stdEff()}}.}
 }
@@ -112,12 +112,12 @@ For mixed models with \href{https://stats.stackexchange.com/questions/228800/cro
 nonparametric resampling will not be appropriate. In these cases,
 parametric or semiparametric bootstrapping can be performed instead via
 \code{\link[lme4:bootMer]{lme4::bootMer()}} (with additional arguments passed to that function as
-necessary). NOTE: As \code{\link[=bootMer]{bootMer()}} takes only a fitted model as its first
-argument (i.e. no lists), any model averaging is calculated 'post-hoc'
-using the estimates in boot objects for each candidate model, rather than
-during the bootstrapping process itself (i.e. the default procedure via
-\code{\link[=boot]{boot()}}). Results are then returned in a new boot object for each response
-variable or correlated error estimate.
+necessary). NOTE: As \code{\link[lme4:bootMer]{lme4::bootMer()}} takes only a fitted model as its
+first argument (i.e. no lists), any model averaging is calculated
+'post-hoc' using the estimates in boot objects for each candidate model,
+rather than during the bootstrapping process itself (i.e. the default
+procedure via \code{\link[boot:boot]{boot::boot()}}). Results are then returned in a new boot
+object for each response variable or correlated error estimate.
 
 If supplied a list containing both mixed and non-mixed models, \code{\link[=bootEff]{bootEff()}}
 with nonparametric bootstrapping will still work and will treat all models
@@ -128,7 +128,7 @@ their mixed counterparts for at least some response variables (e.g. where
 random effect variance estimates are at or near zero). The data will be
 resampled on the supplied random effect for all models. If nonparametric
 bootstrapping is not used in this scenario however, an error will occur, as
-\code{\link[=bootMer]{bootMer()}} will only accept mixed models.
+\code{\link[lme4:bootMer]{lme4::bootMer()}} will only accept mixed models.
 
 Parallel processing is used by default via the \link{parallel} package and
 option \code{parallel = "snow"} (and is generally recommended), but users can
