@@ -228,6 +228,7 @@ Statistics</em>, <em>37</em>(9), 1487–1498. <a href="https://doi.org/10/dvfzcn
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Bootstrap Shipley SEM (test – 1 rep)</span></span></span>
 <span class="r-in"><span><span class="co"># (set 'site' as group for resampling – highest-level random effect)</span></span></span>
 <span class="r-in"><span><span class="fu">bootEff</span><span class="op">(</span><span class="va">shipley.sem</span>, R <span class="op">=</span> <span class="fl">1</span>, ran.eff <span class="op">=</span> <span class="st">"site"</span>, parallel <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Model failed to converge with max|grad| = 0.00338991 (tol = 0.002, component 1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $DD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ORDINARY NONPARAMETRIC BOOTSTRAP</span>
@@ -240,8 +241,8 @@ Statistics</em>, <em>37</em>(9), 1487–1498. <a href="https://doi.org/10/dvfzcn
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bootstrap Statistics :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        original      bias    std. error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t1* -0.05600661 -0.03759749          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t2* -0.68772025  0.04417058          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t1* -0.05600661 -0.01112349          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t2* -0.68772025  0.25835687          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Date</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -255,8 +256,8 @@ Statistics</em>, <em>37</em>(9), 1487–1498. <a href="https://doi.org/10/dvfzcn
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bootstrap Statistics :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        original      bias    std. error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t1* -0.01493651 -0.03938594          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t2* -0.62813666  0.01186123          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t1* -0.01493651 -0.10090846          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t2* -0.62813666  0.03402639          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Growth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -270,8 +271,8 @@ Statistics</em>, <em>37</em>(9), 1487–1498. <a href="https://doi.org/10/dvfzcn
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bootstrap Statistics :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       original      bias    std. error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t1* -0.2917507 -0.04310056          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t2*  0.3824224 -0.05454842          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t1* -0.2917507  0.07847243          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t2*  0.3824224 -0.07636603          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Live</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -285,8 +286,8 @@ Statistics</em>, <em>37</em>(9), 1487–1498. <a href="https://doi.org/10/dvfzcn
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bootstrap Statistics :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      original    bias    std. error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t1* 0.3105220 0.2796271          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t2* 0.3681961 0.1489441          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t1* 0.3105220 0.2528761          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t2* 0.3681961 0.1597136          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Check estimates (use saved boot object – 1000 reps)</span></span></span>
