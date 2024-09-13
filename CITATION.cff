@@ -9,7 +9,7 @@ type: software
 license: GPL-3.0-or-later
 title: 'semEff: Automatic Calculation of Effects for Piecewise Structural Equation
   Models'
-version: 0.7.2
+version: 0.7.2.9000
 doi: 10.32614/CRAN.package.semEff
 identifiers:
 - type: url
