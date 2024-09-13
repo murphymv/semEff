@@ -11,7 +11,7 @@ template:
     primary: '#0ce3ac'
     code_font: {google: "Fira Code"}
   includes:
-    after_navbar: <a href="https://www.buymeacoffee.com/murphymv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"/></a>
+    after_navbar: <a href="https://buymeacoffee.com/murphymv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"/></a>
 url: https://murphymv.github.io/semEff/
 news:
   cran_dates: false
